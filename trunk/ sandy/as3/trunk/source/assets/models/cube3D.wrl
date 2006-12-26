@@ -1,0 +1,29 @@
+#VRML V2.0 utf8
+
+# Produced by 3D Studio MAX VRML97 exporter, Version 5, Revision 0,93
+# MAX File: testcube.max, Date: Sun Nov 23 15:57:57 2003
+
+DEF Box01 Transform {
+translation 0 0 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.333 0.11 0.694
+}
+}
+geometry DEF Box01-FACES IndexedFaceSet {
+ccw TRUE
+solid TRUE
+coord DEF Box01-COORD Coordinate { point [
+-10 0 10, 10 0 10, -10 0 -10, 10 0 -10, -10 20 10, 10 20 10, 
+-10 20 -10, 10 20 -10]
+}
+coordIndex [
+3, 1, 0, -1, 0, 2, 3, -1, 7, 6, 4, -1, 4, 5, 7, -1, 5, 4, 0, -1, 
+0, 1, 5, -1, 7, 5, 1, -1, 1, 3, 7, -1, 6, 7, 3, -1, 3, 2, 6, -1, 
+4, 6, 2, -1, 2, 0, 4, -1]
+}
+}
+]
+}

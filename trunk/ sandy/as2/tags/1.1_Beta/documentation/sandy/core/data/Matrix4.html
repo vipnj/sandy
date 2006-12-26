@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.core.data.Matrix4 - Sandy 1.1 BETA</title><link href="../../../style.css" rel="stylesheet" type="text/css"/><link href="../../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.core.data" rel="up"/><link href="../../../sandy/core/data/Plane.html" title="Class sandy.core.data.Plane" rel="prev"/><link href="../../../sandy/core/data/BSphere.html" title="Class sandy.core.data.BSphere" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/><meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/></head><body><ul class="main_nav"><li><a href="../../../overview-summary.html" title="Overview of Sandy 1.1 BETA">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.core.data">Package</a></li><li><span class="nav_current">Class</span></li><li><a href="../../../index-files/index.html" title="Alpabetical index of types and members">Index</a></li></ul><h1>Class sandy.core.data.Matrix4</h1><pre class="type_hierachy"><strong>sandy.core.data.Matrix4</strong></pre><div class="type_description"><h2>Description</h2><p>
+ Matrix with 4 lines & 4 columns.
+  
+ </p></div><div class="field_index"><h2>Field Index</h2><a href="#n11" title="public n11:Number">n11</a>, <a href="#n12" title="public n12:Number">n12</a>, <a href="#n13" title="public n13:Number">n13</a>, <a href="#n14" title="public n14:Number">n14</a>, <a href="#n21" title="public n21:Number">n21</a>, <a href="#n22" title="public n22:Number">n22</a>, <a href="#n23" title="public n23:Number">n23</a>, <a href="#n24" title="public n24:Number">n24</a>, <a href="#n31" title="public n31:Number">n31</a>, <a href="#n32" title="public n32:Number">n32</a>, <a href="#n33" title="public n33:Number">n33</a>, <a href="#n34" title="public n34:Number">n34</a>, <a href="#n41" title="public n41:Number">n41</a>, <a href="#n42" title="public n42:Number">n42</a>, <a href="#n43" title="public n43:Number">n43</a>, <a href="#n44" title="public n44:Number">n44</a></div><div class="method_index"><h2>Method Index</h2><p><code>new <a href="#method_Matrix4" title="public function Matrix4()">Matrix4()</a></code></p><a href="#method_createIdentity" title="static public function createIdentity(Void):Matrix4">createIdentity()</a>, <a href="#method_createZero" title="static public function createZero(Void):Matrix4">createZero()</a>, <a href="#method_toString" title="public function toString(Void):String">toString()</a></div><div class="constructor_detail_list"><h2>Constructor Detail</h2><div class="method_details"><a name="method_Matrix4"></a><h3>Matrix4</h3><code class="method_synopsis">public function <strong class="method_name">Matrix4</strong>()</code><div class="method_info"><p>
+ Create a new <code> Matrix4</code>.
+ <p>If 16 arguments are passed to the constructor, it will
+ create a <code> Matrix4</code> with the values. In the other case,
+ a identity <code> Matrix4</code> is created.</p>
+ <code>var m:Matrix4 = new Matrix4();</code><br>
+ <code>1 0 0 0 <br>
+       0 1 0 0 <br>
+       0 0 1 0 <br>
+       0 0 0 1 </code><br><br>
+ <code>var m:Matrix4 = new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 
+ 13, 14, 15, 16);</code><br>
+ <code>1  2  3  4 <br>
+       5  6  7  8 <br>
+       9  10 11 12 <br>
+       13 14 15 16 </code>
+	 </p></div></div></div><div class="field_detail_list"><h2>Field Detail</h2><a name="n11"></a><h3>n11</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n11</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>1 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n12"></a><h3>n12</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n12</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 1 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n13"></a><h3>n13</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n13</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 1 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n14"></a><h3>n14</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n14</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 1 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n21"></a><h3>n21</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n21</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          1 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n22"></a><h3>n22</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n22</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 1 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n23"></a><h3>n23</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n23</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 1 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n24"></a><h3>n24</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n24</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 1 <br>
+          0 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n31"></a><h3>n31</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n31</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          1 0 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n32"></a><h3>n32</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n32</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 1 0 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n33"></a><h3>n33</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n33</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 1 0 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n34"></a><h3>n34</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n34</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 1 <br>
+          0 0 0 0 </code></p>
+	 </div></div><a name="n41"></a><h3>n41</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n41</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          1 0 0 0 </code></p>
+	 </div></div><a name="n42"></a><h3>n42</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n42</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 1 0 0 </code></p>
+	 </div></div><a name="n43"></a><h3>n43</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n43</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 1 0 </code></p>
+	 </div></div><a name="n44"></a><h3>n44</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">n44</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ <code> Matrix4</code> cell.
+ <p><code>0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 0 <br>
+          0 0 0 1 </code></p>
+	 </div></div></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="method_createIdentity"></a><h3>createIdentity</h3><code class="method_synopsis">static public function <strong class="method_name">createIdentity</strong>(Void):<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Create a new Identity Matrix4.
+ <p>An Identity Matrix4 is represented like that :</p>
+ <code>1 0 0 0 <br>
+       0 1 0 0 <br>
+       0 0 1 0 <br>
+       0 0 0 1 </code>
+ 
+ </p><h4>Return</h4><p class="extra_info">	The new Identity Matrix4
+	</p></div></div><div class="method_details"><a name="method_createZero"></a><h3>createZero</h3><code class="method_synopsis">static public function <strong class="method_name">createZero</strong>(Void):<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Create a new Zero Matrix4.
+ <p>An zero Matrix4 is represented like that :</p>
+ <code>0 0 0 0 <br>
+       0 0 0 0 <br>
+       0 0 0 0 <br>
+       0 0 0 0 </code>
+ 
+ </p><h4>Return</h4><p class="extra_info">	The new Identity Matrix4
+	</p></div></div><div class="method_details alt_row"><a name="method_toString"></a><h3>toString</h3><code class="method_synopsis">public function <strong class="method_name">toString</strong>(Void):<span class="unresolved_type_name">String</span></code><div class="method_info"><p>
+ Get a string representation of the <code> Matrix4</code>.
+
+ </p><h4>Return</h4><p class="extra_info">	A String representing the <code> Matrix4</code>.
+	 </p></div></div></div><div class="footer"><span>Generated by </span><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a><span> FlashDevelop edition.</span></div></body></html>

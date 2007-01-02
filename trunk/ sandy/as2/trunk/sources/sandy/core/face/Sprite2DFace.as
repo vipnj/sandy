@@ -14,13 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
-import sandy.core.face.TriFace3D;
+import sandy.core.face.Polygon;
 import sandy.core.Sprite2D;
 import sandy.skin.TextureSkin;
-import sandy.view.Camera3D;
-import sandy.core.data.Vector;
-import sandy.core.World3D;
 
 /**
 * Sprite2DFace
@@ -29,8 +27,9 @@ import sandy.core.World3D;
 * @version		1.0
 * @date 		12.05.2006 
 **/
-class sandy.core.face.Sprite2DFace extends TriFace3D
+class sandy.core.face.Sprite2DFace extends Polygon
 {
+	private var _v:Vertex;
 	
 	/**
 	* Create a Sprite2DFace. This constructor should be created only by the Sprite or derivated class.
@@ -39,19 +38,10 @@ class sandy.core.face.Sprite2DFace extends TriFace3D
 	*/
 	public function Sprite2DFace( oref:Sprite2D, pt:Vertex ) 
 	{
-		super( oref, pt );
+		super( oref, pt );  
+		_v = pt;
 	}
-
-	/**
-	* Allows you to get the vertex of the face. Very usefull when you want to make some calculation on a face after it has been clicked.
-	* @param	Void
-	* @return Array The array of vertex.
-	*/
-	public function getVertex( Void ):Array
-	{
-		return [ _va ];
-	}
-	
+	  
 	/**
 	 * isvisible 
 	 * 
@@ -81,12 +71,13 @@ class sandy.core.face.Sprite2DFace extends TriFace3D
 		var sv:Vector 	= Sprite2D(_o).getScaleVector();
 		var s:Number 	= Sprite2D(_o).getScale();
 		// --
-		var cste:Number	= 100 / _va.wz;
+		var cste:Number	= _v.wz;
+		trace("cste  :"+cste);
 		mc._width 	= t.texture.width  * (s * sv.x * cste);
 		mc._height 	= t.texture.height * (s * sv.y * cste);
 		// --
-		mc._x = _va.sx - mc._width  / 2;
-		mc._y = _va.sy - mc._height / 2;
+		mc._x = _v.sx - mc._width  / 2;
+		mc._y = _v.sy - mc._height / 2;
 		// --
 		mc.filters = t.filters;
 	}
@@ -103,12 +94,12 @@ class sandy.core.face.Sprite2DFace extends TriFace3D
 		var sv:Vector 	= Sprite2D(_o).getScaleVector();
 		var s:Number 	= Sprite2D(_o).getScale();
 		// --
-		var cste:Number	= 100 / _va.wz;
+		var cste:Number	= _v.wz;
 		_mc._width 	= t.texture.width  * (s * sv.x * cste);
 		_mc._height = t.texture.height * (s * sv.y * cste);
 		// --
-		_mc._x = _va.sx - _mc._width  / 2;
-		_mc._y = _va.sy - _mc._height / 2;
+		_mc._x = _v.sx - _mc._width  / 2;
+		_mc._y = _v.sy - _mc._height / 2;
 		// --
 		_mc.filters = t.filters;
 	}
@@ -140,7 +131,7 @@ class sandy.core.face.Sprite2DFace extends TriFace3D
 	 */
 	public function getZAverage( Void ) : Number 
 	{
-		return _va.wz;
+		return _v.wz;
 	}
 
 	/**
@@ -150,7 +141,7 @@ class sandy.core.face.Sprite2DFace extends TriFace3D
 	 */
 	public function getMinDepth( Void ) : Number 
 	{
-		return _va.wz;
+		return _v.wz;
 	}
 
 	/**
@@ -160,7 +151,7 @@ class sandy.core.face.Sprite2DFace extends TriFace3D
 	 */
 	public function getMaxDepth( Void ) : Number 
 	{
-		return _va.wz;
+		return _v.wz;
 	}
 
 }

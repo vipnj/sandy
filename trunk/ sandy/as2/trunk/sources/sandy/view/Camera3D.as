@@ -479,6 +479,11 @@ class sandy.view.Camera3D
 	{
 		return _mtInv;
 	}
+	
+	public function toString(Void):String
+	{
+		return "sandy.view.Camera3D";
+	}
 		
 	/**
 	* Set an orthographic projection. This projection in opposite of the perspective one, don't distort distances and pictures

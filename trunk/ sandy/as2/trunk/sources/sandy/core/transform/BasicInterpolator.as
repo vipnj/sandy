@@ -85,8 +85,8 @@ class sandy.core.transform.BasicInterpolator
 	*/
 	public function getPercent( Void ):Number
 	{
-		if(_way == 1 ) 	return ( _frame / _duration );
-		else			return ( 1 - ( _frame / _duration ) );
+		if( _way == 1 ) 	return ( _frame / _duration )*100;
+		else			return ( 1 - ( _frame / _duration ) )*100;
 	}
 	
 	/**

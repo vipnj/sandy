@@ -78,8 +78,6 @@ class sandy.core.World3D
 		_isRunning = false;
 		_aCams = [];
 		_oEventManager = new ObjectEventManager();
-		// we add the listener
-		FPSBeacon.getInstance().addFrameListener( new Delegate( this, __onEnterFrame ) );
 	}
 	
 	/**
@@ -121,7 +119,6 @@ class sandy.core.World3D
 	{
 		return _oEventManager;
 	}
-
 	
 	/**
 	 * Get the Singleton instance of World3D.
@@ -130,7 +127,7 @@ class sandy.core.World3D
 	 */
 	public static function getInstance( Void ) : World3D
 	{
-		if (_inst === undefined) _inst = new World3D();
+		if (_inst == undefined) _inst = new World3D();
 		return _inst;
 	}
 	
@@ -220,8 +217,9 @@ class sandy.core.World3D
 		{
 			_isRunning = true;
 			// we broadcast the start message
-			_oEB.broadcastEvent( _eStart ); 
+			_oEB.broadcastEvent( _eStart );
 			// we start the real time rendering
+			FPSBeacon.getInstance().addFrameListener( new Delegate( this, __onEnterFrame ) );
 			FPSBeacon.getInstance().start();
 		}
 	}
@@ -233,6 +231,7 @@ class sandy.core.World3D
 	public function stop( Void ):Void
 	{
 		FPSBeacon.getInstance().stop();
+		FPSBeacon.getInstance().removeFrameListener( new Delegate( this, __onEnterFrame ) );
 		_isRunning = false;
 	}
 	
@@ -378,6 +377,7 @@ class sandy.core.World3D
 						v.sx =  (v.wx = c * (vx * mp11 + vy * mp12 + vz * mp13 + mp14) ) * offx + offx;
 						v.sy = -(v.wy = c * (vx * mp21 + vy * mp22 + vz * mp23 + mp24) ) * offy + offy;
 						v.wz =  (vx * mp31 + vy * mp32 + vz * mp33 + mp34) * c;
+
 					}	
 					// -- object rendering.
 					obj.render();		
@@ -435,6 +435,11 @@ class sandy.core.World3D
 		}
 		n.setModified( false );
 		return;
+	}
+	
+	public function toString( Void ):String
+	{
+		return "sandy.core.World3D";
 	}
 	
 	private var _mProj:Matrix4;

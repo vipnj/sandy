@@ -144,7 +144,6 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 					};
 		// --
 		var rMat = __concat( m, sMat );
-		//trace( rMat.a+' '+rMat.b+' '+rMat.c+' '+rMat.d+' '+rMat.tx+' '+rMat.ty );
 		// -- 
 		if( _useLight == true )
 		{

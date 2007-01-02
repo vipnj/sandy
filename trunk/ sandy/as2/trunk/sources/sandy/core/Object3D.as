@@ -325,7 +325,6 @@ class sandy.core.Object3D extends Leaf
 	public function addPoint (px :Number, py:Number, pz:Number ):Number
 	{
 		setModified( true );
-		trace('New vertex '+px+' '+py+' '+pz );
 		return aPoints.push ( new Vertex ( px, py, pz ) );
 	}
 	
@@ -361,7 +360,6 @@ class sandy.core.Object3D extends Leaf
 	
 	public function refresh( Void ):Void
 	{
-		trace('refreh');
 		var a:Array = aFaces;
 		var l:Number = a.length;
 		while( --l > -1 )

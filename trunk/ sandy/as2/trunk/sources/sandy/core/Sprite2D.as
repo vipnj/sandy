@@ -15,9 +15,9 @@ limitations under the License.
 */
 
 import sandy.core.buffer.ZBuffer;
+import sandy.core.data.Vector;
 import sandy.core.face.Sprite2DFace;
 import sandy.core.Object3D;
-import sandy.core.data.Vector;
 import sandy.skin.TextureSkin;
 
 /**
@@ -114,13 +114,15 @@ class sandy.core.Sprite2D extends Object3D
 		// -- local copy because it's faster
 		var f:Sprite2DFace = aFaces[0];
 		// -- private property access hack for speed purpose. Please use the equivalent public method in your code!
-		var ndepth:Number = f['_va'].wz;
+		var ndepth:Number = f.getVertices()[0].wz;
 		// CLIPPING Now is the object behind the camera?
-		if ( ndepth > 100 )
+		if ( ndepth > -1 )
 		{
 			// if face is visible or drawAllFaces is set to true
 			if ( !enableBackFaceCulling || f.isVisible () ) 
-				ZBuffer.push( {face : f, depth : ndepth} );				
+			{
+				ZBuffer.push( {face : f, depth : ndepth} );
+			}		
 		}
 		setModified( false );
 	}
@@ -128,7 +130,7 @@ class sandy.core.Sprite2D extends Object3D
 	/**
 	* Create a new Frace.
 	* <p>When a new Face is created, by default it has the Skin of the Object3D. 
-	* The new Face will be automatically stored into the Object3D.</p>	* 
+	* The new Face will be automatically stored into the Object3D.</p>
 	* @return	The created Face
 	*/
 	public function createFace ( Void ):Sprite2DFace

@@ -26,12 +26,11 @@ import sandy.skin.Skin;
 import sandy.skin.TextureSkin;
 
 /**
-* NFace3D
+* Polygon
 * @author		Thomas Pfeiffer - kiroukou
 * @version		1.0
 * @date 		12.01.2006 
 **/
-
 class sandy.core.face.Polygon implements IPolygon
 {
 	public function Polygon(  oref:Object3D /* ... */)
@@ -132,7 +131,6 @@ class sandy.core.face.Polygon implements IPolygon
 	public function refresh( Void ):Void
 	{
 		_mc.clear();
-		trace('Polygon::refresh');
 		if( _bV )  _s.begin( this, _mc );
 		else  _sb.begin( this, _mc );
 		//
@@ -183,7 +181,7 @@ class sandy.core.face.Polygon implements IPolygon
 		var min:Number = _aVertex[0].wz;
 		var l:Number = _nL;
 		while( --l > 0 )
-		min = Math.min( min, _aVertex[l].wz );
+			min = Math.min( min, _aVertex[l].wz );
 		return min;
 	}
 

@@ -14,11 +14,12 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
-import sandy.core.face.TriFace3D;
+import sandy.core.face.Sprite2DFace;
 import sandy.core.Sprite3D;
 import sandy.skin.MovieSkin;
-import sandy.core.data.Vector;
+
 /**
 * Sprite3DFace
 * <p>Create the face needed by the Sprite3D object. This face fits perfectly the Sprite3D needs.</p>
@@ -26,37 +27,14 @@ import sandy.core.data.Vector;
 * @version		1.0
 * @date 		12.05.2006 
 **/
-class sandy.core.face.Sprite3DFace extends TriFace3D
+class sandy.core.face.Sprite3DFace extends Sprite2DFace
 {
 	
 	public function Sprite3DFace( oref:Sprite3D, pt:Vertex ) 
 	{
 		super( oref, pt );
 	}
-	
-	/**
-	* Allows you to get the vertex of the face. Very usefull when you want to make some calculation on a face after it has been clicked.
-	* @param	Void
-	* @return Array The array of vertex.
-	*/
-	public function getVertex( Void ):Array
-	{
-		return [ _va ];
-	}
-		
-	/**
-	 * isvisible 
-	 * 
-	 * <p>Say if the face is visible or not</p>
-	 *
-	 * @param Void
-	 * @return a Boolean, true if visible, false otherwise
-	 */	
-	public function isVisible( Void ): Boolean
-	{
-		return true;
-	}
-	
+
 	/**
 	* set the frame of the movieclip
 	* @param	n
@@ -65,7 +43,6 @@ class sandy.core.face.Sprite3DFace extends TriFace3D
 	{
 		_nFrame = n;
 	}
-	
 	
 	/** 
 	 * Render the face into a MovieClip.
@@ -78,7 +55,7 @@ class sandy.core.face.Sprite3DFace extends TriFace3D
 		// --
 		var sv:Vector 	= Sprite3D(_o).getScaleVector();
 		var s:Number 	= Sprite3D(_o).getScale();
-		var cste:Number	= 100 / _va.wz;
+		var cste:Number	= 100 / _v.wz;
 		//
 		var t:MovieSkin = MovieSkin( _s );
 		t.getMovie().gotoAndStop( _nFrame );
@@ -87,8 +64,8 @@ class sandy.core.face.Sprite3DFace extends TriFace3D
 		mc._width 	= t.texture.width  * (s * sv.x * cste);
 		mc._height 	= t.texture.height * (s * sv.y * cste);
 		// --
-		mc._x = _va.sx - mc._width/2;
-		mc._y = _va.sy - mc._height/2;
+		mc._x = _v.sx- mc._width/2;
+		mc._y = _v.sy - mc._height/2;
 		// --
 		mc.filters = t.filters;
 	}
@@ -102,7 +79,7 @@ class sandy.core.face.Sprite3DFace extends TriFace3D
 		// --
 		var sv:Vector 	= Sprite3D(_o).getScaleVector();
 		var s:Number 	= Sprite3D(_o).getScale();
-		var cste:Number	= 100 / (_va.wz );
+		var cste:Number	= 100 / (_v.wz );
 		//
 		var t:MovieSkin = MovieSkin( _s );
 		t.getMovie().gotoAndStop( _nFrame );
@@ -111,8 +88,8 @@ class sandy.core.face.Sprite3DFace extends TriFace3D
 		_mc._width 	= t.texture.width  * (s * sv.x * cste);
 		_mc._height = t.texture.height * (s * sv.y * cste);
 		// --
-		_mc._x = _va.sx - _mc._width/2;
-		_mc._y = _va.sy - _mc._height/2;
+		_mc._x = _v.sx - _mc._width/2;
+		_mc._y = _v.sy - _mc._height/2;
 		// --
 		_mc.filters = t.filters;
 	}
@@ -134,38 +111,6 @@ class sandy.core.face.Sprite3DFace extends TriFace3D
 	public function getSkin( Void ) : MovieSkin 
 	{
 		return MovieSkin( _s );
-	}
-	
-
-	/**
-	 * Return the depth average of the face.
-	 * <p>Useful for z-sorting.</p>
-	 *
-	 * @return	A Number as depth average.
-	 */
-	public function getZAverage( Void ) : Number 
-	{
-		return _va.wz;
-	}
-
-	/**
-	 * Returns the min depth of its vertex.
-	 * @param Void	
-	 * @return number the minimum depth of it's vertex
-	 */
-	public function getMinDepth( Void ) : Number 
-	{
-		return _va.wz;
-	}
-
-	/**
-	 * Returns the max depth of its vertex.
-	 * @param Void	
-	 * @return number the maximum depth of it's vertex
-	 */
-	public function getMaxDepth( Void ) : Number 
-	{
-		return _va.wz;
 	}
 	
 	private var _nFrame:Number;

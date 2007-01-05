@@ -25,6 +25,7 @@ import sandy.core.World3D;
 import sandy.events.SkinEvent;
 import sandy.skin.SimpleLineSkin;
 import sandy.skin.Skin;
+import sandy.view.Frustum;
 
 /**
 * <p>Represent an Object3D in a World3D</p>
@@ -344,14 +345,10 @@ class sandy.core.Object3D extends Leaf
 		{
 			f 		= aF [l];
 			ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-			// CLIPPING Now is the object behind the camera?
-			if ( f.getMinDepth() > -1 )
+			// if face is visible or enableBackFaceCulling is set to false
+			if ( f.isVisible() || !_backFaceCulling ) 
 			{
-				// if face is visible or enableBackFaceCulling is set to false
-				if ( f.isVisible() || !_backFaceCulling ) 
-				{
-					ZBuffer.push( {face : f, depth : ndepth} );
-				}
+				ZBuffer.push( {face : f, depth : ndepth} );
 			}				
 		}
 		// -- 
@@ -423,6 +420,23 @@ class sandy.core.Object3D extends Leaf
 		World3D.getInstance().getObjectEventManager().removeEventListeningObject( this );
 		// --
 		super.destroy();
+	}
+	
+	public function clip( frustum:Frustum ):Boolean
+	{
+		/*
+		var aF:Array = aFaces;
+		var l:Number = aF.length;
+		var f:IPolygon;
+		while( --l > -1 )
+		{
+			bClipped = bClipped || aF[l].clip( frustum );
+		}
+		*/
+		if( frustum.boxInFrustum( getBBox() ) == Frustum.OUTSIDE )
+			return true;
+		else
+			return false;
 	}
 	
 	/**

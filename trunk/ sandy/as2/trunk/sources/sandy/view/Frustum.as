@@ -43,7 +43,7 @@ class sandy.view.Frustum
 	
 	public function Frustum() 
 	{
-		aPlanes = new Array();
+		aPlanes = new Array(6);
 	}
 	
 	public function extractPlanes( comboMatrix:Matrix4, normalize:Boolean ):Void
@@ -92,13 +92,12 @@ class sandy.view.Frustum
 	
 	public function pointInFrustum( p:Vector ):Number
 	{
-		for( var i:Number = 0; i < 6; i++) 
+		for( var i:Number = 0; i < 6; i++)
 		{
 			if ( PlaneMath.classifyPoint( aPlanes[i], p) == PlaneMath.NEGATIVE )
 				return OUTSIDE;
 		}
 		return INSIDE ;
-
 	}
 	
 	public function sphereInFrustum( s:BSphere ):Number
@@ -131,6 +130,7 @@ class sandy.view.Frustum
 			// both inside and out of the frustum
 			for ( var k:Number = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
+				trace(p[k]);
 				// is the corner outside or inside
 				if ( PlaneMath.distanceToPoint( aPlanes[i], p[k] ) )
 					out++;
@@ -147,12 +147,36 @@ class sandy.view.Frustum
 		return result;
  	}
 
+	public function clipFrustum( cvert: Array ):Array
+	{
+		//-- CLIP AGAINST LEFT FRUSTUM
+		if( cvert.length <= 2 )
+		{
+			return cvert;
+		}
+		var tmp:Array = cvert.slice();
+		tmp = clipPolygon( aPlanes[0], tmp ); // left
+		tmp = clipPolygon( aPlanes[1], tmp ); // right
+		tmp = clipPolygon( aPlanes[2], tmp ); // top
+		tmp = clipPolygon( aPlanes[3], tmp ); // bottom
+		tmp = clipPolygon( aPlanes[4], tmp ); // near
+		return tmp;
+	}
+
+	
+
 	public function clipPolygon( p:Plane, pts:Array ):Array
 	{
 	 var aDist:Array = new Array( pts.length );
 	 var allin:Boolean = true, allout:Boolean = true;
 	 var v:Vertex;
 	 var i:Number, l:Number = pts.length;
+	 // -- If no points, we return null
+	 if( !l )
+	 {
+	 	 return null;
+	 }
+	 // -- otherwise we compute the distances to frustum plane
 	 for ( i=0; i<l; i++)
 	 {	 
 	 	v = pts[i];
@@ -161,8 +185,14 @@ class sandy.view.Frustum
 		 if (aDist[i] >= EPSILON) allout = false;
 	 }
 	 	
-	 if (allin) 		return pts.slice(); 
-	 else if (allout) 	return null;
+	 if (allin)
+	 {
+ 		return pts.slice();
+	 } 
+	 else if (allout) 	
+	 {
+	 	return null;
+	 }
 	 
 	 // Clip a polygon against a plane
 	 //fVertex *cv[10], *v1=vertex(0);
@@ -216,8 +246,14 @@ class sandy.view.Frustum
 		 dist1 = dist2;
 	 }
 	 
-	 if (!clipped) return pts.slice();
-	 else return aClipped;	;
+	 if (!clipped)
+	 {
+	  return pts.slice();
+	 }
+	 else
+	 {
+	 	 return aClipped;
+	 }
 	}
 	
 }

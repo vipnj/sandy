@@ -24,6 +24,7 @@ import sandy.core.Object3D;
 import sandy.math.VectorMath;
 import sandy.skin.Skin;
 import sandy.skin.TextureSkin;
+import sandy.view.Frustum;
 
 /**
 * Polygon
@@ -38,8 +39,8 @@ class sandy.core.face.Polygon implements IPolygon
 		_o = oref;
 		_bfc = 1;
 		_id = Polygon._ID_ ++;
-		_aVertex = arguments.slice(1);
-		_nL = _aVertex.length;
+		_aClipped = _aVertex = arguments.slice(1);
+		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
 		updateTextureMatrix();
 	}
@@ -209,6 +210,12 @@ class sandy.core.face.Polygon implements IPolygon
 		return new String("sandy.core.face.Polygon");
 	}
 
+	public function clip( frustum:Frustum ):Boolean
+	{
+		_aClipped = frustum.clipFrustum( _aVertex );
+		if( (_nCL = _aClipped.length) != _nL ) return true;
+		else return false;
+	}
 
 	/**
 	* Enable or not the events onPress, onRollOver and onRollOut with this face.
@@ -346,7 +353,9 @@ class sandy.core.face.Polygon implements IPolygon
 
 	private var _aUV:Array;
 	private var _aVertex:Array;
+	private var _aClipped:Array;
 	private var _nL:Number;
+	private var _nCL:Number;
 	private var _o:Object3D; // reference to is owner object
 	/**
 	 * Vertex representing the normal of the face!

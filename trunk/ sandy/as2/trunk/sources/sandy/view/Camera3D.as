@@ -61,6 +61,7 @@ class sandy.view.Camera3D
 		setScreen( s );
 		setPerspectiveProjection();
 		// --
+		frustrum = new Frustum();
 		_mt = _mf = _mv = Matrix4.createIdentity();
 		_compiled = false;
 		_oInt = null;
@@ -438,6 +439,7 @@ class sandy.view.Camera3D
 			__updateTransformMatrix();
 			// we add the translation effect
 			_mf = Matrix4Math.multiply ( _mp, _mt );
+			frustrum.extractPlanes(_mf, true);
 			_compiled = true;
 		}
 	}
@@ -477,7 +479,7 @@ class sandy.view.Camera3D
 
 	public function getTransformationMatrixInverse( Void ):Matrix4
 	{
-		return _mtInv;
+		return  Matrix4Math.getInverse( _mt );
 	}
 	
 	public function toString(Void):String
@@ -545,6 +547,8 @@ class sandy.view.Camera3D
 		_mp.n43 = 1;
 		
 		_mpInv = Matrix4Math.getInverse( _mp );
+		_compiled = false;
+		
 	}
 	
 	private function __updateTransformMatrix ( Void ):Void
@@ -565,7 +569,6 @@ class sandy.view.Camera3D
 		_mt.n34 = - VectorMath.dot( _vOut, _p );
 		
 		_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
-		_mtInv = Matrix4Math.getInverse( _mt );
 	}
 	
 	/**
@@ -586,10 +589,9 @@ class sandy.view.Camera3D
 	 */
 	private var _p : Vector;
 
-	private var _mt : Matrix4;// transformation matrix
-	private var _mtInv:Matrix4;// Inverse of the transformation matrix
-	private var _mp : Matrix4;//projection Matrix4
-	private var _mpInv : Matrix4;//Inverse of the projection matrix 
+	private var _mt : Matrix4; // transformation matrix
+	private var _mp : Matrix4; // projection Matrix4
+	private var _mpInv : Matrix4; // Inverse of the projection matrix 
 	
 	/*
 	 * ViewPort matrix

@@ -377,10 +377,13 @@ class sandy.core.World3D
 						v.sx =  (v.wx = c * (vx * mp11 + vy * mp12 + vz * mp13 + mp14) ) * offx + offx;
 						v.sy = -(v.wy = c * (vx * mp21 + vy * mp22 + vz * mp23 + mp24) ) * offy + offy;
 						v.wz =  (vx * mp31 + vy * mp32 + vz * mp33 + mp34) * c;
-
 					}	
-					// -- object rendering.
-					obj.render();		
+					// Is the object clipped? If not we can render it.
+					if( !obj.clip( cam.frustrum ) )
+					{
+						// -- object rendering.
+						obj.render();	
+					}	
 				}// end objects loop
 				// we sort visibles Faces
 				var aF:Array = ZBuffer.sort();

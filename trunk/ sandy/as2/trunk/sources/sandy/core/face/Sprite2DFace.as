@@ -71,8 +71,8 @@ class sandy.core.face.Sprite2DFace extends Polygon
 		var sv:Vector 	= Sprite2D(_o).getScaleVector();
 		var s:Number 	= Sprite2D(_o).getScale();
 		// --
-		var cste:Number	= _v.wz;
-		trace("cste  :"+cste);
+		var cste:Number	= _o.aPoints[1].wz / _o.aPoints[0].wz;
+		// --
 		mc._width 	= t.texture.width  * (s * sv.x * cste);
 		mc._height 	= t.texture.height * (s * sv.y * cste);
 		// --
@@ -94,7 +94,8 @@ class sandy.core.face.Sprite2DFace extends Polygon
 		var sv:Vector 	= Sprite2D(_o).getScaleVector();
 		var s:Number 	= Sprite2D(_o).getScale();
 		// --
-		var cste:Number	= _v.wz;
+		var cste:Number	= _o.aPoints[1].wx / _o.aPoints[0].wx;
+		// --
 		_mc._width 	= t.texture.width  * (s * sv.x * cste);
 		_mc._height = t.texture.height * (s * sv.y * cste);
 		// --

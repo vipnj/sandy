@@ -130,7 +130,7 @@ class sandy.view.Frustum
 			// both inside and out of the frustum
 			for ( var k:Number = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
-				trace(p[k]);
+				//trace("BBox vertex :"+p[k]); returns undefined!!!!
 				// is the corner outside or inside
 				if ( PlaneMath.distanceToPoint( aPlanes[i], p[k] ) )
 					out++;

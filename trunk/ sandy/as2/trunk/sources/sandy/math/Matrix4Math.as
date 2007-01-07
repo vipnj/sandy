@@ -62,6 +62,29 @@ class sandy.math.Matrix4Math
 	
 		return dest;
 	}
+
+	public static function multiply4x3( a:Matrix4, b:Matrix4 ):Matrix4
+	{
+		var m:Matrix4 = Matrix4.createIdentity();
+		m.n11 = a.n11 * b.n11 + a.n21 * b.n12 + a.n31 * b.n13;
+		m.n21 = a.n11 * b.n21 + a.n21 * b.n22 + a.n31 * b.n23;
+		m.n31 = a.n11 * b.n31 + a.n21 * b.n32 + a.n13 * b.n33;
+		
+		m.n12 = a.n12 * b.n11 + a.n22 * b.n12 + a.n32 * b.n13;
+		m.n22 = a.n12 * b.n21 + a.n22 * b.n22 + a.n32 * b.n23;
+		m.n32 = a.n12 * b.n31 + a.n22 * b.n32 + a.n32 * b.n33;
+			
+		m.n13 = a.n13 * b.n11 + a.n23 * b.n12 + a.n33 * b.n13;
+		m.n23 = a.n13 * b.n21 + a.n23 * b.n22 + a.n33 * b.n23;
+		m.n33 = a.n13 * b.n31 + a.n23 * b.n32 + a.n33 * b.n33;
+			
+		m.n14 = a.n14 * b.n11 + a.n24 * b.n12 + a.n34 * b.n13 + b.n14;
+		m.n24 = a.n14 * b.n21 + a.n24 * b.n22 + a.n34 * b.n23 + b.n24;
+		m.n34 = a.n14 * b.n31 + a.n24 * b.n32 + a.n34 * b.n33 + b.n34;
+		
+		return m;
+	}
+		
 	/**
 	 * Compute the multiplication of 2 {@code Matrix4}.
 	 *
@@ -427,6 +450,11 @@ class sandy.math.Matrix4Math
 				 + 	(m.n11 * m.n42 - m.n41 * m.n12) * (m.n23 * m.n34 - m.n33 * m.n24)+ (m.n21 * m.n32 - m.n31 * m.n22) * (m.n13 * m.n44 - m.n43 * m.n14)
 				 - 	(m.n21 * m.n42 - m.n41 * m.n22) * (m.n13 * m.n34 - m.n33 * m.n14)+ (m.n31 * m.n42 - m.n41 * m.n32) * (m.n13 * m.n24 - m.n23 * m.n14);
 
+	}
+	
+	public static function det3x3( m:Matrix4 ):Number
+	{	
+		return m.n11 * ( m.n22 * m.n33 - m.n23 * m.n32 ) + m.n21 * ( m.n32 * m.n13 - m.n12 * m.n33 ) + m.n31 * ( m.n12 * m.n23 - m.n22 * m.n13 );
 	}
 
 	/**

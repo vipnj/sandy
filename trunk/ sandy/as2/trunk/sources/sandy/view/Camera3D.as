@@ -439,7 +439,6 @@ class sandy.view.Camera3D
 			__updateTransformMatrix();
 			// we add the translation effect
 			_mf = Matrix4Math.multiply ( _mp, _mt );
-			frustrum.extractPlanes(_mf, true);
 			_compiled = true;
 		}
 	}
@@ -547,28 +546,43 @@ class sandy.view.Camera3D
 		_mp.n43 = 1;
 		
 		_mpInv = Matrix4Math.getInverse( _mp );
+		
+		frustrum.extractPlanes(_mp, true);
+		
 		_compiled = false;
 		
 	}
 	
 	private function __updateTransformMatrix ( Void ):Void
 	{
-		_mt.n11 = _vSide.x; 
-		_mt.n12 = _vSide.y; 
-		_mt.n13 = _vSide.z; 
-		_mt.n14 = - VectorMath.dot( _vSide, _p );
+		var n11:Number = _vSide.x; 
+		var n12:Number = _vSide.y; 
+		var n13:Number = _vSide.z; 
+		var n21:Number = _vUp.x; 
+		var n22:Number = _vUp.y; 
+		var n23:Number = _vUp.z; 
+		var n31:Number = _vOut.x; 
+		var n32:Number = _vOut.y; 
+		var n33:Number = _vOut.z; 
+		var px:Number = _p.x,  py:Number = _p.y, pz:Number = _p.z;
 		
-		_mt.n21 = _vUp.x; 
-		_mt.n22 = _vUp.y; 
-		_mt.n23 = _vUp.z; 
-		_mt.n24 = - VectorMath.dot( _vUp, _p );
-		
-		_mt.n31 = _vOut.x; 
-		_mt.n32 = _vOut.y; 
-		_mt.n33 = _vOut.z; 
-		_mt.n34 = - VectorMath.dot( _vOut, _p );
-		
-		_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
+		var det: Number = n11 * ( n22 * n33 - n23 * n32 ) + n21 * ( n32 * n13 - n12 * n33 ) + n31 * ( n12 * n23 - n22 * n13 );
+		if( det == 0 ) return;
+		_mt.n11 = ( n22 * n33 - n32 * n23 ) / det;
+		_mt.n12 = ( n31 * n23 - n21 * n33 ) / det;
+		_mt.n13 = ( n21 * n32 - n31 * n22 ) / det;
+
+		_mt.n21 = ( n32 * n13 - n21 * n33 ) / det;
+		_mt.n22 = ( n11 * n33 - n31 * n13 ) / det;
+		_mt.n23 = ( n31 * n12 - n11 * n32 ) / det;
+
+		_mt.n31 = ( n12 * n23 - n22 * n13 ) / det;
+		_mt.n32 = ( n21 * n13 - n11 * n23 ) / det;
+		_mt.n33 = ( n11 * n22 - n21 * n12 ) / det;
+
+		_mt.n14 = -( px * _mt.n11 + py * _mt.n12 + pz * _mt.n13 );
+		_mt.n24 = -( px * _mt.n21 + py * _mt.n22 + pz * _mt.n23 );
+		_mt.n34 = -( px * _mt.n31 + py * _mt.n32 + pz * _mt.n33 );
 	}
 	
 	/**

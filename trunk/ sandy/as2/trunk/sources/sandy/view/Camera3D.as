@@ -59,9 +59,9 @@ class sandy.view.Camera3D
 		_nYaw  	= 0;
 		// --
 		setScreen( s );
+		frustrum = new Frustum();
 		setPerspectiveProjection();
 		// --
-		frustrum = new Frustum();
 		_mt = _mf = _mv = Matrix4.createIdentity();
 		_compiled = false;
 		_oInt = null;
@@ -530,8 +530,8 @@ class sandy.view.Camera3D
 		// --
 		if( undefined == fovY ) fovY = 45;
 		if( undefined == aspectRatio ) aspectRatio = _is.getRatio();
-		if( undefined == zNear ) zNear = 1;
-		if( undefined == zFar ) zFar = 10000;
+		if( undefined == zNear ) zNear = 10;
+		if( undefined == zFar ) zFar = 1000;
 		// --
 		fovY = NumberUtil.toRadian( fovY );
 		cotan = 1 / Math.tan(fovY / 2);
@@ -547,7 +547,7 @@ class sandy.view.Camera3D
 		
 		_mpInv = Matrix4Math.getInverse( _mp );
 		
-		frustrum.extractPlanes(_mp, true);
+		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
 		
 		_compiled = false;
 		

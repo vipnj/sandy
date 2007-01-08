@@ -35,6 +35,7 @@ import sandy.core.data.Plane;
 class sandy.view.Frustum 
 {
 	public var aPlanes:Array;
+	public var aVertex:Array;
 	
 	public static function get INSIDE():Number { return 1; }
 	public static function get OUTSIDE():Number { return  -1; }
@@ -44,6 +45,34 @@ class sandy.view.Frustum
 	public function Frustum() 
 	{
 		aPlanes = new Array(6);
+		aVertex = new Array(8);
+	}
+	
+	public function computePlanes( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
+	{
+		var yNear:Number = (Math.tan (nFov / 2 * 0.017453292519943295769236907684886)) * fNear;
+		var xNear:Number = yNear * nAspect;
+		var yFar:Number = yNear * fFar / fNear;
+		var xFar:Number = xNear * fFar / fNear;
+		//fNear = -fNear;
+		//fFar = -fFar;
+		var p:Array = aVertex;
+		p[0] = new Vector(xNear, yNear, fNear); // Near, right, top
+		p[1] = new Vector(xNear, -yNear, fNear); // Near, right, bottom
+		p[2] = new Vector(-xNear, -yNear, fNear); // Near, left, bottom
+		p[3] = new Vector(-xNear, yNear, fNear); // Near, left, top
+		p[4] = new Vector(xFar, yFar, fFar);  // Far, right, top
+		p[5] = new Vector(xFar, -yFar, fFar);  // Far, right, bottom
+		p[6] = new Vector(-xFar, -yFar, fFar);  // Far, left, bottom
+		p[7] = new Vector( -xFar, yFar, fFar);  // Far, left, top
+		
+		p = aPlanes;
+		p[0] = PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
+		p[1] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
+		p[2] = PlaneMath.computePlaneFromPoints( p[0], p[3], p[7] ); // Top
+		p[3] = PlaneMath.computePlaneFromPoints( p[1], p[2], p[5] ); // Bottom
+		p[4] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[2] ); // Near
+		p[5] = PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
 	}
 	
 	public function extractPlanes( comboMatrix:Matrix4, normalize:Boolean ):Void
@@ -130,7 +159,7 @@ class sandy.view.Frustum
 			// both inside and out of the frustum
 			for ( var k:Number = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
-				//trace("BBox vertex :"+p[k]); returns undefined!!!!
+				trace("BBox vertex :"+p[k]);
 				// is the corner outside or inside
 				if ( PlaneMath.distanceToPoint( aPlanes[i], p[k] ) )
 					out++;

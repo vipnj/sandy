@@ -53,7 +53,7 @@ class sandy.primitive.Line3D extends Object3D implements Primitive3D
 		{
 			for( var i:Number = 0; i < arguments.length; i++ )
 			{
-				aPoints.push ( new Vertex( arguments[i].x, - arguments[i].y, arguments[i].z ) );
+				aPoints.push ( new Vertex( arguments[i].x, arguments[i].y, arguments[i].z ) );
 			}
 			generate ();
 		}
@@ -71,7 +71,7 @@ class sandy.primitive.Line3D extends Object3D implements Primitive3D
 		var l:Number = aPoints.length;
 		for( var i:Number = 0; i < l-1; i++ )
 		{
-			addFace( new Polygon( this,aPoints[i], aPoints[i+1] ) );
+			addFace( new Polygon( this, aPoints[i], aPoints[i+1] ) );
 		}
 	}
 	
@@ -97,5 +97,8 @@ class sandy.primitive.Line3D extends Object3D implements Primitive3D
 		return false;	
 	}
 	
-	
+	public function toString(Void):String
+	{
+		return "sandy.primitive.Line3D";
+	}
 }

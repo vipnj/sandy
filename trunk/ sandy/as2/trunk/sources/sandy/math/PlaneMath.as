@@ -16,6 +16,8 @@ limitations under the License.
 
 import sandy.core.data.Plane;
 import sandy.core.data.Vector;
+import sandy.primitive.Plane3D;
+import sandy.math.VectorMath;
 
 /**
 * Math functions for planes.
@@ -74,5 +76,21 @@ class sandy.math.PlaneMath
 		if (d > 0) return PlaneMath.POSITIVE;
 		return PlaneMath.ON_PLANE;
 	}
+	
+	public static function computePlaneFromPoints( pA:Vector, pB:Vector, pC:Vector ):Plane
+	{
+		var p:Plane = new Plane();
+		var n:Vector = VectorMath.cross( VectorMath.sub( pA, pB), VectorMath.sub( pA, pC) );
+		VectorMath.normalize( n );
+		var d:Number = VectorMath.dot( pA, n);
+		// --
+		p.a = n.x;
+		p.b = n.y;
+		p.c = n.z;
+		p.d = d;
+		// --
+		return p;
+	}
+	
 }
 

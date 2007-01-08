@@ -235,7 +235,8 @@ class sandy.core.face.Polygon implements IPolygon
 	 */	
 	public function isVisible( Void ): Boolean
 	{
-		return _bV = ( _bfc * ((_aVertex[1].sx - _aVertex[0].sx)*(_aVertex[2].sy - _aVertex[0].sy)-(_aVertex[1].sy - _aVertex[0].sy)*(_aVertex[2].sx - _aVertex[0].sx)) < 0 );
+		if( _nL < 3 ) return _bV = true;
+		else return _bV = ( _bfc * ((_aVertex[1].sx - _aVertex[0].sx)*(_aVertex[2].sy - _aVertex[0].sy)-(_aVertex[1].sy - _aVertex[0].sy)*(_aVertex[2].sx - _aVertex[0].sx)) < 0 );
 	}
 
 	/**

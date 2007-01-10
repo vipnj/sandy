@@ -379,11 +379,21 @@ class sandy.core.World3D
 						v.wz =  (vx * mp31 + vy * mp32 + vz * mp33 + mp34) * c;
 					}	
 					// Is the object clipped? If not we can render it.
-					if( !obj.clip( cam.frustrum ) )
+					if (lc == 0 )
+					{
+					if( obj.clip( cam.frustrum ) == false )
 					{
 						// -- object rendering.
+						trace(obj+" render");
 						obj.render();	
+					}
+					else
+					{
+						trace("Objet clippé");
 					}	
+					}
+					else
+						obj.render();
 				}// end objects loop
 				// we sort visibles Faces
 				var aF:Array = ZBuffer.sort();

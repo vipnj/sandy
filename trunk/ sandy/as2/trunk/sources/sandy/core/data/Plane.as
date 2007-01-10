@@ -56,4 +56,3 @@ class sandy.core.data.Plane
 		return "Plane : "+a+","+b+","+c+","+d;
 	}
 }
-

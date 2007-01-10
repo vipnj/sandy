@@ -18,6 +18,7 @@ import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.Object3D;
 import sandy.math.VertexMath;
+import sandy.math.VectorMath;
 
 /**
 * BoundingBox object used to clip the object faster.
@@ -34,12 +35,12 @@ class sandy.core.data.BBox
 	/**
 	 * max vector, representing the upper point of the cube volume
 	 */
-	public var max:Vertex;
+	public var max:Vector;
 	
 	/**
 	 * min vector, representing the lower point of the cube volume.
 	 */
-	public var min:Vertex;
+	public var min:Vector;
 	
 	/**
 	 * the 3D object owning the Bounding Box
@@ -81,8 +82,8 @@ class sandy.core.data.BBox
 	private function BBox( pobj:Object3D, pmin:Vector, pmax:Vector )
 	{
 		owner	= pobj;
-		min		= (undefined == pmin) ? new Vertex() : new Vertex( pmin.x, pmin.y, pmin.z );
-		max		= (undefined == pmax) ? new Vertex() : new Vertex( pmax.x, pmax.y, pmax.z );
+		min		= (undefined == pmin) ? new Vector() : new Vector( pmin.x, pmin.y, pmin.z );
+		max		= (undefined == pmax) ? new Vector() : new Vector( pmax.x, pmax.y, pmax.z );
 		_aCorners = [];
 	}
 	
@@ -121,14 +122,14 @@ class sandy.core.data.BBox
 		else
 			return _aCorners =  
 			[
-				new Vertex(min.x, max.y, max.z),
-				VertexMath.clone( max ),
-				new Vertex(max.x, min.y, max.z),
-				new Vertex(min.x, min.y, max.z),
-				new Vertex(min.x, max.y, min.z),
-				new Vertex(max.x, max.y, min.z),
-				new Vertex(max.x, min.y, min.z),
-				VertexMath.clone( min )
+				new Vector(min.x, max.y, max.z),
+				VectorMath.clone( max ),
+				new Vector(max.x, min.y, max.z),
+				new Vector(min.x, min.y, max.z),
+				new Vector(min.x, max.y, min.z),
+				new Vector(max.x, max.y, min.z),
+				new Vector(max.x, min.y, min.z),
+				VectorMath.clone( min )
 			];
 	/*
 		pts=new Vector();

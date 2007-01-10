@@ -66,13 +66,23 @@ class sandy.view.Frustum
 		p[6] = new Vector(-xFar, -yFar, fFar);  // Far, left, bottom
 		p[7] = new Vector( -xFar, yFar, fFar);  // Far, left, top
 		
-		p = aPlanes;
-		p[0] = PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
-		p[1] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
-		p[2] = PlaneMath.computePlaneFromPoints( p[0], p[3], p[7] ); // Top
-		p[3] = PlaneMath.computePlaneFromPoints( p[1], p[2], p[5] ); // Bottom
-		p[4] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[2] ); // Near
-		p[5] = PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
+		aPlanes[0] = PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
+		trace("Plan gauche : "+aPlanes[0]);
+		aPlanes[1] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
+		trace("Plan droit : "+aPlanes[1]);
+		aPlanes[2] = PlaneMath.computePlaneFromPoints( p[0], p[7], p[3] ); // Top
+		trace("Plan sommet : "+aPlanes[2]);
+		aPlanes[3] = PlaneMath.computePlaneFromPoints( p[1], p[2], p[5] ); // Bottom
+		trace("Plan sol : "+aPlanes[3]);
+		aPlanes[4] = PlaneMath.computePlaneFromPoints( p[0], p[2], p[1] ); // Near
+		trace("Plan proche : "+aPlanes[4]);
+		aPlanes[5] = PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
+		trace("Plan lointain : "+aPlanes[5]);
+		
+		for( var i:Number = 0; i < 6; i++ )
+			PlaneMath.normalizePlane( aPlanes[i] );	
+		
+
 	}
 	
 	public function extractPlanes( comboMatrix:Matrix4, normalize:Boolean ):Void
@@ -148,10 +158,14 @@ class sandy.view.Frustum
 	public function boxInFrustum( box:BBox ):Number
 	{
 		var result:Number = Frustum.INSIDE, out:Number,iin:Number;
-		var p:Array = box.getCorners();
+		var d:Number;
+		var plane:Plane;
+		var p:Array = box.getCorners(true);
 		// for each plane do ...
-		for(var i:Number = 0; i < 6; i++) 
+		for(var i:Number = 4; i < 6; i++) 
 		{
+			plane = aPlanes[i];
+			trace("Plane  :"+plane);
 			// reset counters for corners in and out
 			out = 0; iin = 0;
 			// for each corner of the box do ...
@@ -159,19 +173,26 @@ class sandy.view.Frustum
 			// both inside and out of the frustum
 			for ( var k:Number = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
-				trace("BBox vertex :"+p[k]);
+				d = PlaneMath.distanceToPoint( plane, p[k] ) ;
+				trace("Distance : "+d);
 				// is the corner outside or inside
-				if ( PlaneMath.distanceToPoint( aPlanes[i], p[k] ) )
+				if ( d < 0 )
 					out++;
 				else
 					iin++;
 			}
-			//if all corners are out
-			if ( !iin )
+			// if all corners are out
+			if ( iin == 0 )
+			{
+				trace("Outside");
 				return Frustum.OUTSIDE;
+			}
 			// if some corners are out and others are in	
-			else if ( out )
+			else if ( out > 0 )
+			{
+				trace("intersecting");
 				result = Frustum.INTERSECT;
+			}
 		}
 		return result;
  	}

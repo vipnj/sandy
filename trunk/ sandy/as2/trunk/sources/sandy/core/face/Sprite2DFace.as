@@ -62,24 +62,23 @@ class sandy.core.face.Sprite2DFace extends Polygon
 	 * @param	{@code mc}	A {@code MovieClip}.
 	 * @param	id			A Number which is the camera identifiant
 	 */
-	public function render( mc:MovieClip ):Void
+	public function render( Void ):Void
 	{
-		_mc = mc;
 		var t:TextureSkin = TextureSkin( _s );
-		mc.attachBitmap( t.texture, 1 );
+		_mc.attachBitmap( t.texture, 1 );
 		// --
 		var sv:Vector 	= Sprite2D(_o).getScaleVector();
 		var s:Number 	= Sprite2D(_o).getScale();
 		// --
 		var cste:Number	= _o.aPoints[1].wz / _o.aPoints[0].wz;
 		// --
-		mc._width 	= t.texture.width  * (s * sv.x * cste);
-		mc._height 	= t.texture.height * (s * sv.y * cste);
+		_mc._width 	= t.texture.width  * (s * sv.x * cste);
+		_mc._height 	= t.texture.height * (s * sv.y * cste);
 		// --
-		mc._x = _v.sx - mc._width  / 2;
-		mc._y = _v.sy - mc._height / 2;
+		_mc._x = _v.sx - _mc._width  / 2;
+		_mc._y = _v.sy - _mc._height / 2;
 		// --
-		mc.filters = t.filters;
+		_mc.filters = t.filters;
 	}
 	
 	/** 

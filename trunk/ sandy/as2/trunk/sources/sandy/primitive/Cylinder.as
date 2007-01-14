@@ -22,6 +22,7 @@ import sandy.core.face.QuadFace3D;
 import sandy.core.face.TriFace3D;
 import sandy.core.Object3D;
 import sandy.primitive.Primitive3D;
+import sandy.core.data.UVCoord;
 
 /**
 * Cylinder
@@ -96,8 +97,8 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 		var tx:Number = w; 
 		var ty:Number = h;
 		//-- on ajoute les coords de texture
-		auv[0] = addUVCoordinate( 1 , 0.5 );		
-		auv[1] = addUVCoordinate( 0 , 0.5 );
+		auv[0] = new UVCoord( 1 , 0.5 );		
+		auv[1] = new UVCoord( 0 , 0.5 );
 
 		var pas:Number = (2*pi/_quality);
 		var pas2:Number = (_radius/_quality);
@@ -113,12 +114,12 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 		{
 			points.push({x:_radius*cos(theta) , y: _height/2, z:_radius*sin(theta) });
 			points.push({x:_radius*cos(theta) , y: -_height/2, z:_radius*sin(theta) });
-			auv.push( addUVCoordinate( tx/w , ty/h ) );
-			auv.push( addUVCoordinate( tx/w , (ty- _height)/h ) );
+			auv.push( new UVCoord( tx/w , ty/h ) );
+			auv.push( new UVCoord( tx/w , (ty- _height)/h ) );
 		}
 		tx -= h/_quality;
-		auv.push( addUVCoordinate( tx/w , ty/h ) );
-		auv.push( addUVCoordinate( tx/w , (ty- _height)/h ) );
+		auv.push( new UVCoord( tx/w , ty/h ) );
+		auv.push( new UVCoord( tx/w , (ty- _height)/h ) );
 		ty -= _radius;
 		
 		var l:Number = points.length;

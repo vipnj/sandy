@@ -25,6 +25,7 @@ import sandy.core.buffer.ZBuffer;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
+import sandy.math.Matrix4Math;
 import sandy.core.group.Group;
 import sandy.core.group.INode;
 import sandy.core.group.Node;
@@ -61,6 +62,9 @@ class sandy.core.World3D
 	public static var onStopEVENT:EventType 		= new EventType( 'onStop' );
 	
 	public static var onLightAddedEVENT:EventType = new EventType( 'onLightAdded' );
+	
+	public static var onContainerCreatedEVENT:EventType = new EventType( 'onContainerCreated' );
+	
 	/**
 	 * Private Constructor.
 	 * 
@@ -74,10 +78,20 @@ class sandy.core.World3D
 		// init the event broadcaster
 		_oEB = new EventBroadcaster( this );
 		// default light
+		_container = _root;
 		_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 		_isRunning = false;
-		_aCams = [];
 		_oEventManager = new ObjectEventManager();
+	}
+	
+	public function setContainer( mc:MovieClip ):Void
+	{
+		_container = mc;
+	}
+	
+	public function getContainer( Void ):MovieClip
+	{
+		return _container;
 	}
 	
 	/**
@@ -136,30 +150,19 @@ class sandy.core.World3D
 	 * 
 	 * @param	cam	The new {@link Camera3D}
 	 */	
-	public function addCamera ( cam:Camera3D ):Number
+	public function setCamera ( pCam:Camera3D ):Void
 	{
-		return _aCams.push( cam ) - 1;
+		_oCamera = pCam;
 	}
 	
 	/**
-	 * Get the list of {@code Camera3D} of the world.
+	 * Get the {@code Camera3D} of the world.
 	 * 
-	 * @return	 The {@link Camera3D} array
-	 */	
-	public function getCameraList ( Void ):Array/*Camera3D*/
-	{
-		return _aCams;
-	}	
-	
-	/**
-	 * Get the a {@code Camera3D} of the world.
-	 * @param id Number The id of the camera you want. default is 0.
 	 * @return	 The {@link Camera3D}
 	 */	
-	public function getCamera ( id:Number ):Camera3D
+	public function getCamera ( Void ):Camera3D
 	{
-		if( !id || id < 0 || id >= _aCams.length ) id = 0;
-		return _aCams[ id ];
+		return _oCamera;
 	}	
 	
 	/**
@@ -256,16 +259,6 @@ class sandy.core.World3D
 		return _mProj;
 	}
 
-	/**
-	* Allows to get the current camera
-	* @param	Void
-	* @return Camera3D The current camera
-	*/
-	public function getCurrentCamera( Void ):Camera3D
-	{
-		return _oCam;
-	}
-
 	////////////////////
 	//// PRIVATE
 	////////////////////
@@ -276,15 +269,17 @@ class sandy.core.World3D
 	 */
 	private function __render( Void ) : Void 
 	{
-		var l:Number,lc:Number, lp:Number, vx:Number, vy:Number, vz:Number, offx:Number, offy:Number, nbObjects:Number, nbCams:Number;
+		var l:Number, lp:Number, vx:Number, vy:Number, vz:Number, offx:Number, offy:Number, nbObjects:Number;
 		var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
-		var mp:Matrix4, aV:Array;
+		var aV:Array;
+		var mp:Matrix4;
 		var cam:Camera3D ;
+		var camCache:Boolean;
 		var obj:Object3D;
 		var v:Vertex;
 		var crt:Node, crtId:Number;
 		// we set a variable to remember the number of objects and in the same time we strop if no objects are displayable
-		if( !( nbCams =  _aCams.length ) || _oRoot == null )
+		if( _oRoot == null )
 			return;
 		//-- we initialize
 		_bGlbCache = false;
@@ -294,130 +289,64 @@ class sandy.core.World3D
 		MatrixBuffer.init();
 		//
 		__parseTree( _oRoot, _oRoot.isModified() );
+		//		
+		cam = _oCamera;
+		if( (camCache = cam.isModified()) )
+		{
+			cam.compile();
+			_mProj = cam.getMatrix() ;
+		}
+		offx = cam.getXOffset(); offy = cam.getYOffset(); 
 		// now we check if there are some modifications on that branch
 		// if true something has changed and we need to compute again
 		l = nbObjects = _aObjects.length;
 		while( --l > -1 )
 		{
 			obj = _aObjects[ l ];
-			if( _aCache[ l ] == true )
+			if( _aCache[ l ] == true || camCache == true )
 			{
-				mp = _aMatrix[ l ];
-				if( mp )
-				{
-					aV = obj.aPoints;
-					//aV.push( obj.getBounds().min, obj.getBounds().max );
-					mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31;
-					mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32;
-					mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33;
-					mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34;
-					// Now we can transform the objet vertices
-					lp = aV.length;
-					while( --lp > -1 )
-					{
-						v = aV[lp];	
-						// computations for projection
-						v.tx =	(vx = v.x) * mp11 + (vy = v.y) * mp12 + (vz = v.z) * mp13 + mp14;
-						v.ty = 	vx * mp21 + vy * mp22 + vz * mp23 + mp24;
-						v.tz = 	vx * mp31 + vy * mp32 + vz * mp33 + mp34;
-					}			
-				}
+				if( mp = _aMatrix[ l ] )
+					mp = Matrix4Math.multiply( _mProj, mp );
 				else
-				{
-					// In this canse we just do a copy of the local position to the transformed
-					aV = obj.aPoints;
-					lp = aV.length;
-					while( --lp > -1 )
-					{
-						v = aV[lp];	
-						// computations for projection
-						v.tx =	v.x;
-						v.ty = 	v.y;
-						v.tz = 	v.z;
-					}
-				}
-			}
-			else
-			{
-				;/* Object cached */
-			}
-		}
-		
-		// -- Now we check if nothing moved on the world and the camera's neither
-		lc = nbCams;
-		//
-		while( --lc > -1 )
-		{
-			_oCam = cam = _aCams[ lc ];
-			// Now we check if nothing moved on the world and the camera's neither
-			if( _bGlbCache  || cam.isModified() )
-			{
-				cam.compile();
-				offx = cam.getXOffset(); offy = cam.getYOffset(); 
-				// Camera projection
-				_mProj = mp = cam.getMatrix() ;
-				//
+					mp = Matrix4Math.clone( _mProj );
+				// 
 				mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
 				mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
 				mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
-				mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;	
-				// Object transformations.
-				l = nbObjects;
-				while( --l > -1 )
+				mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
+				// Now we can transform the objet vertices
+				aV = obj.aPoints;
+				lp = aV.length;
+				while( --lp > -1 )
 				{
-					obj = Object3D( _aObjects[l] );
-					aV = obj.aPoints;
-					//aV.push( obj.getBounds().min, obj.getBounds().max );
-					lp =  aV.length;
-					while( --lp > -1 )
-					{
-						v = aV[lp];
-						var c:Number = 	1 / ( (vx = v.tx) * mp41 + (vy = v.ty) * mp42 + (vz = v.tz) * mp43 + mp44 );
-						// computations for projection
-						v.sx =  (v.wx = c * (vx * mp11 + vy * mp12 + vz * mp13 + mp14) ) * offx + offx;
-						v.sy = -(v.wy = c * (vx * mp21 + vy * mp22 + vz * mp23 + mp24) ) * offy + offy;
-						v.wz =  (vx * mp31 + vy * mp32 + vz * mp33 + mp34) * c;
-					}	
-					// Is the object clipped? If not we can render it.
-					if (lc == 0 )
-					{
-					if( obj.clip( cam.frustrum ) == false )
-					{
-						// -- object rendering.
-						trace(obj+" render");
-						obj.render();	
-					}
-					else
-					{
-						trace("Objet clippé");
-					}	
-					}
-					else
-						obj.render();
-				}// end objects loop
-				// we sort visibles Faces
-				var aF:Array = ZBuffer.sort();
-				var s:IScreen = cam.getScreen();
-				// -- we draw all sorted Faces
-				s.render( aF );
-				// -- we clear the ZBuffer
-				ZBuffer.dispose ();
-			}
+					v = aV[lp];	
+					v.wx = v.x * mp11 + v.y * mp12 + v.z * mp13 + mp14;
+					v.wy = v.x * mp21 + v.y * mp22 + v.z * mp23 + mp24;
+					v.wz = v.x * mp31 + v.y * mp32 + v.z * mp33 + mp34;
+					// computations for projection
+					var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
+					v.sx =  c * v.wx * offx + offx;
+					v.sy = -c * v.wy * offy + offy;
+				}
+				// 
+				obj.render();
+			}// end objects loop
 			else
 			{
-				/* Nothing has moved, so nothing to do exept if an object has a texture which has been updated! Let's see */
-				l = nbObjects;
-				while( --l > -1 )
+				if( obj.needRefresh() )
 				{
-					obj = Object3D( _aObjects[l] );
-					if( obj.needRefresh() )
-					{
-						obj.refresh();
-					}
+					obj.refresh();
 				}
-				// That's all
 			}
-		} // end cameras
+		}
+		
+		// we sort visibles Faces
+		var aF:Array = ZBuffer.sort();
+		var s:IScreen = cam.getScreen();
+		// -- we draw all sorted Faces
+		s.render( aF );
+		// -- we clear the ZBuffer
+		ZBuffer.dispose ();
 	} // end method
 
 	
@@ -456,7 +385,7 @@ class sandy.core.World3D
 	}
 	
 	private var _mProj:Matrix4;
-	private var _oCam:Camera3D;
+	private var _oCamera:Camera3D;
 	private var _oRoot:Group;
 	private var _aGroups:Array;//_aGroups : The Array of {@link Group}
 	private var _aCams:Array/*Camera3D*/;	
@@ -471,4 +400,6 @@ class sandy.core.World3D
 	private var _aObjects:Array;
 	private var _aMatrix:Array;
 	private var _aCache:Array;
+
+	private var _container : MovieClip;
 }

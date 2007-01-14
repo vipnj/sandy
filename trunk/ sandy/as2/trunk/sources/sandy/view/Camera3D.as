@@ -547,7 +547,7 @@ class sandy.view.Camera3D
 		
 		_mpInv = Matrix4Math.getInverse( _mp );
 		
-		frustrum.computePlanes(aspectRatio, zNear, zFar, 2*fovY );
+		frustrum.computePlanes(aspectRatio, zNear, zFar, 5*fovY );
 		
 		_compiled = false;
 		

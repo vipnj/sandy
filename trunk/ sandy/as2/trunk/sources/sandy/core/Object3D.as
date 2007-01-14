@@ -148,7 +148,7 @@ class sandy.core.Object3D extends Leaf
 	public function getPosition( Void ):Vector
 	{
 		var v:Vertex = aPoints[0];
-		return new Vector( v.tx - v.x, v.ty - v.y, v.tz - v.z );
+		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
 	}
 	
 	/**
@@ -343,7 +343,8 @@ class sandy.core.Object3D extends Leaf
 		var f:IPolygon;
 		while( --l > -1 )
 		{
-			f 		= aF [l];
+			f = aF [l];
+			f.getContainer().clear();
 			ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
 			// if face is visible or enableBackFaceCulling is set to false
 			if ( f.isVisible() || !_backFaceCulling ) 
@@ -358,11 +359,14 @@ class sandy.core.Object3D extends Leaf
 	public function refresh( Void ):Void
 	{
 		var a:Array = aFaces;
+		var f:IPolygon;
 		var l:Number = a.length;
 		while( --l > -1 )
 		{
-			if ( a[l].isVisible () || !_backFaceCulling ) 
-				a[l].refresh();
+			f = a [l];
+			f.getContainer().clear();
+			if ( f.isVisible () || !_backFaceCulling ) 
+				f.refresh();
 		}
 		// -- 
 		_needRedraw = false;

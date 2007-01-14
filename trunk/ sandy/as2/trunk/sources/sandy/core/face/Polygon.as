@@ -21,10 +21,12 @@ import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.face.IPolygon;
 import sandy.core.Object3D;
+import sandy.core.World3D;
 import sandy.math.VectorMath;
 import sandy.skin.Skin;
 import sandy.skin.TextureSkin;
 import sandy.view.Frustum;
+import com.bourre.events.BasicEvent;
 
 /**
 * Polygon
@@ -43,6 +45,8 @@ class sandy.core.face.Polygon implements IPolygon
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
 		updateTextureMatrix();
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
+		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}
 	
 	/**
@@ -108,22 +112,22 @@ class sandy.core.face.Polygon implements IPolygon
 	 *
 	 * @param	{@code mc}	A {@code MovieClip}.
 	 */
-	public function render( mc:MovieClip ): Void
+	public function render( Void ): Void
 	{
-		_mc = mc;
 		var l:Number = _nL;
 		//--
-		if( _bV )  _s.begin( this, mc ) ;
-		else _sb.begin( this, mc );
+		if( _bV )  _s.begin( this, _mc ) ;
+		else _sb.begin( this, _mc );
 		//--
-		mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
+		_mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
 		while( --l > 0 )
 		{
-			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
+			trace( _aVertex[l] );
+			_mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
 		}
 		// -- we launch the rendering with the appropriate skin
-		if( _bV ) _s.end( this, mc );
-		else _sb.end( this, mc );
+		if( _bV ) _s.end( this, _mc );
+		else _sb.end( this, _mc );
 	}
 	
 	/** 
@@ -250,8 +254,8 @@ class sandy.core.face.Polygon implements IPolygon
 		{
 			var v:Vector, w:Vector;
 			var a:Vertex = _aVertex[0], b:Vertex = _aVertex[1], c:Vertex = _aVertex[2];
-			v = new Vector( b.tx - a.tx, b.ty - a.ty, b.tz - a.tz );
-			w = new Vector( b.tx - c.tx, b.ty - c.ty, b.tz - c.tz );
+			v = new Vector( b.x - a.x, b.y - a.y, b.z - a.z );
+			w = new Vector( b.x - c.x, b.y - c.y, b.z - c.z );
 			// -- we compute de cross product
 			_vn = VectorMath.cross( v, w );//new Vector( (w.y * v.z) - (w.z * v.y) , (w.z * v.x) - (w.x * v.z) , (w.x * v.y) - (w.y * v.x) );
 			// -- we normalize the resulting vector
@@ -261,7 +265,7 @@ class sandy.core.face.Polygon implements IPolygon
 		}
 		else
 		{
-			return null;
+			return _vn = null;
 		}
 	}
 
@@ -348,10 +352,21 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		return _m;
 	}
+	
+	public function getContainer( Void ):MovieClip
+	{
+		return _mc;
+	}
+	
 	//////////////
 	/// PRIVATE
 	//////////////
-
+	private function __onWorldContainer( e:BasicEvent ):Void
+	{
+		_mc.removeMovieClip();
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
+	}
+	
 	private var _aUV:Array;
 	private var _aVertex:Array;
 	private var _aClipped:Array;
@@ -392,5 +407,6 @@ class sandy.core.face.Polygon implements IPolygon
 	*/
 	private var _mc:MovieClip;
 	private var _m:Matrix;
+
 }
 

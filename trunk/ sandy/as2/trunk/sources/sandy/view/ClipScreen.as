@@ -16,6 +16,8 @@ limitations under the License.
 import sandy.util.Rectangle;
 import sandy.view.Camera3D;
 import sandy.view.IScreen;
+import com.bourre.events.BasicEvent;
+import sandy.core.World3D;
 
 /**
 * Screen
@@ -35,16 +37,22 @@ class sandy.view.ClipScreen implements IScreen
 	* @param: h a Number giving the height of the rendered screen
 	* @param: bgColor [optionnal] the color of the background, white is the default color
 	**/
-	public function ClipScreen (mc:MovieClip, w:Number, h:Number, bgColor:Number)
+	public function ClipScreen ( w:Number, h:Number, bgColor:Number)
 	{
-		_mc = mc;
-		_bg = _mc.createEmptyMovieClip( 'background', -1 );
 		_w = w;
 		_h = h;
 		_sRect 	= new Rectangle( 0, 0, w, h );
 		setColor( (bgColor == undefined) ? 0xFFFFFF : bgColor );
+		_mc = World3D.getInstance().getContainer();
+		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}
-
+	
+	private function __onWorldContainer( e:BasicEvent ):Void
+	{
+		_mc = World3D.getInstance().getContainer();
+		_bg = _mc.createEmptyMovieClip( 'background', -1 );
+	}
+	
 	/**
 	* Returns the background color
 	* @return Number The color value
@@ -131,13 +139,13 @@ class sandy.view.ClipScreen implements IScreen
 	 */
 	public function render ( a:Array ):Void
 	{
-		_mc.child.removeMovieClip();
-		var c:MovieClip = _mc.createEmptyMovieClip( 'child', 1 );
 		// -- 
-		var l:Number = a.length;
+		var l:Number, t:Number;
+		l = t = a.length;
 		while( --l > -1 )
 		{
-			a[l].face.render( c.createEmptyMovieClip( 'c_'+l, l ) );
+			a[l].face.getContainer().swapDepth( l );
+			a[l].face.render();
 		};
 	}
 	

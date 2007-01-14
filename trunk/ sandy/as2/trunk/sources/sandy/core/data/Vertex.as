@@ -30,13 +30,6 @@ import sandy.core.data.Vector;
 class sandy.core.data.Vertex extends Vector
 {
 	/**
-	* properties used to store transformed coordinates in the local frame of the object
-	*/
-	public var tx:Number;
-	public var ty:Number;
-	public var tz:Number;
-	
-	/**
 	* properties used to store transformed coordinates in the World coordinates
 	*/
 	public var wx:Number;
@@ -60,26 +53,12 @@ class sandy.core.data.Vertex extends Vector
 	public function Vertex(px:Number, py:Number,pz:Number)
 	{
 		super(px,py,pz);
-		// --
-		tx = px; 
-		ty = py; 
-		tz = pz; 
 		// -- 
-		wx = tx; 
-		wy = ty; 
-		wz = tz;
+		wx = x; 
+		wy = y; 
+		wz = z;
 		// --
 		sy = sx = sz = 0;
-	}
-
-	/**
-	* Returns a vector representing the vertex in the transformed coordinate system
-	* @param	Void
-	* @return	Vector	a Vector
-	*/
-	public function getTransformVector( Void ):Vector
-	{
-		return new Vector( tx, ty, tz );
 	}
 	
 	/**
@@ -99,7 +78,7 @@ class sandy.core.data.Vertex extends Vector
 	*/
 	public function toString( Void ):String
 	{
-		return "Vertex : x:"+x+" y:"+y+" z:"+z+"\ntx:"+tx+" ty:"+ty+" tz:"+tz+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+" \nsx:"+sx+" sy:"+sy;
+		return "Vertex : x:"+x+" y:"+y+" z:"+z+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+" \nsx:"+sx+" sy:"+sy;
 	}
 }
 

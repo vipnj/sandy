@@ -37,6 +37,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	{
 		super();
 		_t = (undefined == transform) ? null : transform;
+		_bPop = false;
 	}
 	
 	/**
@@ -86,6 +87,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 			var m:Matrix4 = _t.getMatrix();
 			if( m )
 			{
+				_bPop = true;
 				MatrixBuffer.push( m );
 			}
 		}
@@ -97,11 +99,10 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	 */
 	public function dispose ( Void ):Void
 	{
-		if( _t )
+		if( _bPop )
 		{
-			var m:Matrix4 = _t.getMatrix();
-			if( m )
-				MatrixBuffer.pop();
+			MatrixBuffer.pop();
+			_bPop = false;
 		}
 	}
 
@@ -128,6 +129,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	* The transformation of this TransformGroup
 	*/
 	private var _t:ITransform3D;
+	private var _bPop:Boolean;
 
 }
 

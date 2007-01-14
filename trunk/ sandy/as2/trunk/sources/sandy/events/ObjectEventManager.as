@@ -57,7 +57,7 @@ class sandy.events.ObjectEventManager
 	* @param	Object3D
 	* @return 	Void
 	*/
-	public function addEventListeningObject( lO:Object3D )
+	public function addEventListeningObject( lO:Object3D ):Void
 	{
 		if(_aListeningObjects.length == 0)
 		{
@@ -72,7 +72,7 @@ class sandy.events.ObjectEventManager
 	* @param	Object3D
 	* @return 	Void
 	*/
-	public function removeEventListeningObject( lO:Object3D )
+	public function removeEventListeningObject( lO:Object3D ):Void
 	{
 		var found :Boolean = false;
 		var i:Number;
@@ -106,17 +106,17 @@ class sandy.events.ObjectEventManager
 		var curseurX:Number = mc._xmouse;
 		var curseurY:Number = mc._ymouse;
 		
-		//tableau des objets de notre scène
+		//tableau des objets de notre scï¿½ne
 		var oA:Array = _aListeningObjects;
 		var loA:Number = oA.length;
 		var obj:Object3D;
-		//tableau des faces appartenant à l'objet qui va être parcouru
+		//tableau des faces appartenant ï¿½ l'objet qui va ï¿½tre parcouru
 		var fA:Array;
 		var lfA:Number;
 		var fac:Face;
 		//on va chercher le hitTest ayant une profondeur minimale.
 		var depthMin:Number = Number.MAX_VALUE;
-		//référence à l'objet sélectionner sur la scène
+		//rï¿½fï¿½rence ï¿½ l'objet sï¿½lectionner sur la scï¿½ne
 		var pickObj:Object3D;
 		
 		while( --loA > -1 )
@@ -132,7 +132,7 @@ class sandy.events.ObjectEventManager
 				var depth = fac.getZAverage();
 				if( depth < depthMin && depth > 0 )
 				{
-					if( fac.getClip().hitTest( origX+curseurX, origy+curseurY, false) ) //méthode getClip() sur une face renvoie le clip sur lequel est dessinné la face.
+					if( fac.getClip().hitTest( origX+curseurX, origy+curseurY, false) ) //mï¿½thode getClip() sur une face renvoie le clip sur lequel est dessinnï¿½ la face.
 					{
 						depthMin = depth;
 						pickObj = obj;
@@ -152,7 +152,7 @@ class sandy.events.ObjectEventManager
 	private function __picking( Void ):Void
 	{
 		/* FIXME: Change this and do the selection by the mouse position to find the active viewport! */
-		var screen:IScreen = World3D.getInstance().getCurrentCamera().getScreen();
+		var screen:IScreen = World3D.getInstance().getCamera().getScreen();
 		var pickObj:Object3D = __pickAt(screen);
 		if( pickObj != undefined && _currentRollSelection != pickObj )
 		{
@@ -176,10 +176,10 @@ class sandy.events.ObjectEventManager
 	* @param	void
 	* @return 	void
 	*/
-	private function onMouseDown()
+	private function onMouseDown():Void
 	{	
 		/* FIXME: Change this and do the selection by the mouse position to find the active viewport! */
-		var screen:IScreen = World3D.getInstance().getCurrentCamera().getScreen();
+		var screen:IScreen = World3D.getInstance().getCamera().getScreen();
 		var pickObj:Object3D = __pickAt(screen);
 		if( pickObj != undefined )
 		{
@@ -188,10 +188,10 @@ class sandy.events.ObjectEventManager
 		}
 	}
 	
-	private function onMouseUp()
+	private function onMouseUp():Void
 	{	
 		/* FIXME: Change this and do the selection by the mouse position to find the active viewport! */
-		var screen:IScreen = World3D.getInstance().getCurrentCamera().getScreen();
+		var screen:IScreen = World3D.getInstance().getCamera().getScreen();
 		var pickObj:Object3D = __pickAt(screen);
 		if( pickObj != undefined && pickObj == _currentClickedSelection )
 		{

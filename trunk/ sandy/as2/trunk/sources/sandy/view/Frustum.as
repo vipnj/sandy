@@ -54,8 +54,8 @@ class sandy.view.Frustum
 		var xNear:Number = yNear * nAspect;
 		var yFar:Number = yNear * fFar / fNear;
 		var xFar:Number = xNear * fFar / fNear;
-		//fNear = -fNear;
-		//fFar = -fFar;
+		fNear = -fNear;
+		fFar = -fFar;
 		var p:Array = aVertex;
 		p[0] = new Vector(xNear, yNear, fNear); // Near, right, top
 		p[1] = new Vector(xNear, -yNear, fNear); // Near, right, bottom

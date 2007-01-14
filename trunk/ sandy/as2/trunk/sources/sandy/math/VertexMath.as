@@ -56,7 +56,7 @@ class sandy.math.VertexMath extends VectorMath
 	 */
 	public static function dot( v: Vertex, w: Vertex):Number
 	{
-		return ( v.tx * w.tx + v.ty * w.ty + w.tz * v.tz );
+		return ( v.wx * w.wx + v.wy * w.wy + w.wz * v.wz );
 	}
 	
 	/**
@@ -86,9 +86,9 @@ class sandy.math.VertexMath extends VectorMath
 		return new Vertex(	 v.x - w.x ,
                              v.y - w.y ,
                              v.z - w.z ,
-                             v.tx - w.tx ,
-                             v.ty - w.ty ,
-                             v.tz - w.tz );
+                             v.wx - w.wx ,
+                             v.wy - w.wy ,
+                             v.wz - w.wz );
 	}	
 	
 	/**

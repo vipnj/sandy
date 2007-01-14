@@ -30,6 +30,7 @@ import sandy.core.data.UVCoord;
 interface sandy.core.face.IPolygon
 {
 	public function getUVCoords( Void ):Array;
+	public function getContainer( Void ):MovieClip;
 	
 	public function setUVCoords( pUv1:UVCoord, pUv2:UVCoord, pUv3:UVCoord ):Void;
 	
@@ -64,7 +65,7 @@ interface sandy.core.face.IPolygon
 	* <p>{@code mc} represent the MovieClip where the Face must be displayed. 
 	* @param	mc		The MovieClip
 	*/
-	public function render( mc:MovieClip ):Void;
+	public function render( Void ):Void;
 	
 	/**
 	* Set the normale vector of the face. Useful when the normale for this face is alleady computed

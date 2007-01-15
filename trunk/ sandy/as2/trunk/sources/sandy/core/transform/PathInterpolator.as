@@ -59,9 +59,10 @@ class sandy.core.transform.PathInterpolator
 		if( false == _paused && false == _finished )
 		{
 			var current:Vector;
+			var p:Number = getProgress();
 			// --
-			if( _way == 1 )	current = _pPath.getPosition( _f ( getPercent() ) );
-			else		current = _pPath.getPosition( 1.0 - _f ( getPercent() ) );
+			if( _way == 1 )	current = _pPath.getPosition( _f ( p ) );
+			else		current = _pPath.getPosition( 1.0 - _f ( p ) );
 			/* TODO check the sign of the y value */
 			_m = Matrix4Math.translation( current.x, current.y, current.z );
 			// --

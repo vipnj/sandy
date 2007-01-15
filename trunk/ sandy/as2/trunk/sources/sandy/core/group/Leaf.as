@@ -69,11 +69,16 @@ class sandy.core.group.Leaf extends Node implements INode
 	* @param	child Node The node you want to remove.
 	* @return Boolean Return everytime false value;
 	*/
-	public function removeChild( child:Node ):Boolean 
+	public function removeChild( pId:Number ):Boolean 
 	{
 		return false;
 	}
 	
+	public function removeChildByName( pName:String ):Boolean 
+	{
+		return false;
+	}
+		
 	public function toString( Void ):String
 	{
 		return 'sandy.core.group.Leaf';

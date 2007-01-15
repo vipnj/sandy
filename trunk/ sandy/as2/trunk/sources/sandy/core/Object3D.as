@@ -100,6 +100,14 @@ class sandy.core.Object3D extends Leaf
 	}
 	
 	/**
+	 * Returns a boolean value specifying if the depth is forced or not
+	 */
+	public function	isForcedDepthEnable( Void ):Boolean
+	{
+		return _enableForcedDepth;
+	}
+	
+	/**
 	 * Set a forced depth for this object.
 	 * To make this feature working you must enable the ForcedDepth system too.
 	 * The higher the depth is, the sooner the more far the object will be represented.
@@ -107,6 +115,7 @@ class sandy.core.Object3D extends Leaf
 	public function setForcedDepth( pDepth:Number ):Void
 	{
 		_forcedDepth = pDepth;
+		setModified( true );
 	}
 	
 	/**
@@ -344,13 +353,14 @@ class sandy.core.Object3D extends Leaf
 		while( --l > -1 )
 		{
 			f = aF [l];
-			f.getContainer().clear();
 			ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
 			// if face is visible or enableBackFaceCulling is set to false
 			if ( f.isVisible() || !_backFaceCulling ) 
 			{
 				ZBuffer.push( {face : f, depth : ndepth} );
-			}				
+			}	
+			else
+				f.getContainer().clear();			
 		}
 		// -- 
 		_needRedraw = false;
@@ -364,7 +374,6 @@ class sandy.core.Object3D extends Leaf
 		while( --l > -1 )
 		{
 			f = a [l];
-			f.getContainer().clear();
 			if ( f.isVisible () || !_backFaceCulling ) 
 				f.refresh();
 		}

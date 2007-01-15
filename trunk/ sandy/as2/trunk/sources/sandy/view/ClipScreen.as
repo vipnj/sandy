@@ -140,13 +140,13 @@ class sandy.view.ClipScreen implements IScreen
 	public function render ( a:Array ):Void
 	{
 		// -- 
-		var l:Number, t:Number;
-		l = t = a.length;
+		var l:Number;
+		l = a.length;
 		while( --l > -1 )
 		{
-			a[l].face.getContainer().swapDepth( l );
+			a[l].face.getContainer().swapDepths( l );
 			a[l].face.render();
-		};
+		}
 	}
 	
 	/**

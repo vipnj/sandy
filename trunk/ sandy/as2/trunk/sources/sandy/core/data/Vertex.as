@@ -42,6 +42,10 @@ class sandy.core.data.Vertex extends Vector
 	public var sy:Number;
 	public var sz:Number;
 
+	public var nx:Number;
+	public var ny:Number;
+	public var nz:Number;
+	
 	/**
 	* Create a new {@code Vertex} Instance.
 	* If no
@@ -70,7 +74,17 @@ class sandy.core.data.Vertex extends Vector
 	{
 		return new Vector( wx, wy, wz );
 	}
-	
+
+	/**
+	* Returns a vector representing the vertex in the world normalized coordinates
+	* @param	Void
+	* @return	Vector	a Vector
+	*/
+	public function getNormalizedWorldVector( Void ):Vector
+	{
+		return new Vector( nx, ny, nz );
+	}
+		
 	/**
 	* Get a String represntation of the {@code Vertex}.
 	* 

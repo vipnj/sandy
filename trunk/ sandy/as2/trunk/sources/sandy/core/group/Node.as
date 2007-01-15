@@ -28,6 +28,11 @@ import com.bourre.events.EventBroadcaster;
  **/
 class sandy.core.group.Node extends EventBroadcaster
 {
+	/*
+	 * Name of the node. Default value is its ID number.
+	 */
+	public var name:String;
+	
 	/**
 	 * Adds passed-in {@code oL} listener for receiving passed-in {@code t} event type.
 	 * 
@@ -237,6 +242,24 @@ class sandy.core.group.Node extends EventBroadcaster
 		}
 		return null;
 	}
+
+	/**
+	* Returns the child node with the specified name
+	* @param	index Number The name of the child you want to get
+	* @return 	Node The desired Node or null is no child with this name has been found
+	*/
+	public function getChildByName( pName:String ):Node 
+	{
+		var l:Number = _aChilds.length;
+		while( -- l > -1 )
+		{
+			if( Node(_aChilds[l]).name == pName )
+			{
+				return _aChilds[l];
+			}
+		}
+		return null;
+	}
 	
 	/**
 	* Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
@@ -246,14 +269,36 @@ class sandy.core.group.Node extends EventBroadcaster
 	* @param	child Node The node you want to remove.
 	* @return Boolean True if the node has been removed from the list, false otherwise.
 	*/
-	public function removeChild( child:Node ):Boolean 
+	public function removeChild( pId:Number ):Boolean 
 	{
-		if( !child.isParent( this ) ) return false;
 		var found:Boolean = false;
-		// --
-		for( var i:Number = 0; i < _aChilds.length && !found; i++ )
+		if( pId > 0 && pId < _aChilds.length )
 		{
-			if( _aChilds[i] == child )
+			if( _aChilds[pId]  )
+			{
+				_aChilds.splice( pId, 1 );
+				setModified( true );
+				found = true;
+			}
+		}
+		return found;
+	}
+	
+	/**
+	* Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
+	* All the children of the node you want to remove are lost. The link between them and the rest of the tree is broken.
+	* They will not be rendered anymore!
+	* But the object itself and his children are still in memory! If you want to free them completely, use child.destroy();
+	* @param	child Node The name of the node you want to remove.
+	* @return Boolean True if the node has been removed from the list, false otherwise.
+	*/
+	public function removeChildByName( pName:String):Boolean 
+	{
+		var found:Boolean = false;
+		var i:Number;
+		for( i = 0; i < _aChilds.length && found == false; i++ )
+		{
+			if( _aChilds[i].name == pName  )
 			{
 				_aChilds.splice( i, 1 );
 				setModified( true );
@@ -262,7 +307,7 @@ class sandy.core.group.Node extends EventBroadcaster
 		}
 		return found;
 	}
-
+	
 	/**
 	 * Delete all the childs of this node, and also the datas it is actually storing.
 	 * Do a recurssive call to child's destroy method.
@@ -270,7 +315,7 @@ class sandy.core.group.Node extends EventBroadcaster
 	public function destroy( Void ):Void 
 	{
 		// the unlink this node to his parent
-		if( hasParent() ) _parent.removeChild( this );
+		if( hasParent() ) _parent.removeChild( this.getId() );
 		// should we kill all the childs, or just make them childs of current node parent ?
 		var l:Number = _aChilds.length;
 		while( --l > -1 )
@@ -294,11 +339,11 @@ class sandy.core.group.Node extends EventBroadcaster
 		var l:Number = _aChilds.length;
 		// first we remove this node as a child of its parent
 		// we do not update rigth now, but a little bit later ;)
-		_parent.removeChild( this, false );
+		_parent.removeChild( this.getId() );
 		// now we make current node children the current parent's node children
 		while( --l > -1 )
 		{
-			_parent.addChild( _aChilds[l], false );
+			_parent.addChild( _aChilds[l] );
 		}
 		delete _aChilds;
 		_parent = null;
@@ -315,6 +360,7 @@ class sandy.core.group.Node extends EventBroadcaster
 		_parent = null;
 		_aChilds = [];
 		_id = Node._ID_++;
+		name = String( _id );
 		setModified( true );
 		// -- 
 	}

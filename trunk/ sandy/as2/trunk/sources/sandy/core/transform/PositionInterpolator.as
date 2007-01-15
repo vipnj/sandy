@@ -119,8 +119,15 @@ class sandy.core.transform.PositionInterpolator
 	{
 		if( false == _paused && false == _finished )
 		{
-			if( _way == 1 )	_current = VectorMath.addVector( _vMin, VectorMath.scale( _vDiff, _f ( getPercent() ) ) );
-			else			_current = VectorMath.sub( _vMax, VectorMath.scale( _vDiff, _f ( getPercent() ) ) );
+			var p:Number = getProgress();
+			if( _way == 1 )
+			{
+				_current = VectorMath.addVector( _vMin, VectorMath.scale( _vDiff, _f ( p ) ) );
+			}
+			else
+			{
+				_current = VectorMath.sub( _vMax, VectorMath.scale( _vDiff, _f ( p ) ) );
+			}
 			// --
 			__updatePosition();
 			// --

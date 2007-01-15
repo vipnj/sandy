@@ -133,7 +133,8 @@ class sandy.core.transform.ScaleInterpolator
 	{
 		if( false == _paused && false == _finished )
 		{
-			_current = _f( getPercent() );
+			var p:Number = getProgress();
+			_current = _f( p );
 			// --
 			__updateScale();
 			// --

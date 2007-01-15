@@ -130,7 +130,8 @@ class sandy.core.transform.VertexInterpolator
 	{
 		if( false == _paused && false == _finished )
 		{
-			var current:Number = _f( getPercent() );
+			var p:Number = getProgress();
+			var current:Number = _f( p );
 			if( _way == -1 ) current = 1 - current;
 			// we launch the animation of the moving vertices at a specific frame.
 			_animation.animate( Object3D(_o), int( current * _nFrames ) );

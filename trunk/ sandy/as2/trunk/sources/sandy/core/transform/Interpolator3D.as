@@ -53,6 +53,8 @@ interface sandy.core.transform.Interpolator3D extends ITransform3D
 	 */
 	public function getPercent( Void ):Number;
 	
+	public function getProgress( Void ):Number;
+	
 	public function getDuration ( Void ):Number;
 	
 	public function getDurationElapsed ( Void ):Number;

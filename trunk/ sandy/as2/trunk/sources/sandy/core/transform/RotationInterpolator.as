@@ -128,8 +128,9 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 			// special condition because blocked doesn't mean stopped. It just block the rendering
 			if( false == _blocked )
 			{
-				if( _way == 1 )	_current = _nMin + _nDiff * _f ( getPercent() );
-				else			_current = _nMax - _nDiff * _f ( getPercent() );
+				var p:Number = getProgress();
+				if( _way == 1 )	_current = _nMin + _nDiff * _f ( p );
+				else			_current = _nMax - _nDiff * _f ( p );
 				// --
 				__updateRotation();
 				// --

@@ -85,10 +85,20 @@ class sandy.core.transform.BasicInterpolator
 	*/
 	public function getPercent( Void ):Number
 	{
-		if( _way == 1 ) 	return ( _frame / _duration )*100;
-		else			return ( 1 - ( _frame / _duration ) )*100;
+		return (getProgress()*100);
 	}
-	
+
+	/**
+	* Returns the progress of the interpolator. 0 is the beginning, and 1 is the end.
+	* @param	Void
+	* @return a Number between [0-1] corresponding on the interpolation progress.
+	*/
+	public function getProgress( Void ):Number
+	{
+		if( _way == 1 ) return ( _frame / _duration );
+		else			return ( 1 - ( _frame / _duration ) );
+	}
+		
 	/**
 	* Returns the type of the interpolation. 
 	* @param	Void

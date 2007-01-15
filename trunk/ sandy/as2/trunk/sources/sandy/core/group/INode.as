@@ -87,6 +87,7 @@ interface sandy.core.group.INode
 	 */
 	public function getChildList ( Void ):Array;
 	
+	public function getChildByName( pName:String ):Node;
 	/**
 	* Returns the child node at the specific index.
 	* @param	index Number The ID of the child you want to get
@@ -102,8 +103,10 @@ interface sandy.core.group.INode
 	* @param	child Node The node you want to remove.
 	* @return Boolean True if the node has been removed from the list, false otherwise.
 	*/
-	public function removeChild( child:Node ):Boolean;
+	public function removeChild( id:Number ):Boolean;
 
+	public function removeChildByName( pName:String ):Boolean;
+	
 	/**
 	 * Delete all the childs of this node, and also the datas it is actually storing.
 	 * Do a recurssive call to child's destroy method.

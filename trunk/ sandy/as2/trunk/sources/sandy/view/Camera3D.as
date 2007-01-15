@@ -351,6 +351,7 @@ class sandy.view.Camera3D
 		_p.x = x;
 		_p.y = y;
 		_p.z = z;	
+		trace("Camera::setPosition :"+x+" "+y+" "+z);
 	}
 	
 	/**
@@ -433,7 +434,7 @@ class sandy.view.Camera3D
 	*/
 	public function compile( Void ):Void
 	{
-		if(! _compiled )
+		if(false == _compiled )
 		{
 			// we set up the rotation matrix from euler's angle
 			__updateTransformMatrix();
@@ -565,7 +566,7 @@ class sandy.view.Camera3D
 		var n32:Number = _vOut.y; 
 		var n33:Number = _vOut.z; 
 		var px:Number = _p.x,  py:Number = _p.y, pz:Number = _p.z;
-		
+
 		var det: Number = n11 * ( n22 * n33 - n23 * n32 ) + n21 * ( n32 * n13 - n12 * n33 ) + n31 * ( n12 * n23 - n22 * n13 );
 		if( det == 0 ) return;
 		_mt.n11 = ( n22 * n33 - n32 * n23 ) / det;

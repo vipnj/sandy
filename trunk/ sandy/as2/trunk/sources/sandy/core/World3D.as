@@ -25,13 +25,13 @@ import sandy.core.buffer.ZBuffer;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
-import sandy.math.Matrix4Math;
 import sandy.core.group.Group;
 import sandy.core.group.INode;
 import sandy.core.group.Node;
 import sandy.core.light.Light3D;
 import sandy.core.Object3D;
 import sandy.events.ObjectEventManager;
+import sandy.math.Matrix4Math;
 import sandy.view.Camera3D;
 import sandy.view.IScreen;
 
@@ -271,6 +271,7 @@ class sandy.core.World3D
 	{
 		var l:Number, lp:Number, vx:Number, vy:Number, vz:Number, offx:Number, offy:Number, nbObjects:Number;
 		var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
+		//var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
 		var aV:Array;
 		var mp:Matrix4;
 		var cam:Camera3D ;
@@ -294,48 +295,65 @@ class sandy.core.World3D
 		if( (camCache = cam.isModified()) )
 		{
 			cam.compile();
+			trace("Camera compile ");
 			_mProj = cam.getMatrix() ;
 		}
 		offx = cam.getXOffset(); offy = cam.getYOffset(); 
 		// now we check if there are some modifications on that branch
 		// if true something has changed and we need to compute again
 		l = nbObjects = _aObjects.length;
-		while( --l > -1 )
+		// If nothing has changed in the whole world
+		if( _bGlbCache == false )
 		{
-			obj = _aObjects[ l ];
-			if( _aCache[ l ] == true || camCache == true )
+			while( --l > -1 )
 			{
-				if( mp = _aMatrix[ l ] )
-					mp = Matrix4Math.multiply( _mProj, mp );
-				else
-					mp = Matrix4Math.clone( _mProj );
-				// 
-				mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
-				mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
-				mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
-				mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
-				// Now we can transform the objet vertices
-				aV = obj.aPoints;
-				lp = aV.length;
-				while( --lp > -1 )
-				{
-					v = aV[lp];	
-					v.wx = v.x * mp11 + v.y * mp12 + v.z * mp13 + mp14;
-					v.wy = v.x * mp21 + v.y * mp22 + v.z * mp23 + mp24;
-					v.wz = v.x * mp31 + v.y * mp32 + v.z * mp33 + mp34;
-					// computations for projection
-					var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-					v.sx =  c * v.wx * offx + offx;
-					v.sy = -c * v.wy * offy + offy;
-				}
-				// 
-				obj.render();
-			}// end objects loop
-			else
-			{
+				obj = _aObjects[ l ];
 				if( obj.needRefresh() )
 				{
 					obj.refresh();
+				}
+			}
+		}
+		else
+		{
+			while( --l > -1 )
+			{
+				obj = _aObjects[ l ];
+				if( _aCache[ l ] == true || camCache == true )
+				{
+					mp = _aMatrix[ l ];
+					if (mp) 
+						mp = Matrix4Math.multiply( _mProj, mp );
+					else
+						mp = Matrix4Math.clone( _mProj );
+					
+					mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
+					mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
+					mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
+					mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
+					// Now we can transform the objet vertices
+					aV = obj.aPoints;
+					lp = aV.length;
+					while( --lp > -1 )
+					{
+						v = aV[lp];
+						v.wx = v.x * mp11 + v.y * mp12 + v.z * mp13 + mp14;
+						v.wy = v.x * mp21 + v.y * mp22 + v.z * mp23 + mp24;
+						v.wz = v.x * mp31 + v.y * mp32 + v.z * mp33 + mp34;
+						// computations for projection
+						var c:Number = 	1 / ( v.x * mp41 + v.y * mp42 + v.z * mp43 + mp44 );
+						v.nx = v.wx * c;
+						v.ny = v.wy * c;
+						v.nz = v.wz * c;
+						v.sx =  v.nx * offx + offx;
+						v.sy = -v.ny * offy + offy;
+					}
+					// 
+					obj.render();
+				}// end objects loop
+				else
+				{
+					obj.render();
 				}
 			}
 		}

@@ -304,15 +304,20 @@ class sandy.core.transform.Sequence3D implements Interpolator3D
 	*/
 	public function getPercent( Void ) : Number
 	{
+		return (getProgress() * 100);
+	}
+	
+	public function getProgress( Void ) : Number
+	{
 		/* TODO remake this one with durations */
 		var p:Number=0;
 		
-		if(_way == 1) 	p = _current_index + 1 + _ci.getPercent();
-		else 			p = _aInterpolator.length - (_current_index + 1) + _ci.getPercent(); 
+		if(_way == 1) 	p = _current_index + 1 + _ci.getProgress();
+		else 			p = _aInterpolator.length - (_current_index + 1) + _ci.getProgress(); 
 				
 		return ( p / _aInterpolator.length );
 	}
-
+	
 	/**
 	* Returns the type of the interpolation. 
 	* @param	Void

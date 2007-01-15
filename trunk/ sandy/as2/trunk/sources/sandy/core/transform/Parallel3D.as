@@ -310,6 +310,11 @@ class sandy.core.transform.Parallel3D implements Interpolator3D
 	{		
 		return _longer_interpol.getPercent();
 	}
+	
+	public function getProgress( Void ) : Number
+	{		
+		return _longer_interpol.getProgress();
+	}
 
 	/**
 	* Returns the type of the interpolation. 

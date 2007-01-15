@@ -24,7 +24,7 @@ limitations under the License.
 * </p>
 * 
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin Cédric - thecaptain
+* @author		Tabin Cï¿½dric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
 * @date 		28.03.2006
 */

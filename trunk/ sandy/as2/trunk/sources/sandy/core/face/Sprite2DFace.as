@@ -19,6 +19,7 @@ import sandy.core.data.Vertex;
 import sandy.core.face.Polygon;
 import sandy.core.Sprite2D;
 import sandy.skin.TextureSkin;
+import sandy.skin.MovieSkin;
 
 /**
 * Sprite2DFace
@@ -64,21 +65,18 @@ class sandy.core.face.Sprite2DFace extends Polygon
 	 */
 	public function render( Void ):Void
 	{
-		var t:TextureSkin = TextureSkin( _s );
-		_mc.attachBitmap( t.texture, 1 );
 		// --
-		var sv:Vector 	= Sprite2D(_o).getScaleVector();
 		var s:Number 	= Sprite2D(_o).getScale();
 		// --
-		var cste:Number	= _o.aPoints[1].wz / _o.aPoints[0].wz;
+		var cste:Number	= s * 100 / _v.wz;
 		// --
-		_mc._width 	= t.texture.width  * (s * sv.x * cste);
-		_mc._height 	= t.texture.height * (s * sv.y * cste);
+		_mc._xscale = 100 * cste;
+		_mc._yscale = 100 * cste;
 		// --
 		_mc._x = _v.sx - _mc._width  / 2;
 		_mc._y = _v.sy - _mc._height / 2;
 		// --
-		_mc.filters = t.filters;
+		_mc.filters = _s.filters; /* FIXME : Shall be processed jsut when skin is updated */
 	}
 	
 	/** 
@@ -86,41 +84,30 @@ class sandy.core.face.Sprite2DFace extends Polygon
 	 */
 	public function refresh( Void ):Void
 	{
-		_mc.clear();
-		var t:TextureSkin = TextureSkin( _s );
-		_mc.attachBitmap( t.texture, 1 );
-		// --
-		var sv:Vector 	= Sprite2D(_o).getScaleVector();
-		var s:Number 	= Sprite2D(_o).getScale();
-		// --
-		var cste:Number	= _o.aPoints[1].wx / _o.aPoints[0].wx;
-		// --
-		_mc._width 	= t.texture.width  * (s * sv.x * cste);
-		_mc._height = t.texture.height * (s * sv.y * cste);
-		// --
-		_mc._x = _v.sx - _mc._width  / 2;
-		_mc._y = _v.sy - _mc._height / 2;
-		// --
-		_mc.filters = t.filters;
+		_mc.filters = _s.filters; /* FIXME : Shall be processed jsut when skin is updated */
 	}
 	
 	/**
 	* Set the skin for that SpriteFace. This skin must be a TextureSkin or a derivated class. Others skins can't be applied
 	* @param	s TextureSkin The skin
 	*/
-	public function setSkin(s : TextureSkin) : Void 
+	public function setSkin(s:MovieSkin) : Void 
 	{
-		if( s instanceof TextureSkin )
+		if( s instanceof MovieSkin )
+		{
+			if( _s ) _s.end( this );
 			_s = s;
+			_s.attach( _mc );
+		}
 	}
 
 	/**
 	* Returns the skin of this SpriteFace which is a TextureSkin.
 	* @return TextureSkin the skin of this face
 	*/
-	public function getSkin( Void ) : TextureSkin 
+	public function getSkin( Void ) : MovieSkin 
 	{
-		return TextureSkin( _s );
+		return MovieSkin( _s );
 	}
 
 	/**
@@ -153,5 +140,7 @@ class sandy.core.face.Sprite2DFace extends Polygon
 	{
 		return _v.wz;
 	}
-
+	
+	private var _s:MovieSkin;
+	
 }

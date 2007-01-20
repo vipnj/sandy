@@ -19,6 +19,15 @@ import sandy.core.World3D;
 import sandy.skin.SkinType;
 import sandy.skin.TextureSkin;
 import sandy.util.BitmapUtil;
+import sandy.skin.BasicSkin;
+import sandy.skin.Skin;
+import sandy.core.face.IPolygon;
+import sandy.core.face.Sprite2DFace;
+import flash.geom.Matrix;
+import sandy.core.light.Light3D;
+import sandy.math.VectorMath;
+import flash.filters.ColorMatrixFilter;
+import flash.geom.Point;
 
 /**
 * MovieSkin
@@ -28,31 +37,70 @@ import sandy.util.BitmapUtil;
 * @version		1.0
 * @date 		22.04.2006 
 **/
-class sandy.skin.MovieSkin extends TextureSkin
+class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
+	private var _mcl:MovieClipLoader;
 	/**
 	* Create a new MovieSkin.
 	* 
-	* @param mc MovieClip a MovieClip 
-	* @param b	Boolean	if true we DISABLE the automatic update of the texture property.
+	* @param url URL to load
 	*/
-	public function MovieSkin( mc:MovieClip, b:Boolean )
+	public function MovieSkin( url:String, b:Boolean )
 	{
-		super( new BitmapData( mc._width-2, mc._height-2 , false ) );
-		_mc = mc;
-		b = (undefined == b) ? false: b;
-		// TODO: Think again on which choice is clever, choosing the World3D framerate to update the texture
-		// or to use the texture movieClip framerate as timer to update the bitmap.
-		if( false == b ) 
-		{
+		super();
+		_url = url;
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("Skin_"+_ID_, -10000-_ID_);
+		
+		_mcl = new MovieClipLoader();
+		_mcl.addListener(this);
+		_mcl.loadClip( url, _mc);
+		
+		_initialized = false;
+		_bSmooth = false;
+		_p = new Point(0, 0);
+		
+		if( b != undefined && b == true )
 			World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
-		}
-		else
-		{
-			_mc.stop();
-		}
+	}
+	
+	public function attach( mc:MovieClip ):Void
+	{
+		_mcl.loadClip( _url, mc );
 	}
 
+	function onLoadStart  (target:MovieClip):Void 
+	{ 
+		trace("MovieSkin::start"); 
+	}
+
+	function onLoadProgress  (target:MovieClip, loaded:Number, total:Number):Void 
+	{ 
+		trace("MovieSkin::progress"); 
+	}
+	
+	function onLoadComplete  (target:MovieClip):Void 
+	{ 
+		trace("MovieSkin::complete"); 
+	}
+	
+	function onLoadInit  (target:MovieClip):Void 
+	{ 
+		trace("MovieSkin::init"); 
+		if( _initialized == false )
+		{
+			_h = target._height;
+			_w = target._width;
+			_mc._visible = false;
+			_initialized = true;
+		}
+	}
+	
+	function onLoadError  (target:MovieClip, code:String):Void 
+	{ 
+		trace("MovieSkin::erreur"); 
+	}
+		 
+	 
 	/**
 	 * getType, returns the type of the skin
 	 * @param Void
@@ -75,6 +123,69 @@ class sandy.skin.MovieSkin extends TextureSkin
 	}
 	
 	/**
+	* Start the rendering of the Skin
+	* @param f	The face which is being rendered
+	* @param mc The mc where the face will be build.
+	*/ 	
+	public function begin( f:IPolygon, mc:MovieClip ):Void
+	{
+		var a:Array = f.getVertices();
+		var m:Matrix = f.getTextureMatrix();
+		var tmp:BitmapData;
+		// --
+		var x0: Number = a[0].sx;
+		var y0: Number = a[0].sy;
+		var x1: Number = a[1].sx;
+		var y1: Number = a[1].sy;
+		var x2: Number = a[2].sx;
+		var y2: Number = a[2].sy;
+		// --
+		var sMat = 	{ 	a:( x1 - x0 ) / _w, 
+						b:( y1 - y0 ) / _w, 
+						c:( x2 - x0 ) / _h, 
+						d:( y2 - y0 ) / _h, 
+						tx: x0, 
+						ty: y0 
+					};
+		// --
+		var rMat = __concat( m, sMat );
+		// -- 
+		if( _useLight == true )
+		{
+			//TODO copy only the little part which is needed is the bitmap if possible.
+			tmp = _texture.clone();
+			var l:Light3D 	= World3D.getInstance().getLight();
+			var lp:Number	= 0.01 * l.getPower();
+			var dot:Number 	= lp - ( VectorMath.dot( l.getDirectionVector(), f.createNormale() ) );
+			// -- update the color transform matrix
+			_cmf.matrix = __getBrightnessTransform( dot );
+			// TODO: Optimize here with a different way to produce the light effect
+			// and in aplying the filter only to the considered part of the texture!
+			tmp.applyFilter( tmp , tmp.rectangle, _p,  _cmf );
+			mc.filters = _filters;
+			mc.beginBitmapFill( tmp, rMat, false, _bSmooth );
+			tmp.dispose();
+			delete tmp;
+		}
+		else
+		{
+			// -- 
+			mc.filters = _filters;
+			mc.beginBitmapFill( _texture, rMat, false, _bSmooth );
+		}
+	}
+	
+	/**
+	* Finish the rendering of the Skin
+	* @param f	The face which is being rendered
+	* @param mc The mc where the face will be build.
+	*/ 	
+	public function end( f:IPolygon, mc:MovieClip ):Void
+	{
+		mc.endFill();
+	}
+	
+	/**
 	* Give a string representation of the class
 	* @param	Void
 	* @return	String the string representing the object.
@@ -84,17 +195,54 @@ class sandy.skin.MovieSkin extends TextureSkin
 		return 'sandy.skin.MovieSkin' ;
 	}
 
-	/**
-	* Update the texture BitmapData with the current content of the actual frame of the movieclip.
-	* @param	Void
-	*/
+
 	public function updateTexture( Void ):Void
 	{
-		_texture.dispose();
-		delete _texture;
-		texture = BitmapUtil.movieToBitmap( _mc, true );
+		_texture = BitmapUtil.movieToBitmap( _mc, true, 0xFFFFFFFF);
 	}
 	
+	private function __concat( m1, m2 ):Object
+	{	
+		var r = {};
+		r.a = m1.a * m2.a;
+		r.d = m1.d * m2.d;
+		r.b = r.c = 0;
+		r.ty = m1.ty * m2.d + m2.ty;
+		r.tx = m1.tx * m2.a + m2.tx;
+		if( m1.b != 0 || m1.c !=0 || m2.b != 0 || m2.c != 0 )
+		{
+			r.a += m1.b * m2.c;
+			r.d += m1.c * m2.b;
+			r.b += m1.a * m2.b + m1.b * m2.d;
+			r.c += m1.c * m2.a + m1.d * m2.c;
+			r.tx += m1.ty * m2.c;
+			r.ty += m1.tx * m2.b;
+		}
+		return r;
+	}
+	
+	private function __getBrightnessTransform( scale:Number ) : Array
+	{
+		var s = scale;
+		var o:Number = 0;
+		//
+		return new Array 
+		(
+			s	, 0.0	, 0.0	, 0.0	, o,
+			0.0	, s		, 0.0	, 0.0	, o,
+			0.0	, 0.0	, s		, 0.0	, o,
+			0.0	, 0.0	, 0.0	, 1.0	, o
+		);
+	}
 	// --
+	private var _url:String;
 	private var _mc:MovieClip;
+	private var _animated:Boolean;
+	private var _h:Number;
+	private var _w:Number;
+	private var _texture:BitmapData;
+	private var _cmf:ColorMatrixFilter;
+	private var _bSmooth:Boolean;
+	private var _p:Point;
+	private var _initialized:Boolean;
 }

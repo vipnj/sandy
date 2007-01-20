@@ -35,6 +35,7 @@ import sandy.core.light.Light3D;
  **/
 class sandy.skin.BasicSkin extends EventBroadcaster
 {
+	
 	/**
 	 *  The Transformation end Event. Broadcasted when the Interpolation is finished
 	 */
@@ -96,6 +97,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 		_eOnUpdate 	= new SkinEvent( SkinEvent.onUpdateEVENT, this, getType() );
 		_filters 	= [];
 		_useLight 	= false;
+		_id = _ID_++;
 		World3D.getInstance().addEventListener( World3D.onLightAddedEVENT, this, __onLightAdded );
 	}
 	
@@ -115,4 +117,6 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	private var _filters:Array;
 	private var _useLight : Boolean;
 	private var _eOnUpdate:SkinEvent;
+	private var _id:Number;
+	private static var _ID_:Number = 0;
 }

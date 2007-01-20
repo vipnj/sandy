@@ -50,7 +50,7 @@ class sandy.core.buffer.MatrixBuffer
 	public static function push( m:Matrix4):Matrix4
 	{
 		// -- used to be m, _c because order is important here.
-		if( _c )	_c = Matrix4Math.multiply4x3( _c, m );
+		if( _c )	_c = Matrix4Math.multiply( _c, m );
 		else		_c = m;
 		_b.push( _c );
 		return _c;

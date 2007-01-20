@@ -26,6 +26,8 @@ import sandy.events.SkinEvent;
 import sandy.skin.SimpleLineSkin;
 import sandy.skin.Skin;
 import sandy.view.Frustum;
+import com.bourre.events.BasicEvent;
+import com.bourre.commands.Delegate;
 
 /**
 * <p>Represent an Object3D in a World3D</p>
@@ -77,15 +79,22 @@ class sandy.core.Object3D extends Leaf
 		super();
 		aPoints		= new Array ();
 		aFaces		= new Array ();
+		_aSorted	= new Array ();
 		_backFaceCulling = true;
 		_bEv = false;
 		_needRedraw = false;
 		_visible = true;
 		_enableForcedDepth = false;
 		_forcedDepth = 0;
+		
+		var d:Delegate = new Delegate(this, __renderFaces);
+		_fCallback = d.getFunction();
 		// we also set skin to Default constant
 		setSkin( DEFAULT_SKIN, true );
 		setBackSkin( DEFAULT_SKIN, true );
+		//
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("object_"+_ID_, _ID_);
+		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}	
 
 	/**
@@ -180,25 +189,12 @@ class sandy.core.Object3D extends Leaf
 	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 	* @return	Boolean True to apply the skin to the non default faces skins , false otherwise (default).
 	*/
-	public function setSkin( s:Skin, bOverWrite:Boolean ):Boolean
+	public function setSkin( pS:Skin ):Boolean
 	{
-		// set the skin to all the faces
-		var aF:Array = aFaces;
-		var lf:Number = aF.length;
 		//
 		_s.removeEventListener( SkinEvent.onUpdateEVENT, this );
-		bOverWrite = (bOverWrite == undefined ) ? false : bOverWrite;
-		//
-		while ( --lf > -1 ) 
-		{
-			var face:Face = aF[ lf ];
-			if ( bOverWrite || face.getSkin() == _s )
-			{
- 				face.setSkin( s );
-			} 
-		}	
 		// Now we register to the update event
-		_s = s;
+		_s = pS;
 		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		//
 		_needRedraw = true;
@@ -213,25 +209,12 @@ class sandy.core.Object3D extends Leaf
 	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 	* @return	Boolean True is the skin is applied, false otherwise.
 	*/
-	public function setBackSkin( sb:Skin, bOverWrite:Boolean ):Boolean
+	public function setBackSkin( pSb:Skin ):Boolean
 	{
-		// set the skin to all the faces
-		var aF:Array = aFaces;
-		var lf:Number = aF.length;
 		//
 		_sb.removeEventListener( SkinEvent.onUpdateEVENT, this );
-		bOverWrite = (bOverWrite == undefined ) ? false : bOverWrite;
-		//
-		while ( --lf > -1 ) 
-		{
-			var face:Face = aF[ lf ];
-			if ( bOverWrite || face.getBackSkin() == _sb )
-			{
-				face.setBackSkin( sb );
-			} 
-		}
 		// Now we register to the update event
-		_sb = sb;
+		_sb = pSb;
 		_sb.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		//
 		_needRedraw = true;
@@ -344,23 +327,39 @@ class sandy.core.Object3D extends Leaf
 	*/ 
 	public function render ( Void ):Void
 	{
-		var ndepth:Number, min:Number;
+		var l:Number = aPoints.length;
+		var p:Number = l;
+		var lDepth:Number = 0;
+		while( --l > -1 ) lDepth += aPoints[l].nz;
+		ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback } );
+	}
+	
+	private function __renderFaces( Void ):Void
+	{
+		var ndepth:Number;
 		// -- local copy because it's faster
-		var aF:Array = aFaces;
-		var l:Number = aF.length;
-		var s:String;
+		var l:Number = aFaces.length;
 		var f:IPolygon;
+		//
+		_mc.clear();
+		//
 		while( --l > -1 )
 		{
-			f = aF [l];
+			f = aFaces[l];
 			ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-			// if face is visible or enableBackFaceCulling is set to false
+			_aSorted[l] = { face:f, depth:ndepth };
+		}
+		//
+		_aSorted.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		//
+		l = _aSorted.length;
+		while( --l > -1 )
+		{
+			f = _aSorted[l].face;
 			if ( f.isVisible() || !_backFaceCulling ) 
 			{
-				ZBuffer.push( {face : f, depth : ndepth} );
-			}	
-			else
-				f.getContainer().clear();			
+				f.render( _mc, _s, _sb );
+			}				
 		}
 		// -- 
 		_needRedraw = false;
@@ -368,14 +367,15 @@ class sandy.core.Object3D extends Leaf
 	
 	public function refresh( Void ):Void
 	{
-		var a:Array = aFaces;
+		var a:Array = _aSorted;
 		var f:IPolygon;
 		var l:Number = a.length;
+		_mc.clear();
 		while( --l > -1 )
 		{
-			f = a [l];
+			f = a[l];
 			if ( f.isVisible () || !_backFaceCulling ) 
-				f.refresh();
+				f.refresh( _mc, _s, _sb );
 		}
 		// -- 
 		_needRedraw = false;
@@ -396,9 +396,6 @@ class sandy.core.Object3D extends Leaf
 	 */
 	public function addFace( f:IPolygon ):Void
 	{
-		// -- set Default Skin
-		f.setSkin( _s );
-		f.setBackSkin( _sb );
 		// -- we update its texture matrix
 		f.updateTextureMatrix();	
 		// -- store the face
@@ -451,7 +448,20 @@ class sandy.core.Object3D extends Leaf
 		else
 			return false;
 	}
+
+	public function getContainer( Void ):MovieClip
+	{
+		return _mc;
+	}
 	
+	//////////////
+	/// PRIVATE
+	//////////////
+	private function __onWorldContainer( e:BasicEvent ):Void
+	{
+		_mc.removeMovieClip();
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
+	}
 	/**
 	* -------------------------------------------------------
 	* 			PRIVATE VAR
@@ -465,6 +475,10 @@ class sandy.core.Object3D extends Leaf
 	private var _visible : Boolean;
 	private var _enableForcedDepth:Boolean;
 	private var _forcedDepth:Number;
+	private var _fCallback:Function;
+	private var _mc:MovieClip;
+	private var _aSorted:Array;
+	
 	/**
 	* called when the skin of an object change.
 	* We want this object to notify that it has changed to redrawn, so we change its modified property.

@@ -65,22 +65,11 @@ class sandy.math.Matrix4Math
 
 	public static function multiply4x3( a:Matrix4, b:Matrix4 ):Matrix4
 	{
-		var m:Matrix4 = Matrix4.createIdentity();
-		m.n11 = a.n11 * b.n11 + a.n21 * b.n12 + a.n31 * b.n13;
-		m.n21 = a.n11 * b.n21 + a.n21 * b.n22 + a.n31 * b.n23;
-		m.n31 = a.n11 * b.n31 + a.n21 * b.n32 + a.n13 * b.n33;
+		var m:Matrix4 = Matrix4Math.multiply3x3( a, b );
 		
-		m.n12 = a.n12 * b.n11 + a.n22 * b.n12 + a.n32 * b.n13;
-		m.n22 = a.n12 * b.n21 + a.n22 * b.n22 + a.n32 * b.n23;
-		m.n32 = a.n12 * b.n31 + a.n22 * b.n32 + a.n32 * b.n33;
-			
-		m.n13 = a.n13 * b.n11 + a.n23 * b.n12 + a.n33 * b.n13;
-		m.n23 = a.n13 * b.n21 + a.n23 * b.n22 + a.n33 * b.n23;
-		m.n33 = a.n13 * b.n31 + a.n23 * b.n32 + a.n33 * b.n33;
-			
-		m.n14 = a.n14 * b.n11 + a.n24 * b.n12 + a.n34 * b.n13 + b.n14;
-		m.n24 = a.n14 * b.n21 + a.n24 * b.n22 + a.n34 * b.n23 + b.n24;
-		m.n34 = a.n14 * b.n31 + a.n24 * b.n32 + a.n34 * b.n33 + b.n34;
+		m.n14 = a.n11 * b.n14 + a.n12 * b.n24 + a.n43 * b.n31 + b.n14;
+		m.n24 = a.n21 * b.n14 + a.n22 * b.n24 + a.n23 * b.n34 + b.n24;
+		m.n34 = a.n31 * b.n14 + a.n32 * b.n24 + a.n33 * b.n34 + b.n34;
 		
 		return m;
 	}

@@ -92,7 +92,7 @@ class sandy.core.data.Vertex extends Vector
 	*/
 	public function toString( Void ):String
 	{
-		return "Vertex : x:"+x+" y:"+y+" z:"+z+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+" \nsx:"+sx+" sy:"+sy;
+		return "Vertex : x:"+x+" y:"+y+" z:"+z+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+" \nnx:"+nx+" ny:"+ny+" nz:"+nz+" \nsx:"+sx+" sy:"+sy;
 	}
 }
 

@@ -16,9 +16,10 @@ limitations under the License.
 
 import sandy.core.buffer.ZBuffer;
 import sandy.core.data.Vector;
-import sandy.core.face.Sprite2DFace;
 import sandy.core.Object3D;
-import sandy.skin.TextureSkin;
+import sandy.skin.MovieSkin;
+import sandy.core.data.Vertex;
+import sandy.core.face.IPolygon;
 
 /**
  * @author		Thomas Pfeiffer - kiroukou
@@ -37,13 +38,11 @@ class sandy.core.Sprite2D extends Object3D
 	{
 		super();
 		// -- we create a fictive point
-		super.addPoint( 0, 0, 0 );
-		// -- the scale vector
-		super.addPoint( 1, 1, 1 );
+		_v = new Vertex( 0, 0, 0 );
+		aPoints[0] = _v;
 		// --
 		_nScale = (undefined == pScale) ? 1.0 : pScale;
 		// --
-		createFace();
 	}
 	
 	/**
@@ -53,16 +52,17 @@ class sandy.core.Sprite2D extends Object3D
 	* @param	s	The TexstureSkin to apply to the object
 	* @return	Boolean True is the skin is applied, false otherwise.
 	*/
-	public function setSkin( s:TextureSkin ):Boolean
+	public function setSkin( s:MovieSkin ):Boolean
 	{
-		return super.setSkin( s, true );
+		s.attach( _mc );
+		return true;
 	}
 
 	/**
 	 * This method isn't enable with the Sprite object. You might get the reason ;)
 	 * Returns always false.
 	 */
-	public function setBackSkin( s:TextureSkin, bOverWrite:Boolean ):Boolean
+	public function setBackSkin( s:MovieSkin, bOverWrite:Boolean ):Boolean
 	{
 		return false;
 	}
@@ -110,41 +110,31 @@ class sandy.core.Sprite2D extends Object3D
 	* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
 	*/ 
 	public function render ( Void ):Void
-	{
-		// -- local copy because it's faster
-		var f:Sprite2DFace = aFaces[0];
-		// -- private property access hack for speed purpose. Please use the equivalent public method in your code!
-		var ndepth:Number = f.getVertices()[0].wz;
-		// CLIPPING Now is the object behind the camera?
-		if ( ndepth > -1 )
+	{		
+		if( _v.nz > -1 )
 		{
-			// if face is visible or drawAllFaces is set to true
-			if ( !enableBackFaceCulling || f.isVisible () ) 
-			{
-				ZBuffer.push( {face : f, depth : ndepth} );
-			}		
+			ZBuffer.push( { movie:_mc, depth : _v.nz, callback:_fCallback } );
 		}
-		setModified( false );
 	}
 	
-	/**
-	* Create a new Frace.
-	* <p>When a new Face is created, by default it has the Skin of the Object3D. 
-	* The new Face will be automatically stored into the Object3D.</p>
-	* @return	The created Face
-	*/
-	public function createFace ( Void ):Sprite2DFace
+	private function __renderFaces( Void ):Void
 	{
-		setModified( true );
-		//
-		var f:Sprite2DFace = new Sprite2DFace( this, aPoints[0] );
-		// set Default Skin
-		f.setSkin( TextureSkin(_s ) );
-		aFaces[0] = f;
-		//and return it
-		return f;
+		// --
+		var cste:Number	= _nScale * 100 / _v.wz;
+		// --
+		_mc._xscale = 100 * cste;
+		_mc._yscale = 100 * cste;
+		// --
+		_mc._x = _v.sx - _mc._width  / 2;
+		_mc._y = _v.sy - _mc._height / 2;
+		// --
 	}
 	
+	public function addFace( f:IPolygon ):Void
+	{
+		;
+	}
+		
 	/**
 	* Erase the behaviour of the Sprite2D addPoint method because Sprite2D handles itself its points. You can't add vertex by yourself here.
 	* @param	x
@@ -156,5 +146,6 @@ class sandy.core.Sprite2D extends Object3D
 		;
 	}
 	
+	private var _v:Vertex;
 	private var _nScale:Number;
 }

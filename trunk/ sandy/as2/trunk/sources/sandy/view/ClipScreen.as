@@ -144,8 +144,8 @@ class sandy.view.ClipScreen implements IScreen
 		l = a.length;
 		while( --l > -1 )
 		{
-			a[l].face.getContainer().swapDepths( l );
-			a[l].face.render();
+			a[l].movie.swapDepths( l );
+			a[l].callback();
 		}
 	}
 	

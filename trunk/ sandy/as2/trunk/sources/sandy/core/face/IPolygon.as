@@ -30,7 +30,6 @@ import sandy.core.data.UVCoord;
 interface sandy.core.face.IPolygon
 {
 	public function getUVCoords( Void ):Array;
-	public function getContainer( Void ):MovieClip;
 	
 	public function setUVCoords( pUv1:UVCoord, pUv2:UVCoord, pUv3:UVCoord ):Void;
 	
@@ -65,7 +64,7 @@ interface sandy.core.face.IPolygon
 	* <p>{@code mc} represent the MovieClip where the Face must be displayed. 
 	* @param	mc		The MovieClip
 	*/
-	public function render( Void ):Void;
+	public function render( mc:MovieClip, pS:Skin, pSb:Skin  ):Void;
 	
 	/**
 	* Set the normale vector of the face. Useful when the normale for this face is alleady computed
@@ -97,13 +96,6 @@ interface sandy.core.face.IPolygon
 	* @return	The Skin of the Face
 	*/
 	public function getSkin( Void ):Skin;
-	
-	/**
-	* Allows you to get the clip associate to the face.
-	* @param	Void
-	* @return MovieClip where the face has been drawn.
-	*/
-	public function getClip( Void ):MovieClip;
 
 	/**
 	 * Update the texture matrix in case that one of its vertex has been changed
@@ -148,7 +140,7 @@ interface sandy.core.face.IPolygon
 	* refresh the movieclip, not to compute it again.
 	* @param	Void
 	*/
-	public function refresh( Void ):Void;
+	public function refresh( mc:MovieClip, pS:Skin, pSb:Skin  ):Void;
 	
 	/**
 	* This method change the value of the "normal" clipping side.

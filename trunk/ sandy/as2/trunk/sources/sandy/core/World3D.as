@@ -87,11 +87,13 @@ class sandy.core.World3D
 	public function setContainer( mc:MovieClip ):Void
 	{
 		_container = mc;
+		_container.createEmptyMovieClip("scene", 0);
+		_oEB.broadcastEvent( new BasicEvent( World3D.onContainerCreatedEVENT ) ); 
 	}
 	
 	public function getContainer( Void ):MovieClip
 	{
-		return _container;
+		return _container.scene;
 	}
 	
 	/**
@@ -271,9 +273,9 @@ class sandy.core.World3D
 	{
 		var l:Number, lp:Number, vx:Number, vy:Number, vz:Number, offx:Number, offy:Number, nbObjects:Number;
 		var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
-		//var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
+		var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
 		var aV:Array;
-		var mp:Matrix4;
+		var mp:Matrix4, m:Matrix4, mt:Matrix4;
 		var cam:Camera3D ;
 		var camCache:Boolean;
 		var obj:Object3D;
@@ -292,18 +294,17 @@ class sandy.core.World3D
 		__parseTree( _oRoot, _oRoot.isModified() );
 		//		
 		cam = _oCamera;
-		if( (camCache = cam.isModified()) )
-		{
-			cam.compile();
-			trace("Camera compile ");
-			_mProj = cam.getMatrix() ;
-		}
+		camCache = cam.isModified();
+		//
+		mt = cam.getTransformMatrix();
+		mp = _mProj = cam.getProjectionMatrix() ;
+		//
 		offx = cam.getXOffset(); offy = cam.getYOffset(); 
 		// now we check if there are some modifications on that branch
 		// if true something has changed and we need to compute again
 		l = nbObjects = _aObjects.length;
 		// If nothing has changed in the whole world
-		if( _bGlbCache == false )
+		if( _bGlbCache == false && camCache == false )
 		{
 			while( --l > -1 )
 			{
@@ -321,12 +322,17 @@ class sandy.core.World3D
 				obj = _aObjects[ l ];
 				if( _aCache[ l ] == true || camCache == true )
 				{
-					mp = _aMatrix[ l ];
-					if (mp) 
-						mp = Matrix4Math.multiply( _mProj, mp );
+					m = _aMatrix[ l ];
+					if (m) 
+						m = Matrix4Math.multiply(mt,m);
 					else
-						mp = Matrix4Math.clone( _mProj );
-					
+						m = mt;	
+					//
+					m11 = m.n11; m21 = m.n21; m31 = m.n31; m41 = m.n41;
+					m12 = m.n12; m22 = m.n22; m32 = m.n32; m42 = m.n42;
+					m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
+					m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
+					//
 					mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
 					mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
 					mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
@@ -337,14 +343,22 @@ class sandy.core.World3D
 					while( --lp > -1 )
 					{
 						v = aV[lp];
-						v.wx = v.x * mp11 + v.y * mp12 + v.z * mp13 + mp14;
-						v.wy = v.x * mp21 + v.y * mp22 + v.z * mp23 + mp24;
-						v.wz = v.x * mp31 + v.y * mp32 + v.z * mp33 + mp34;
+						v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
+						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
+						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
+						
+						v.nx = v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14;
+						v.ny = v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24;
+						v.nz = v.wx * mp31 + v.wy * mp32 + v.wz * mp33 + mp34;
+						
 						// computations for projection
-						var c:Number = 	1 / ( v.x * mp41 + v.y * mp42 + v.z * mp43 + mp44 );
-						v.nx = v.wx * c;
-						v.ny = v.wy * c;
-						v.nz = v.wz * c;
+						var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
+						v.nx = v.nx * c;
+						v.ny = v.ny * c;
+						v.nz = v.nz * c;
+						
+						trace( v.nx+" "+v.ny+" "+v.nz);
+						
 						v.sx =  v.nx * offx + offx;
 						v.sy = -v.ny * offy + offy;
 					}

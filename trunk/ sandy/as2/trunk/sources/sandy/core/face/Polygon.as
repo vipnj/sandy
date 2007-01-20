@@ -41,12 +41,11 @@ class sandy.core.face.Polygon implements IPolygon
 		_o = oref;
 		_bfc = 1;
 		_id = Polygon._ID_ ++;
+		_s = _sb = undefined;
 		_aClipped = _aVertex = arguments.slice(1);
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
 		updateTextureMatrix();
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
-		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}
 	
 	/**
@@ -112,40 +111,42 @@ class sandy.core.face.Polygon implements IPolygon
 	 *
 	 * @param	{@code mc}	A {@code MovieClip}.
 	 */
-	public function render( Void ): Void
+	public function render( mc:MovieClip, pS:Skin, pSb:Skin ): Void
 	{
-		_mc.clear();
+		var s:Skin;
+		if( _bV ) s = (_s == null) ? pS : _s;
+		else	  s = (_sb == null) ? pSb : _sb;
+		//s = pS;
+		//
+		s.begin( this, mc) ;
+		//
 		var l:Number = _nL;
-		//--
-		if( _bV )  _s.begin( this, _mc ) ;
-		else _sb.begin( this, _mc );
-		//--
-		_mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
+		mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
 		while( --l > 0 )
 		{
-			_mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
+			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
 		}
 		// -- we launch the rendering with the appropriate skin
-		if( _bV ) _s.end( this, _mc );
-		else _sb.end( this, _mc );
+		s.end( this, mc );
 	}
 	
 	/** 
 	 * Refresh the face display
 	 */
-	public function refresh( Void ):Void
+	public function refresh( mc:MovieClip, pS:Skin, pSb:Skin ):Void
 	{
-		_mc.clear();
-		if( _bV )  _s.begin( this, _mc );
-		else  _sb.begin( this, _mc );
+		var s:Skin;
+		if( _bV ) s = (_s == undefined) ? pS : _s;
+		else	  s = (_sb == undefined) ? pSb : _sb;
 		//
-		_mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
+		s.begin( this, mc) ;
+		//
+		mc.lineTo( _aVertex[0].sx, _aVertex[0].sy );
 		var l:Number = _nL;
 		while( --l > 0 )
-			_mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
+			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
 		// -- we launch the rendering with the appropriate skin
-		if( _bV ) _s.end( this, _mc );
-		else _sb.end( this, _mc );
+		s.end( this, mc );
 	}
 
 	/**
@@ -301,16 +302,6 @@ class sandy.core.face.Polygon implements IPolygon
 	}
 
 	/**
-	* Get the clip where is drawn the face content
-	* @param	Void
-	* @return the MovieClip
-	*/
-	public function getClip( Void ):MovieClip
-	{
-		return _mc;
-	}
-
-	/**
 	 * Returns the the skin of the back of this face.
 	 * @see Face.setBackSkin
 	 * @return	The Skin
@@ -342,7 +333,7 @@ class sandy.core.face.Polygon implements IPolygon
 	 */
 	public function destroy( Void ):Void
 	{
-		_mc.removeMovieClip();
+		;
 	}
 
 	/**
@@ -352,20 +343,7 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		return _m;
 	}
-	
-	public function getContainer( Void ):MovieClip
-	{
-		return _mc;
-	}
-	
-	//////////////
-	/// PRIVATE
-	//////////////
-	private function __onWorldContainer( e:BasicEvent ):Void
-	{
-		_mc.removeMovieClip();
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
-	}
+
 	
 	private var _aUV:Array;
 	private var _aVertex:Array;
@@ -405,7 +383,7 @@ class sandy.core.face.Polygon implements IPolygon
 	/**
 	* The latest movieclip used to render the face
 	*/
-	private var _mc:MovieClip;
+
 	private var _m:Matrix;
 
 }

@@ -116,13 +116,12 @@ class sandy.core.face.Polygon implements IPolygon
 		var s:Skin;
 		if( _bV ) s = (_s == null) ? pS : _s;
 		else	  s = (_sb == null) ? pSb : _sb;
-		//s = pS;
 		//
 		s.begin( this, mc) ;
 		//
 		var l:Number = _nL;
 		mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
-		while( --l > 0 )
+		while( --l > -1 )
 		{
 			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
 		}
@@ -143,7 +142,7 @@ class sandy.core.face.Polygon implements IPolygon
 		//
 		mc.lineTo( _aVertex[0].sx, _aVertex[0].sy );
 		var l:Number = _nL;
-		while( --l > 0 )
+		while( --l > -1 )
 			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
 		// -- we launch the rendering with the appropriate skin
 		s.end( this, mc );
@@ -173,7 +172,7 @@ class sandy.core.face.Polygon implements IPolygon
 		var d:Number = 0;
 		var l:Number = _nL;
 		while( --l > -1 )
-			d += _aVertex[l].nz;
+			d += _aVertex[l].wz;
 		return d / _nL;
 	}
 	
@@ -184,10 +183,10 @@ class sandy.core.face.Polygon implements IPolygon
 	 */
 	public function getMinDepth ( Void ):Number
 	{
-		var min:Number = _aVertex[0].nz;
+		var min:Number = _aVertex[0].wz;
 		var l:Number = _nL;
 		while( --l > 0 )
-			min = Math.min( min, _aVertex[l].nz );
+			min = Math.min( min, _aVertex[l].wz );
 		return min;
 	}
 
@@ -198,10 +197,10 @@ class sandy.core.face.Polygon implements IPolygon
 	 */
 	public function getMaxDepth ( Void ):Number
 	{
-		var max:Number = _aVertex[0].nz;
+		var max:Number = _aVertex[0].wz;
 		var l:Number = _nL;
 		while( --l > 0 )
-			max = Math.max( max, _aVertex[l].nz );
+			max = Math.max( max, _aVertex[l].wz );
 		return max;
 	}
 	

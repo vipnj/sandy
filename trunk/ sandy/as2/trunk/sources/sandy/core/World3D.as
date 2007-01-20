@@ -347,20 +347,10 @@ class sandy.core.World3D
 						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
 						
-						v.nx = v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14;
-						v.ny = v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24;
-						v.nz = v.wx * mp31 + v.wy * mp32 + v.wz * mp33 + mp34;
-						
-						// computations for projection
+			
 						var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-						v.nx = v.nx * c;
-						v.ny = v.ny * c;
-						v.nz = v.nz * c;
-						
-						trace( v.nx+" "+v.ny+" "+v.nz);
-						
-						v.sx =  v.nx * offx + offx;
-						v.sy = -v.ny * offy + offy;
+						v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
+						v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 					}
 					// 
 					obj.render();

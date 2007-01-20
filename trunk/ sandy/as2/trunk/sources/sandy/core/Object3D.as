@@ -14,6 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import com.bourre.commands.Delegate;
+import com.bourre.events.BasicEvent;
+import com.bourre.events.EventBroadcaster;
+import com.bourre.events.IEvent;
+
 import sandy.core.buffer.ZBuffer;
 import sandy.core.data.BBox;
 import sandy.core.data.Vector;
@@ -22,12 +27,11 @@ import sandy.core.face.Face;
 import sandy.core.face.IPolygon;
 import sandy.core.group.Leaf;
 import sandy.core.World3D;
+import sandy.events.ObjectEvent;
 import sandy.events.SkinEvent;
 import sandy.skin.SimpleLineSkin;
 import sandy.skin.Skin;
 import sandy.view.Frustum;
-import com.bourre.events.BasicEvent;
-import com.bourre.commands.Delegate;
 
 /**
 * <p>Represent an Object3D in a World3D</p>
@@ -86,9 +90,16 @@ class sandy.core.Object3D extends Leaf
 		_visible = true;
 		_enableForcedDepth = false;
 		_forcedDepth = 0;
-		
+		//
 		var d:Delegate = new Delegate(this, __renderFaces);
 		_fCallback = d.getFunction();
+		//
+		_oEB = new EventBroadcaster( this );
+		_oOnPress = new ObjectEvent( ObjectEvent.onPressEVENT, this );
+		_oOnRelease = new ObjectEvent( ObjectEvent.onReleaseEVENT, this );
+		_oOnReleaseOutside = new ObjectEvent( ObjectEvent.onReleaseOutsideEVENT, this );
+		_oOnRollOver = new ObjectEvent( ObjectEvent.onRollOverEVENT, this );
+		_oOnRollOut = new ObjectEvent( ObjectEvent.onRollOutEVENT, this );
 		// we also set skin to Default constant
 		setSkin( DEFAULT_SKIN, true );
 		setBackSkin( DEFAULT_SKIN, true );
@@ -232,22 +243,46 @@ class sandy.core.Object3D extends Leaf
 	*/
 	public function enableEvents( b:Boolean ):Void
 	{
+		/*
 		var l:Number = aFaces.length;
 		while( --l > -1 )
 		{
 			Face(aFaces[l]).enableEvents( b );
 		}
+		*/
 		// -- 
 		if( b )
 		{
 			if( !_bEv )
 			{
-				World3D.getInstance().getObjectEventManager().addEventListeningObject( this );
+				var dpress:Delegate = new Delegate(this, __sendObjectEvent);
+				dpress.setArguments( _oOnPress );
+				_mc.onPress = dpress.getFunction();
+				//
+				var drollover:Delegate = new Delegate(this, __sendObjectEvent);
+				drollover.setArguments( _oOnRollOver );
+				_mc.onRollOver = drollover.getFunction();
+				//
+				var drollout:Delegate = new Delegate(this, __sendObjectEvent);
+				drollout.setArguments( _oOnRollOut );
+				_mc.onRollOut = drollout.getFunction();
+				//
+				var drelease:Delegate = new Delegate(this, __sendObjectEvent);
+				drelease.setArguments( _oOnRelease );
+				_mc.onRelease = drelease.getFunction();
+				//
+				var dreleaseout:Delegate = new Delegate(this, __sendObjectEvent);
+				dreleaseout.setArguments( _oOnReleaseOutside );
+				_mc.onReleaseOutside = dreleaseout.getFunction();
 			}
 		}
 		else if( !b && _bEv )
 		{
-			World3D.getInstance().getObjectEventManager().removeEventListeningObject( this );
+			_mc.onPress = null;
+			_mc.onRollOver = null;
+			_mc.onRollOut = null;
+			_mc.onRelease = null;
+			_mc.onReleaseOutside = null;
 		}
 		_bEv = b;
 	}
@@ -330,8 +365,10 @@ class sandy.core.Object3D extends Leaf
 		var l:Number = aPoints.length;
 		var p:Number = l;
 		var lDepth:Number = 0;
-		while( --l > -1 ) lDepth += aPoints[l].nz;
-		ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback } );
+		while( --l > -1 ) lDepth += aPoints[l].wz;
+		// First fast clipping
+		if( lDepth > 0 )
+			ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback } );
 	}
 	
 	private function __renderFaces( Void ):Void
@@ -343,11 +380,13 @@ class sandy.core.Object3D extends Leaf
 		//
 		_mc.clear();
 		//
+		_aSorted = [];
 		while( --l > -1 )
 		{
 			f = aFaces[l];
 			ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-			_aSorted[l] = { face:f, depth:ndepth };
+			if( ndepth > 10 )
+				_aSorted[l] = { face:f, depth:ndepth };
 		}
 		//
 		_aSorted.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
@@ -370,7 +409,9 @@ class sandy.core.Object3D extends Leaf
 		var a:Array = _aSorted;
 		var f:IPolygon;
 		var l:Number = a.length;
+		//
 		_mc.clear();
+		//
 		while( --l > -1 )
 		{
 			f = a[l];
@@ -427,7 +468,7 @@ class sandy.core.Object3D extends Leaf
 		// --
 		_s.removeEventListener( SkinEvent.onUpdateEVENT, this );
 		// --
-		World3D.getInstance().getObjectEventManager().removeEventListeningObject( this );
+		//World3D.getInstance().getObjectEventManager().removeEventListeningObject( this );
 		// --
 		super.destroy();
 	}
@@ -453,6 +494,45 @@ class sandy.core.Object3D extends Leaf
 	{
 		return _mc;
 	}
+
+	/**
+	 * Adds passed-in {@code oL} listener for receiving passed-in {@code t} event type.
+	 * 
+	 * <p>Take a look at example below to see all possible method call.
+	 * 
+	 * <p>Example
+	 * <code>
+	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
+	 *   oEB.addEventListener( myClass.onSometingEVENT, myFirstObject);
+	 *   oEB.addEventListener( myClass.onSometingElseEVENT, this, __onSomethingElse);
+	 *   oEB.addEventListener( myClass.onSometingElseEVENT, this, Delegate.create(this, __onSomething) );
+	 * </code>
+	 * 
+	 * @param t Name of the Event.
+	 * @param oL Listener object.
+	 */
+	public function addEventListener(t:String, oL) : Void
+	{
+		_oEB.addEventListener.apply( _oEB, arguments );
+	}
+	
+	/**
+	 * Removes passed-in {@code oL} listener that suscribed for passed-in {@code t} event.
+	 * 
+	 * <p>Example
+	 * <code>
+	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
+	 *   oEB.removeEventListener( myClass.onSometingEVENT, myFirstObject);
+	 *   oEB.removeEventListener( myClass.onSometingElseEVENT, this);
+	 * </code>
+	 * 
+	 * @param t Name of the Event.
+	 * @param oL Listener object.
+	 */
+	public function removeEventListener(t:String, oL) : Void
+	{
+		_oEB.removeEventListener( t, oL );
+	}
 	
 	//////////////
 	/// PRIVATE
@@ -461,7 +541,15 @@ class sandy.core.Object3D extends Leaf
 	{
 		_mc.removeMovieClip();
 		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
+		_mc.clear();
 	}
+	
+	private function __sendObjectEvent( e:ObjectEvent ):Void
+	{
+		trace("send event : "+e);
+		_oEB.broadcastEvent.apply( _oEB, arguments );
+	}
+	
 	/**
 	* -------------------------------------------------------
 	* 			PRIVATE VAR
@@ -478,7 +566,14 @@ class sandy.core.Object3D extends Leaf
 	private var _fCallback:Function;
 	private var _mc:MovieClip;
 	private var _aSorted:Array;
+	private var _eventDelegate:Delegate;
 	
+	private var _oOnPress:ObjectEvent;
+	private var _oOnRelease:ObjectEvent;
+	private var _oOnReleaseOutside:ObjectEvent;
+	private var _oOnRollOver:ObjectEvent;
+	private var _oOnRollOut:ObjectEvent;
+	private var _oEB:EventBroadcaster;	
 	/**
 	* called when the skin of an object change.
 	* We want this object to notify that it has changed to redrawn, so we change its modified property.

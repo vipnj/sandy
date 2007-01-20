@@ -111,9 +111,14 @@ class sandy.core.Sprite2D extends Object3D
 	*/ 
 	public function render ( Void ):Void
 	{		
-		if( _v.nz > -1 )
+		if( _v.wz > 10 )
 		{
+			_mc._visible = true;
 			ZBuffer.push( { movie:_mc, depth : _v.nz, callback:_fCallback } );
+		}
+		else
+		{
+			_mc._visible = false;
 		}
 	}
 	

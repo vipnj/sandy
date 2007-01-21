@@ -70,6 +70,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_mc._visible = false;
 		}
 		//
+		_m = new Matrix();
 		_bSmooth = false;
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
@@ -148,7 +149,6 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	{
 		var a:Array = f.getVertices();
 		var m:Matrix = f.getTextureMatrix();
-		var tmp:BitmapData;
 		// --
 		var x0: Number = a[0].sx;
 		var y0: Number = a[0].sy;
@@ -170,7 +170,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		if( _useLight == true )
 		{
 			//TODO copy only the little part which is needed is the bitmap if possible.
-			tmp = _texture.clone();
+			_tmp = _texture.clone();
 			var l:Light3D 	= World3D.getInstance().getLight();
 			var lp:Number	= 0.01 * l.getPower();
 			var dot:Number 	= lp - ( VectorMath.dot( l.getDirectionVector(), f.createNormale() ) );
@@ -178,11 +178,9 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_cmf.matrix = __getBrightnessTransform( dot );
 			// TODO: Optimize here with a different way to produce the light effect
 			// and in aplying the filter only to the considered part of the texture!
-			tmp.applyFilter( tmp , tmp.rectangle, _p,  _cmf );
+			_tmp.applyFilter( _tmp , _tmp.rectangle, _p,  _cmf );
 			mc.filters = _filters;
-			mc.beginBitmapFill( tmp, rMat, false, _bSmooth );
-			tmp.dispose();
-			delete tmp;
+			mc.beginBitmapFill( _tmp, rMat, false, _bSmooth );
 		}
 		else
 		{
@@ -219,7 +217,12 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_texture.dispose();
 			delete _texture;
 		}
-		_texture = BitmapUtil.movieToBitmap( _mc );//, 0x00FFFFFF);
+		if( _tmp )
+		{
+			_tmp.dispose();
+			delete _tmp;
+		}
+		_texture = BitmapUtil.movieToBitmap( _mc );
 	}
 	
 	private function __concat( m1, m2 ):Object
@@ -298,10 +301,13 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	private var _h:Number;
 	private var _w:Number;
 	private var _texture:BitmapData;
+	private var _tmp:BitmapData;
 	private var _cmf:ColorMatrixFilter;
 	private var _bSmooth:Boolean;
 	private var _p:Point;
 	private var _initialized:Boolean;
 	private var _loaded:Boolean;
 	private var _mcl:MovieClipLoader;
+
+	private var _m : Matrix;
 }

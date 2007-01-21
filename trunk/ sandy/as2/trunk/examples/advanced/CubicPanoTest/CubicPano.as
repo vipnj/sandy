@@ -4,7 +4,7 @@ import com.bourre.data.libs.LibStack;
 import com.bourre.data.libs.AbstractLib;
 
 import sandy.core.group.Group;
-import sandy.core.face.Face;
+import sandy.core.face.*;
 import sandy.primitive.Box;
 import sandy.skin.*;
 import sandy.view.Camera3D;
@@ -16,9 +16,6 @@ import sandy.util.*;
 
 import flash.display.BitmapData;
 
-/**
-* @mtasc -main CubicPano -swf CubicPano.swf -header 300:300:30:FFFFFF -version 8 -wimp -trace org.flashdevelop.utils.FlashConnect.mtrace org/flashdevelop/utils/FlashConnect.as 
-*/
 class CubicPano
 {
 	// the MovieClip in which CubicPano does its stuff
@@ -27,7 +24,7 @@ class CubicPano
 	// the six bitmaps that will constitute the cubic view
 	static var CUBE_DIM 		= 300;
 	static var ANIM_DIM 		= 400;
-	static var CUBE_QUALITY 	= 3;
+	static var CUBE_QUALITY 	= 2;
 	private var cube:Box;
 
 	private var oLibStack:LibStack;
@@ -46,7 +43,7 @@ class CubicPano
 
 	public static function main():Void
 	{
-		var p:CubicPano = new CubicPano(_level0);
+		var p:CubicPano = new CubicPano(_root);
 	}
 
 	public function CubicPano(scope:MovieClip)
@@ -105,22 +102,20 @@ class CubicPano
 	 
 	function onTimeOut(e:LibEvent) : Void
 	{	// On peut utiliser setTimeOut pour le modifier le délais de 10 secs par défaut.
-		trace("Le chargement de " + e.getName() + " a échoué!");
+		trace("Le chargement de " + e.getName() + " a échouŽ!");
 	}
 
 	public function start():Void
 	{
 		_yaw = _pitch = 0;
-		var branchGroup:Group = makeScene();
-
 		// We have built all the objects; now we can display them 
-		var screen:IScreen = new ClipScreen(_scope.createEmptyMovieClip("screen", _scope.getNextHighestDepth()), ANIM_DIM, ANIM_DIM);
+		_world.setContainer(_scope.createEmptyMovieClip("screen", _scope.getNextHighestDepth()));
+		var screen:IScreen = new ClipScreen( ANIM_DIM, ANIM_DIM);
 		__createFPS();
-		var cam:Camera3D = new Camera3D(200, screen);
+		var cam:Camera3D = new Camera3D( screen);
 		//cam.setPosition( 0, 0, -500 );
-		_fov = fov(300);
-		_world.addCamera(cam);
-		_world.setRootGroup( branchGroup );
+		_world.setCamera(cam);
+		_world.setRootGroup( makeScene() );
 		_ms = getTimer();
 		_world.addEventListener(World3D.onRenderEVENT, this, interactions);
 		_world.render();
@@ -130,13 +125,14 @@ class CubicPano
 	{
 		var g:Group = new Group();	
 		cube = new Box( CUBE_DIM, CUBE_DIM, CUBE_DIM, 'tri', CUBE_QUALITY );
-		var a:Array = cube.getFaces();
-		trace( a.length );
+		var a:Array = cube.aFaces;
+		trace(a.length);
 		for( var i:Number = 0,j:Number = 1; i < a.length; i+=(2*CUBE_QUALITY*CUBE_QUALITY), j++ )
 		{
-			var f:Face;
+			var f:Polygon;
 			var skin:Skin;
 			var lib:AbstractLib = AbstractLib( aElmts[j-1] );
+trace(lib.getContent() );
 			var b:BitmapData = BitmapUtil.movieToBitmap( lib.getContent(), true );
 			skin = new TextureSkin( b ); 
 			// --
@@ -188,31 +184,10 @@ class CubicPano
 			cam.tilt(-5);		// pitch (not really but OK since we don't roll)
 			_pitch -= 5;
 		}
-		if (Key.isDown(Key.SHIFT))
-		{
-			_fov -= 10;
-			cam.setFocal(foc(_fov));	// zoom
-			trace(_fov);
-		}
-		if (Key.isDown(Key.CONTROL))
-		{
-			_fov += 10;
-			cam.setFocal(foc(_fov));	// zoom
-			trace(_fov);
-		}
 
 		if (_yaw > 180) _yaw -= 360;
 		else if (_yaw < -180) _yaw += 360;
 	}
 
-	private function fov(foc:Number):Number	// fov in degrees
-	{
-		return 360 * Math.atan(ANIM_DIM/(2 * foc)) / Math.PI;
-	}
-
-	private function foc(fov:Number):Number	// fov in degrees
-	{
-		return ANIM_DIM / (2 * Math.tan(Math.PI * fov/360));
-	}
 
 }

@@ -39,68 +39,85 @@ import flash.geom.Point;
 **/
 class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
-	private var _mcl:MovieClipLoader;
 	/**
 	* Create a new MovieSkin.
-	* 
 	* @param url URL to load
 	*/
 	public function MovieSkin( url:String, b:Boolean )
 	{
 		super();
+		
 		_url = url;
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("Skin_"+_ID_, -10000-_ID_);
-		
-		_mcl = new MovieClipLoader();
-		_mcl.addListener(this);
-		_mcl.loadClip( url, _mc);
-		
-		_initialized = false;
+		// we try to attach it from the library
+		_mc = World3D.getInstance().getContainer().attachMovie(url, "Skin_"+_ID_, -10000-_ID_);
+		if( _mc == undefined )
+		{
+			_mc = World3D.getInstance().getContainer().createEmptyMovieClip("Skin_"+_ID_, -10000-_ID_);
+			_mcl = new MovieClipLoader();
+			_mcl.addListener(this);
+			_mcl.loadClip( url, _mc);
+			_loaded = true;
+			_initialized = false;
+		}
+		else
+		{
+			_loaded = false;
+			_initialized = true;
+			_animated = _mc._totalframes > 1;
+			_h = _mc._height;
+			_w = _mc._width;
+			updateTexture();
+			_mc._visible = false;
+		}
+		//
 		_bSmooth = false;
 		_p = new Point(0, 0);
-		
-		if( b != undefined && b == true )
-			World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
+		_cmf = new ColorMatrixFilter();
+		//
+		if( b ) World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
 	}
 	
 	public function attach( mc:MovieClip ):Void
 	{
-		_mcl.loadClip( _url, mc );
-	}
-
-	function onLoadStart  (target:MovieClip):Void 
-	{ 
-		trace("MovieSkin::start"); 
-	}
-
-	function onLoadProgress  (target:MovieClip, loaded:Number, total:Number):Void 
-	{ 
-		trace("MovieSkin::progress"); 
-	}
-	
-	function onLoadComplete  (target:MovieClip):Void 
-	{ 
-		trace("MovieSkin::complete"); 
-	}
-	
-	function onLoadInit  (target:MovieClip):Void 
-	{ 
-		trace("MovieSkin::init"); 
-		if( _initialized == false )
+		if( _loaded == true ) 
 		{
-			_h = target._height;
-			_w = target._width;
-			_mc._visible = false;
-			_initialized = true;
+			if ( _animated == true )
+			{
+				_mcl.loadClip( _url, mc );
+			}
+			else
+			{
+				mc.attachBitmap( _texture, 0 );
+			}
+		}
+		else
+		{
+			if( _animated == false )
+			{
+				mc.attachBitmap( _texture, 0 );
+			}
+			else
+			{
+				mc.attachMovie( _url, "toto", 0 );
+			}
 		}
 	}
-	
-	function onLoadError  (target:MovieClip, code:String):Void 
-	{ 
-		trace("MovieSkin::erreur"); 
+ 
+	public function isAnimated( Void ):Boolean
+	{
+		return _animated;
 	}
-		 
-	 
+	
+	public function isInitialized( Void ):Boolean
+	{
+		return _initialized;
+	}
+	
+	public function get smooth():Boolean
+	{
+		return _bSmooth;
+	}
+		
 	/**
 	 * getType, returns the type of the skin
 	 * @param Void
@@ -195,10 +212,14 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		return 'sandy.skin.MovieSkin' ;
 	}
 
-
 	public function updateTexture( Void ):Void
 	{
-		_texture = BitmapUtil.movieToBitmap( _mc, true, 0xFFFFFFFF);
+		if( _texture )
+		{
+			_texture.dispose();
+			delete _texture;
+		}
+		_texture = BitmapUtil.movieToBitmap( _mc );//, 0x00FFFFFF);
 	}
 	
 	private function __concat( m1, m2 ):Object
@@ -234,6 +255,42 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			0.0	, 0.0	, 0.0	, 1.0	, o
 		);
 	}
+	
+	private function onLoadStart  (target:MovieClip):Void 
+	{ 
+		; 
+	}
+
+	private function onLoadProgress  (target:MovieClip, loaded:Number, total:Number):Void 
+	{ 
+		; 
+	}
+	
+	private function onLoadComplete  (target:MovieClip):Void 
+	{ 
+		; 
+	}
+	
+	private function onLoadInit  (target:MovieClip):Void 
+	{ 
+		if( _initialized == false )
+		{
+			_h = target._height;
+			_w = target._width;
+			updateTexture();
+			_mc._visible = false;
+			_mc.stop();
+			_initialized = true;
+			_animated = target._totalframes > 1;
+			broadcastEvent(_eOnUpdate);
+		}
+	}
+	
+	private function onLoadError  (target:MovieClip, code:String):Void 
+	{ 
+		trace("MovieSkin::erreur"); 
+	} 
+		
 	// --
 	private var _url:String;
 	private var _mc:MovieClip;
@@ -245,4 +302,6 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	private var _bSmooth:Boolean;
 	private var _p:Point;
 	private var _initialized:Boolean;
+	private var _loaded:Boolean;
+	private var _mcl:MovieClipLoader;
 }

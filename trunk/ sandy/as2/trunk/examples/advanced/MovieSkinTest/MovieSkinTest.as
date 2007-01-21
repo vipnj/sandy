@@ -66,9 +66,10 @@ class MovieSkinTest
 	{
 		var mc:MovieClip; var cam:Camera3D; var screen:IScreen;
 		mc = _mc.createEmptyMovieClip( 'screen', 1 );
-		screen = new ClipScreen( mc, 300, 300 );
-		cam = new Camera3D( 700, screen );
-		World3D.getInstance().addCamera( cam );
+		World3D.getInstance().setContainer( mc );
+		screen = new ClipScreen(  300, 300 );
+		cam = new Camera3D( screen );
+		World3D.getInstance().setCamera( cam );
 	}
 	
 
@@ -89,16 +90,16 @@ class MovieSkinTest
 		tgTranslation	= new TransformGroup();
 		//
 		var translation:Transform3D = new Transform3D();
-		translation.translate( 0, 0, 500 );
+		translation.translate( 0, 0, 300 );
 		tgTranslation.setTransform( translation );
 		//
 		var rotint:RotationInterpolator = new RotationInterpolator( myEase.create(), 500 );
 		// -- listener
-		rotint.addEventListener( BasicInterpolator.onEndEVENT, this, __yoyo );
-		rotint.addEventListener( BasicInterpolator.onProgressEVENT, this, __playMouse );
+		rotint.addEventListener( InterpolationEvent.onEndEVENT, this, __yoyo );
+		rotint.addEventListener( InterpolationEvent.onProgressEVENT, this, __playMouse );
 		
 		var o:Object3D = new Box( 100, 100, 100 );
-		var skin:Skin = new MovieSkin( _mc.texture_mc );
+		var skin:Skin = new MovieSkin( 'texture_anim', true );
 		skin.setLightingEnable( true );
 		o.setSkin( skin );
 		//

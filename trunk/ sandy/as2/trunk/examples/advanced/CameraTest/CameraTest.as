@@ -5,13 +5,15 @@ import sandy.core.*;
 import sandy.skin.*;
 import sandy.util.Ease;
 import sandy.core.transform.*;
-import sandy.events.*;
+import sandy.events.InterpolationEvent;
 import sandy.util.*;
+import sandy.view.Camera3D;
+import sandy.view.ClipScreen;
 
 /**
 * @mtasc -main CameraTest -swf CameraTest.swf -header 300:300:120:FFFFFF -version 8 -wimp -trace org.flashdevelop.utils.FlashConnect.mtrace org/flashdevelop/utils/FlashConnect.as 
 */
-class CameraTest extends Sandy
+class CameraTest
 {
 	/**
 	* Entry point for MTASC compilation. If no Movieclip is given, _root will be choose.
@@ -23,35 +25,24 @@ class CameraTest extends Sandy
 		var c = new CameraTest ( mc );
 	}
 	
-	private var _mcLoader:MovieClipLoader;
-	
 	public function CameraTest( mc:MovieClip )
 	{
 		super( mc );
-		_mcLoader = new MovieClipLoader();
-		_mcLoader.addListener(this);
-		//loadClip('180.swf');
-		loadClip('DamoMovieSkin(1).swf');
+		init();
 	}
-	
-	public function onLoadInit(target:MovieClip):Void
+
+	public function init()
 	{
-		target._visible = false;
-		__start( target );
+		var screen:ClipScreen = new ClipScreen( 300, 300 );
+		var cam:Camera3D = new Camera3D( screen );
+		cam.setPosition( 0, 0, -500 );
+		World3D.getInstance().setCamera( cam );
+		var g:Group = new Group();
+		createScene(g);
+		World3D.getInstance().setRootGroup( g );
+		World3D.getInstance().render();
 	}
-	
-	private function __start ( mc:MovieClip ):Void
-	{
-		if( mc ) super.__start();
-	}
-	
-	private function loadClip( im:String )
-	{
-		var pathName:String = im;
-		// this MC will never appear on screen:
-		var loaderMC:MovieClip = _mc.createEmptyMovieClip( 'texture', _mc.getNextHighestDepth() );
-		_mcLoader.loadClip( pathName, loaderMC );
-	}
+
 	
 	public function createScene( bg:Group ):Void
 	{
@@ -65,8 +56,8 @@ class CameraTest extends Sandy
 		tg.setTransform( t );
 		//
 		var o:Object3D, skin:Skin;
-		o = new Sprite3D(90,5);
-		skin = new MovieSkin( _mc.texture.texture, false );
+		o = new Sprite3D(3, 0);
+		skin = new MovieSkin( "180.swf", true );
 		o.setSkin( skin );
 		//
 		tg.addChild( o );
@@ -91,7 +82,7 @@ class CameraTest extends Sandy
 		ease.bounce(1);
 		ease.easingOutToBackIn();
 		var posint:PositionInterpolator = new PositionInterpolator( ease.create(), 150, new Vector(50, 0, 500), new Vector( 50, 60, 500 ) );
-		posint.addEventListener( PositionInterpolator.onEndEVENT, this, __onCubeEnd );
+		posint.addEventListener( InterpolationEvent.onEndEVENT, this, __onCubeEnd );
 		tg.addChild( o );
 		tg.setTransform( posint );
 		bg.addChild( tg );
@@ -106,14 +97,13 @@ class CameraTest extends Sandy
 		var int:PathInterpolator = new PathInterpolator( e.create(), 600, path );
 		int.addEventListener( InterpolationEvent.onProgressEVENT, 	this, __onCamMove );
 		int.addEventListener( InterpolationEvent.onEndEVENT, 		this, __onCamMoveEnd );
-		getCamera().setInterpolator( int );
-		
-		World3D.getInstance().render();
+		World3D.getInstance().getCamera().setInterpolator( int );
+
 	}
 	
 	private function __onCamMove( e:InterpolationEvent ):Void
 	{
-		getCamera().lookAt( 0, 0, 400 );
+		World3D.getInstance().getCamera().lookAt( 0, 0, 400 );
 	}
 	private function __onCamMoveEnd( e:InterpolationEvent ):Void
 	{

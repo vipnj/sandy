@@ -14,13 +14,13 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-import sandy.core.data.Matrix4;
-import sandy.core.data.Vector;
-import sandy.math.PlaneMath;
 import sandy.core.data.BBox;
 import sandy.core.data.BSphere;
-import sandy.core.data.Vertex;
+import sandy.core.data.Matrix4;
 import sandy.core.data.Plane;
+import sandy.core.data.Vector;
+import sandy.core.data.Vertex;
+import sandy.math.PlaneMath;
 /**
 * Frustum
 * Class used to determine if a box, a sphere, or a point is in the frustrum of the camera.
@@ -67,17 +67,11 @@ class sandy.view.Frustum
 		p[7] = new Vector( -xFar, yFar, fFar);  // Far, left, top
 		
 		aPlanes[0] = PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
-		trace("Plan gauche : "+aPlanes[0]);
 		aPlanes[1] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
-		trace("Plan droit : "+aPlanes[1]);
 		aPlanes[2] = PlaneMath.computePlaneFromPoints( p[0], p[7], p[3] ); // Top
-		trace("Plan sommet : "+aPlanes[2]);
 		aPlanes[3] = PlaneMath.computePlaneFromPoints( p[1], p[2], p[5] ); // Bottom
-		trace("Plan sol : "+aPlanes[3]);
 		aPlanes[4] = PlaneMath.computePlaneFromPoints( p[0], p[2], p[1] ); // Near
-		trace("Plan proche : "+aPlanes[4]);
 		aPlanes[5] = PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
-		trace("Plan lointain : "+aPlanes[5]);
 		
 		for( var i:Number = 0; i < 6; i++ )
 			PlaneMath.normalizePlane( aPlanes[i] );	
@@ -148,9 +142,13 @@ class sandy.view.Frustum
 		{
 			distance = PlaneMath.distanceToPoint( aPlanes[i], p );
 			if ( distance < -r )
+			{
 				return OUTSIDE; // outside
-			else if ( distance < r )
+			}
+			else if ( Math.abs(distance) < -r )
+			{
 				return  INTERSECT; // intersect
+			}
 		}
 		return INSIDE ; // inside
 	}
@@ -162,7 +160,7 @@ class sandy.view.Frustum
 		var plane:Plane;
 		var p:Array = box.getCorners(true);
 		// for each plane do ...
-		for(var i:Number = 4; i < 6; i++) 
+		for(var i:Number = 0; i < 6; i++) 
 		{
 			plane = aPlanes[i];
 			trace("Plane  :"+plane);
@@ -176,7 +174,7 @@ class sandy.view.Frustum
 				d = PlaneMath.distanceToPoint( plane, p[k] ) ;
 				trace("Distance : "+d);
 				// is the corner outside or inside
-				if ( d < 0 )
+				if ( d > 0 )
 					out++;
 				else
 					iin++;

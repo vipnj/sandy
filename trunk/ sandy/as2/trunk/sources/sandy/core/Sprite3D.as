@@ -15,12 +15,12 @@ limitations under the License.
 */
 
 import sandy.core.buffer.ZBuffer;
-import sandy.core.face.Sprite3DFace;
-import sandy.core.Object3D;
-import sandy.skin.MovieSkin;
-import sandy.util.NumberUtil;	
-import sandy.math.VectorMath;
 import sandy.core.data.Vector;
+import sandy.core.Sprite2D;
+import sandy.math.VectorMath;
+import sandy.skin.MovieSkin;
+import sandy.util.NumberUtil;
+import sandy.core.data.Vertex;
 	
 /**
  * @author		Thomas Pfeiffer - kiroukou
@@ -28,7 +28,7 @@ import sandy.core.data.Vector;
  * @version		0.3
  * @date 		28.03.2006
  **/
-class sandy.core.Sprite3D extends Object3D 
+class sandy.core.Sprite3D extends Sprite2D 
 {
 	/**
 	* A Sprite3D is in fact a special Sprite2D. A Sprite3D is batween a real Object3D and a Sprite2D.
@@ -39,65 +39,45 @@ class sandy.core.Sprite3D extends Object3D
 	* 							isn't adapted to your needs. Default value is 1.0 which means unchanged. A value of 2.0 will make the object
 	* 							twice bigger and so on.
 	*/
-	public function Sprite3D( pOffset:Number, pScale:Number ) 
+	public function Sprite3D( pScale:Number, pOffset:Number ) 
 	{
-		super();
-		// -- we create a fictive position point
-		super.addPoint( 0, 0, 0 );
-		// -- the scale vector
-		super.addPoint( 1, 1, 1 );
+		super(pScale);
 		// -- we create a fictive normal vector
-		super.addPoint( 0, 0, -1 );
+		aPoints[1] = new Vertex( 0, 0, -1 );
 		_vView = new Vector(0, 0, 1);
 		// -- set the offset
 		_nOffset = int(pOffset) || 0;
-		// -- set the scale
-		_nScale = (undefined == pScale) ? 1.0 : pScale;
-		
-		createFace();
 	}
 	
 	/**
-	* Set a Skin to the Sprite3D.
+	* Set a Skin to the Object3D.
 	* <p>This method will set the the new Skin to all his faces.</p>
 	* 
-	* @param	s	The MovieSkin to apply to the object
-	* @return Bolean False is the skin can't be applied, true is everything is fine.
+	* @param	s	The TexstureSkin to apply to the object
+	* @return	Boolean True is the skin is applied, false otherwise.
 	*/
 	public function setSkin( s:MovieSkin ):Boolean
 	{
-		if( s.getMovie()._totalframes < 360 )
+		_s = s;
+		if( _s.isInitialized() )
+			__updateContent();
+		else
+			_s.addEventListener( MovieSkin.onUpdateEVENT, this, __updateContent);
+		return true;
+	}
+	
+	private function __updateContent( Void ):Void
+	{
+		if( _s.getMovie()._totalframes != 360 )
 		{
-			trace("Sandy::Sprite3D#setSkin Error, The MovieSkin used with Sprite3D must have 360 frames, one frame per angle "+s.getMovie()._totalframes);
-			return true;
+			trace("Sprite3D:: Error, the skin movie must have 360 frames");
 		}
 		else
 		{
-			super.setSkin( s, true );
-			return false;
+			_s.attach( _mc );
 		}
 	}
-	
-	/**
-	 * This method isn't enable with the Sprite3D object. You might get the reason ;)
-	 * Returns always false.
-	 */
-	public function setBackSkin( s:MovieSkin, bOverWrite:Boolean ):Boolean
-	{
-		return false;
-	}
-	
-	/**
-	* getScaleVector
-	* <p>Returns the scale vector that represents the result of all the scales transformations applyied during the pipeline.
-	* </p>
-	* @param	Void
-	* @return Number the scale value.
-	*/
-	public function getScaleVector( Void ):Vector
-	{
-		return new Vector( aPoints[1].tx - aPoints[0].tx, aPoints[1].ty - aPoints[0].ty, aPoints[1].tz - aPoints[0].tz );
-	}
+
 	
 	/**
 	* Render the Sprite3D.
@@ -105,44 +85,28 @@ class sandy.core.Sprite3D extends Object3D
 	*/ 
 	public function render ( Void ):Void
 	{
-		// local copy because it's faster
-		var f:Sprite3DFace = aFaces[0];
 		// private property access hack for speed purpose. Please use the equivalent public method in your code!
-		var ndepth:Number = f.getVertex()[0].wz;
+		var ndepth:Number = _v.wz;
 		//
-		var vNormale:Vector = new Vector( aPoints[0].wx - aPoints[2].wx, aPoints[0].wy - aPoints[2].wy, aPoints[0].wz - aPoints[2].wz );
+		var vNormale:Vector = new Vector( _v.wx - aPoints[1].wx, _v.wy - aPoints[1].wy, _v.wz - aPoints[1].wz );
 		var angle:Number = VectorMath.getAngle( _vView, vNormale );
 		if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
+		// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
+		_mc.gotoAndStop( __frameFromAngle( angle ) );
 		//
-		f.setFrame( __frameFromAngle( angle ) );
-		// CLIPPING Now is the object behind the camera?
-		if ( ndepth > 100 )
-		{
-			// if face is visible or drawAllFaces is set to true
-			if ( !enableBackFaceCulling || f.isVisible () ) 
-				ZBuffer.push( {face : f, depth : ndepth} );				
-		}
+		_mc._visible = true;
+		ZBuffer.push( { movie:_mc, depth : _v.wz, callback:_fCallback } );
 		setModified( false );
 	}
 	
-	/**
-	* Create a new Frace.
-	* <p>When a new Face is created, by default it has the Skin of the Sprite3D. 
-	* The new Face will be automatically stored into the Object3D.</p>	* 
-	* @return	The created Face
-	*/
-	public function createFace ( Void ):Sprite3DFace
+	private function __frameFromAngle(a:Number):Number
 	{
-		setModified( true );
-		//
-		var f:Sprite3DFace = new Sprite3DFace( this, aPoints[0], aPoints[1] );
-		// set Default Skin
-		f.setSkin( MovieSkin( _s ) );
-		aFaces[0] = f;
-		//and return it
-		return f;
+		a = NumberUtil.toDegree( a );
+		a = (( a + _nOffset )+360) % 360;
+		return int(a);
 	}
-	
+		
+
 	/**
 	* getOffset
 	* Ollows you to get the offset of the Clip3D and later change it with setOffset if you need.
@@ -162,48 +126,7 @@ class sandy.core.Sprite3D extends Object3D
 	{
 		_nOffset = n;
 	}
-	
-	/**
-	* getScale
-	* Allows you to get the scale of the Sprite3D and later change it with setSCale.
-	* @param	Void
-	* @return
-	*/
-	public function getScale( Void ):Number
-	{
-		return _nScale;
-	}
-	
-	/**
-	* Allows you to change the oject's scale.
-	* @param	n Number 	The scale. This value must be a Number. A value of 1 let the scale as the perspective one.
-	* 						A value of 2.0 will make the object twice bigger. 0 is a forbidden value
-	*/
-	public function setScale( n:Number ):Void
-	{
-		if( n )
-		{
-			_nScale = n;
-		}
-	}
-	
-	/**
-	* Erase the behaviour of the Object3D addPoint method because Sprite3D handles itself its points. You can't add vertex by yourself here.
-	* @param	x
-	* @param	y
-	* @param	z
-	*/
-	public function addPoint( x:Number, y:Number, z:Number ):Void
-	{
-		;
-	}
-	
-	private function __frameFromAngle(a:Number):Number
-	{
-		a = NumberUtil.toDegree( a );
-		a = (( a + _nOffset )+360) % 360;
-		return int(a);
-	}
+
 	
 	// -- frames offset
 	private var _nOffset:Number;

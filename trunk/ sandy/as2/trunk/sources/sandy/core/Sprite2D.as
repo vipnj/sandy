@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 import sandy.core.buffer.ZBuffer;
-import sandy.core.data.Vector;
-import sandy.core.Object3D;
-import sandy.skin.MovieSkin;
 import sandy.core.data.Vertex;
 import sandy.core.face.IPolygon;
+import sandy.core.Object3D;
+import sandy.skin.MovieSkin;
+import sandy.view.Frustum;
 
 /**
  * @author		Thomas Pfeiffer - kiroukou
@@ -54,8 +54,17 @@ class sandy.core.Sprite2D extends Object3D
 	*/
 	public function setSkin( s:MovieSkin ):Boolean
 	{
-		s.attach( _mc );
+		_s = s;
+		if( _s.isInitialized() )
+			__updateContent();
+		else
+			_s.addEventListener( MovieSkin.onUpdateEVENT, this, __updateContent);
 		return true;
+	}
+	
+	private function __updateContent( Void ):Void
+	{
+		_s.attach( _mc );
 	}
 
 	/**
@@ -79,19 +88,7 @@ class sandy.core.Sprite2D extends Object3D
 	{
 		return _nScale;
 	}
-	
-	/**
-	* getScaleVector
-	* <p>Returns the scale vector that represents the result of all the scales transformations applyied during the pipeline.
-	* </p>
-	* @param	Void
-	* @return Number the scale value.
-	*/
-	public function getScaleVector( Void ):Vector
-	{
-		return new Vector( aPoints[1].tx - aPoints[0].tx, aPoints[1].ty - aPoints[0].ty, aPoints[1].tz - aPoints[0].tz );
-	}
-	
+
 	/**
 	* Allows you to change the oject's scale.
 	* @param	n Number 	The scale. This value must be a Number. A value of 1 let the scale as the perspective one.
@@ -111,15 +108,9 @@ class sandy.core.Sprite2D extends Object3D
 	*/ 
 	public function render ( Void ):Void
 	{		
-		if( _v.wz > 10 )
-		{
-			_mc._visible = true;
-			ZBuffer.push( { movie:_mc, depth : _v.nz, callback:_fCallback } );
-		}
-		else
-		{
-			_mc._visible = false;
-		}
+		_mc._visible = true;
+		ZBuffer.push( { movie:_mc, depth : _v.wz, callback:_fCallback } );
+		setModified( false );
 	}
 	
 	private function __renderFaces( Void ):Void
@@ -151,6 +142,32 @@ class sandy.core.Sprite2D extends Object3D
 		;
 	}
 	
+	public function enableClipping( b:Boolean ):Void
+	{
+		_enableClipping = b;
+	}
+	
+	public function clip( frustum:Frustum ):Boolean
+	{
+		var result:Boolean = false;
+		
+		if( _enableClipping )
+		{
+			if( frustum.pointInFrustum( _v.getWorldVector() ) == Frustum.OUTSIDE )
+				result =  true;
+			else
+				result =  false;
+		}
+		else
+		{
+			result =  false;
+		}
+		
+		if( result ) _mc._visible = false;
+		return result;
+	}
+	
 	private var _v:Vertex;
 	private var _nScale:Number;
+	private var _s:MovieSkin;
 }

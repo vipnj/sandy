@@ -30,9 +30,7 @@ class Sprite2DTest
 		_t  = getTimer();
 		_fps = 0;
 		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __refreshFps );
-		if( mc.texture instanceof MovieClip )	__start( _mc );
-		else									loadClip('arbre2.gif');
-		
+		__start( _mc );
 	}
 	
 	private function __refreshFps ():Void
@@ -53,16 +51,11 @@ class Sprite2DTest
 		var c:Sprite2DTest = new Sprite2DTest( mc );
 	}
 	
-	// this method is invoked when the mcLoader has loaded the clip
-	public function onLoadInit(target:MovieClip):Void
-	{
-		__start( target );
-	}
  	
 	private function __start ( mc:MovieClip ):Void
 	{
 		var w:World3D = World3D.getInstance();
-		w.setRootGroup( __createScene( mc ) );
+		w.setRootGroup( __createScene() );
 		__createCams();
 		//w.addEventListener( World3D.onRenderEVENT, this, __onRender );
 		w.render();
@@ -71,9 +64,10 @@ class Sprite2DTest
 	private function __createCams ( Void ):Void
 	{
 		var mc:MovieClip = _mc.createEmptyMovieClip( 'screen', 1 );
-		var screen:ClipScreen = new ClipScreen( mc, 300, 300 );
-		var cam:Camera3D = new Camera3D( 700, screen );
-		World3D.getInstance().addCamera( cam );
+		World3D.getInstance().setContainer( mc );
+		var screen:ClipScreen = new ClipScreen( 300, 300 );
+		var cam:Camera3D = new Camera3D(  screen );
+		World3D.getInstance().setCamera( cam );
 	}
 
 	private function __onRender ( e:BasicEvent ):Void
@@ -90,25 +84,16 @@ class Sprite2DTest
 			//case Key.isDown (Key.CONTROL) : cam.tilt ( -1 ); 		break;
 		}
 	}
-	
-	private function loadClip( im:String )
-	{
-		var pathName:String = im;
-		// this MC will never appear on screen:
-		var loaderMC:MovieClip = _mc.createEmptyMovieClip( 'texture_mc', _mc.getNextHighestDepth() );
-		_mcLoader.loadClip( pathName, loaderMC );
-	}
 
-	private function __createScene ( mc:MovieClip ):Group
+
+	private function __createScene ():Group
 	{
-		mc._visible = false;
-		var b:BitmapData = BitmapUtil.movieToBitmap( mc, true );
-		var skin:TextureSkin = new TextureSkin( b );
-		//var skin:TextureSkin = new MovieSkin( mc );
+		var skin:MovieSkin = new MovieSkin( 'arbre2.gif', false );
 		var bg:Group 		 = new Group();
 		for( var i:Number = 0; i < Sprite2DTest.NUM_ELEMENTS; i++ )
 		{
 			var s:Sprite2D = new Sprite2D();
+			s.enableClipping( true );
 			s.setSkin( skin );
 			var tgT:TransformGroup = new TransformGroup();
 			var trans:Transform3D = new Transform3D();

@@ -61,7 +61,7 @@ class sandy.core.World3D
 	 */
 	public static var onStopEVENT:EventType 		= new EventType( 'onStop' );
 	
-	public static var onLightAddedEVENT:EventType = new EventType( 'onLightAdded' );
+	public static var onLightAddedEVENT:EventType 	= new EventType( 'onLightAdded' );
 	
 	public static var onContainerCreatedEVENT:EventType = new EventType( 'onContainerCreated' );
 	
@@ -78,10 +78,10 @@ class sandy.core.World3D
 		// init the event broadcaster
 		_oEB = new EventBroadcaster( this );
 		// default light
-		_container = _root;
 		_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 		_isRunning = false;
 		_oEventManager = new ObjectEventManager();
+		setContainer( _root );
 	}
 	
 	public function setContainer( mc:MovieClip ):Void
@@ -346,14 +346,17 @@ class sandy.core.World3D
 						v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
 						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
-						
-			
+						//
 						var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
 						v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
 						v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 					}
 					// 
-					obj.render();
+					if( obj.clip( cam.frustrum ) == false )
+					{
+						obj.render();
+					}
+
 				}// end objects loop
 				else
 				{

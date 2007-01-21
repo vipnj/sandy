@@ -17,13 +17,12 @@ limitations under the License.
 import com.bourre.commands.Delegate;
 import com.bourre.events.BasicEvent;
 import com.bourre.events.EventBroadcaster;
-import com.bourre.events.IEvent;
 
 import sandy.core.buffer.ZBuffer;
 import sandy.core.data.BBox;
+import sandy.core.data.BSphere;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
-import sandy.core.face.Face;
 import sandy.core.face.IPolygon;
 import sandy.core.group.Leaf;
 import sandy.core.World3D;
@@ -89,7 +88,10 @@ class sandy.core.Object3D extends Leaf
 		_needRedraw = false;
 		_visible = true;
 		_enableForcedDepth = false;
+		_enableClipping = false;
 		_forcedDepth = 0;
+		_oBBox = null;
+		_oBSphere = null;
 		//
 		var d:Delegate = new Delegate(this, __renderFaces);
 		_fCallback = d.getFunction();
@@ -104,10 +106,20 @@ class sandy.core.Object3D extends Leaf
 		setSkin( DEFAULT_SKIN, true );
 		setBackSkin( DEFAULT_SKIN, true );
 		//
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("object_"+_ID_, _ID_);
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("object_"+_id, _id);
 		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}	
 
+	public function enableClipping( b:Boolean ):Void
+	{
+		_enableClipping = b;
+		if( _enableClipping ) 
+		{
+			_oBSphere = BSphere.create( this );
+			_oBBox = BBox.create( this );
+		}
+	}
+	
 	/**
 	 * Enable (true) or disable (false) the object forced depth.
 	 * Enable this feature makes the object drawn at a specific depth.
@@ -208,6 +220,12 @@ class sandy.core.Object3D extends Leaf
 		_s = pS;
 		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		//
+		var l:Number = aFaces.length;
+		while( --l > -1 )
+		{
+			aFaces[l].updateTextureMatrix( _s );
+		}
+		//
 		_needRedraw = true;
 		return true;
 	}
@@ -228,6 +246,12 @@ class sandy.core.Object3D extends Leaf
 		_sb = pSb;
 		_sb.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		//
+		var l:Number = aFaces.length;
+		while( --l > -1 )
+		{
+			aFaces[l].updateTextureMatrix( _sb );
+		}
+		//
 		_needRedraw = true;
 		return true;
 	}
@@ -243,13 +267,6 @@ class sandy.core.Object3D extends Leaf
 	*/
 	public function enableEvents( b:Boolean ):Void
 	{
-		/*
-		var l:Number = aFaces.length;
-		while( --l > -1 )
-		{
-			Face(aFaces[l]).enableEvents( b );
-		}
-		*/
 		// -- 
 		if( b )
 		{
@@ -329,14 +346,14 @@ class sandy.core.Object3D extends Leaf
 	{
 		var s:String;
 		for( s in aFaces )
-			Face(aFaces[s]).swapCulling();
+			aFaces[s].swapCulling();
 		// -- swap the skins too
 		/*
 		var tmp:Skin;
 		tmp = _sb;
 		_sb = _s;
 		_s = tmp;
-		 */
+		*/
 		// --
 		_needRedraw = true;	
 		setModified( true );
@@ -366,9 +383,7 @@ class sandy.core.Object3D extends Leaf
 		var p:Number = l;
 		var lDepth:Number = 0;
 		while( --l > -1 ) lDepth += aPoints[l].wz;
-		// First fast clipping
-		if( lDepth > 0 )
-			ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback } );
+		ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback } );
 	}
 	
 	private function __renderFaces( Void ):Void
@@ -389,7 +404,7 @@ class sandy.core.Object3D extends Leaf
 				_aSorted[l] = { face:f, depth:ndepth };
 		}
 		//
-		_aSorted.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		_aSorted.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
 		//
 		l = _aSorted.length;
 		while( --l > -1 )
@@ -429,9 +444,19 @@ class sandy.core.Object3D extends Leaf
 	*/
 	public function getBBox( Void ):BBox
 	{
-		return BBox.create( this );
+		return _oBBox;
 	}
 
+	/**
+	* Returns  bounding sphere of the object. [ minimum  value; maximum  value]
+	* @param	Void
+	* @return Return the bounding sphere
+	*/
+	public function getBSphere( Void ):BSphere
+	{
+		return _oBSphere;
+	}
+	
 	/**
 	 * Add a face to the objet, set the object skins to faces, and notify that there is a modification
 	 */
@@ -484,10 +509,37 @@ class sandy.core.Object3D extends Leaf
 			bClipped = bClipped || aF[l].clip( frustum );
 		}
 		*/
-		if( frustum.boxInFrustum( getBBox() ) == Frustum.OUTSIDE )
-			return true;
+		var result:Boolean = false;
+		
+		if( _enableClipping )
+		{
+			_oBSphere.center = getPosition();
+			if( frustum.sphereInFrustum( _oBSphere ) == Frustum.OUTSIDE )
+			{
+				result = true;
+			}
+			/*
+			else
+			{
+				if( frustum.boxInFrustum( _oBBox ) == Frustum.OUTSIDE )
+				{
+					trace("Bounding box clippée");
+					result =  true;
+				}
+				else
+				{
+					result =  false;
+				}
+			}
+			*/
+		}
 		else
-			return false;
+		{
+			result =  false;
+		}
+		
+		if( result ) _mc.clear();
+		return result;
 	}
 
 	public function getContainer( Void ):MovieClip
@@ -540,16 +592,15 @@ class sandy.core.Object3D extends Leaf
 	private function __onWorldContainer( e:BasicEvent ):Void
 	{
 		_mc.removeMovieClip();
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("polygon_"+_ID_, _ID_);
+		_mc = World3D.getInstance().getContainer().createEmptyMovieClip( "object_"+_id, _id );
 		_mc.clear();
 	}
 	
 	private function __sendObjectEvent( e:ObjectEvent ):Void
 	{
-		trace("send event : "+e);
 		_oEB.broadcastEvent.apply( _oEB, arguments );
 	}
-	
+
 	/**
 	* -------------------------------------------------------
 	* 			PRIVATE VAR
@@ -560,6 +611,7 @@ class sandy.core.Object3D extends Leaf
 	private var _needRedraw:Boolean;//Say if the object needs to be drawn again or not. Happens when the skin is updated!
 	private var _bEv:Boolean;// The event system state (enable or not)
 	private var _backFaceCulling:Boolean;
+	private var _enableClipping:Boolean;
 	private var _visible : Boolean;
 	private var _enableForcedDepth:Boolean;
 	private var _forcedDepth:Number;
@@ -567,6 +619,8 @@ class sandy.core.Object3D extends Leaf
 	private var _mc:MovieClip;
 	private var _aSorted:Array;
 	private var _eventDelegate:Delegate;
+	private var _oBBox:BBox;
+	private var _oBSphere:BSphere;
 	
 	private var _oOnPress:ObjectEvent;
 	private var _oOnRelease:ObjectEvent;

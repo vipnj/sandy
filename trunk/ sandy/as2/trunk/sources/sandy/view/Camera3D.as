@@ -533,7 +533,7 @@ class sandy.view.Camera3D
 		// --
 		if( undefined == fovY ) fovY = 45;
 		if( undefined == aspectRatio ) aspectRatio = _is.getRatio();
-		if( undefined == zNear ) zNear = 10;
+		if( undefined == zNear ) zNear = 50;
 		if( undefined == zFar ) zFar = 1000;
 		// --
 		fovY = NumberUtil.toRadian( fovY );
@@ -564,8 +564,10 @@ public function setPerspective( par_f_fieldOfViewVerticalDeg:Number, par_f_aspec
 	
 	if( undefined == par_f_fieldOfViewVerticalDeg ) par_f_fieldOfViewVerticalDeg = 45;
 	if( undefined == par_f_aspectRatio ) par_f_aspectRatio = _is.getRatio();
-	if( undefined == par_f_zNear ) par_f_zNear = 10;
+	if( undefined == par_f_zNear ) par_f_zNear = 50;
 	if( undefined == par_f_zFar ) par_f_zFar = 1000;
+	
+	frustrum.computePlanes(par_f_aspectRatio, par_f_zNear, par_f_zFar, par_f_fieldOfViewVerticalDeg );
 		
    par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
 
@@ -577,7 +579,7 @@ public function setPerspective( par_f_fieldOfViewVerticalDeg:Number, par_f_aspec
    frustum(  loc_f_x, -loc_f_x,
              loc_f_y, -loc_f_y,
               par_f_zNear, par_f_zFar);
-
+	
 	/* End of user code */
 	return;
 }

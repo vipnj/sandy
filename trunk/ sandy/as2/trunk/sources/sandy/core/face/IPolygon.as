@@ -100,7 +100,7 @@ interface sandy.core.face.IPolygon
 	/**
 	 * Update the texture matrix in case that one of its vertex has been changed
 	 */
-	public function updateTextureMatrix(Void):Void;
+	public function updateTextureMatrix( s:Skin ):Void;
 
 	/**
 	 * Returns the precomputed matrix for the texture algorithm.

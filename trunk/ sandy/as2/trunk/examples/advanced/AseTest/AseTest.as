@@ -77,9 +77,10 @@ class AseTest
 	{
 		var mc:MovieClip;var cam:Camera3D;var screen:ClipScreen;
 		mc = _mc.createEmptyMovieClip( 'screen', 1 );
-		screen = new ClipScreen( mc, 300, 300 );
+		World3D.getInstance().setContainer( mc );
+		screen = new ClipScreen( 300, 300 );
 		cam = new Camera3D(screen );
-		World3D.getInstance().addCamera( cam );
+		World3D.getInstance().setCamera( cam );
 	}
 	
 	private function __createScene ( Void ):Group

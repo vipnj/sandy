@@ -21,12 +21,12 @@ import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.face.IPolygon;
 import sandy.core.Object3D;
-import sandy.core.World3D;
 import sandy.math.VectorMath;
+import sandy.skin.MovieSkin;
 import sandy.skin.Skin;
+import sandy.skin.SkinType;
 import sandy.skin.TextureSkin;
 import sandy.view.Frustum;
-import com.bourre.events.BasicEvent;
 
 /**
 * Polygon
@@ -36,7 +36,7 @@ import com.bourre.events.BasicEvent;
 **/
 class sandy.core.face.Polygon implements IPolygon
 {
-	public function Polygon(  oref:Object3D /* ... */)
+	public function Polygon( oref:Object3D /* ... */ )
 	{
 		_o = oref;
 		_bfc = 1;
@@ -45,19 +45,28 @@ class sandy.core.face.Polygon implements IPolygon
 		_aClipped = _aVertex = arguments.slice(1);
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
-		updateTextureMatrix();
 	}
 	
 	/**
 	 * FIXME, the matrix i available only for front skin, the same thing shall be applied for back skins!
 	 **/
-	public function updateTextureMatrix(Void):Void
+	public function updateTextureMatrix( s:Skin ):Void
 	{
-		if( _nL > 2 && (_s instanceof TextureSkin) )
+		if( _nL > 2 )
 		{
-			var w:Number, h:Number;
-			w = TextureSkin(_s).texture.width;
-			h = TextureSkin(_s).texture.height;
+			var w:Number = 0, h:Number = 0;
+
+			if (s.getType() == SkinType.TEXTURE)
+			{
+				w = TextureSkin(s).texture.width;
+				h = TextureSkin(s).texture.height;
+			}
+			else if (s.getType() == SkinType.MOVIE)
+			{
+				w = MovieSkin(s).getMovie()._width;
+				h = MovieSkin(s).getMovie()._height;
+			}
+			//
 			if( w > 0 && h > 0 )
 			{		
 				var u0: Number = _aUV[0].u;
@@ -66,7 +75,7 @@ class sandy.core.face.Polygon implements IPolygon
 				var v1: Number = _aUV[1].v;
 				var u2: Number = _aUV[2].u;
 				var v2: Number = _aUV[2].v;
-				// -- Test PAPERVISION hack ! Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
+				// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 				if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 				{
 					u0 -= (u0 > 0.05)? 0.05 : -0.05;
@@ -114,8 +123,8 @@ class sandy.core.face.Polygon implements IPolygon
 	public function render( mc:MovieClip, pS:Skin, pSb:Skin ): Void
 	{
 		var s:Skin;
-		if( _bV ) s = (_s == null) ? pS : _s;
-		else	  s = (_sb == null) ? pSb : _sb;
+		if( _bfc == 1 ) s = (_s == null) ? pS : _s;
+		else	        s = (_sb == null) ? pSb : _sb;
 		//
 		s.begin( this, mc) ;
 		//
@@ -135,8 +144,8 @@ class sandy.core.face.Polygon implements IPolygon
 	public function refresh( mc:MovieClip, pS:Skin, pSb:Skin ):Void
 	{
 		var s:Skin;
-		if( _bV ) s = (_s == undefined) ? pS : _s;
-		else	  s = (_sb == undefined) ? pSb : _sb;
+		if( _bfc == 1 ) s = (_s == undefined) ? pS : _s;
+		else	        s = (_sb == undefined) ? pSb : _sb;
 		//
 		s.begin( this, mc) ;
 		//
@@ -324,7 +333,6 @@ class sandy.core.face.Polygon implements IPolygon
 		tmp = _sb;
 		_sb = _s;
 		_s = tmp;
-		
 	}
 
 	/**

@@ -14,9 +14,9 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-import sandy.core.data.Vertex;
 import sandy.core.Object3D;
-import sandy.math.VertexMath;
+import sandy.math.VectorMath;
+import sandy.core.data.Vector;
 
 /**
 * Bounding Sphere object used to clip the object faster.
@@ -30,7 +30,7 @@ import sandy.math.VertexMath;
 */
 class sandy.core.data.BSphere
 {
-	public var center:Vertex;
+	public var center:Vector;
 	public var radius:Number;
 	public var owner:Object3D;
 	
@@ -48,9 +48,9 @@ class sandy.core.data.BSphere
 		while( --l > -1 )
 		{
 			// --
-			if( VertexMath.getNorm( a[l] ) > max )	max =  VertexMath.getNorm( a[l] );
+			if( VectorMath.getNorm( a[l] ) > max )	max =  VectorMath.getNorm( a[l] );
 		}
-		return new BSphere( obj, new Vertex(), max );
+		return new BSphere( obj, new Vector(), max );
 	}
 	
 	/**
@@ -59,7 +59,7 @@ class sandy.core.data.BSphere
 	* @param	pos	The center of the sphere
 	* @param	radius	THe radius of the Sphere
 	*/ 	
-	public function BSphere( obj:Object3D, ppos:Vertex, pradius:Number )
+	public function BSphere( obj:Object3D, ppos:Vector, pradius:Number )
 	{
 		owner	= obj;
 		center 	= ppos; 

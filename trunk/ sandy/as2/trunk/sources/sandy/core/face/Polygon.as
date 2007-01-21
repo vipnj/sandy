@@ -263,8 +263,8 @@ class sandy.core.face.Polygon implements IPolygon
 		{
 			var v:Vector, w:Vector;
 			var a:Vertex = _aVertex[0], b:Vertex = _aVertex[1], c:Vertex = _aVertex[2];
-			v = new Vector( b.x - a.x, b.y - a.y, b.z - a.z );
-			w = new Vector( b.x - c.x, b.y - c.y, b.z - c.z );
+			v = new Vector( b.wx - a.wx, b.wy - a.wy, b.wz - a.wz );
+			w = new Vector( b.wx - c.wx, b.wy - c.wy, b.wz - c.wz );
 			// -- we compute de cross product
 			_vn = VectorMath.cross( v, w );//new Vector( (w.y * v.z) - (w.z * v.y) , (w.z * v.x) - (w.x * v.z) , (w.x * v.y) - (w.y * v.x) );
 			// -- we normalize the resulting vector

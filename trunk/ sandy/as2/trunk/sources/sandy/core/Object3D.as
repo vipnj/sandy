@@ -31,6 +31,8 @@ import sandy.events.SkinEvent;
 import sandy.skin.SimpleLineSkin;
 import sandy.skin.Skin;
 import sandy.view.Frustum;
+import sandy.core.transform.ITransform3D;
+import sandy.core.data.Matrix4;
 
 /**
 * <p>Represent an Object3D in a World3D</p>
@@ -498,6 +500,30 @@ class sandy.core.Object3D extends Leaf
 		super.destroy();
 	}
 	
+	/**
+	 * Add a transformation to the current TransformGroup. This allows to apply a transformation to all the childs of the Node.
+	 * @param t		The transformation to add
+	 */
+	public function setTransform( t:ITransform3D ):Void
+	{
+		_t = t;
+		setModified( true );
+	}
+	
+	/**
+	 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
+	 * @return	The transformation 
+	 */
+	public function getTransform( Void ):ITransform3D
+	{
+		return _t;
+	}
+	
+	public function getMatrix( Void ):Matrix4
+	{
+		return _t.getMatrix();
+	}
+	
 	public function clip( frustum:Frustum ):Boolean
 	{
 		/*
@@ -518,20 +544,27 @@ class sandy.core.Object3D extends Leaf
 			{
 				result = true;
 			}
-			/*
 			else
 			{
-				if( frustum.boxInFrustum( _oBBox ) == Frustum.OUTSIDE )
+				var res:Number = Frustum.INTERSECT;//frustum.boxInFrustum( _oBBox );
+				if( res == Frustum.OUTSIDE )
 				{
-					trace("Bounding box clippée");
 					result =  true;
+				}
+				else if (res == Frustum.INTERSECT )
+				{
+					var l:Number = aFaces.length;
+					while( --l > -1 )
+					{
+						aFaces[l].clip( frustum );
+					}
+					result = false;
 				}
 				else
 				{
-					result =  false;
+					result = false;
 				}
 			}
-			*/
 		}
 		else
 		{
@@ -621,7 +654,7 @@ class sandy.core.Object3D extends Leaf
 	private var _eventDelegate:Delegate;
 	private var _oBBox:BBox;
 	private var _oBSphere:BSphere;
-	
+	private var _t:ITransform3D;
 	private var _oOnPress:ObjectEvent;
 	private var _oOnRelease:ObjectEvent;
 	private var _oOnReleaseOutside:ObjectEvent;

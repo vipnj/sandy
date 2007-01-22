@@ -215,93 +215,92 @@ class sandy.view.Frustum
 
 	public function clipPolygon( p:Plane, pts:Array ):Array
 	{
-	 var aDist:Array = new Array( pts.length );
-	 var allin:Boolean = true, allout:Boolean = true;
-	 var v:Vertex;
-	 var i:Number, l:Number = pts.length;
-	 // -- If no points, we return null
-	 if( !l )
-	 {
-	 	 return null;
-	 }
-	 // -- otherwise we compute the distances to frustum plane
-	 for ( i=0; i<l; i++)
-	 {	 
-	 	v = pts[i];
-		aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz - p.d;
-		 if (aDist[i] < -EPSILON) allin = false;
-		 if (aDist[i] >= EPSILON) allout = false;
-	 }
-	 	
-	 if (allin)
-	 {
- 		return pts.slice();
-	 } 
-	 else if (allout) 	
-	 {
-	 	return null;
-	 }
-	 
-	 // Clip a polygon against a plane
-	 //fVertex *cv[10], *v1=vertex(0);
-	 var aClipped:Array = new Array();
-	 var v1:Vertex = pts[0];
-	 
-	 var dist2:Number, dist1:Number = aDist[0];
-	 var clipped:Boolean = false, inside:Boolean = (dist1 >= 0);
-	 var curv:Number = 0;
-	 for (i=1; i<l; i++)
-	 {	 
-	 	var v2:Vertex = pts[i%l];
-		dist2= aDist[i % l];
-		 // Sutherland-hodgeman clipping
-		 if (inside && (dist2>=0.0)) 
+		 var aDist:Array = new Array( pts.length );
+		 var allin:Boolean = true, allout:Boolean = true;
+		 var v:Vertex;
+		 var i:Number, l:Number = pts.length;
+		 // -- If no points, we return null
+		 if( !l )
 		 {
-		 	aClipped.push(v2);	// Both in
+		 	 return null;
 		 }
-		 else if ( (!inside) && (dist2>=EPSILON) )		// Coming in
+		 // -- otherwise we compute the distances to frustum plane
+		 for ( i=0; i<l; i++)
 		 {	 
-		 	clipped=inside=true;
-			 var t:Vertex = new Vertex();
-			 var  d:Number = dist1/(dist1-dist2);
-			t.x = (v1.wx+(v2.wx-v1.wx)*d);
-			t.y = (v1.wy+(v2.wy-v1.wy)*d);
-			t.z = (v1.wz+(v2.wz-v1.wz)*d);
-			
-			 //t.u = (v1.u+(v2.u-v1.u)*d);
-			 //t.v = (v1.v+(v2.v-v1.v)*d);
-			 aClipped.push( t );
-			 aClipped.push( v2 );
+		 	v = pts[i];
+			aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz - p.d;
+			 if (aDist[i] < -EPSILON) allin = false;
+			 if (aDist[i] >= EPSILON) allout = false;
+		 }
+		 	
+		 if (allin)
+		 {
+	 		return pts.slice();
 		 } 
-		 else if ( inside && (dist2<-EPSILON) )		// Going out
-		 {	 clipped=true;
-			 inside=false;
-			 var t:Vertex = new Vertex();
-			 var d:Number = dist1/(dist1-dist2);
-			 
-			t.x = (v1.wx+(v2.wx-v1.wx)*d);
-			t.y = (v1.wy+(v2.wy-v1.wy)*d);
-			t.z = (v1.wz+(v2.wz-v1.wz)*d);
-			
-			//t.u = (v1.u+(v2.u-v1.u)*d);
-			//t.v = (v1.v+(v2.v-v1.v)*d);
-
-			 aClipped.push( t );
-		 } 
+		 else if (allout) 	
+		 {
+		 	return null;
+		 }
 		 
-		 clipped = true;		// Both out
-		 v1 = v2;
-		 dist1 = dist2;
-	 }
-	 
-	 if (!clipped)
-	 {
-	  return pts.slice();
-	 }
-	 else
-	 {
-	 	 return aClipped;
-	 }
+		 // Clip a polygon against a plane
+		 var aClipped:Array = new Array();
+		 var v1:Vertex = pts[0];
+		 
+		 var dist2:Number, dist1:Number = aDist[0];
+		 var clipped:Boolean = false, inside:Boolean = (dist1 >= 0);
+		 var curv:Number = 0;
+		 for (i=1; i<l; i++)
+		 {	 
+		 	var v2:Vertex = pts[i%l];
+			dist2= aDist[i % l];
+			 // Sutherland-hodgeman clipping
+			 if (inside && (dist2>=0.0)) 
+			 {
+			 	aClipped.push(v2);	// Both in
+			 }
+			 else if ( (!inside) && (dist2>=EPSILON) )		// Coming in
+			 {	 
+				clipped=inside=true;
+				var t:Vertex = new Vertex();
+				var  d:Number = dist1/(dist1-dist2);
+				t.x = (v1.wx+(v2.wx-v1.wx)*d);
+				t.y = (v1.wy+(v2.wy-v1.wy)*d);
+				t.z = (v1.wz+(v2.wz-v1.wz)*d);
+				
+				 //t.u = (v1.u+(v2.u-v1.u)*d);
+				 //t.v = (v1.v+(v2.v-v1.v)*d);
+				 aClipped.push( t );
+				 aClipped.push( v2 );
+			 } 
+			 else if ( inside && (dist2<-EPSILON) )		// Going out
+			 {	 clipped=true;
+				 inside=false;
+				 var t:Vertex = new Vertex();
+				 var d:Number = dist1/(dist1-dist2);
+				 
+				t.x = (v1.wx+(v2.wx-v1.wx)*d);
+				t.y = (v1.wy+(v2.wy-v1.wy)*d);
+				t.z = (v1.wz+(v2.wz-v1.wz)*d);
+				
+				//t.u = (v1.u+(v2.u-v1.u)*d);
+				//t.v = (v1.v+(v2.v-v1.v)*d);
+	
+				 aClipped.push( t );
+			 } 
+			 
+			 clipped = true;		// Both out
+			 v1 = v2;
+			 dist1 = dist2;
+		 }
+		 
+		 if (!clipped)
+		 {
+		  return pts.slice();
+		 }
+		 else
+		 {
+		 	 return aClipped;
+		 }
 	}
 	
 }

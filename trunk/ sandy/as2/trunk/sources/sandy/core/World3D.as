@@ -346,16 +346,19 @@ class sandy.core.World3D
 						v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
 						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
-						//
-						var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-						v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
-						v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 					}
-					// 
 					if( obj.clip( cam.frustrum ) == false )
 					{
-						obj.render();
-					}
+						aV = obj.aFaces;
+						lp = aV.length;
+						while( --lp > -1 )
+						{
+							//
+							// Loop on all the vertex of the polygon!
+							var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
+							v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
+							v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
+						}
 
 				}// end objects loop
 				else
@@ -381,14 +384,17 @@ class sandy.core.World3D
 		var lCache:Boolean = n.isModified();
 		_bGlbCache = _bGlbCache || lCache;
 		var l:Number = a.length;
-		
+		var m:Matrix4;
 		if( !l )
 		{
 			if( Object3D( n ).isVisible() )
 			{
 				_aObjects.push( n );
 				_aCache.push( cache || lCache );
+				m = Object3D( n ).getMatrix();
+				if( m ) MatrixBuffer.push( m );
 				_aMatrix.push( MatrixBuffer.getCurrentMatrix() );
+				if( m ) MatrixBuffer.pop();
 			}
 		}
 		else

@@ -123,16 +123,18 @@ class sandy.core.face.Polygon implements IPolygon
 	public function render( mc:MovieClip, pS:Skin, pSb:Skin ): Void
 	{
 		var s:Skin;
+		var l:Number = _nCL;
+		var a:Array = _aClipped;
+		//
 		if( _bfc == 1 ) s = (_s == null) ? pS : _s;
 		else	        s = (_sb == null) ? pSb : _sb;
 		//
 		s.begin( this, mc) ;
 		//
-		var l:Number = _nL;
-		mc.moveTo( _aVertex[0].sx, _aVertex[0].sy );
+		mc.moveTo( a[0].sx, a[0].sy );
 		while( --l > -1 )
 		{
-			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
+			mc.lineTo( a[l].sx, a[l].sy);
 		}
 		// -- we launch the rendering with the appropriate skin
 		s.end( this, mc );
@@ -144,15 +146,17 @@ class sandy.core.face.Polygon implements IPolygon
 	public function refresh( mc:MovieClip, pS:Skin, pSb:Skin ):Void
 	{
 		var s:Skin;
+		var l:Number = _nCL;
+		var a:Array = _aClipped;
+		//
 		if( _bfc == 1 ) s = (_s == undefined) ? pS : _s;
 		else	        s = (_sb == undefined) ? pSb : _sb;
 		//
 		s.begin( this, mc) ;
 		//
-		mc.lineTo( _aVertex[0].sx, _aVertex[0].sy );
-		var l:Number = _nL;
+		mc.lineTo( a[0].sx, a[0].sy );
 		while( --l > -1 )
-			mc.lineTo( _aVertex[l].sx, _aVertex[l].sy);
+			mc.lineTo( a[l].sx, a[l].sy);
 		// -- we launch the rendering with the appropriate skin
 		s.end( this, mc );
 	}
@@ -225,6 +229,7 @@ class sandy.core.face.Polygon implements IPolygon
 
 	public function clip( frustum:Frustum ):Boolean
 	{
+		delete _aClipped;
 		_aClipped = frustum.clipFrustum( _aVertex );
 		if( (_nCL = _aClipped.length) != _nL ) return true;
 		else return false;

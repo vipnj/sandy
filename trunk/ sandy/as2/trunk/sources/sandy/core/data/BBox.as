@@ -42,6 +42,8 @@ class sandy.core.data.BBox
 	 */
 	public var min:Vector;
 	
+	public var center:Vector;
+	
 	/**
 	 * the 3D object owning the Bounding Box
 	 */
@@ -85,6 +87,9 @@ class sandy.core.data.BBox
 		min		= (undefined == pmin) ? new Vector() : new Vector( pmin.x, pmin.y, pmin.z );
 		max		= (undefined == pmax) ? new Vector() : new Vector( pmax.x, pmax.y, pmax.z );
 		_aCorners = [];
+		center = new Vector();
+		for( var i:Number = 0; i < 8; i++)
+			_aCorners.push( new Vector() );
 	}
 	
 	/**
@@ -117,58 +122,19 @@ class sandy.core.data.BBox
 	 */
 	public function getCorners ( b:Boolean ):Array
 	{
-		if( !b )
-			return _aCorners;
-		else
-			return _aCorners =  
-			[
-				new Vector(min.x, max.y, max.z),
-				VectorMath.clone( max ),
-				new Vector(max.x, min.y, max.z),
-				new Vector(min.x, min.y, max.z),
-				new Vector(min.x, max.y, min.z),
-				new Vector(max.x, max.y, min.z),
-				new Vector(max.x, min.y, min.z),
-				VectorMath.clone( min )
-			];
-	/*
-		pts=new Vector();
-		pts.add(p1);
-		pts.add(p2);
-		pts.add(p3);
-		pts.add(p4);
-		s1=new Polygon(pts);
-		pts=new Vector();
-		pts.add(p2);
-		pts.add(p6);
-		pts.add(p7);
-		pts.add(p3);
-		s2=new Polygon(pts);
-		pts=new Vector();
-		pts.add(p1);
-		pts.add(p5);
-		pts.add(p6);
-		pts.add(p2);
-		s3=new Polygon(pts);
-		pts=new Vector();
-		pts.add(p5);
-		pts.add(p1);
-		pts.add(p4);
-		pts.add(p8);
-		s4=new Polygon(pts);
-		pts=new Vector();
-		pts.add(p7);
-		pts.add(p8);
-		pts.add(p4);
-		pts.add(p3);
-		s5=new Polygon(pts);
-		pts=new Vector();
-		pts.add(p6);
-		pts.add(p5);
-		pts.add(p8);
-		pts.add(p7);
-		s6=new Polygon(pts);
-	*/
+		if( b )
+		{
+			var x:Number = center.x, y:Number = center.y, z:Number = center.z;
+			_aCorners[0].x = (x+min.x);_aCorners[0].y =  (y+max.y); _aCorners[0].z =  (z+max.z);
+			_aCorners[1].x = (x+max.x);_aCorners[1].y =  (y+max.y); _aCorners[1].z =  (z+max.z);
+			_aCorners[2].x = (x+max.x);_aCorners[2].y =  (y+min.y); _aCorners[2].z =  (z+max.z);
+			_aCorners[3].x = (x+min.x);_aCorners[3].y =  (y+min.y); _aCorners[3].z =  (z+max.z);
+			_aCorners[4].x = (x+min.x);_aCorners[4].y =  (y+max.y); _aCorners[4].z =  (z+min.z);
+			_aCorners[5].x = (x+max.x);_aCorners[5].y =  (y+max.y); _aCorners[5].z =  (z+min.z);
+			_aCorners[6].x = (x+max.x);_aCorners[6].y =  (y+min.y); _aCorners[6].z =  (z+min.z);
+			_aCorners[7].x = (x+min.x);_aCorners[7].y =  (y+min.y); _aCorners[7].z =  (z+min.z);
+		}
+		return _aCorners;
 	}
 	
 	/**

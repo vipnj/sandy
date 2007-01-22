@@ -1,7 +1,7 @@
 
 import sandy.core.Object3D;
 import sandy.view.IScreen;
-import sandy.core.face.Face;
+import sandy.core.face.Polygon;
 import sandy.core.World3D;
 import sandy.events.ObjectEvent;
 
@@ -106,14 +106,14 @@ class sandy.events.ObjectEventManager
 		var curseurX:Number = mc._xmouse;
 		var curseurY:Number = mc._ymouse;
 		
-		//tableau des objets de notre sc�ne
+		//tableau des objets de notre scene
 		var oA:Array = _aListeningObjects;
 		var loA:Number = oA.length;
 		var obj:Object3D;
-		//tableau des faces appartenant � l'objet qui va �tre parcouru
+		//
 		var fA:Array;
 		var lfA:Number;
-		var fac:Face;
+		var fac:Polygon;
 		//on va chercher le hitTest ayant une profondeur minimale.
 		var depthMin:Number = Number.MAX_VALUE;
 		//r�f�rence � l'objet s�lectionner sur la sc�ne
@@ -132,12 +132,15 @@ class sandy.events.ObjectEventManager
 				var depth = fac.getZAverage();
 				if( depth < depthMin && depth > 0 )
 				{
+					/*
 					if( fac.getClip().hitTest( origX+curseurX, origy+curseurY, false) ) //m�thode getClip() sur une face renvoie le clip sur lequel est dessinn� la face.
 					{
 						depthMin = depth;
 						pickObj = obj;
 						break;
 					}
+					 * 
+					 */
 				}
 			}
 		}

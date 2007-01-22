@@ -332,12 +332,7 @@ class sandy.core.World3D
 					m12 = m.n12; m22 = m.n22; m32 = m.n32; m42 = m.n42;
 					m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
 					m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
-					//
-					mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
-					mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
-					mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
-					mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
-					// Now we can transform the objet vertices
+					// Now we can transform the objet vertices into the camera coordinates
 					aV = obj.aPoints;
 					lp = aV.length;
 					while( --lp > -1 )
@@ -347,19 +342,34 @@ class sandy.core.World3D
 						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
 					}
+					// Now we clip the object and in case it is visible or patially visible, we project it
+					// into the screen coordinates
 					if( obj.clip( cam.frustrum ) == false )
 					{
+						//
+						mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
+						mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
+						mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
+						mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
+						//
 						aV = obj.aFaces;
 						lp = aV.length;
 						while( --lp > -1 )
 						{
 							//
-							// Loop on all the vertex of the polygon!
-							var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-							v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
-							v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
+							var aCV:Array = aV[lp].getClippedVertices();
+							var lc:Number = aCV.length;
+							while( -- lc > -1 )
+							{
+								v = aCV[lp];
+								var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
+								v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
+								v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
+							}
 						}
-
+						
+						obj.render();
+					}
 				}// end objects loop
 				else
 				{

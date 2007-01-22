@@ -114,7 +114,12 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		return _aVertex;
 	}
-
+	
+	public function getClippedVertices(   Void ):Array
+	{
+		return _aClipped;
+	}
+	
 	/** 
 	 * Render the face into a MovieClip.
 	 *

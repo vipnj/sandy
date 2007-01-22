@@ -163,7 +163,6 @@ class sandy.view.Frustum
 		for(var i:Number = 0; i < 6; i++) 
 		{
 			plane = aPlanes[i];
-			trace("Plane  :"+plane);
 			// reset counters for corners in and out
 			out = 0; iin = 0;
 			// for each corner of the box do ...
@@ -172,9 +171,8 @@ class sandy.view.Frustum
 			for ( var k:Number = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
 				d = PlaneMath.distanceToPoint( plane, p[k] ) ;
-				trace("Distance : "+d);
 				// is the corner outside or inside
-				if ( d > 0 )
+				if ( d < 0 )
 					out++;
 				else
 					iin++;
@@ -182,14 +180,12 @@ class sandy.view.Frustum
 			// if all corners are out
 			if ( iin == 0 )
 			{
-				trace("Outside");
 				return Frustum.OUTSIDE;
 			}
 			// if some corners are out and others are in	
 			else if ( out > 0 )
 			{
-				trace("intersecting");
-				result = Frustum.INTERSECT;
+				return Frustum.INTERSECT;
 			}
 		}
 		return result;

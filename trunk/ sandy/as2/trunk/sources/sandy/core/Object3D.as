@@ -546,7 +546,8 @@ class sandy.core.Object3D extends Leaf
 			}
 			else
 			{
-				var res:Number = Frustum.INTERSECT;//frustum.boxInFrustum( _oBBox );
+				_oBBox.center = getPosition();
+				var res:Number = frustum.boxInFrustum( _oBBox );
 				if( res == Frustum.OUTSIDE )
 				{
 					result =  true;

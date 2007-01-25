@@ -60,8 +60,8 @@ class sandy.view.Camera3D
 		// --
 		setScreen( s );
 		frustrum = new Frustum();
-		//setPerspectiveProjection();
-		setPerspective();
+		setPerspectiveProjection();
+		//setPerspective();
 		// --
 		_mt = _mf = _mv = Matrix4.createIdentity();
 		_compiled = false;
@@ -534,8 +534,10 @@ class sandy.view.Camera3D
 		if( undefined == fovY ) fovY = 45;
 		if( undefined == aspectRatio ) aspectRatio = _is.getRatio();
 		if( undefined == zNear ) zNear = 50;
-		if( undefined == zFar ) zFar = 1000;
+		if( undefined == zFar ) zFar = 3000;
 		// --
+		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
+		
 		fovY = NumberUtil.toRadian( fovY );
 		cotan = 1 / Math.tan(fovY / 2);
 		Q = zFar/(zFar - zNear);
@@ -548,70 +550,68 @@ class sandy.view.Camera3D
 		_mp.n34 = -Q*zNear;
 		_mp.n43 = 1;
 		
-		_mpInv = Matrix4Math.getInverse( _mp );
-		
-		frustrum.computePlanes(aspectRatio, zNear, zFar, 5*fovY );
-		
 		_compiled = false;
 		
 	}
 	
-public function setPerspective( par_f_fieldOfViewVerticalDeg:Number, par_f_aspectRatio:Number, par_f_zNear:Number, par_f_zFar:Number):Void
-{
-   /* Start of user code */
-   var loc_f_x:Number;
-   var loc_f_y:Number;
-	
-	if( undefined == par_f_fieldOfViewVerticalDeg ) par_f_fieldOfViewVerticalDeg = 45;
-	if( undefined == par_f_aspectRatio ) par_f_aspectRatio = _is.getRatio();
-	if( undefined == par_f_zNear ) par_f_zNear = 50;
-	if( undefined == par_f_zFar ) par_f_zFar = 1000;
-	
-	frustrum.computePlanes(par_f_aspectRatio, par_f_zNear, par_f_zFar, par_f_fieldOfViewVerticalDeg );
+	public function setPerspective( par_f_fieldOfViewVerticalDeg:Number, par_f_aspectRatio:Number, par_f_zNear:Number, par_f_zFar:Number):Void
+	{
+	   /* Start of user code */
+	   var loc_f_x:Number;
+	   var loc_f_y:Number;
 		
-   par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
-
-   loc_f_y = (par_f_zNear * Math.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
-
-   loc_f_x = par_f_aspectRatio * loc_f_y;
-
-	// FIXME Sign modification to be left handed
-   frustum(  loc_f_x, -loc_f_x,
-             loc_f_y, -loc_f_y,
-              par_f_zNear, par_f_zFar);
+		if( undefined == par_f_fieldOfViewVerticalDeg ) par_f_fieldOfViewVerticalDeg = 45;
+		if( undefined == par_f_aspectRatio ) par_f_aspectRatio = _is.getRatio();
+		if( undefined == par_f_zNear ) par_f_zNear = 50;
+		if( undefined == par_f_zFar ) par_f_zFar = 3000;
+		
+		frustrum.computePlanes(par_f_aspectRatio, par_f_zNear, par_f_zFar, par_f_fieldOfViewVerticalDeg );
+			
+	   par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
 	
-	/* End of user code */
-	return;
-}
-
-public function frustum( par_f_left:Number, par_f_right:Number, par_f_bottom:Number, par_f_top:Number, par_f_near:Number, par_f_far:Number):Void
-{
-	/* Start of user code */
- 	var   loc_f_width:Number;
- 	var   loc_f_height:Number;
- 	var   loc_f_depth:Number;
-
-	delete _mp;
-	_mp = Matrix4.createZero();
-
- 	loc_f_width  = par_f_right  -   par_f_left;
-	loc_f_height = par_f_top    -   par_f_bottom;
- 	loc_f_depth  = par_f_near   -   par_f_far;
-
- 	_mp.n11 = (2 * par_f_near) / loc_f_width;
- 	_mp.n22 = (2 * par_f_near) / loc_f_height;
-
- 	_mp.n13 = (par_f_right + par_f_left)  / loc_f_width;
- 	_mp.n23 = (par_f_top   + par_f_bottom) / loc_f_width;
-
-   	_mp.n33 = (par_f_far + par_f_near    ) / loc_f_depth;
-  	_mp.n34 = (par_f_far * par_f_near * 2) / loc_f_depth;
-  	
-  	_mp.n43 = -1;
-
-	/* End of user code */
-	return;
-}
+	   loc_f_y = (par_f_zNear * Math.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
+	
+	   loc_f_x = par_f_aspectRatio * loc_f_y;
+	
+		// FIXME Sign modification to be left handed
+	   frustum(  loc_f_x, -loc_f_x,
+	             loc_f_y, -loc_f_y,
+	              par_f_zNear, par_f_zFar);
+		
+		_compiled = false;
+		/* End of user code */
+		return;
+	}
+	
+	public function frustum( par_f_left:Number, par_f_right:Number, par_f_bottom:Number, par_f_top:Number, par_f_near:Number, par_f_far:Number):Void
+	{
+		/* Start of user code */
+	 	var   loc_f_width:Number;
+	 	var   loc_f_height:Number;
+	 	var   loc_f_depth:Number;
+	
+		delete _mp;
+		_mp = Matrix4.createZero();
+	
+	 	loc_f_width  = par_f_right  -   par_f_left;
+		loc_f_height = par_f_top    -   par_f_bottom;
+	 	loc_f_depth  = par_f_near   -   par_f_far;
+	
+	 	_mp.n11 = (2 * par_f_near) / loc_f_width;
+	 	_mp.n22 = (2 * par_f_near) / loc_f_height;
+	
+	 	_mp.n13 = (par_f_right + par_f_left)  / loc_f_width;
+	 	_mp.n23 = (par_f_top   + par_f_bottom) / loc_f_width;
+	
+	   	_mp.n33 = (par_f_far + par_f_near    ) / loc_f_depth;
+	  	_mp.n34 = (par_f_far * par_f_near * 2) / loc_f_depth;
+	  	
+	  	_mp.n43 = -1;
+	
+		_compiled = false;
+		/* End of user code */
+		return;
+	}
 
 	
 	private function __updateTransformMatrix ( Void ):Void

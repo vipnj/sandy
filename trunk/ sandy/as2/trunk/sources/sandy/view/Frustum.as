@@ -141,7 +141,6 @@ class sandy.view.Frustum
 		for( var i:Number = 0; i < 6; i++) 
 		{
 			d = PlaneMath.distanceToPoint( aPlanes[i], p );
-			
 			if ( d < -r )
 			{
 				return Frustum.OUTSIDE; // outside

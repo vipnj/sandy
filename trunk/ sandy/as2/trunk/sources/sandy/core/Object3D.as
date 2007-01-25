@@ -564,7 +564,7 @@ class sandy.core.Object3D extends Leaf
 					var l:Number = aFaces.length;
 					while( --l > -1 )
 					{
-						//;aFaces[l].clip( frustum );
+						//aFaces[l].clip( frustum );
 					}
 					// We consider that the object is not clipped and needs to be draw.
 					result = false;

@@ -35,14 +35,14 @@ class sandy.core.data.BBox
 	/**
 	 * max vector, representing the upper point of the cube volume
 	 */
-	public var max:Vector;
+	public var max:Vertex;
 	
 	/**
 	 * min vector, representing the lower point of the cube volume.
 	 */
-	public var min:Vector;
+	public var min:Vertex;
 	
-	public var center:Vector;
+	public var center:Vertex;
 	
 	/**
 	 * the 3D object owning the Bounding Box
@@ -84,10 +84,10 @@ class sandy.core.data.BBox
 	private function BBox( pobj:Object3D, pmin:Vector, pmax:Vector )
 	{
 		owner	= pobj;
-		min		= (undefined == pmin) ? new Vector() : new Vector( pmin.x, pmin.y, pmin.z );
-		max		= (undefined == pmax) ? new Vector() : new Vector( pmax.x, pmax.y, pmax.z );
+		min		= (undefined == pmin) ? new Vertex() : new Vertex( pmin.x, pmin.y, pmin.z );
+		max		= (undefined == pmax) ? new Vertex() : new Vertex( pmax.x, pmax.y, pmax.z );
 		_aCorners = [];
-		center = new Vector();
+		center = new Vertex();
 		for( var i:Number = 0; i < 8; i++)
 			_aCorners.push( new Vector() );
 	}
@@ -124,15 +124,24 @@ class sandy.core.data.BBox
 	{
 		if( b )
 		{
+			center.x = 0; center.y = 0; center.z = 0;
+			var minx:Number = min.wx;
+			var miny:Number = min.wy;
+			var minz:Number = min.wz;
+			
+			var maxx:Number = max.wx;
+			var maxy:Number = max.wy;
+			var maxz:Number = max.wz;
+			
 			var x:Number = center.x, y:Number = center.y, z:Number = center.z;
-			_aCorners[0].x = (x+min.x);_aCorners[0].y =  (y+max.y); _aCorners[0].z =  (z+max.z);
-			_aCorners[1].x = (x+max.x);_aCorners[1].y =  (y+max.y); _aCorners[1].z =  (z+max.z);
-			_aCorners[2].x = (x+max.x);_aCorners[2].y =  (y+min.y); _aCorners[2].z =  (z+max.z);
-			_aCorners[3].x = (x+min.x);_aCorners[3].y =  (y+min.y); _aCorners[3].z =  (z+max.z);
-			_aCorners[4].x = (x+min.x);_aCorners[4].y =  (y+max.y); _aCorners[4].z =  (z+min.z);
-			_aCorners[5].x = (x+max.x);_aCorners[5].y =  (y+max.y); _aCorners[5].z =  (z+min.z);
-			_aCorners[6].x = (x+max.x);_aCorners[6].y =  (y+min.y); _aCorners[6].z =  (z+min.z);
-			_aCorners[7].x = (x+min.x);_aCorners[7].y =  (y+min.y); _aCorners[7].z =  (z+min.z);
+			_aCorners[0].x = (x+minx);_aCorners[0].y =  (y+maxy); _aCorners[0].z =  (z+maxz);
+			_aCorners[1].x = (x+maxx);_aCorners[1].y =  (y+maxy); _aCorners[1].z =  (z+maxz);
+			_aCorners[2].x = (x+maxx);_aCorners[2].y =  (y+miny); _aCorners[2].z =  (z+maxz);
+			_aCorners[3].x = (x+minx);_aCorners[3].y =  (y+miny); _aCorners[3].z =  (z+maxz);
+			_aCorners[4].x = (x+minx);_aCorners[4].y =  (y+maxy); _aCorners[4].z =  (z+minz);
+			_aCorners[5].x = (x+maxx);_aCorners[5].y =  (y+maxy); _aCorners[5].z =  (z+minz);
+			_aCorners[6].x = (x+maxx);_aCorners[6].y =  (y+miny); _aCorners[6].z =  (z+minz);
+			_aCorners[7].x = (x+minx);_aCorners[7].y =  (y+miny); _aCorners[7].z =  (z+minz);
 		}
 		return _aCorners;
 	}

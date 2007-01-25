@@ -549,8 +549,8 @@ class sandy.core.Object3D extends Leaf
 			else if( res == Frustum.INTERSECT )
 			{
 				// The bounding sphere is intersecting a place at least.
-				// Let's check the bounding box volume.
-				_oBBox.center = getPosition();
+				// Let's check the bounding box volume
+				//_oBBox.center = getPosition();
 				res = frustum.boxInFrustum( _oBBox );
 				if( res == Frustum.OUTSIDE )
 				{
@@ -564,7 +564,7 @@ class sandy.core.Object3D extends Leaf
 					var l:Number = aFaces.length;
 					while( --l > -1 )
 					{
-						aFaces[l].clip( frustum );
+						//;aFaces[l].clip( frustum );
 					}
 					// We consider that the object is not clipped and needs to be draw.
 					result = false;

@@ -333,7 +333,8 @@ class sandy.core.World3D
 					m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
 					m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
 					// Now we can transform the objet vertices into the camera coordinates
-					aV = obj.aPoints;
+					aV = obj.aPoints.slice();
+					aV.push( obj.getBBox().max, obj.getBBox().min );
 					lp = aV.length;
 					while( --lp > -1 )
 					{
@@ -361,7 +362,7 @@ class sandy.core.World3D
 							var lc:Number = aCV.length;
 							while( -- lc > -1 )
 							{
-								v = aCV[lp];
+								v = aCV[lc];
 								var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
 								v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
 								v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;

@@ -135,22 +135,23 @@ class sandy.view.Frustum
 	
 	public function sphereInFrustum( s:BSphere ):Number
 	{
-		var distance:Number;
+		var d:Number;
 		var r:Number = s.radius; // radius
 		var p:Vector = s.center; // position (center)
 		for( var i:Number = 0; i < 6; i++) 
 		{
-			distance = PlaneMath.distanceToPoint( aPlanes[i], p );
-			if ( distance < -r )
+			d = PlaneMath.distanceToPoint( aPlanes[i], p );
+			
+			if ( d < -r )
 			{
-				return OUTSIDE; // outside
+				return Frustum.OUTSIDE; // outside
 			}
-			else if ( Math.abs(distance) < -r )
+			else if ( Math.abs(d) < r )
 			{
-				return  INTERSECT; // intersect
-			}
+				return  Frustum.INTERSECT; // intersect
+			}      
 		}
-		return INSIDE ; // inside
+		return Frustum.INSIDE ; // inside
 	}
 	
 	public function boxInFrustum( box:BBox ):Number

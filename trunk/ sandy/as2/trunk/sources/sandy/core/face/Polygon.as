@@ -42,7 +42,8 @@ class sandy.core.face.Polygon implements IPolygon
 		_bfc = 1;
 		_id = Polygon._ID_ ++;
 		_s = _sb = undefined;
-		_aClipped = _aVertex = arguments.slice(1);
+		_aVertex = arguments.slice(1);
+		_aClipped = _aVertex.concat();
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
 	}

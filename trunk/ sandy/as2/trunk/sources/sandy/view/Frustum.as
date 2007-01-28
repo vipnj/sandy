@@ -76,7 +76,7 @@ class sandy.view.Frustum
 		aConstants = new Array(6);
 	}
 	
-	public function computePlanes( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
+	public function computePlanes2( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
 	{	
 		var k:Number;
 		var f:Number = Math.tan(nFov * Math.PI / 180 / 2);
@@ -119,7 +119,7 @@ class sandy.view.Frustum
 		aPlanes[RIGHT] = PlaneMath.createFromNormalAndPoint( aNormals[RIGHT], aConstants[RIGHT] );
 	}
       
-	public function computePlanesOld( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
+	public function computePlanes( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
 	{
 		// store the information
 		var lRadAngle:Number = NumberUtil.toRadian( nFov );
@@ -213,7 +213,7 @@ class sandy.view.Frustum
 	{
 		var d:Number;
 		var r:Number = s.radius; // radius
-		var p:Vector = VectorMath.addVector(s.center, s.owner.getPosition()); // position (center)
+		var p:Vector = s.center;//VectorMath.addVector(s.center, s.owner.getPosition()); // position (center)
 		for( var i:Number = 0; i < 6; i++) 
 		{
 			d = PlaneMath.distanceToPoint( aPlanes[i], p );
@@ -228,7 +228,7 @@ class sandy.view.Frustum
 		}
 		return Frustum.INSIDE ; // inside
 	}
-	
+
 	public function boxInFrustum( box:BBox ):Number
 	{
 		var result:Number = Frustum.INSIDE, out:Number,iin:Number;
@@ -275,11 +275,12 @@ class sandy.view.Frustum
 			return cvert;
 		}
 		var tmp:Array = cvert.slice();
-		tmp = clipPolygon( aPlanes[0], tmp ); // left
-		tmp = clipPolygon( aPlanes[1], tmp ); // right
-		tmp = clipPolygon( aPlanes[2], tmp ); // top
-		tmp = clipPolygon( aPlanes[3], tmp ); // bottom
-		tmp = clipPolygon( aPlanes[4], tmp ); // near
+		tmp = clipPolygon( aPlanes[LEFT], tmp ); // left
+		tmp = clipPolygon( aPlanes[RIGHT], tmp ); // right
+		tmp = clipPolygon( aPlanes[BOTTOM], tmp ); // top
+		tmp = clipPolygon( aPlanes[TOP], tmp ); // bottom
+		tmp = clipPolygon( aPlanes[NEAR], tmp ); // near
+		//tmp = clipPolygon( aPlanes[FAR], tmp ); // far
 		return tmp;
 	}
 
@@ -300,7 +301,7 @@ class sandy.view.Frustum
 		 for ( i=0; i<l; i++)
 		 {	 
 		 	v = pts[i];
-			aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz - p.d;
+			aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d; // - p.d ??
 			 if (aDist[i] < -EPSILON) allin = false;
 			 if (aDist[i] >= EPSILON) allout = false;
 		 }
@@ -335,10 +336,9 @@ class sandy.view.Frustum
 				clipped=inside=true;
 				var t:Vertex = new Vertex();
 				var  d:Number = dist1/(dist1-dist2);
-				t.x = (v1.wx+(v2.wx-v1.wx)*d);
-				t.y = (v1.wy+(v2.wy-v1.wy)*d);
-				t.z = (v1.wz+(v2.wz-v1.wz)*d);
-				
+				t.wx = (v1.wx+(v2.wx-v1.wx)*d);
+				t.wy = (v1.wy+(v2.wy-v1.wy)*d);
+				t.wz = (v1.wz+(v2.wz-v1.wz)*d);
 				 //t.u = (v1.u+(v2.u-v1.u)*d);
 				 //t.v = (v1.v+(v2.v-v1.v)*d);
 				 aClipped.push( t );
@@ -350,9 +350,9 @@ class sandy.view.Frustum
 				 var t:Vertex = new Vertex();
 				 var d:Number = dist1/(dist1-dist2);
 				 
-				t.x = (v1.wx+(v2.wx-v1.wx)*d);
-				t.y = (v1.wy+(v2.wy-v1.wy)*d);
-				t.z = (v1.wz+(v2.wz-v1.wz)*d);
+				t.wx = (v1.wx+(v2.wx-v1.wx)*d);
+				t.wy = (v1.wy+(v2.wy-v1.wy)*d);
+				t.wz = (v1.wz+(v2.wz-v1.wz)*d);
 				
 				//t.u = (v1.u+(v2.u-v1.u)*d);
 				//t.v = (v1.v+(v2.v-v1.v)*d);

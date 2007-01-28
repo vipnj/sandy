@@ -118,7 +118,7 @@ class sandy.core.Object3D extends Leaf
 		if( _enableClipping ) 
 		{
 			_oBSphere = new BSphere( this );
-			_oBBox = BBox.create( this );
+			_oBBox = new BBox( this );
 		}
 	}
 	
@@ -540,6 +540,8 @@ class sandy.core.Object3D extends Leaf
 		// Is clipping enable on that object
 		if( _enableClipping )
 		{
+			delete _oBSphere;
+			_oBSphere = new BSphere( this );
 			res = frustum.sphereInFrustum( _oBSphere );
 			if( res  == Frustum.OUTSIDE )
 			{
@@ -547,11 +549,12 @@ class sandy.core.Object3D extends Leaf
 			}
 			else if( res == Frustum.INTERSECT )
 			{
-				return false;
-				trace("Sphere intersect");
 				// The bounding sphere is intersecting a place at least.
 				// Let's check the bounding box volume
+				delete _oBBox;
+				_oBBox = new BBox( this );
 				res = frustum.boxInFrustum( _oBBox );
+				//res = frustum.isBoxInFrustum( _oBBox.min, _oBBox.max );
 				if( res == Frustum.OUTSIDE )
 				{
 					// OUSIDE, the objet is clipped
@@ -559,12 +562,14 @@ class sandy.core.Object3D extends Leaf
 				}
 				else if (res == Frustum.INTERSECT )
 				{
+					// FIXME Why don't we pass by here ?
+					trace("Intersection!, on clippe face par face ");
 					// We are intersecting a place one more time. The object shall be at the limit
 					// of the frustum volume. Let's try to clip the faces against it.
 					var l:Number = aFaces.length;
 					while( --l > -1 )
 					{
-						//aFaces[l].clip( frustum );
+						aFaces[l].clip( frustum );
 					}
 					// We consider that the object is not clipped and needs to be draw.
 					result = false;

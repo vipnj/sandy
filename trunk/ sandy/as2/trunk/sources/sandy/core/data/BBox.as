@@ -35,14 +35,12 @@ class sandy.core.data.BBox
 	/**
 	 * max vector, representing the upper point of the cube volume
 	 */
-	public var max:Vertex;
+	public var max:Vector;
 	
 	/**
 	 * min vector, representing the lower point of the cube volume.
 	 */
-	public var min:Vertex;
-	
-	public var center:Vertex;
+	public var min:Vector;
 	
 	/**
 	 * the 3D object owning the Bounding Box
@@ -54,25 +52,22 @@ class sandy.core.data.BBox
 	 * Verry usefull for clipping and so performance !
 	 * @param obj Object3D The object that you want to add a bounding Box volume.
 	 */
-	public static function create( obj:Object3D ):BBox
+	public function compute( a:Array ):Void
 	{
-		var minx:Number, miny:Number, minz:Number, maxx:Number, maxy:Number, maxz:Number;
-		var a:Array = obj.aPoints;
 		var l:Number = a.length;
-		minx = maxx = a[0].wx; miny = maxy = a[0].wy; minz = maxz = a[0].wz;
+		min.x = max.x = a[0].wx; min.y = max.y = a[0].wy; min.z = max.z = a[0].wz;
 		while( --l > 0 )
 		{
 			var v:Vertex = a[l];
 			// --
-			if( v.wx < minx )		minx = v.wx;
-			else if( v.wx > maxx )	maxx = v.wx;
-			if( v.wy < miny )		miny = v.wy;
-			else if( v.wy > maxy )	maxy = v.wy;
-			if( v.wz < minz )		minz = v.wz;
-			else if( v.wz > maxz )	maxz = v.wz;
+			if( v.wx < min.x )		min.x = v.wx;
+			else if( v.wx > max.x )	max.x = v.wx;
+			if( v.wy < min.y )		min.y = v.wy;
+			else if( v.wy > max.y )	max.y = v.wy;
+			if( v.wz < min.z )		min.z = v.wz;
+			else if( v.wz > max.z )	max.z = v.wz;
 			
 		}
-		return new BBox( obj, new Vector( minx, miny, minz ), new Vector( maxx, maxy, maxz ) );
 	}
 	
 	/**
@@ -81,15 +76,12 @@ class sandy.core.data.BBox
 	* @param	obj		the object owner
 	* @param	radius	The radius of the Sphere
 	*/ 	
-	private function BBox( pobj:Object3D, pmin:Vector, pmax:Vector )
+	public function BBox( pobj:Object3D, pmin:Vector, pmax:Vector )
 	{
 		owner	= pobj;
-		min		= (undefined == pmin) ? new Vertex() : new Vertex( pmin.x, pmin.y, pmin.z );
-		max		= (undefined == pmax) ? new Vertex() : new Vertex( pmax.x, pmax.y, pmax.z );
-		_aCorners = [];
-		center = new Vertex();
-		for( var i:Number = 0; i < 8; i++)
-			_aCorners.push( new Vector() );
+		min		= new Vector();
+		max		= new Vector();
+		compute( owner.aPoints );
 	}
 	
 	/**
@@ -124,24 +116,22 @@ class sandy.core.data.BBox
 	{
 		if( b )
 		{
-			center.x = 0; center.y = 0; center.z = 0;
-			var minx:Number = min.wx;
-			var miny:Number = min.wy;
-			var minz:Number = min.wz;
+			var minx:Number = min.x;
+			var miny:Number = min.y;
+			var minz:Number = min.z;
 			
-			var maxx:Number = max.wx;
-			var maxy:Number = max.wy;
-			var maxz:Number = max.wz;
+			var maxx:Number = max.x;
+			var maxy:Number = max.y;
+			var maxz:Number = max.z;
 			
-			var x:Number = center.x, y:Number = center.y, z:Number = center.z;
-			_aCorners[0].x = (x+minx);_aCorners[0].y =  (y+maxy); _aCorners[0].z =  (z+maxz);
-			_aCorners[1].x = (x+maxx);_aCorners[1].y =  (y+maxy); _aCorners[1].z =  (z+maxz);
-			_aCorners[2].x = (x+maxx);_aCorners[2].y =  (y+miny); _aCorners[2].z =  (z+maxz);
-			_aCorners[3].x = (x+minx);_aCorners[3].y =  (y+miny); _aCorners[3].z =  (z+maxz);
-			_aCorners[4].x = (x+minx);_aCorners[4].y =  (y+maxy); _aCorners[4].z =  (z+minz);
-			_aCorners[5].x = (x+maxx);_aCorners[5].y =  (y+maxy); _aCorners[5].z =  (z+minz);
-			_aCorners[6].x = (x+maxx);_aCorners[6].y =  (y+miny); _aCorners[6].z =  (z+minz);
-			_aCorners[7].x = (x+minx);_aCorners[7].y =  (y+miny); _aCorners[7].z =  (z+minz);
+			_aCorners[0].x = (minx);_aCorners[0].y =  (maxy); _aCorners[0].z =  (maxz);
+			_aCorners[1].x = (maxx);_aCorners[1].y =  (maxy); _aCorners[1].z =  (maxz);
+			_aCorners[2].x = (maxx);_aCorners[2].y =  (miny); _aCorners[2].z =  (maxz);
+			_aCorners[3].x = (minx);_aCorners[3].y =  (miny); _aCorners[3].z =  (maxz);
+			_aCorners[4].x = (minx);_aCorners[4].y =  (maxy); _aCorners[4].z =  (minz);
+			_aCorners[5].x = (maxx);_aCorners[5].y =  (maxy); _aCorners[5].z =  (minz);
+			_aCorners[6].x = (maxx);_aCorners[6].y =  (miny); _aCorners[6].z =  (minz);
+			_aCorners[7].x = (minx);_aCorners[7].y =  (miny); _aCorners[7].z =  (minz);
 		}
 		return _aCorners;
 	}

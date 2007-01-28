@@ -117,7 +117,7 @@ class sandy.core.Object3D extends Leaf
 		_enableClipping = b;
 		if( _enableClipping ) 
 		{
-			_oBSphere = BSphere.create( this );
+			_oBSphere = new BSphere( this );
 			_oBBox = BBox.create( this );
 		}
 	}
@@ -540,7 +540,6 @@ class sandy.core.Object3D extends Leaf
 		// Is clipping enable on that object
 		if( _enableClipping )
 		{
-			_oBSphere.center = getPosition();
 			res = frustum.sphereInFrustum( _oBSphere );
 			if( res  == Frustum.OUTSIDE )
 			{
@@ -548,9 +547,10 @@ class sandy.core.Object3D extends Leaf
 			}
 			else if( res == Frustum.INTERSECT )
 			{
+				return false;
+				trace("Sphere intersect");
 				// The bounding sphere is intersecting a place at least.
 				// Let's check the bounding box volume
-				//_oBBox.center = getPosition();
 				res = frustum.boxInFrustum( _oBBox );
 				if( res == Frustum.OUTSIDE )
 				{

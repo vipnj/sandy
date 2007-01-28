@@ -92,5 +92,17 @@ class sandy.math.PlaneMath
 		return p;
 	}
 	
+	public static function createFromNormalAndPoint( pNormal:Vector, pD:Number ):Plane
+	{
+		var p:Plane = new Plane();
+		VectorMath.normalize(pNormal);
+		p.a = pNormal.x;
+		p.b = pNormal.y;
+		p.c = pNormal.z;
+		p.d = pD;
+		PlaneMath.normalizePlane( p );
+		return p;
+	}
+	
 }
 

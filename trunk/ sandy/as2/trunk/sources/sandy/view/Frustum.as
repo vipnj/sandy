@@ -21,6 +21,8 @@ import sandy.core.data.Plane;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.math.PlaneMath;
+import sandy.util.NumberUtil;
+import sandy.math.VectorMath;
 /**
 * Frustum
 * Class used to determine if a box, a sphere, or a point is in the frustrum of the camera.
@@ -35,7 +37,31 @@ import sandy.math.PlaneMath;
 class sandy.view.Frustum 
 {
 	public var aPlanes:Array;
-	public var aVertex:Array;
+  //  0-> +
+  //  |
+  //  V     5---4
+  //  -    /|  /|
+  //      / 6-/-7
+  //     / / / /
+  //    1---0 /   
+  //    |/  |/
+  //    2---3 	
+  	public var aPoints:Array;
+  	public var aNormals:Array;
+  	public var aConstants:Array;
+  // front plane : aNormals[0], aConstants[0] <-> aPoints[0], aPoints[1], aPoints[2], aPoints[3]
+  // upper plane : aNormals[1], aConstants[1] <-> aPoints[0], aPoints[1], aPoints[4], aPoints[5]
+  // lower plane : aNormals[2], aConstants[2] <-> aPoints[2], aPoints[3], aPoints[6], aPoints[7]
+  // right plane : aNormals[3], aConstants[3] <-> aPoints[0], aPoints[3], aPoints[4], aPoints[7]
+  // left plane  : aNormals[4], aConstants[4] <-> aPoints[1], aPoints[2], aPoints[5], aPoints[6]
+  // back plane  : aNormals[5], aConstants[5] <-> aPoints[4], aPoints[5], aPoints[6], aPoints[7] 	
+	public static var FAR:Number 	= 0;
+	public static var TOP:Number 	= 1;
+	public static var BOTTOM:Number = 2; 
+	public static var RIGHT:Number 	= 3;
+	public static var LEFT:Number 	= 4;
+	public static var NEAR:Number 	= 5;
+
 	
 	public static function get INSIDE():Number { return 1; }
 	public static function get OUTSIDE():Number { return  -1; }
@@ -45,18 +71,68 @@ class sandy.view.Frustum
 	public function Frustum() 
 	{
 		aPlanes = new Array(6);
-		aVertex = new Array(8);
+		aPoints = new Array(8);
+		aNormals = new Array(6);
+		aConstants = new Array(6);
 	}
 	
 	public function computePlanes( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
+	{	
+		var k:Number;
+		var f:Number = Math.tan(nFov * Math.PI / 180 / 2);
+		// --
+		var y:Number = fFar * f;    // y >= 0
+		var x:Number = y / nAspect;   // x >= 0
+		aPoints[4] = new Vector( x,  y, -fFar);
+		aPoints[5] = new Vector(-x,  y, -fFar);
+		aPoints[6] = new Vector(-x, -y, -fFar);
+		aPoints[7] = new Vector( x, -y, -fFar);
+		// --
+		aNormals  [0] = new Vector(0, 0, 1);
+		aConstants[0] = fNear;
+		k = Math.sqrt(y * y + fFar * fFar);
+		aNormals  [1] = new Vector(0, fFar / k, y / k);
+		aConstants[1] = 0;
+		aNormals  [2] = new Vector(0, -aNormals[1].y, aNormals[1].z);
+		aConstants[2] = 0;
+		k = Math.sqrt(x * x + fFar * fFar);
+		aNormals  [3] = new Vector(fFar / k, 0, x / k);
+		aConstants[3] = 0;
+		aNormals  [4] = new Vector(-aNormals[3].x, 0, aNormals[3].z);
+		aConstants[4] = 0;
+		aNormals  [5] = new Vector(0, 0, -1);
+		aConstants[5] = -fFar;
+		// --
+		y = fNear * f;
+		x = y / nAspect;
+		aPoints[0] = new Vector( x,  y, -fNear);
+		aPoints[1] = new Vector(-x,  y, -fNear);
+		aPoints[2] = new Vector(-x, -y, -fNear);
+		aPoints[3] = new Vector( x, -y, -fNear);
+
+
+	    aPlanes[NEAR] = PlaneMath.createFromNormalAndPoint( aNormals[NEAR], aConstants[NEAR] );
+		aPlanes[FAR] = PlaneMath.createFromNormalAndPoint( aNormals[FAR], aConstants[FAR] );
+		aPlanes[BOTTOM] = PlaneMath.createFromNormalAndPoint( aNormals[BOTTOM], aConstants[BOTTOM] );
+		aPlanes[TOP] = PlaneMath.createFromNormalAndPoint( aNormals[TOP], aConstants[TOP] );
+		aPlanes[LEFT] = PlaneMath.createFromNormalAndPoint( aNormals[LEFT], aConstants[LEFT] );
+		aPlanes[RIGHT] = PlaneMath.createFromNormalAndPoint( aNormals[RIGHT], aConstants[RIGHT] );
+	}
+      
+	public function computePlanesOld( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):Void
 	{
-		var yNear:Number = (Math.tan (nFov / 2 * 0.017453292519943295769236907684886)) * fNear;
+		// store the information
+		var lRadAngle:Number = NumberUtil.toRadian( nFov );
+		// compute width and height of the near and far plane sections
+		var tang:Number = Math.tan(lRadAngle * 0.5) ;
+		
+		var yNear:Number = tang * fNear;
 		var xNear:Number = yNear * nAspect;
 		var yFar:Number = yNear * fFar / fNear;
 		var xFar:Number = xNear * fFar / fNear;
 		fNear = -fNear;
 		fFar = -fFar;
-		var p:Array = aVertex;
+		var p:Array = aPoints;
 		p[0] = new Vector(xNear, yNear, fNear); // Near, right, top
 		p[1] = new Vector(xNear, -yNear, fNear); // Near, right, bottom
 		p[2] = new Vector(-xNear, -yNear, fNear); // Near, left, bottom
@@ -137,7 +213,7 @@ class sandy.view.Frustum
 	{
 		var d:Number;
 		var r:Number = s.radius; // radius
-		var p:Vector = s.center; // position (center)
+		var p:Vector = VectorMath.addVector(s.center, s.owner.getPosition()); // position (center)
 		for( var i:Number = 0; i < 6; i++) 
 		{
 			d = PlaneMath.distanceToPoint( aPlanes[i], p );
@@ -298,5 +374,50 @@ class sandy.view.Frustum
 		 	 return aClipped;
 		 }
 	}
+
+/*
+	public function computePlanesTemp( pAspect:Number, pNear:Number, pFar:Number, pFov:Number ):Void
+	{
+		// store the information
+		var lRadAngle:Number = NumberUtil.toRadian( pFov );
+		// compute width and height of the near and far plane sections
+		var tang:Number = Math.tan(lRadAngle * 0.5) ;
+		var nh:Number = pNear * tang;
+		var nw:Number = nh * pAspect; 
+		var fh:Number = pFar  * tang;
+		var fw:Number = fh * pAspect;
+		// compute the Z axis of camera
+		// this axis points in the opposite direction from 
+		// the looking direction
+		var Z:Vector = new Vector( 0, 0, 1 );
+		// X axis of camera with given "up" vector and Z axis
+		var X:Vector = new Vector( 1, 0, 0 );
+		// the real "up" vector is the cross product of Z and X
+		var Y:Vector = new Vector( 0, 1, 0 );
+		// compute the centers of the near and far planes
+		var nc:Vector = new Vector( 0, 0, pNear);
+		var fc:Vector = new Vector( 0, 0, pFar );
 	
+		aPlanes[NEAR].setNormalAndPoint(-Z,nc);
+		aPlanes[FAR].setNormalAndPoint(Z,fc);
+	
+		var aux:Vector,normal:Vector;
+	
+		aux = new Vector(0, nh, pNear);
+		normal = aux * X;
+		aPlanes[TOP].setNormalAndPoint(normal,nc+Y*nh);
+	
+		aux = (nc - Y*nh);
+		normal = X * aux;
+		aPlanes[BOTTOM].setNormalAndPoint(normal,nc-Y*nh);
+		
+		aux = (nc - X*nw);
+		normal = aux * Y;
+		aPlanes[LEFT].setNormalAndPoint(normal,nc-X*nw);
+	
+		aux = (nc + X*nw);
+		normal = Y * aux;
+		aPlanes[RIGHT].setNormalAndPoint(normal,nc+X*nw);
+	}
+	*/
 }

@@ -562,8 +562,6 @@ class sandy.core.Object3D extends Leaf
 				}
 				else if (res == Frustum.INTERSECT )
 				{
-					// FIXME Why don't we pass by here ?
-					trace("Intersection!, on clippe face par face ");
 					// We are intersecting a place one more time. The object shall be at the limit
 					// of the frustum volume. Let's try to clip the faces against it.
 					var l:Number = aFaces.length;

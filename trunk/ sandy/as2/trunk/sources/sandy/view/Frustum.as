@@ -232,27 +232,32 @@ class sandy.view.Frustum
 	public function boxInFrustum( box:BBox ):Number
 	{
 		var result:Number = Frustum.INSIDE, out:Number,iin:Number;
+		var k:Number;
 		var d:Number;
 		var plane:Plane;
 		var p:Array = box.getCorners(true);
+		trace("Points : "+p+" "+p.length);
 		// for each plane do ...
 		for(var i:Number = 0; i < 6; i++) 
 		{
 			plane = aPlanes[i];
+			trace("plan :"+plane);
 			// reset counters for corners in and out
 			out = 0; iin = 0;
 			// for each corner of the box do ...
 			// get out of the cycle as soon as a box as corners
 			// both inside and out of the frustum
-			for ( var k:Number = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
+			for ( k = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
 				d = PlaneMath.distanceToPoint( plane, p[k] ) ;
+				trace(d);
 				// is the corner outside or inside
 				if ( d < 0 )
 					out++;
 				else
 					iin++;
 			}
+	
 			// if all corners are out
 			if ( iin == 0 )
 			{

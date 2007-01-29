@@ -81,6 +81,9 @@ class sandy.core.data.BBox
 		owner	= pobj;
 		min		= new Vector();
 		max		= new Vector();
+		_aCorners = new Array(8);
+		var l:Number = 8;
+		while( --l > -1 ) _aCorners[l] = new Vector();
 		compute( owner.aPoints );
 	}
 	

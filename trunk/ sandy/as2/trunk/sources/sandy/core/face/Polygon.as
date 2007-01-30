@@ -43,7 +43,7 @@ class sandy.core.face.Polygon implements IPolygon
 		_id = Polygon._ID_ ++;
 		_s = _sb = undefined;
 		_aVertex = arguments.slice(1);
-		_aClipped = _aVertex.concat();
+		_aClipped = _aVertex.slice();
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
 	}
@@ -130,6 +130,7 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		var s:Skin;
 		var l:Number = _nCL;
+		if( l == 0 ) return;
 		var a:Array = _aClipped;
 		//
 		if( _bfc == 1 ) s = (_s == null) ? pS : _s;
@@ -153,6 +154,7 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		var s:Skin;
 		var l:Number = _nCL;
+		if( l == 0 ) return;
 		var a:Array = _aClipped;
 		//
 		if( _bfc == 1 ) s = (_s == undefined) ? pS : _s;
@@ -189,10 +191,10 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		// -- We normalize the sum and return it
 		var d:Number = 0;
-		var l:Number = _nL;
+		var l:Number = _nCL;
 		while( --l > -1 )
-			d += _aVertex[l].wz;
-		return d / _nL;
+			d += _aClipped[l].wz;
+		return d / _nCL;
 	}
 	
 	/**
@@ -202,10 +204,10 @@ class sandy.core.face.Polygon implements IPolygon
 	 */
 	public function getMinDepth ( Void ):Number
 	{
-		var min:Number = _aVertex[0].wz;
-		var l:Number = _nL;
+		var l:Number = _nCL;
+		var min:Number = _aClipped[0].wz;
 		while( --l > 0 )
-			min = Math.min( min, _aVertex[l].wz );
+			min = Math.min( min, _aClipped[l].wz );
 		return min;
 	}
 
@@ -216,10 +218,10 @@ class sandy.core.face.Polygon implements IPolygon
 	 */
 	public function getMaxDepth ( Void ):Number
 	{
-		var max:Number = _aVertex[0].wz;
-		var l:Number = _nL;
+		var l:Number = _nCL;
+		var max:Number = _aClipped[0].wz;
 		while( --l > 0 )
-			max = Math.max( max, _aVertex[l].wz );
+			max = Math.max( max, _aClipped[l].wz );
 		return max;
 	}
 	
@@ -233,12 +235,12 @@ class sandy.core.face.Polygon implements IPolygon
 		return new String("sandy.core.face.Polygon");
 	}
 
-	public function clip( frustum:Frustum ):Boolean
+	public function clip( frustum:Frustum ):Array
 	{
 		delete _aClipped;
 		_aClipped = frustum.clipFrustum( _aVertex );
-		if( (_nCL = _aClipped.length) != _nL ) return true;
-		else return false;
+		_nCL = _aClipped.length;
+		return _aClipped;
 	}
 
 	/**

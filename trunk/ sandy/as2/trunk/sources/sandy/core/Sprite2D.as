@@ -40,6 +40,7 @@ class sandy.core.Sprite2D extends Object3D
 		// -- we create a fictive point
 		_v = new Vertex( 0, 0, 0 );
 		aPoints[0] = _v;
+		aClipped = aPoints;
 		// --
 		_nScale = (undefined == pScale) ? 1.0 : pScale;
 		// --

@@ -353,20 +353,14 @@ class sandy.core.World3D
 						mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
 						mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
 						//
-						aV = obj.aFaces;
+						aV = obj.aClipped;
 						lp = aV.length;
 						while( --lp > -1 )
 						{
-							//
-							var aCV:Array = aV[lp].getClippedVertices();
-							var lc:Number = aCV.length;
-							while( -- lc > -1 )
-							{
-								v = aCV[lc];
-								var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-								v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
-								v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
-							}
+							v = aV[lp];
+							var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
+							v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
+							v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 						}
 						
 						obj.render();

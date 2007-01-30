@@ -35,18 +35,7 @@ class sandy.core.data.Vertex extends Vector
 	public var wx:Number;
 	public var wy:Number;
 	public var wz:Number;	
-	/**
-	* properties used to store transformed corrdinates
-	*/	
-	public var tx:Number;
-	public var ty:Number;
-	public var tz:Number;
-	/**
-	* properties used to store normalized coordinates
-	*/
-	public var nx:Number;
-	public var ny:Number;
-	public var nz:Number;	
+
 	/**
 	* properties used to store transformed coordinates in screen World.
 	*/ 
@@ -66,9 +55,9 @@ class sandy.core.data.Vertex extends Vector
 	{
 		super(px,py,pz);
 		// -- 
-		tx = wx = nx = x; 
-		ty = wy = ny = y; 
-		tz = wz = nz = z;
+		wx = px; 
+		wy = py; 
+		wz = pz;
 		// --
 		sy = sx = sz = 0;
 	}
@@ -82,24 +71,7 @@ class sandy.core.data.Vertex extends Vector
 	{
 		return new Vector( wx, wy, wz );
 	}
-	/**
-	* Returns a vector representing the vertex in the transformed coordinate
-	* @param	Void
-	* @return	Vector	a Vector
-	*/
-	public function getTransformedVector( Void ):Vector
-	{
-		return new Vector( tx, ty, tz );
-	}
-	/**
-	* Returns a vector representing the vertex in the normalized coordinate
-	* @param	Void
-	* @return	Vector	a Vector
-	*/
-	public function getNormalizedVector( Void ):Vector
-	{
-		return new Vector( nx, ny, nz );
-	}		
+	
 	/**
 	* Get a String represntation of the {@code Vertex}.
 	* 

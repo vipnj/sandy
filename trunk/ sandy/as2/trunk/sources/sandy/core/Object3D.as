@@ -60,6 +60,9 @@ class sandy.core.Object3D extends Leaf
 	* Array of Vertex ( Points used in this Object3D )
 	*/
 	public var aPoints:Array;
+	
+	public var aClipped:Array;
+	
 	/**
 	* Array of the faces of the Object3D.
 	*/ 
@@ -401,9 +404,11 @@ class sandy.core.Object3D extends Leaf
 		while( --l > -1 )
 		{
 			f = aFaces[l];
-			ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-			if( ndepth > 10 )
-				_aSorted[l] = { face:f, depth:ndepth };
+			if ( f.isVisible() || !_backFaceCulling ) 
+			{
+				ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
+				if(ndepth) _aSorted.push( { face:f, depth:ndepth } );
+			}
 		}
 		//
 		_aSorted.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
@@ -411,11 +416,7 @@ class sandy.core.Object3D extends Leaf
 		l = _aSorted.length;
 		while( --l > -1 )
 		{
-			f = _aSorted[l].face;
-			if ( f.isVisible() || !_backFaceCulling ) 
-			{
-				f.render( _mc, _s, _sb );
-			}				
+			_aSorted[l].face.render( _mc, _s, _sb );				
 		}
 		// -- 
 		_needRedraw = false;
@@ -431,9 +432,7 @@ class sandy.core.Object3D extends Leaf
 		//
 		while( --l > -1 )
 		{
-			f = a[l];
-			if ( f.isVisible () || !_backFaceCulling ) 
-				f.refresh( _mc, _s, _sb );
+			a[l].refresh( _mc, _s, _sb );
 		}
 		// -- 
 		_needRedraw = false;
@@ -537,6 +536,8 @@ class sandy.core.Object3D extends Leaf
 		*/
 		var result:Boolean = false;
 		var res:Number;
+		
+		aClipped = aPoints;
 		// Is clipping enable on that object
 		if( _enableClipping )
 		{
@@ -562,12 +563,13 @@ class sandy.core.Object3D extends Leaf
 				}
 				else if (res == Frustum.INTERSECT )
 				{
+					aClipped = new Array();
 					// We are intersecting a place one more time. The object shall be at the limit
 					// of the frustum volume. Let's try to clip the faces against it.
 					var l:Number = aFaces.length;
 					while( --l > -1 )
 					{
-						aFaces[l].clip( frustum );
+						aClipped = aClipped.concat( aFaces[l].clip( frustum ) );
 					}
 					// We consider that the object is not clipped and needs to be draw.
 					result = false;

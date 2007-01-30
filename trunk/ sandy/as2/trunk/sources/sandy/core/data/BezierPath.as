@@ -109,7 +109,7 @@ class sandy.core.data.BezierPath
 	public function compile( Void ):Void
 	{
 		_nNbPoints = _aContainer.length;
-		if( _nNbPoints%3 != 2)
+		if( _nNbPoints>=3 &&  _nNbPoints%2 == 1 )
 		{
 			trace('sandy.core.data.BezierPath ERROR: Number of points incompatible');
 			return;

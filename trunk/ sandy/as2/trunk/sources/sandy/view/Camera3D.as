@@ -352,7 +352,6 @@ class sandy.view.Camera3D
 		_p.x = x;
 		_p.y = y;
 		_p.z = z;	
-		trace("Camera::setPosition :"+x+" "+y+" "+z);
 	}
 	
 	/**

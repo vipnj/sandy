@@ -66,7 +66,7 @@ class sandy.view.Frustum
 	public static function get INSIDE():Number { return 1; }
 	public static function get OUTSIDE():Number { return  -1; }
 	public static function get INTERSECT():Number { return  0; }
-	public static function get EPSILON():Number { return  0.0000005; }
+	public static function get EPSILON():Number { return  0.005; }
 	
 	public function Frustum() 
 	{
@@ -82,29 +82,29 @@ class sandy.view.Frustum
 		var lRadAngle:Number = NumberUtil.toRadian( nFov );
 		// compute width and height of the near and far plane sections
 		var tang:Number = Math.tan(lRadAngle * 0.5) ;
-		
-		var yNear:Number = tang * fNear;
+		// we inverse the vertical axis as Flash a a vertical axis inversed by our 3D one. VERY IMPORTANT
+		var yNear:Number = -tang * fNear;
 		var xNear:Number = yNear * nAspect;
 		var yFar:Number = yNear * fFar / fNear;
 		var xFar:Number = xNear * fFar / fNear;
 		fNear = -fNear;
 		fFar = -fFar;
 		var p:Array = aPoints;
-		p[0] = new Vector(xNear, yNear, fNear); // Near, right, top
-		p[1] = new Vector(xNear, -yNear, fNear); // Near, right, bottom
-		p[2] = new Vector(-xNear, -yNear, fNear); // Near, left, bottom
+		p[0] = new Vector( xNear, yNear, fNear); // Near, right, top
+		p[1] = new Vector( xNear,-yNear, fNear); // Near, right, bottom
+		p[2] = new Vector(-xNear,-yNear, fNear); // Near, left, bottom
 		p[3] = new Vector(-xNear, yNear, fNear); // Near, left, top
-		p[4] = new Vector(xFar, yFar, fFar);  // Far, right, top
-		p[5] = new Vector(xFar, -yFar, fFar);  // Far, right, bottom
-		p[6] = new Vector(-xFar, -yFar, fFar);  // Far, left, bottom
-		p[7] = new Vector( -xFar, yFar, fFar);  // Far, left, top
+		p[4] = new Vector( xFar,  yFar,  fFar);  // Far, right, top
+		p[5] = new Vector( xFar, -yFar,  fFar);  // Far, right, bottom
+		p[6] = new Vector(-xFar, -yFar,  fFar);  // Far, left, bottom
+		p[7] = new Vector(-xFar,  yFar,  fFar);  // Far, left, top
 		
-		aPlanes[0] = PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
-		aPlanes[1] = PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
-		aPlanes[2] = PlaneMath.computePlaneFromPoints( p[0], p[7], p[3] ); // Top
-		aPlanes[3] = PlaneMath.computePlaneFromPoints( p[1], p[2], p[5] ); // Bottom
-		aPlanes[4] = PlaneMath.computePlaneFromPoints( p[0], p[2], p[1] ); // Near
-		aPlanes[5] = PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
+		aPlanes[LEFT] 	= PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
+		aPlanes[RIGHT] 	= PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
+		aPlanes[TOP] 	= PlaneMath.computePlaneFromPoints( p[0], p[7], p[3] ); // Top
+		aPlanes[BOTTOM] = PlaneMath.computePlaneFromPoints( p[1], p[2], p[5] ); // Bottom
+		aPlanes[NEAR] 	= PlaneMath.computePlaneFromPoints( p[0], p[2], p[1] ); // Near
+		aPlanes[FAR] 	= PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
 		
 		for( var i:Number = 0; i < 6; i++ )
 			PlaneMath.normalizePlane( aPlanes[i] );	
@@ -193,12 +193,10 @@ class sandy.view.Frustum
 		var d:Number;
 		var plane:Plane;
 		var p:Array = box.getCorners(true);
-		trace("Points : "+p+" "+p.length);
 		// for each plane do ...
 		for(var i:Number = 0; i < 6; i++) 
 		{
 			plane = aPlanes[i];
-			trace("plan :"+plane);
 			// reset counters for corners in and out
 			out = 0; iin = 0;
 			// for each corner of the box do ...
@@ -207,7 +205,6 @@ class sandy.view.Frustum
 			for ( k = 0; k < 8 && ( iin == 0 || out == 0 ); k++ ) 
 			{
 				d = PlaneMath.distanceToPoint( plane, p[k] ) ;
-				trace(d);
 				// is the corner outside or inside
 				if ( d < 0 )
 					out++;
@@ -239,7 +236,7 @@ class sandy.view.Frustum
 		var tmp:Array = new Array( cvert.length );
 		for( var i:Number=0; i < cvert.length; i++ ) tmp[i] = new Vertex( cvert[i].wx, cvert[i].wy, cvert[i].wz );
 		*/
-		var tmp:Array = cvert.slice();
+		var tmp:Array = cvert;
 		
 		tmp = clipPolygon( aPlanes[LEFT], tmp ); // left
 		if( tmp.length <= 2 ) return tmp;
@@ -273,8 +270,8 @@ class sandy.view.Frustum
 		{	 
 			v = pts[i];
 			aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d;
-			if (aDist[i] < -EPSILON) allin = false;
-			if (aDist[i] >= EPSILON) allout = false;
+			if (aDist[i] < 0) allin = false;
+			if (aDist[i] >= 0) allout = false;
 		}
 		
 		if (allin)
@@ -297,11 +294,11 @@ class sandy.view.Frustum
 			var v2:Vertex = pts[i%l];
 			dist2= aDist[i%l];
 			// Sutherland-hodgeman clipping
-			if ( inside && (dist2 >= EPSILON) ) 
+			if ( inside && (dist2 >= 0) ) 
 			{
 				aClipped.push(v2);	// Both in
 			}
-			else if ( (!inside) && (dist2>=EPSILON) )		// Coming in
+			else if ( (!inside) && (dist2>=0) )		// Coming in
 			{	 
 				clipped = inside = true;
 				var t:Vertex = new Vertex();
@@ -313,7 +310,7 @@ class sandy.view.Frustum
 				aClipped.push( t );
 				aClipped.push( v2 );
 			} 
-			else if ( inside && (dist2<-EPSILON) )		// Going out
+			else if ( inside && (dist2<0) )		// Going out
 			{	 
 				clipped=true;
 				inside=false;

@@ -240,6 +240,7 @@ class sandy.core.face.Polygon implements IPolygon
 		delete _aClipped;
 		_aClipped = frustum.clipFrustum( _aVertex );
 		_nCL = _aClipped.length;
+		trace(_nCL );
 		return _aClipped;
 	}
 
@@ -353,7 +354,8 @@ class sandy.core.face.Polygon implements IPolygon
 	 */
 	public function destroy( Void ):Void
 	{
-		;
+		delete _aClipped;
+		delete _aVertex;
 	}
 
 	/**

@@ -22,7 +22,6 @@ import sandy.util.BitmapUtil;
 import sandy.skin.BasicSkin;
 import sandy.skin.Skin;
 import sandy.core.face.IPolygon;
-import sandy.core.face.Sprite2DFace;
 import flash.geom.Matrix;
 import sandy.core.light.Light3D;
 import sandy.math.VectorMath;

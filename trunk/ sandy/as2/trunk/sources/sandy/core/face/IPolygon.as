@@ -14,10 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import flash.geom.Matrix;
+
+import sandy.core.data.UVCoord;
 import sandy.core.data.Vector;
 import sandy.skin.Skin;
-import flash.geom.Matrix;
-import sandy.core.data.UVCoord;
 
 /**
 * Face

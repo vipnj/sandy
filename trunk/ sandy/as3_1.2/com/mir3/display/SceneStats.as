@@ -94,8 +94,6 @@
 				line.x = l_barXPos;
 			}
 			
-			ms = getTimer();
-			fs = prevFrameTime = 0;
 			
 			maxBarWidth = 300;
 			

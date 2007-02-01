@@ -191,15 +191,15 @@ package sandy.core.data {
 		 *       9  10 11 12 <br>
 		 *       13 14 15 16 </code>
 		 */	
-		public function Matrix4() 
+		public function Matrix4(...rest) 
 		{
 			//TODO voir si on peut pas faire n11 = 1 || arguments[0] n12 = 0 || arguments[1] etc.
-			if(arguments.length == 16)
+			if(rest.length == 16)
 			{
-				n11 = arguments[0] ; n12 = arguments[1] ; n13 = arguments[2] ; n14 = arguments[3] ;
-				n21 = arguments[4] ; n22 = arguments[5] ; n23 = arguments[6] ; n24 = arguments[7] ;
-				n31 = arguments[8] ; n32 = arguments[9] ; n33 = arguments[10]; n34 = arguments[11];
-				n41 = arguments[12]; n42 = arguments[13]; n43 = arguments[14]; n44 = arguments[15];
+				n11 = rest[0] ; n12 = rest[1] ; n13 = rest[2] ; n14 = rest[3] ;
+				n21 = rest[4] ; n22 = rest[5] ; n23 = rest[6] ; n24 = rest[7] ;
+				n31 = rest[8] ; n32 = rest[9] ; n33 = rest[10]; n34 = rest[11];
+				n41 = rest[12]; n42 = rest[13]; n43 = rest[14]; n44 = rest[15];
 			}
 			else
 			{
@@ -220,7 +220,7 @@ package sandy.core.data {
 		*/
 		public static function createIdentity():Matrix4
 		{
-			return new Matrix4(  1, 0, 0, 0,
+			return new Matrix4( 1, 0, 0, 0,
 								0, 1, 0, 0,
 								0, 0, 1, 0, 
 								0, 0, 0, 1);

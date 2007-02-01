@@ -35,11 +35,13 @@ package sandy.core {
 	import flash.events.EventDispatcher;
 	import flash.events.Event;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
 	
 	import sandy.events.SandyEvent;
+	import sandy.math.FastMath;
 	
 	/**
 	* The 3D world for displaying the Objects.
@@ -67,10 +69,15 @@ package sandy.core {
 			_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 			_isRunning = false;
 			
+			trace("World3D start");
+			trace(FastMath.sin(10));
+			trace(Math.sin(10));
+		
+			
 			//setContainer(l_container);
 		}
 		
-		public function setContainer( mc:DisplayObject):void
+		public function setContainer( mc:DisplayObjectContainer):void
 		{
 			_bg = new Sprite();
 			mc.addChild(_bg);
@@ -81,21 +88,21 @@ package sandy.core {
 			dispatchEvent(containerCreatedEvent);
 		}
 		
-		public function clearSceneContainer():DisplayObject
+		public function clearSceneContainer():DisplayObjectContainer
 		{
 			_scene.parent.removeChild(_scene);
-			_scene = new Sprite();
+			_scene = new MovieClip();
 			_bg.parent.addChild(_scene);
 			
 			return _scene;
 		}
 		
-		public function getSceneContainer():DisplayObject
+		public function getSceneContainer():DisplayObjectContainer
 		{
 			return _scene;
 		}
 		
-		public function getBGContainer():DisplayObject
+		public function getBGContainer():DisplayObjectContainer
 		{
 			return _bg;
 		}
@@ -444,8 +451,8 @@ package sandy.core {
 		private var startEvent:Event = new Event(SandyEvent.START);
 		private var renderEvent:Event = new Event(SandyEvent.RENDER);
 		
-		private var _scene : DisplayObject;
-		private var _bg : DisplayObject;
+		private var _scene : MovieClip;
+		private var _bg : Sprite;
 	}
 }
 

@@ -23,11 +23,11 @@ package sandy.skin {
 	import sandy.skin.Skin;
 	import sandy.skin.SkinType;
 	import sandy.util.NumberUtil;
-	import sandy.skin.BasicSkin;
+	import sandy.skin.Skin;
 	
 	import sandy.events.SandyEvent;
 	import flash.display.MovieClip;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	/**
 	* MixedSkin
@@ -36,7 +36,7 @@ package sandy.skin {
 	* @version		1.0
 	* @date 		23.06.2006 
 	**/
-	public class MixedSkin extends BasicSkin
+	public class MixedSkin extends Skin
 	{
 		private var _colorLine:Number;
 		private var _alphaLine:Number;
@@ -135,7 +135,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function begin( face:IPolygon, mc:DisplayObject ):void
+		override public function begin( face:IPolygon, mc:Sprite ):void
 		{
 			mc.filters = _filters;
 			// -- 
@@ -167,7 +167,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function end( f:IPolygon, mc:DisplayObject ):void
+		override public function end( f:IPolygon, mc:Sprite ):void
 		{
 			mc.graphics.endFill();
 		}

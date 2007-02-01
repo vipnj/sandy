@@ -20,6 +20,8 @@ import sandy.core.data.Vector;
 import sandy.math.Matrix4Math;
 import sandy.math.VectorMath;
 import sandy.util.NumberUtil;
+import sandy.math.FastMath;
+
 
 /**
  * QuaternionMath
@@ -139,8 +141,8 @@ class sandy.math.QuaternionMath
 	public static function setEuler( x:Number, y:Number, z:Number ):Quaternion
 	{
 		var q:Quaternion = new Quaternion();
-		var fsin:Function = Math.sin ;
-		var fcos:Function = Math.cos ;
+		var fsin:Function = FastMath.sin ;
+		var fcos:Function = FastMath.cos ;
 		//Conversion des angles en radians
 		NumberUtil.toRadian( x );
 		NumberUtil.toRadian( y );
@@ -248,9 +250,9 @@ class sandy.math.QuaternionMath
 	{
 		VectorMath.normalize( axe );
 		var a2:Number = angle * 0.5;
-		var sa:Number = Math.sin( a2 ) ;
+		var sa:Number = FastMath.sin( a2 ) ;
 		var q:Quaternion = new Quaternion();
-		q.w = Math.cos( a2 ) ;
+		q.w = FastMath.cos( a2 ) ;
 		q.x = axe.x * sa ;
 		q.y = axe.y * sa ;
 		q.z = axe.z * sa ;

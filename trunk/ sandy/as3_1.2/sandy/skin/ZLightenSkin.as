@@ -29,11 +29,11 @@ package sandy.skin {
 	import sandy.math.Matrix4Math;
 	import sandy.skin.Skin;
 	import sandy.skin.SkinType;
-	import sandy.skin.BasicSkin;
+	import sandy.skin.Skin;
 	
 	import sandy.events.SandyEvent;
 	import flash.display.MovieClip;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	
 	/**
@@ -45,7 +45,7 @@ package sandy.skin {
 	* @version		1.0
 	* @date 		12.04.2006 
 	**/
-	public class ZLightenSkin extends BasicSkin
+	public class ZLightenSkin extends Skin
 	{
 		/**
 		* Create a new Zlighting skin thnaks to a gradient effect.
@@ -112,7 +112,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		public function begin( p_f:IPolygon, mc:DisplayObject ):void
+		public function begin( p_f:IPolygon, mc:Sprite ):void
 		{
 			var f:TriFace3D = TriFace3D(p_f);
 			var vert:Array = new Array(3);
@@ -165,7 +165,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		public function end( f:IPolygon, mc:DisplayObject ):void
+		public function end( f:IPolygon, mc:Sprite  ):void
 		{
 			mc.graphics.endFill();
 		}

@@ -26,9 +26,10 @@ package sandy.core
 	import sandy.core.face.Polygon;
 	import sandy.core.Object3D;
 	import sandy.skin.MovieSkin;
-	import sandy.skin.BasicSkin;
+	import sandy.skin.Skin;
 	import sandy.view.Frustum;
 	import sandy.util.DisplayUtil;
+	import sandy.events.SandyEvent;
 	
 	
 	
@@ -50,7 +51,7 @@ package sandy.core
 			super();
 			
 			// Special case - is using MovieClip rather than default Sprite
-			setContainer( DisplayUtil.replaceObject(getContainer(), new MovieClip()) );
+			setContainer( Sprite(DisplayUtil.replaceObject(getContainer(), new MovieClip())) );
 				
 			// -- we create a fictive point
 			_v = new Vertex( 0, 0, 0 );
@@ -68,15 +69,15 @@ package sandy.core
 		* @param	s	The TexstureSkin to apply to the object
 		* @return	Boolean True is the skin is applied, false otherwise.
 		*/
-		override public function setSkin( s:BasicSkin ):Boolean
+		override public function setSkin( s:Skin ):Boolean
 		{
 			if ( !(s is MovieSkin) )
 			{
 				trace("#Warning [Sprite2D] setSkin Wrong parameter type: MovieSkin expected.");
-				return;
+				return false;
 			}
 			
-			_s = s;
+			_s = MovieSkin(s);
 			
 			if( _s.isInitialized() )
 			{
@@ -97,7 +98,7 @@ package sandy.core
 		 * This method isn't enable with the Sprite object. You might get the reason ;)
 		 * Returns always false.
 		 */
-		override public function setBackSkin( s:BasicSkin/*, bOverWrite:Boolean */):Boolean
+		override public function setBackSkin( s:Skin/*, bOverWrite:Boolean */):Boolean
 		{
 			/*if ( !(s is MovieSkin) )
 			{
@@ -164,7 +165,7 @@ package sandy.core
 			// --
 		}
 		
-		override public function addFace( f:Polygon ):void
+		override public function addFace( f:IPolygon ):void
 		{
 			;
 		}
@@ -177,7 +178,7 @@ package sandy.core
 		*/
 		override public function addPoint( x:Number, y:Number, z:Number ):uint
 		{
-			return;
+			return -1;
 		}
 		
 		override public function enableClipping( b:Boolean ):void
@@ -208,6 +209,6 @@ package sandy.core
 		
 		protected var _v:Vertex;
 		private var _nScale:Number;
-		private var _s:MovieSkin;
+		protected var _s:MovieSkin;
 	}
 }

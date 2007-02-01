@@ -23,12 +23,12 @@ package
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.Sphere;
 	import sandy.skin.MixedSkin;
-	import sandy.skin.SimpleColorSkin;
+	//import sandy.skin.SimpleColorSkin;
 	import sandy.skin.Skin;
 	import sandy.util.Ease;
 	import sandy.view.Camera3D;
 	import sandy.view.ClipScreen;
-	import sandy.util.TransformUtil;
+	//import sandy.util.TransformUtil;
 
 	import com.mir3.display.FPSMetter;
 	import com.mir3.display.SceneStats;
@@ -48,10 +48,15 @@ package
 		private var _fps:Number;
 		private var _t:Number;
 		private var oPlane:Plane3D;
+		private var _paused:Boolean;
 		
 		private var world:MovieClip;
 		private var _earthRadius:Vector;
 		private var _sunPosition:Vector;
+		private var seq;
+		private var S1;
+		private var SphereSkinRollOut ;
+		private var SphereSkinRollOver ;
 		
 		
 		
@@ -63,8 +68,7 @@ package
 			//KeyManager.addKeyUp(keyUp);
 			
 			// _ FPS
-			fps = new FPSMetter(false, 110, stage);
-			addChild(fps);
+			addChild(new FPSMetter(false, 110, stage));
 			
 			// _ STATS
 			addChild(new SceneStats(false, false, false, stage));

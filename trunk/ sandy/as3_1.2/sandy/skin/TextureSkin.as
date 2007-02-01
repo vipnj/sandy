@@ -18,7 +18,7 @@ package sandy.skin {
 		
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -29,7 +29,6 @@ package sandy.skin {
 	import sandy.math.VectorMath;
 	import sandy.skin.Skin;
 	import sandy.skin.SkinType;
-	import sandy.skin.BasicSkin;
 	import sandy.events.SandyEvent;
 	
 	import sandy.util.NumberUtil;
@@ -42,7 +41,7 @@ package sandy.skin {
 	* @version		1.0
 	* @date 		12.01.2006 
 	**/
-	public class TextureSkin extends BasicSkin
+	public class TextureSkin extends Skin
 	{
 		
 		private var _w:Number;
@@ -194,7 +193,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function begin( f:IPolygon, mc:DisplayObject ):void
+		override public function begin( f:IPolygon, mc:Sprite ):void
 		{
 			var a:Array = f.getVertices();
 			var m:Matrix = f.getTextureMatrix();
@@ -231,7 +230,7 @@ package sandy.skin {
 				
 				// TODO: Optimize here with a different way to produce the light effect
 				// and in aplying the filter only to the considered part of the texture!
-				_tmp.applyFilter( _tmp , _tmp.rectangle, _p,  _cmf );
+				_tmp.applyFilter( _tmp , _tmp.rect, _p,  _cmf );
 				mc.filters = _filters;
 				mc.graphics.beginBitmapFill( _tmp, rMat, false, _bSmooth );
 				_tmp.dispose();
@@ -250,7 +249,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function end( f:IPolygon, mc:DisplayObject ):void
+		override public function end( f:IPolygon, mc:Sprite ):void
 		{
 			mc.graphics.endFill();
 		}

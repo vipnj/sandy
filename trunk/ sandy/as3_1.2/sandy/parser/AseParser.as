@@ -26,9 +26,8 @@ package sandy.parser
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
 	import sandy.core.Object3D;
-	import sandy.events.ParserEvent;
-	import sandy.events.TimerEvent;
-
+	import flash.events.*;
+	
 	/**
 	 * Full credits to Andre-Michelle (www.andre-michelle.com)
 	 * 

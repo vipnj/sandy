@@ -19,7 +19,9 @@ package sandy.view
 
 	import flash.events.Event;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.utils.getTimer;
 	
 	import sandy.util.Rectangle;
@@ -54,8 +56,8 @@ package sandy.view
 			_h = h;
 			_sRect 	= new Rectangle( 0, 0, w, h );
 			
-			_mc = World3D.getInstance().getSceneContainer();
-			_bg = World3D.getInstance().getBGContainer();
+			_mc = Sprite(World3D.getInstance().getSceneContainer());
+			_bg = Sprite(World3D.getInstance().getBGContainer());
 			
 			setColor( bgColor );
 			
@@ -64,8 +66,8 @@ package sandy.view
 		
 		private function __onWorldContainer( e:Event ):void
 		{
-			_mc = World3D.getInstance().getSceneContainer();
-			_bg = World3D.getInstance().getBGContainer();
+			_mc = MovieClip(World3D.getInstance().getSceneContainer());
+			_bg = Sprite(World3D.getInstance().getBGContainer());
 		}
 		
 		/**
@@ -173,7 +175,7 @@ package sandy.view
 		
 		public function render2 ( a:Array ):void
 		{
-			var l_container:DisplayObject = World3D.getInstance().clearSceneContainer();
+			var l_container:DisplayObjectContainer = World3D.getInstance().clearSceneContainer();
 			
 			// -- 
 			var l:int = a.length;
@@ -214,8 +216,8 @@ package sandy.view
 		}
 		
 		// -- movieclip containing the onscreen bitmapData visualisation
-		private var _mc:DisplayObject;
-		private var _bg:DisplayObject;
+		private var _mc:Sprite;
+		private var _bg:Sprite;
 		// -- color of the background
 		private var _bgColor:Number;
 		// -- Screen rectangle, to memorize screen dimension

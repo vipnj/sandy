@@ -31,6 +31,7 @@ package sandy.util {
 		public var resources:Dictionary;
 		private var currentItem:Object;
 		private var isLoading:Boolean;
+		private var stopped:Boolean;
 		private var currentResource:Object;
 		
 		

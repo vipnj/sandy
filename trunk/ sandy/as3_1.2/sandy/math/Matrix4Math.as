@@ -19,6 +19,7 @@ package sandy.math {
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.util.NumberUtil;
+	import sandy.math.FastMath;
 
 	/**
 	* Math functions for {@link Matrix4}.
@@ -237,12 +238,12 @@ package sandy.math {
 		{
 			var m:Matrix4 = Matrix4.createIdentity();
 			ax = NumberUtil.toRadian(ax) ; ay = NumberUtil.toRadian(ay); az = NumberUtil.toRadian(az);
-			var a:Number = Math.cos( ax );//_aCos[int(ax)] ;
-			var b:Number = Math.sin( ax );//_aSin[int(ax)]	;
-			var c:Number = Math.cos( ay );//_aCos[int(ay)]	;
-			var d:Number = Math.sin( ay );//_aSin[int(ay)]	;
-			var e:Number = Math.cos( az );//_aCos[int(az)]	;
-			var f:Number = Math.sin( az );//_aSin[int(az)]	;
+			var a:Number = FastMath.cos( ax );//_aCos[int(ax)] ;
+			var b:Number = FastMath.sin( ax );//_aSin[int(ax)]	;
+			var c:Number = FastMath.cos( ay );//_aCos[int(ay)]	;
+			var d:Number = FastMath.sin( ay );//_aSin[int(ay)]	;
+			var e:Number = FastMath.cos( az );//_aCos[int(az)]	;
+			var f:Number = FastMath.sin( az );//_aSin[int(az)]	;
 			var ad:Number = a * d	;
 			var bd:Number = b * d	;
 
@@ -567,8 +568,8 @@ package sandy.math {
 			
 			for( var nAlpha:Number = 0; nAlpha < 360; nAlpha++ ) 
 			{
-				_aSin[nAlpha] = Math.sin(nAlpha*Math.PI/180);
-				_aCos[nAlpha] = Math.cos(nAlpha*Math.PI/180);
+				_aSin[nAlpha] = FastMath.sin(nAlpha*Math.PI/180);
+				_aCos[nAlpha] = FastMath.cos(nAlpha*Math.PI/180);
 			}
 			return true;
 		}

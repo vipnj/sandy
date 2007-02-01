@@ -16,6 +16,8 @@ limitations under the License.
 
 package sandy.core.transform {
 
+	import flash.utils.getQualifiedClassName;
+	
 	/**
 	* Contains all the types of transformation that can be used in Sandy.
 	*  

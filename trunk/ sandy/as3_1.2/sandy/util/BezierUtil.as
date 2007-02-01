@@ -138,9 +138,9 @@ package sandy.util {
 					var v1:Vector = VectorMath.scale( VectorMath.clone( list[int(i)] ), 1.0 - p );
 					var v2:Vector = VectorMath.scale( VectorMath.clone( list[int(i+1)] ), p );
 					aNewList.push( VectorMath.addVector( v1, v2 ) );
-					delete v1; delete v2;
+					v1 = v2 = null;
 				}
-				delete list;
+				list = null;
 				list = aNewList;
 				aNewList = [];
 			} while( list.length > 1 );

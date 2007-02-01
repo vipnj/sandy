@@ -131,7 +131,7 @@
 		
 		private function onEnterFrame( event: Event ): void
 		{
-			time = getTimer();
+			var time:int = getTimer();
 			frameTime = time - prevFrameTime;
 			
 			

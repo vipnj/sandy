@@ -66,6 +66,8 @@ package sandy.core.transform {
 		/** The time between each frames */
 		protected var _timeIncrease:Number;
 		
+		protected var _modified:Boolean;
+		
 		
 	
 		

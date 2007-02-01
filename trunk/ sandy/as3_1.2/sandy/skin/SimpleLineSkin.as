@@ -18,11 +18,10 @@ package sandy.skin {
 
 	import sandy.core.face.IPolygon;
 	import sandy.skin.Skin;
-	import sandy.skin.BasicSkin;
 	import sandy.skin.SkinType;
 	import sandy.events.SandyEvent;
 	
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	
 	/**
@@ -34,7 +33,7 @@ package sandy.skin {
 	* @version		0.2
 	* @date 		12.01.2006 
 	**/
-	public class SimpleLineSkin extends BasicSkin
+	public class SimpleLineSkin extends Skin
 	{
 		/**
 		* Create a new SimpleLineSkin
@@ -101,7 +100,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function begin( f:IPolygon, mc:DisplayObject ):void
+		override public function begin( f:IPolygon, mc:Sprite ):void
 		{
 			mc.filters = _filters;
 			mc.graphics.lineStyle( thickness, color,alpha);
@@ -112,7 +111,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function end( f:IPolygon, mc:DisplayObject ):void
+		override public function end( f:IPolygon, mc:Sprite ):void
 		{
 			; // nothing here
 		}

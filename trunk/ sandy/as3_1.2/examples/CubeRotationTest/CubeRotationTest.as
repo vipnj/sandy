@@ -36,8 +36,7 @@ package {
 			KeyManager.initStage(stage);
 			
 			// -- FPS
-			fps = new FPSMetter(false, 110, stage);
-			addChild(fps);
+			addChild(new FPSMetter(false, 110, stage));
 			
 			// -- STATS
 			addChild(new SceneStats(false, false, false, stage));

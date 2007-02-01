@@ -18,6 +18,7 @@ package sandy.core
 {
 	import flash.events.Event;
 	import flash.display.MovieClip;
+	import flash.display.DisplayObject;
 
 	import sandy.core.buffer.ZBuffer;
 	import sandy.core.data.Vector;
@@ -25,7 +26,7 @@ package sandy.core
 	import sandy.core.data.Vertex;
 	import sandy.math.VectorMath;
 	import sandy.skin.MovieSkin;
-	import sandy.skin.BasicSkin;
+	import sandy.skin.Skin;
 	import sandy.util.NumberUtil;
 	import sandy.util.DisplayUtil;
 	import sandy.events.SandyEvent;
@@ -66,15 +67,16 @@ package sandy.core
 		* @param	s	The TexstureSkin to apply to the object
 		* @return	Boolean True is the skin is applied, false otherwise.
 		*/
-		override public function setSkin( s:BasicSkin ):Boolean
+		override public function setSkin( s:Skin ):Boolean
 		{
 			if ( !(s is MovieSkin) )
 			{
 				trace("#Warning [Sprite3D] setSkin Wrong parameter type: MovieSkin expected.");
-				return;
+				return false;
 			}
 			
-			_s = s;
+			_s = MovieSkin(s);
+			
 			if( _s.isInitialized() )
 				__updateContent(null);
 			else
@@ -90,7 +92,7 @@ package sandy.core
 			}
 			else
 			{
-				setContainer( _s.attach( getContainer() ) );
+				skin = _s.attach( getContainer() );
 				
 			}
 		}
@@ -102,7 +104,8 @@ package sandy.core
 		*/ 
 		override public function render ():void
 		{
-			var l_mc:MovieClip = MovieClip(getContainer());
+			if (!_s.isInitialized()) return;
+			var l_mc:MovieClip = MovieClip(skin);
 			
 			var ndepth:Number = _v.wz;
 			
@@ -152,6 +155,7 @@ package sandy.core
 		private var _nOffset:int;
 		private var _nScale:Number;
 		private var _vView:Vector;
+		private var skin:DisplayObject;
 		
 	}
 }

@@ -21,7 +21,7 @@ package sandy.core.data {
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.Object3D;
-	import sandy.math.VertexMath;
+	//import sandy.math.VertexMath;
 	import sandy.math.VectorMath;
 
 	/**

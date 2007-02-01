@@ -22,11 +22,10 @@ package sandy.skin {
 	import sandy.math.VectorMath;
 	import sandy.skin.Skin;
 	import sandy.skin.SkinType;
-	import sandy.skin.BasicSkin;
 	import sandy.util.NumberUtil;
 
 	import sandy.events.SandyEvent;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	/**
 	* SimpleColorSkin
@@ -37,7 +36,7 @@ package sandy.skin {
 	* @version		0.2
 	* @date 		12.01.2006 
 	**/
-	public class SimpleColorSkin extends BasicSkin
+	public class SimpleColorSkin extends Skin
 	{
 		
 		/**
@@ -97,7 +96,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function begin( face:IPolygon, mc:DisplayObject ):void
+		override public function begin( face:IPolygon, mc:Sprite ):void
 		{
 			mc.filters = _filters;
 			// -- 
@@ -129,7 +128,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function end( f:IPolygon, mc:DisplayObject ):void
+		override public function end( f:IPolygon, mc:Sprite ):void
 		{
 			mc.graphics.endFill();
 		}

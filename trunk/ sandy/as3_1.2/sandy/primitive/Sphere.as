@@ -19,9 +19,6 @@ package sandy.primitive
 
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.core.face.Face;
-	import sandy.core.face.QuadFace3D;
-	import sandy.core.face.TriFace3D;
 	import sandy.core.Object3D;
 	import sandy.primitive.Primitive3D;
 	import sandy.core.data.UVCoord;

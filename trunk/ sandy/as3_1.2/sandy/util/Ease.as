@@ -31,6 +31,10 @@ limitations under the License.
  */
 
  package sandy.util {
+
+	import sandy.math.FastMath;
+	
+	
 	 
 	public class Ease 
 	{	
@@ -162,7 +166,7 @@ limitations under the License.
 		{
 			if (a == undefined || a == 1)
 			{
-				delete this.type; // easing in is prototyped/default
+				this.type = null; // easing in is prototyped/default
 			}
 			else
 			{
@@ -377,7 +381,7 @@ limitations under the License.
 		 */
 		public function sin():Ease 
 		{ // t
-			var ms:Function = Math.sin;
+			var ms:Function = FastMath.sin;
 			this.method = function(t:Number)
 			{
 				return 1 - ms((Math.PI + Math.PI*t)/2);
@@ -393,7 +397,7 @@ limitations under the License.
 		 */
 		public function sinAnticipate(a:Number):Ease 
 		{ // a for anticipation factor (between 0-1)
-			var ms:Function = Math.sin;
+			var ms:Function = FastMath.sin;
 			if (!a) a = .5; // default anticipation factor of .5 if not provided
 			var o = (1 + a)*(.5*Math.PI); // offset
 			this.method = function(t:Number)

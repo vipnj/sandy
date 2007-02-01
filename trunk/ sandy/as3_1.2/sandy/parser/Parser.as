@@ -88,6 +88,7 @@ package sandy.parser
 		
 		public function get progress():Number
 		{
+			return -1;
 			// It has to be overriden in all subclasses
 		}
 	}

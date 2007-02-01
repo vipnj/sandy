@@ -13,61 +13,132 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
 package sandy.skin {
-
-	import sandy.core.face.IPolygon;
+		
 	import sandy.skin.SkinType;
+	import sandy.skin.Skin;
+	import flash.events.EventDispatcher;
+	import flash.display.Sprite;
+	
+	import sandy.events.SandyEvent;
+	import sandy.core.face.IPolygon;
+	import sandy.core.World3D;
+	import sandy.core.light.Light3D;
 
-	import flash.display.DisplayObject;
-
+	import flash.events.Event;
+	
 	/**
-	* Represent a skin for a Face in an Object3D.
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Nicolas Coevoet - [ NikO ]
-	* @author		Tabin Cédric - thecaptain
-	* @version		0.2
-	* @date 		12.01.2006 
-	**/
-	public interface Skin
+	 * ABSTRACT CLASS
+	 * <p>
+	 * This class is the basis of all the skins. It is abstract so that mean you can't instanciate this class.
+	 * </p>
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		1.0
+	 * @version		1.0
+	 * @date 		23.06.2006
+	 **/
+	public class Skin extends EventDispatcher
 	{
-		/**
-		* Prepare the Face drawing of the Object3D into a MovieClip.
-		* <p>This method can be called when the {@link mb.sandy.view.IScreen#render(Array)}
-		* is executed, depending of the type of the Skin that must be applyed to the Face. /p>
-		* <p>{@code mc} represent the MovieClip where the Face must be displayed. The
-		* {@code f} represents the face which is calling the Skin. The skin can call all the public properties of the face</p>
-		* 
-		* @param	f		The face calling the skin method
-		* @param	mc		The MovieClip
-		*/
-		function begin( f:IPolygon, mc:DisplayObject ):void;
+		
+		//////////////////
+		// PROPERTIES
+		//////////////////
+		protected var _filters:Array;
+		protected var _useLight : Boolean;
+		private var _id:Number;
+		private static var _ID_:Number = 0;
+
+		protected var updateEvent:Event = new Event(SandyEvent.UPDATE);
+		
+		
 		
 		/**
-		* Finish the Face drawing of the Object3D into a MovieClip.
-		* <p>This method can be called when the {@link mb.sandy.view.IScreen#render(Array)}
-		* is executed, depending of the type of the Skin that must be applyed to the Face. /p>
-		* <p>{@code mc} represent the MovieClip where the Face must be displayed. The
-		* {@code f} represents the face which is calling the Skin. The skin can call all the public properties of the face</p>
-		* 
-		* @param	f		The face calling the skin method
-		* @param	mc		The MovieClip
+		* Returns the type of SKin you are using.
+		* For the BasicSkin class, this value is set to NONE
+		* @param	void
+		* @return SkinType The type constant which represents your skin.
 		*/
-		function end( f:IPolygon, mc:DisplayObject ):void;
-
+		public function getType():SkinType
+		{
+			return SkinType.NONE;
+		}
+		
 		/**
 		 * setLightingEnable. Prepare the skin to use the world light or not. The default value is false.
 		 * @param	bool	Boolean	true is the skin use the light of the world, false if no.
 		 * @return	void
 		 */
-		function setLightingEnable ( bool:Boolean ):void;
+		public function setLightingEnable ( bool:Boolean ):void
+		{
+			if( _useLight != bool )
+			{
+				_useLight = bool;
+				dispatchEvent( updateEvent );
+			}		
+		}
 		
 		/**
-		 * getType, returns the type of the skin
-		 * @param void
-		 * @return	The appropriate SkinType
-		 */
-		function getType ():SkinType;
+		* Set the value of the array of filters you want to apply to the object faces.
+		* Warning : This is only available since Flash8.
+		* @param	a Array the array containing the filters you want to apply, or an empty array if you want to clear the filters.
+		*/
+		public function set filters( a:Array )
+		{
+			_filters = a;
+			dispatchEvent( updateEvent );
+		}
+		
+		/**
+		* Get the array of filters you are applying to the object faces.
+		* Warning : This is only available since Flash8.
+		* @return	Array the array containing the filters you are using, or an empty array if you don't apply anything
+		*/
+		public function get filters():Array
+		{
+			return _filters;
+		}
+		
+		
+		//////////////////
+		// PRIVATE
+		//////////////////	
+		// TODO: privat ein original implementation
+		public function Skin()
+		{
+			super();
+			_filters = [];
+			_useLight = false;
+			
+			_id = _ID_++;
+			World3D.getInstance().addEventListener( SandyEvent.LIGHT_ADDED, __onLightAdded );
+
+		}
+		
+		private function __onLightAdded( e:Event ):void
+		{
+			World3D.getInstance().getLight().addEventListener( SandyEvent.LIGHT_UPDATE, __onLightUpdated );
+		}
+		
+		private function __onLightUpdated( e:Event ):void
+		{	
+			if( _useLight )
+				dispatchEvent( updateEvent );
+		}
+
+		
+		///////////////////
+		// SKIN
+		///////////////////
+		public function begin( f:IPolygon, mc:Sprite ):void
+		{
+			;
+		}
+		
+		public function end( f:IPolygon, mc:Sprite ):void
+		{
+			;
+		}
 	}
 }
+
+class SingletonBlocker {}	

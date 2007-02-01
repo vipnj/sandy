@@ -12,23 +12,23 @@ package
 	import sandy.core.data.Vector;
 	import sandy.core.group.Group;
 	import sandy.core.group.TransformGroup;
-	import sandy.core.transform.PositionInterpolator;
+	//import sandy.core.transform.PositionInterpolator;
 	import sandy.core.transform.RotationInterpolator;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.World3D;
 	import sandy.core.Object3D;
 	import sandy.events.SandyEvent;
 	import sandy.primitive.Plane3D;
-	import sandy.primitive.Sphere;
+	//import sandy.primitive.Sphere;
 	import sandy.primitive.Box;
-	import sandy.skin.MixedSkin;
+	//import sandy.skin.MixedSkin;
 	import sandy.skin.MovieSkin;
-	import sandy.skin.SimpleColorSkin;
+	//import sandy.skin.SimpleColorSkin;
 	import sandy.skin.Skin;
 	import sandy.util.Ease;
 	import sandy.view.Camera3D;
 	import sandy.view.ClipScreen;
-	import sandy.util.TransformUtil;
+	//import sandy.util.TransformUtil;
 
 	import com.mir3.display.FPSMetter;
 	import com.mir3.display.SceneStats;
@@ -63,8 +63,7 @@ package
 			//KeyManager.addKeyUp(keyUp);
 			
 			// -- FPS
-			fps = new FPSMetter(false, 110, stage);
-			addChild(fps);
+			addChild(new FPSMetter(false, 110, stage));
 			
 			// -- STATS
 			addChild(new SceneStats(false, false, false, stage));

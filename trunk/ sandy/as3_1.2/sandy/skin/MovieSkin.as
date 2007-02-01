@@ -32,12 +32,10 @@ package sandy.skin {
 	
 	import sandy.skin.SkinType;
 	import sandy.skin.TextureSkin;
-	import sandy.skin.BasicSkin;
 	import sandy.skin.Skin;
 	import sandy.core.World3D;
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
-	import sandy.core.face.Sprite2DFace;
 	import sandy.core.light.Light3D;
 	import sandy.util.BitmapUtil;
 	import sandy.util.URLLoaderQueue;
@@ -54,7 +52,7 @@ package sandy.skin {
 	* @version		1.0
 	* @date 		22.04.2006 
 	**/
-	public class MovieSkin extends BasicSkin
+	public class MovieSkin extends Skin
 	{
 		/**
 		* Create a new MovieSkin.
@@ -106,13 +104,13 @@ package sandy.skin {
 			_cmf = new ColorMatrixFilter();
 			
 			//
-			if( b ) 
+			if( _initialized ) 
 			{
 				World3D.getInstance().addEventListener( SandyEvent.RENDER, updateTexture );
 			}
 		}
 		
-		public function attach( mc:DisplayObject ):DisplayObject
+		public function attach( mc:Sprite ):DisplayObject
 		{
 			if( _initialized ) 
 			{
@@ -125,6 +123,8 @@ package sandy.skin {
 					return mc;
 				}
 			}
+			
+			return null;
 		}
 		
 		private function loadingComplete(p_event:Event):void 
@@ -144,6 +144,8 @@ package sandy.skin {
 				_animated = _mc.totalFrames > 1;
 				
 				dispatchEvent( updateEvent );
+				
+				World3D.getInstance().addEventListener( SandyEvent.RENDER, updateTexture );
 			}
 		
         }
@@ -189,8 +191,10 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function begin( f:IPolygon, mc:DisplayObject ):void
+		override public function begin( f:IPolygon, mc:Sprite ):void
 		{
+			if(!_initialized) return;
+			
 			var a:Array = f.getVertices();
 			var m:Matrix = f.getTextureMatrix();
 			
@@ -229,14 +233,14 @@ package sandy.skin {
 				// TODO: Optimize here with a different way to produce the light effect
 				// and in aplying the filter only to the considered part of the texture!
 				_tmp.applyFilter( _tmp , _tmp.rect, _p,  _cmf );
-				Sprite(mc).filters = _filters;
-				Sprite(mc).graphics.beginBitmapFill( _tmp, rMat, false, _bSmooth );
+				mc.filters = _filters;
+				mc.graphics.beginBitmapFill( _tmp, rMat, false, _bSmooth );
 			}
 			else
 			{
 				// -- 
-				Sprite(mc).filters = _filters;
-				Sprite(mc).graphics.beginBitmapFill( _texture, rMat, false, _bSmooth );
+				mc.filters = _filters;
+				mc.graphics.beginBitmapFill( _texture, rMat, false, _bSmooth );
 			}
 			
 		}
@@ -246,7 +250,7 @@ package sandy.skin {
 		* @param f	The face which is being rendered
 		* @param mc The mc where the face will be build.
 		*/ 	
-		override public function end( f:IPolygon, mc:DisplayObject):void
+		override public function end( f:IPolygon, mc:Sprite ):void
 		{
 			//Sprite(mc).graphics.endFill();
 		}

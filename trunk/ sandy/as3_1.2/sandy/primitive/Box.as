@@ -18,9 +18,6 @@ package sandy.primitive {
 
 	import sandy.core.data.Vertex;
 	import sandy.core.data.UVCoord;
-	import sandy.core.face.Face;
-	import sandy.core.face.TriFace3D;
-	import sandy.core.face.QuadFace3D;
 	import sandy.core.Object3D;
 	import sandy.primitive.Primitive3D;
 	
@@ -112,7 +109,7 @@ package sandy.primitive {
 		public function generate () : void
 		{
 			// initialisation
-			aPoints = []; aNormals = []; _aFaces = [];		
+			aPoints = []; aNormals = [];
 			//we build points
 			var h2 : Number = - _h / 2;
 			var r2 : Number = _radius / 2;

@@ -38,7 +38,7 @@ package sandy.core
 	import sandy.core.transform.ITransform3D;
 	import sandy.core.data.Matrix4;
 	import sandy.skin.SimpleLineSkin;
-	import sandy.skin.BasicSkin ;
+	import sandy.skin.Skin ;
 	import sandy.view.Frustum;
 	import sandy.events.SandyEvent;
 
@@ -61,12 +61,12 @@ package sandy.core
 		/**
 		* This is a constante, the default skin used by an Object3D
 		*/
-		private static var _DEFAUT_SKIN:BasicSkin = new SimpleLineSkin(); 
+		private static var _DEFAUT_SKIN:Skin = new SimpleLineSkin(); 
 		
 		/**
 		* Default Skin of the Object3D.
 		*/
-		public static function get DEFAULT_SKIN():BasicSkin  { return _DEFAUT_SKIN; }
+		public static function get DEFAULT_SKIN():Skin  { return _DEFAUT_SKIN; }
 		
 		
 	
@@ -90,8 +90,8 @@ package sandy.core
 	// ______________
 	// [PRIVATE] DATA________________________________________________		
 	
-		private var _s:BasicSkin ; // The Skin of this Object3D
-		private var _sb:BasicSkin ; // The back Skin of this Object3D
+		private var _s:Skin ; // The Skin of this Object3D
+		private var _sb:Skin ; // The back Skin of this Object3D
 		private var _needRedraw:Boolean; //Say if the object needs to be drawn again or not. Happens when the skin is updated!
 		private var _bEv:Boolean; // The event system state (enable or not)
 		private var _backFaceCulling:Boolean;
@@ -100,7 +100,7 @@ package sandy.core
 		private var _enableForcedDepth:Boolean;
 		private var _forcedDepth:Number;
 		protected var _fCallback:Function;
-		private var _mc:DisplayObject;
+		private var _mc:Sprite;
 		private var _aSorted:Array;
 		private var _oBBox:BBox;
 		private var _oBSphere:BSphere;
@@ -150,7 +150,7 @@ package sandy.core
 			setBackSkin( DEFAULT_SKIN );
 			
 			// --
-			_mc = createObjectContainer();
+			_mc = Sprite(createObjectContainer());
 			
 			World3D.getInstance().addEventListener( SandyEvent.CONTAINER_CREATED, __onWorldContainer );
 		}
@@ -227,7 +227,7 @@ package sandy.core
 		* @param	void
 		* @return 	Skin the skin object
 		*/
-		public function getSkin():BasicSkin 
+		public function getSkin():Skin 
 		{
 			return _s;
 		}
@@ -251,7 +251,7 @@ package sandy.core
 		* @param	void
 		* @return	Skin The skin object.
 		*/
-		public function getBackSkin():BasicSkin 
+		public function getBackSkin():Skin 
 		{
 			return _sb;
 		}
@@ -265,7 +265,7 @@ package sandy.core
 		* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 		* @return	Boolean True to apply the skin to the non default faces skins , false otherwise (default).
 		*/
-		public function setSkin( pS:BasicSkin ):Boolean
+		public function setSkin( pS:Skin ):Boolean
 		{
 			//
 			if (_s)
@@ -297,7 +297,7 @@ package sandy.core
 		* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 		* @return	Boolean True is the skin is applied, false otherwise.
 		*/
-		public function setBackSkin( pSb:BasicSkin ):Boolean
+		public function setBackSkin( pSb:Skin ):Boolean
 		{
 			//
 			if(_sb)
@@ -478,7 +478,7 @@ package sandy.core
 			}
 			
 			//
-			_aSorted.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
+			_aSorted.sortOn( "depth", Array.NUMERIC );
 			
 			//trace('_aSorted: ' + _aSorted);
 			
@@ -535,7 +535,7 @@ package sandy.core
 		/**
 		 * Add a face to the objet, set the object skins to faces, and notify that there is a modification
 		 */
-		public function addFace( f:Polygon ):void
+		public function addFace( f:IPolygon ):void
 		{
 			// -- we update its texture matrix
 			f.updateTextureMatrix();
@@ -698,12 +698,12 @@ package sandy.core
 			return result;
 		}
 
-		public function getContainer():DisplayObject
+		public function getContainer():Sprite
 		{
 			return _mc;
 		}
 		
-		public function setContainer(p_mc:DisplayObject):DisplayObject
+		public function setContainer(p_mc:Sprite):void
 		{
 			if (p_mc) 
 			{
@@ -738,9 +738,9 @@ package sandy.core
 			_needRedraw = true;
 		}
 		
-		private static function createObjectContainer():DisplayObject
+		private static function createObjectContainer():Sprite
 		{
-			var p_container:DisplayObject = new Sprite();
+			var p_container:Sprite = new Sprite();
 			World3D.getInstance().getSceneContainer().addChild(p_container);
 			
 			return p_container;

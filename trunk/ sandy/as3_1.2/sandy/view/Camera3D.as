@@ -31,6 +31,7 @@ package sandy.view
 	import sandy.view.IScreen;
 	import sandy.events.SandyEvent;
 	import sandy.core.transform.BasicInterpolator;
+	import sandy.math.FastMath;
 	
 
 	/**
@@ -575,7 +576,7 @@ package sandy.view
 			
 	   par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
 
-	   loc_f_y = (par_f_zNear * Math.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
+	   loc_f_y = (par_f_zNear * FastMath.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
 
 	   loc_f_x = par_f_aspectRatio * loc_f_y;
 

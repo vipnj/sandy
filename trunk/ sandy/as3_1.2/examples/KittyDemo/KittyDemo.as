@@ -9,11 +9,11 @@ package {
 	import flash.ui.Keyboard;
 	
 	import sandy.core.group.*;
-	import sandy.primitive.*;
+	//import sandy.primitive.*;
 	import sandy.core.*;
 	import sandy.core.data.*;
 	import sandy.skin.*;
-	import sandy.util.Ease;
+	//import sandy.util.Ease;
 	import sandy.core.transform.*;
 	import sandy.events.*;
 	import sandy.util.*;
@@ -53,8 +53,7 @@ package {
 			KeyManager.addKeyUp(keyUp);
 			
 			// -- FPS
-			fps = new FPSMetter(false, 110, stage);
-			addChild(fps);
+			addChild(new FPSMetter(false, 110, stage));
 			
 			// -- STATS
 			addChild(new SceneStats(false, false, false, stage));
@@ -78,7 +77,7 @@ package {
 			_b = p_event.target.getResources()[0].bitmapData;
 			
 			// Load model from ASE file
-			aseParser = new AseParser();
+			var aseParser:Parser = new AseParser();
 			aseParser.addEventListener( SandyEvent.PARSING_PROGRESS, __onAseProgress );
 			aseParser.addEventListener( SandyEvent.LOAD, __onLoad );
 			aseParser.addEventListener( SandyEvent.FINISHED, init );
@@ -122,14 +121,14 @@ package {
 		public function createScene( bg:Group ):void
 		{
 			var cam:Camera3D = World3D.getInstance().getCamera();
-			distanceH = distance = 0;
+			var distanceH, distance = 0;
 			//cam.setPosition(Math.cos(circlePlace1*Math.PI/60)*distanceH, distance , Math.sin(circlePlace1*Math.PI/360)*distanceH);
 			cam.setPosition( 0, 0, 0);
 			cam.lookAt(0, 0, 1000);
 			
 			
-			tg = new TransformGroup();
-			t = new Transform3D();
+			var tg = new TransformGroup();
+			var t = new Transform3D();
 			t.translate( 0, 0, 1000);
 			//t.translate( 0, 0, 100);
 			tg.setTransform( t );
@@ -191,15 +190,15 @@ package {
 			}
 			if (e.keyCode == Keyboard.SHIFT)
 			{
-				_fov -= 10;
-				cam.setFocal(foc(_fov));	// zoom
-				trace(_fov);
+				//_fov -= 10;
+				//cam.setFocal(foc(_fov));	// zoom
+				//trace(_fov);
 			}
 			if (e.keyCode == Keyboard.CONTROL)
 			{
-				_fov += 10;
-				cam.setFocal(foc(_fov));	// zoom
-				trace(_fov);
+				//_fov += 10;
+				//cam.setFocal(foc(_fov));	// zoom
+				//trace(_fov);
 			}
 
 			if (_yaw > 180) _yaw -= 360;

@@ -27,6 +27,8 @@ package sandy.util
 				//trace("Swapping object " + l_currentIndex + " with " + p_index);
 				l_parent.swapChildrenAt(l_currentIndex, p_index);
 			}
+			
+			return p_target;
 		}
 	}
 }

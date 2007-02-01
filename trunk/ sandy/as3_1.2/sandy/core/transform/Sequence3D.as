@@ -12,6 +12,8 @@
 
 	public class Sequence3D extends Transform3D implements Interpolator3D
 	{
+		private var _modified:Boolean;
+		
 		/**
 		 * Create a new TranslationInterpolator.
 		 * <p> This class realise an interpolation resulting in a sequence of interpolation.</p>

@@ -18,7 +18,7 @@ package sandy.core.face {
 
 	import flash.geom.Matrix;
 	import flash.utils.getQualifiedClassName;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
@@ -42,13 +42,13 @@ package sandy.core.face {
 	**/
 	public class Polygon implements IPolygon
 	{
-		public function Polygon( oref:Object3D /* ... */ )
+		public function Polygon( oref:Object3D, ...rest)
 		{
 			_o = oref;
 			_bfc = 1;
 			_id = Polygon._ID_ ++;
 			_s = _sb = undefined;
-			_aVertex = arguments.slice(1);
+			_aVertex = rest;
 			_aClipped = _aVertex.slice();
 			_nCL = _nL = _aVertex.length;
 			_aUV = new Array(3);
@@ -141,7 +141,7 @@ package sandy.core.face {
 		 *
 		 * @param	{@code mc}	A {@code MovieClip}.
 		 */
-		public function render( mc:DisplayObject, pS:Skin, pSb:Skin ): void
+		public function render( mc:Sprite, pS:Skin, pSb:Skin ): void
 		{
 			var s:Skin;
 			var l:int = _nCL;
@@ -170,7 +170,7 @@ package sandy.core.face {
 		/** 
 		 * Refresh the face display
 		 */
-		public function refresh( mc:DisplayObject, pS:Skin, pSb:Skin ):void
+		public function refresh( mc:Sprite, pS:Skin, pSb:Skin ):void
 		{
 			var s:Skin;
 			var l:int = _nCL;

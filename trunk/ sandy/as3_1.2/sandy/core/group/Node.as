@@ -113,7 +113,7 @@ package sandy.core.group {
 		*/
 		public function hasParent():Boolean
 		{
-			return (null != _parent);
+			return _parent || false;
 		}	
 		
 		/**
@@ -246,7 +246,7 @@ package sandy.core.group {
 		public function destroy() : void 
 		{
 			// the unlink this node to his parent
-			if( hasParent() ) _parent.removeChild( this );
+			if( hasParent() == true ) _parent.removeChild( this._id );
 			
 			// should we kill all the childs, or just make them childs of current node parent ?
 			var l:int = _aChilds.length;

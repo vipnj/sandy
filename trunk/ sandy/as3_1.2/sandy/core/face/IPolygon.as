@@ -20,7 +20,7 @@ package sandy.core.face {
 	import flash.geom.Matrix;
 	import sandy.core.data.UVCoord;
 
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	/**
 	* Face
@@ -67,7 +67,7 @@ package sandy.core.face {
 		* <p>{@code mc} represent the MovieClip where the Face must be displayed. 
 		* @param	mc		The MovieClip
 		*/
-		function render( mc:DisplayObject, pS:Skin, pSb:Skin  ):void;
+		function render( mc:Sprite, pS:Skin, pSb:Skin  ):void;
 		
 		/**
 		* Set the normale vector of the face. Useful when the normale for this face is alleady computed
@@ -143,7 +143,7 @@ package sandy.core.face {
 		* refresh the movieclip, not to compute it again.
 		* @param	void
 		*/
-		function refresh( mc:DisplayObject, pS:Skin, pSb:Skin  ):void;
+		function refresh( mc:Sprite, pS:Skin, pSb:Skin  ):void;
 		
 		/**
 		* This method change the value of the "normal" clipping side.

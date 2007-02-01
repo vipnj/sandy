@@ -46,7 +46,9 @@ package sandy.util {
 				bmp = new BitmapData( mc.width, mc.height, pTransparent );
 			}
 			
-			bmp.draw( mc, new Matrix().scale( mc.scaleX, mc.scaleY ), mc.transform.colorTransform );
+			var scale:Matrix = new Matrix();
+			scale.scale( mc.scaleX, mc.scaleY );
+			bmp.draw( mc, scale, mc.transform.colorTransform );
 			
 			//
 			return bmp;

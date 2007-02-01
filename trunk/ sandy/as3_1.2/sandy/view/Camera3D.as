@@ -1,0 +1,765 @@
+﻿/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+ 
+package sandy.view 
+{
+
+	import flash.events.Event;
+	
+	import sandy.core.data.Matrix4;
+	import sandy.core.data.Vector;
+	import sandy.core.transform.Interpolator3D;
+	import sandy.core.transform.TransformType;
+	import sandy.math.Matrix4Math;
+	import sandy.math.VectorMath;
+	import sandy.util.NumberUtil;
+	import sandy.util.Rectangle;
+	import sandy.view.Frustum;
+	import sandy.view.IScreen;
+	import sandy.events.SandyEvent;
+	import sandy.core.transform.BasicInterpolator;
+	
+
+	/**
+	* Camera3D
+	* @author		Thomas Pfeiffer - kiroukou
+	* @version		1.0
+	* @date 		12.07.2006
+	**/
+	public class Camera3D 
+	{
+		/**
+		 * The frustum of the camera. See {@see Frustum} class.
+		 */
+		public var frustrum:Frustum;
+		
+		/**
+		 * Create a new Camera3D.
+		 * The default camera projection is the perspective one with default parameters values.
+		 * @param nFoc The focal of the Camera3D
+		 * @param s the screen associated to the camera
+		 */
+		public function Camera3D( s:IScreen )
+		{
+			_p 		= new Vector();
+			// --
+			_vOut 	= new Vector( 0, 0, 1 );
+			_vSide 	= new Vector( 1, 0, 0 );
+			_vUp 	= new Vector( 0, 1 ,0 );
+			_vLookatDown = new Vector(0.00000000001, -1, 0);// value to avoid some colinearity problems.
+			// --
+			_nRoll 	= 0;
+			_nTilt 	= 0;
+			_nYaw  	= 0;
+			// --
+			setScreen( s );
+			frustrum = new Frustum();
+			setPerspectiveProjection();
+			//setPerspective();
+			// --
+			_mt = _mf = _mv = Matrix4.createIdentity();
+			_compiled = false;
+			_oInt = null;
+		}
+
+		/**
+		* Set the camera's screen. Very important in order to represent the 3D world.
+		* @param	s The screen instance
+		*/
+		public function setScreen( s:IScreen ):void
+		{
+			_is = s;
+			_is.setCamera ( this );
+			updateScreen();
+		}
+		
+		/**
+		* Get the screen associated to the camera.
+		* @param	void
+		* @return The screen instance.
+		*/
+		public function getScreen():IScreen
+		{
+			return _is;
+		}
+		
+		/**
+		* Update the sreen properties when they changed. Usually this method is called by the screen directly.
+		* This is very important because the camera pre-compute some values for performances reasons, and they need to be updated.
+		* @param	void
+		*/
+		public function updateScreen():void
+		{
+			_rDim 	= _is.getSize();
+			_wo 	= _rDim.width/2;
+			_ho 	= _rDim.height/2;
+		}
+		
+		/**
+		 * Allow the camera to translate along its side vector. 
+		 * If you imagine yourself in a game, it would be a step on your right or on your left
+		 * @param	d	Number	Move the camera along its side vector
+		 */
+		public function moveSideways( d : Number ) : void
+		{
+			_compiled = false;
+			_p.x += _vSide.x * d;
+			_p.y += _vSide.y * d;
+			_p.z += _vSide.z * d;
+		}
+		
+		/**
+		 * Allow the camera to translate along its up vector. 
+		 * If you imagine yourself in a game, it would be a jump on the direction of your body (so not always the vertical!)
+		 * @param	d	Number	Move the camera along its up vector
+		 */
+		public function moveUpwards( d : Number ) : void
+		{
+			_compiled = false;
+			_p.x += _vUp.x * d;
+			_p.y += _vUp.y * d;
+			_p.z += _vUp.z * d;
+		}
+		
+		/**
+		 * Allow the camera to translate along its view vector. 
+		 * If you imagine yourself in a game, it would be a step in the direction you look at. If you look the sky
+		 * you will translate upwards ! So be careful with its use.
+		 * @param	d	Number	Move the camera along its viw vector
+		 */
+		public function moveForward( d : Number ) : void
+		{
+			_compiled = false;
+			_p.x += _vOut.x * d;
+			_p.y += _vOut.y * d;
+			_p.z += _vOut.z * d;
+		}
+	 
+		/**
+		 * Allow the camera to translate horizontally
+		 * If you imagine yourself in a game, it would be a step in the direction you look at but without changing 
+		 * your altitude.
+		 * @param	d	Number	Move the camera horizontally
+		 */	
+		public function moveHorizontally( d:Number ) : void
+		{
+			_compiled = false;
+			_p.x += _vOut.x * d;
+			_p.z += _vOut.z * d;		
+		}
+		
+		/**
+		 * Allow the camera to translate vertically
+		 * If you imagine yourself in a game, it would be a jump strictly vertical.
+		 * @param	d	Number	Move the camera vertically
+		 */	
+		public function moveVertically( d:Number ) : void
+		{
+			_compiled = false;
+			_p.y += d;		
+		}
+		
+		/**
+		* Translate the camera from it's actual position with the offset values pased in parameters
+		* 
+		* @param px x offset that will be added to the x coordinate of the camera
+		* @param py y offset that will be added to the y coordinate position of the camera
+		* @param pz z offset that will be added to the z coordinate position of the camera
+		*/
+		public function translate( px:Number, py:Number, pz:Number ) : void
+		{
+			_compiled = false;
+			// we must consider the screen y-axis inversion
+			_p.x += px;
+			_p.y += py;
+			_p.z += pz;	
+		}
+		
+		
+		 /**
+		 * Allow the camera to translate lateraly
+		 * If you imagine yourself in a game, it would be a step on the right with a positiv parameter and to the left
+		 * with a negative parameter
+		 * @param	d	Number	Move the camera lateraly
+		 */	
+		public function moveLateraly( d:Number ) : void
+		{
+			_compiled = false;
+			_p.x += d;		
+		}
+		
+		/**
+		 * Rotate the camera around a specific axis by an angle passed in parameter
+		 * @param	ax	Number	The x coordinate of the axis
+		 * @param	ay	Number	The y coordinate of the axis
+		 * @param	az	Number	The z coordinate of the axis
+		 * @param	nAngle	Number	The amount of rotation. This angle is in degrees.
+		 */
+		public function rotateAxis( ax : Number, ay : Number, az : Number, nAngle : Number ):void
+		{
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var n:Number = Math.sqrt( ax*ax + ay*ay + az*az );
+			var m : Matrix4 = Matrix4Math.axisRotation( ax/n, ay/n, az/n, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vSide);
+			Matrix4Math.vectorMult3x3( m, _vUp);
+			Matrix4Math.vectorMult3x3( m, _vOut);
+		}
+	 
+		/**
+		 * Make the camera look at a specific position. Useful to follow a moving object or a static object while the camera is moving.
+		 * @param	px	Number	The x position to look at
+		 * @param	py	Number	The y position to look at
+		 * @param	pz	Number	The z position to look at
+		 */
+		public function lookAt( px:Number, py:Number, pz:Number ):void
+		{
+			_compiled = false;
+			_vOut = VectorMath.sub( new Vector(px, py, pz), _p );
+			VectorMath.normalize( _vOut );
+			// -- the vOut vector should not be colinear with the reference down vector!
+			_vSide = VectorMath.cross( _vOut, _vLookatDown );
+			VectorMath.normalize( _vSide );
+			_vUp = VectorMath.cross( _vOut, _vSide );
+			VectorMath.normalize( _vUp );
+		}
+	 
+		/**
+		 * RotateX - Rotation around the global X axis of the camera frame
+		 * @param nAngle Number The angle of rotation in degree.
+		 * @return void
+		 */
+		public function rotateX ( nAngle:Number ):void
+		{
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var m:Matrix4 = Matrix4Math.axisRotation ( 1, 0, 0, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vUp);
+			Matrix4Math.vectorMult3x3( m, _vSide);
+			Matrix4Math.vectorMult3x3( m, _vOut);
+		}
+		
+		/**
+		 * rotateY - Rotation around the global Y axis of the camera frame
+		 * @param nAngle Number The angle of rotation in degree.
+		 * @return void
+		 */
+		public function rotateY ( nAngle:Number ):void
+		{
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var m:Matrix4 = Matrix4Math.axisRotation ( 0, 1, 0, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vUp);
+			Matrix4Math.vectorMult3x3( m, _vSide);
+			Matrix4Math.vectorMult3x3( m, _vOut);
+		}
+		
+		/**
+		 * rotateZ - Rotation around the global Z axis of the camera frame
+		 * @param nAngle Number The angle of rotation in degree between : [ -180; 180 ].
+		 * @return
+		 */
+		public function rotateZ ( nAngle:Number ):void
+		{
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var m:Matrix4 = Matrix4Math.axisRotation ( 0, 0, 1, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vUp);
+			Matrix4Math.vectorMult3x3( m, _vSide);
+			Matrix4Math.vectorMult3x3( m, _vOut);
+		}	
+		
+		/**
+		 * Tilt - Rotation around the local X axis of the camera frame
+		 * Range from -90 to +90 where 0 = Horizon, +90 = straight up and –90 = straight down.
+		 * @param nAngle Number The angle of rotation in degree.
+		 * @return void
+		 */
+		public function tilt ( nAngle:Number ):void
+		{
+			//_nTilt = NumberUtil.constrain( _nTilt + nAngle, -90, 90 );
+			//if( _nTilt == -90 || _nTilt == 90 ) return;
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var m:Matrix4 = Matrix4Math.axisRotation ( _vSide.x, _vSide.y, _vSide.z, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vUp);
+			Matrix4Math.vectorMult3x3( m, _vOut);
+		}
+		
+		/**
+		 * Pan - Rotation around the local Y axis of the camera frame
+		 * Range from 0 to 360 where 0=North, 90=East, 180=South and 270=West.
+		 * @param nAngle Number The angle of rotation in degree.
+		 * @return void
+		 */
+		public function pan ( nAngle:Number ):void
+		{
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var m:Matrix4 = Matrix4Math.axisRotation ( _vUp.x, _vUp.y, _vUp.z, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vSide);
+			Matrix4Math.vectorMult3x3( m, _vOut);
+		}
+		
+		/**
+		 * roll - Rotation around the local Z axis of the camera frame
+		 * Range from -180 to +180 where 0 means the plane is aligned with the horizon, 
+		 * +180 = Full roll right and –180 = Full roll left. In both cases, when the roll is 180 and –180, 
+		 * the plane is flipped on its back.
+		 * @param nAngle Number The angle of rotation in degree.
+		 * @return
+		 */
+		public function roll ( nAngle:Number ):void
+		{
+			_compiled = false;
+			nAngle = (nAngle + 360)%360;
+			var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, nAngle );
+			Matrix4Math.vectorMult3x3( m, _vSide);
+			Matrix4Math.vectorMult3x3( m, _vUp);
+		}	
+
+		public function getRoll():Number
+		{
+			return _nRoll;
+		}
+		
+		public function getPitch():Number
+		{
+			return _nTilt;
+		}
+		
+		public function getYaw():Number
+		{
+			return _nYaw;
+		}
+		
+		/**
+		* Set the position of the camera. Basically apply a translation.
+		* @param x x position of the camera
+		* @param y y position of the camera
+		* @param z z position of the camera
+		*/
+		public function setPosition( x:Number, y:Number, z:Number ):void
+		{
+			_compiled = false;
+			// we must consider the screen y-axis inversion
+			_p.x = x;
+			_p.y = y;
+			_p.z = z;	
+			trace("Camera::setPosition :"+x+" "+y+" "+z);
+		}
+		
+		/**
+		* Get the offset of the screen of the camera along  axis.
+		* @return a Number corresponding to the offset
+		*/
+		public function getXOffset():Number
+		{
+			return _wo;
+		}
+		
+		/**
+		* Get the offset of the screen of the camera along Y axis.
+		* @return a Number corresponding to the offset
+		*/
+		public function getYOffset():Number
+		{
+			return _ho;
+		}
+		
+		/**
+		* Get the position of the camera.
+		* @return the position of the camera as a Vector
+		*/
+		public function getPosition() : Vector
+		{
+			return new Vector(_p.x, _p.y, _p.z );
+		}
+		
+		/**
+		* Set an interpolator to the camera. Currently the camera handles only a Path interpolator or a Position interpolation.
+		* @param	i Interpolator3D	The interpolator you want to apply to the camera. It must be a Path interpolator or a Position interpolation
+		* @return Boolean True is the operation goes well, false otherwise
+		*/
+		public function setInterpolator( i:BasicInterpolator):Boolean
+		{
+			if( i.getType() == TransformType.PATH_INTERPOLATION || i.getType() == TransformType.TRANSLATION_INTERPOLATION )
+			{
+				removeInterpolator();
+				_oInt = i;
+				_oInt.addEventListener( SandyEvent.PROGRESS, __onInterpolation );
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		/**
+		* REmove the interpolator is exist. remove also the listeners.
+		* @param	void
+		* @return Boolean True is the operation goes well, false otherwise.
+		*/
+		public function removeInterpolator():Boolean
+		{
+			if(  null == _oInt ) return false;
+			else
+			{
+				_oInt.removeEventListener( SandyEvent.PROGRESS, __onInterpolation );
+				_oInt = null;
+				return true;
+			}
+		}
+		
+		/**
+		* This method helps you to know if something has changed in the camera, and if you need to compile it again to take care about the modifications.
+		* @param	void
+		* @return	Boolean True value is returned if something has changed, false otherwise.
+		*/
+		public function isModified():Boolean
+		{
+			return (_compiled == false);
+		}
+		
+		/**
+		* Compile the camera transformations by multiplicating the matrix together.
+		* Be carefull to call isModified method before to save computations. 
+		*/
+		public function compile():void
+		{
+			if(!_compiled )
+			{
+				// we set up the rotation matrix from euler's angle
+				__updateTransformMatrix();
+				// we add the translation effect
+				_mf = Matrix4Math.multiply ( _mp, _mt );
+				_compiled = true;
+			}
+		}
+		
+		public function getMatrix():Matrix4
+		{
+			return _mf;
+		}
+		
+		/**
+		* Return the projection matrix. 
+		* 
+		* @return Matrix4
+		*/
+		public function getProjectionMatrix():Matrix4
+		{
+			return _mp;
+		}
+		
+		/**
+		 * Returns the inverse of the projection matrix
+		 */
+		public function getProjectionMatrixInverse():Matrix4
+		{
+			return _mpInv;
+		}
+		
+		/**
+		* Return the transformation matrix. 
+		* 
+		* @return Matrix4
+		*/
+		public function getTransformMatrix():Matrix4
+		{
+			if(! _compiled ) __updateTransformMatrix();
+			return _mt;
+		}
+
+		public function getTransformationMatrixInverse():Matrix4
+		{
+			return  Matrix4Math.getInverse( _mt );
+		}
+		
+		public function toString():String
+		{
+			return "sandy.view.Camera3D";
+		}
+			
+		/**
+		* Set an orthographic projection. This projection in opposite of the perspective one, don't distort distances and pictures
+		* @param	screenWidth The screen width. Default value: the screen width
+		* @param	screenHeight The screen height. Default value: the screen height.
+		* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
+		* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+		*/
+		/*
+		public function setOrthoProjection(screenWidth:Number, screenHeight:Number, zNear:Number, zFar:Number):void
+		{
+			var h:Number, w:Number, Q:Number;
+			// --
+			if( undefined == screenWidth ) screenWidth = _is.getSize().width;
+			if( undefined == screenHeight ) screenHeight = _is.getSize().height;
+			if( undefined == zNear ) zNear = 10;
+			if( undefined == zFar ) zFar = 10000;
+			// --
+			w = 2*zNear/screenWidth;
+			h = 2*zNear/screenHeight;
+			Q = zFar/(zFar - zNear);
+
+			delete _mp;
+			_mp = Matrix4.createZero();
+			_mp.n11 = w;
+			_mp.n22 = h;
+			_mp.n33 = Q;
+			_mp.n34 = -Q*zNear;
+			_mp.n43 = 1;
+		}
+		*/
+		
+		/**
+		* Set a projection matrix with perspective. This projection allows a more human visual representation of objects.
+		* @param	fovY The angle of view in degress. Default value: 45.
+		* @param	aspectRatio The ratio between vertical and horizontal pixels. Default value: the screeen ratio (width/height)
+		* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
+		* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+		*/
+		public function setPerspectiveProjection(fovY:Number = 45, aspectRatio:Number = undefined, zNear:Number = 50, zFar:Number = 3000):void
+		{
+			var cotan:Number, Q:Number;
+			
+			// --
+			if( !aspectRatio ) aspectRatio = _is.getRatio();
+			
+			frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
+			
+			// --
+			fovY = NumberUtil.toRadian( fovY );
+			cotan = 1 / Math.tan(fovY / 2);
+			Q = zFar/(zFar - zNear);
+			
+			_mp = null;
+			_mp = Matrix4.createZero();
+			//trace(_mp);
+			_mp.n11 = cotan / aspectRatio;
+			_mp.n22 = cotan;
+			_mp.n33 = Q;
+			_mp.n34 = -Q*zNear;
+			_mp.n43 = 1;
+			//trace(_mp);
+			_compiled = false;
+			
+		}
+		
+	public function setPerspective( par_f_fieldOfViewVerticalDeg:Number = 45, 
+									par_f_aspectRatio:Number = undefined, 
+									par_f_zNear:Number = 50, 
+									par_f_zFar:Number = 3000):void
+	{
+	   /* Start of user code */
+	   var loc_f_x:Number;
+	   var loc_f_y:Number;
+		
+		if( undefined == par_f_aspectRatio ) par_f_aspectRatio = _is.getRatio();
+		
+		frustrum.computePlanes(par_f_aspectRatio, par_f_zNear, par_f_zFar, par_f_fieldOfViewVerticalDeg );
+			
+	   par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
+
+	   loc_f_y = (par_f_zNear * Math.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
+
+	   loc_f_x = par_f_aspectRatio * loc_f_y;
+
+		// FIXME Sign modification to be left handed
+	   frustum(  loc_f_x, -loc_f_x,
+				 loc_f_y, -loc_f_y,
+				  par_f_zNear, par_f_zFar);
+		
+		_compiled = false;
+		/* End of user code */
+		return;
+	}
+
+	public function frustum( par_f_left:Number, par_f_right:Number, par_f_bottom:Number, par_f_top:Number, par_f_near:Number, par_f_far:Number):void
+	{
+		/* Start of user code */
+		var   loc_f_width:Number;
+		var   loc_f_height:Number;
+		var   loc_f_depth:Number;
+
+		_mp = null;
+		_mp = Matrix4.createZero();
+
+		loc_f_width  = par_f_right  -   par_f_left;
+		loc_f_height = par_f_top    -   par_f_bottom;
+		loc_f_depth  = par_f_near   -   par_f_far;
+
+		_mp.n11 = (2 * par_f_near) / loc_f_width;
+		_mp.n22 = (2 * par_f_near) / loc_f_height;
+
+		_mp.n13 = (par_f_right + par_f_left)  / loc_f_width;
+		_mp.n23 = (par_f_top   + par_f_bottom) / loc_f_width;
+
+		_mp.n33 = (par_f_far + par_f_near    ) / loc_f_depth;
+		_mp.n34 = (par_f_far * par_f_near * 2) / loc_f_depth;
+		
+		_mp.n43 = -1;
+
+		_compiled = false;
+		
+		/* End of user code */
+		return;
+	}
+
+		
+		private function __updateTransformMatrix ():void
+		{
+			_mt.n11 = _vSide.x; 
+			_mt.n12 = _vSide.y; 
+			_mt.n13 = _vSide.z; 
+			_mt.n14 = - VectorMath.dot( _vSide, _p );
+			
+			_mt.n21 = _vUp.x; 
+			_mt.n22 = _vUp.y; 
+			_mt.n23 = _vUp.z; 
+			_mt.n24 = - VectorMath.dot( _vUp, _p );
+			
+			_mt.n31 = _vOut.x; 
+			_mt.n32 = _vOut.y; 
+			_mt.n33 = _vOut.z; 
+			_mt.n34 = - VectorMath.dot( _vOut, _p );
+			
+			_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
+			/*
+			var n11:Number = _vSide.x; 
+			var n12:Number = _vSide.y; 
+			var n13:Number = _vSide.z; 
+			var n21:Number = _vUp.x; 
+			var n22:Number = _vUp.y; 
+			var n23:Number = _vUp.z; 
+			var n31:Number = _vOut.x; 
+			var n32:Number = _vOut.y; 
+			var n33:Number = _vOut.z; 
+			
+			var px:Number = _p.x,  py:Number = _p.y, pz:Number = _p.z;
+
+			var det: Number = n11 * ( n22 * n33 - n23 * n32 ) + n21 * ( n32 * n13 - n12 * n33 ) + n31 * ( n12 * n23 - n22 * n13 );
+
+			if( det == 0 ) return;
+
+			_mt.n11 = ( n22 * n33 - n32 * n23 ) / det;
+			_mt.n12 = ( n31 * n23 - n21 * n33 ) / det;
+			_mt.n13 = ( n21 * n32 - n31 * n22 ) / det;
+
+			_mt.n21 = ( n32 * n13 - n21 * n33 ) / det;
+			_mt.n22 = ( n11 * n33 - n31 * n13 ) / det;
+			_mt.n23 = ( n31 * n12 - n11 * n32 ) / det;
+
+			_mt.n31 = ( n12 * n23 - n22 * n13 ) / det;
+			_mt.n32 = ( n21 * n13 - n11 * n23 ) / det;
+			_mt.n33 = ( n11 * n22 - n21 * n12 ) / det;
+
+			_mt.n14 = -( px * _mt.n11 + py * _mt.n12 + pz * _mt.n13 );
+			_mt.n24 = -( px * _mt.n21 + py * _mt.n22 + pz * _mt.n23 );
+			_mt.n34 = -( px * _mt.n31 + py * _mt.n32 + pz * _mt.n33 );
+			*/
+
+		}
+		
+		/**
+		* On an interpolation event, we compute the correct position, and update the camera.
+		* @param	e
+		*/
+		private function __onInterpolation( e:Event ):void
+		{
+			var m:Matrix4 = BasicInterpolator(e.target).getMatrix();
+			_p.x = m.n14;
+			_p.y = m.n24;
+			_p.z = m.n34;
+			_compiled = false;
+		}
+			
+		/**
+		 * Position of camera ( a Vector )
+		 */
+		private var _p : Vector;
+
+		private var _mt : Matrix4; // transformation matrix
+		private var _mp : Matrix4; // projection Matrix4
+		private var _mpInv : Matrix4; // Inverse of the projection matrix 
+		
+		/*
+		 * ViewPort matrix
+		 */
+		private var _mv : Matrix4;
+
+
+		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
+		/**
+		 * boolean allowing kind of cache matrix computation
+		 */
+		private var _compiled : Boolean;
+		
+		/**
+		 * Camera Side Orientation Vector
+		 */
+		private var _vSide : Vector;
+		
+		/**
+		 * Camera view Orientation Vector
+		 */
+		private var _vOut : Vector;
+		
+		/**
+		 * Camera up Orientation Vector
+		 */
+		 private var _vUp : Vector;
+		
+		/**
+		 * Nodal Distance of camera ( and not Focal ;) )
+		 */
+		private var _nFocal : Number;
+		
+		/**
+		 * current tilt value
+		 */
+		private var _nTilt : Number;
+		
+		/**
+		 * current yaw value
+		 */
+		private var _nYaw : Number;
+		
+		/**
+		 * current roll value
+		 */
+		private var _nRoll : Number;  
+		
+		/**
+		 * associated screen
+		 */
+		private var _is:IScreen;
+		// Private absolute down vector
+		private var _vLookatDown:Vector;
+		/**
+		 * screen size useful to create an offset
+		 */
+		private var _rDim : Rectangle;	
+		// screen offset
+		private var _wo:Number;
+		private var _ho:Number;
+		/**
+		* The interpolator
+		*/
+		private var _oInt:BasicInterpolator;
+	}
+}

@@ -154,7 +154,7 @@ package sandy.view
 		 * 
 		 * @param	a	The array of {@code Face}.
 		 */
-		public function render ( a:Array ):void
+		public function render2 ( a:Array ):void
 		{
 			//var ms = getTimer();
 			
@@ -173,7 +173,7 @@ package sandy.view
 			//trace("Czas: " + (getTimer()-ms));
 		}
 		
-		public function render2 ( a:Array ):void
+		public function render ( a:Array ):void
 		{
 			var l_container:DisplayObjectContainer = World3D.getInstance().clearSceneContainer();
 			

@@ -203,6 +203,21 @@ package sandy.core.transform {
 			}
 		}
 		
+		/**
+		* redo
+		* <p>Make the interpolation starting again</p>
+		*/
+		override public function redo():void
+		{
+			super.redo();
+			
+			if( _way == 1 )
+				_m = getStartMatrix();
+			else
+				_m = getEndMatrix();
+		}
+
+		
 		
 		
 		

@@ -741,6 +741,7 @@ package sandy.core
 		private static function createObjectContainer():Sprite
 		{
 			var p_container:Sprite = new Sprite();
+			p_container.cacheAsBitmap = true;
 			World3D.getInstance().getSceneContainer().addChild(p_container);
 			
 			return p_container;

@@ -95,9 +95,9 @@ package
 										break;
 				case Keyboard.LEFT	: 	cam.rotateY ( -1 ); 		
 										break;
-				case Keyboard.UP	: 	cam.moveForward ( 2 ); 	
+				case Keyboard.UP	: 	cam.moveForward ( 4 ); 	
 										break;
-				case Keyboard.DOWN	: 	cam.moveForward ( -2 ); 	
+				case Keyboard.DOWN	: 	cam.moveForward ( -4 ); 	
 										break;
 										
 				//case Key.isDown (Key.SHIFT)	: cam.tilt ( 1 ); 		break;

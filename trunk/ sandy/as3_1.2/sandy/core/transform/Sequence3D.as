@@ -58,6 +58,7 @@
 		* */
 		private function __render(e:Event):void
 		{
+			trace(_frame);
 			if( !_paused && !_finished )
 			{
 				_frame += _way;
@@ -130,6 +131,7 @@
 		 */
 		public function addChild( i:BasicInterpolator ) : void 
 		{
+			// Remove interpolator from main rendering loop 
 			World3D.getInstance().removeEventListener( SandyEvent.RENDER, i.__render );
 			
 			_aInterpolator.push(i);

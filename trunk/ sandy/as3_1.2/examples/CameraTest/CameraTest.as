@@ -20,7 +20,6 @@ package {
 	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
 
-	
 	public class CameraTest extends Sprite
 	{
 		internal static const SCREEN_WIDTH:int = 500;

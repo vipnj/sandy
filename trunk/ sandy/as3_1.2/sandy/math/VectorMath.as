@@ -163,7 +163,7 @@ package sandy.math {
 		*/
 		public static function getAngle ( v:Vector, w:Vector ):Number
 		{
-			/*var ncos:Number = VectorMath.dot( v, w ) / ( VectorMath.getNorm(v) * VectorMath.getNorm(w) );
+			var ncos:Number = VectorMath.dot( v, w ) / ( VectorMath.getNorm(v) * VectorMath.getNorm(w) );
 			var sin2:Number = 1 - ncos * ncos;
 			
 			if (sin2<0)
@@ -173,9 +173,9 @@ package sandy.math {
 			}
 			//I took long time to find this bug. Who can guess that (1-cos*cos) is negative ?!
 			//sqrt returns a NaN for a negative value !
-			return  Math.atan2( Math.sqrt(sin2), ncos );*/
+			return  Math.atan2( Math.sqrt(sin2), ncos );
 			
-			return Math.acos( VectorMath.dot( v, w ) / (VectorMath.getNorm(v) * VectorMath.getNorm(w)) );
+			//return Math.acos( VectorMath.dot( v, w ) / (VectorMath.getNorm(v) * VectorMath.getNorm(w)) );
 		}
 		
 		/**

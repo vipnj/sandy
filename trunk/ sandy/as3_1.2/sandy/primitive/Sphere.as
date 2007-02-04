@@ -62,12 +62,10 @@ package sandy.primitive
 		public function Sphere( radius:Number = 5, quality:Number = 1, mode:String = 'tri')
 		{
 			super();
-			_radius =(undefined == radius) ?  5 :  radius ;
-			if (undefined == quality) quality = 1 ;
-			quality = (quality > 5) ? 5 : quality;
-			quality = (quality <=0) ? 1 : quality;
-			_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
-			_quality = 4+2*quality ;
+			_radius = radius ;
+			quality = (quality <= 0 || quality > 5) ? 5 : quality;
+			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
+			_quality = 4 + 2*quality ;
 			generate();
 		}
 		

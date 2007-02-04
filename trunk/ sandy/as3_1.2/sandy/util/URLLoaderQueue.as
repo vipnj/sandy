@@ -71,7 +71,8 @@ package sandy.util {
 		
 		public function addResourceList(p_urlList:Array):void
 		{
-			queue = queue.concat(p_urlList);
+			if (p_urlList)
+				queue = queue.concat(p_urlList);
 		}
 		
 		public function load():void
@@ -112,12 +113,14 @@ package sandy.util {
 		
 		private function loadNextResource():void
 		{
+			
 			if (queue.length && !stopped) 
 			{
 				try 
 				{
 					// First In First Out
 					currentResource = queue.splice(0,1)[0];
+					
 					var l_request:URLRequest = new URLRequest(currentResource.url);
 				
 					switch (currentResource.type) {

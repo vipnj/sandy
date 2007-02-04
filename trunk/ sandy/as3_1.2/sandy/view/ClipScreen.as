@@ -29,6 +29,7 @@ package sandy.view
 	import sandy.view.Camera3D;
 	import sandy.view.IScreen;
 	import sandy.core.World3D;
+	import sandy.core.Object3D;
 	import sandy.events.SandyEvent;
 	
 	
@@ -160,14 +161,14 @@ package sandy.view
 			
 			// -- 
 			var l:int = a.length;
-			var l_2Render:Object;
+			var l_2Render:Object3D;
 			
 			while( --l > -1 )
 			{
 				l_2Render = a[int(l)];
 				
-				DisplayUtil.swapObjectWithIndex(l_2Render.movie, l);	
-				l_2Render.callback();
+				DisplayUtil.swapObjectWithIndex(l_2Render.getContainer(), l);	
+				l_2Render.__renderFaces();
 			}
 			
 			//trace("Czas: " + (getTimer()-ms));
@@ -179,14 +180,14 @@ package sandy.view
 			
 			// -- 
 			var l:int = a.length;
-			var l_2Render:Object;
+			var l_2Render:Object3D;
 			
 			for(var i:int=0; i < l; i++) 
 			{
 				l_2Render = a[int(i)];
 				
-				l_container.addChild(l_2Render.movie);
-				l_2Render.callback();
+				l_container.addChild(l_2Render.getContainer());
+				l_2Render.__renderFaces();
 			}
 			
 		}

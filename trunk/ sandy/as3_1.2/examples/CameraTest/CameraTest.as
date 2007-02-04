@@ -78,7 +78,7 @@ package {
 			tg.setTransform( t );
 			//
 			var o:Object3D, skin:Skin;
-			o = new Sprite3D(3, 0);
+			o = new Sprite3D(1, 0);
 			skin = new MovieSkin( "180.swf", true );
 			o.setSkin( skin );
 			//
@@ -119,8 +119,8 @@ package {
 			path.addPoint(  0, 50, 900 );
 			path.addPoint( 900, 50, 1000 );
 			path.addPoint( 0, 50, -500 );
-			
 			path.compile();
+			
 			var pInt:PathInterpolator = new PathInterpolator( e.create(), 600, path );
 			pInt.addEventListener( SandyEvent.PROGRESS, __onCamMove );
 			pInt.addEventListener( SandyEvent.END, __onCamMoveEnd );

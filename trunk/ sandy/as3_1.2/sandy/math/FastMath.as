@@ -8,6 +8,7 @@ package sandy.math
 	* 	@date	01.02.2007
 	*/
 	public const FastMath:_FastMath_ = _FastMath_.initialize();
+	
 }
 
 import flash.utils.getTimer;

@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.face {
+package sandy.core.face 
+{
 
 	import flash.geom.Matrix;
 	import flash.utils.getQualifiedClassName;
@@ -47,7 +48,7 @@ package sandy.core.face {
 			_o = oref;
 			_bfc = 1;
 			_id = Polygon._ID_ ++;
-			_s = _sb = undefined;
+			_s = _sb = null;
 			_aVertex = rest;
 			_aClipped = _aVertex.slice();
 			_nCL = _nL = _aVertex.length;

@@ -15,7 +15,14 @@ limitations under the License.
 */
 
 
-package sandy.core.buffer {
+package sandy.core.buffer 
+{
+	
+	import sandy.core.Object3D;
+	import sandy.core.Sprite3D;
+	import sandy.core.Sprite2D;
+	
+	
 		
 	/**
 	* Buffer of the z-depths.
@@ -44,12 +51,26 @@ package sandy.core.buffer {
 		* 
 		* @param o : An Object
 		*/ 
-		public static function push( o:Object ):void
+		public static function push( o:Object3D ):void
 		{
 			if (_a.length == 0) {
 				_stats.faces = 0;
+				_stats.sprites2D = 0;
+				_stats.sprites3D = 0;
 			}
-			_stats.faces += o.o3d.aFaces.length;
+			
+			if (o is Sprite3D)
+			{
+				_stats.sprites3D ++;
+			} else 
+				if (o is Sprite2D)
+				{
+					_stats.sprites2D ++;
+				} else 
+				{
+					_stats.faces += o.aFaces.length;
+				}
+			
 			_a.push( o );
 		}
 
@@ -80,5 +101,14 @@ package sandy.core.buffer {
 			return _stats.faces;
 		}
 		
+		public static function getSprites3DNum():int
+		{
+			return _stats.sprites3D;
+		}
+		
+		public static function getSprites2DNum():int
+		{
+			return _stats.sprites2D;
+		}
 	}
 }

@@ -103,7 +103,7 @@ package sandy.core.face {
 		/**
 		 * Update the texture matrix in case that one of its vertex has been changed
 		 */
-		function updateTextureMatrix( s:Skin = undefined):void;
+		function updateTextureMatrix( s:Skin = null):void;
 
 		/**
 		 * Returns the precomputed matrix for the texture algorithm.

@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.skin {
+package sandy.skin 
+{
 		
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -96,10 +97,7 @@ package sandy.skin {
 		{
 			pValue = 0.01 * NumberUtil.constrain( pValue, 0, 100 );
 			
-			if( _cmf ) 
-			{
-				_cmf = null;
-			}
+			_cmf = null;
 			
 			var matrix:Array = [
 								1, 0, 0, 0, 0,

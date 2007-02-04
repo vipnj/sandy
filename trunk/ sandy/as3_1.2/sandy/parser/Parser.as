@@ -56,7 +56,7 @@ package sandy.parser
 			}
 			catch(p_error:Error)
 			{
-				trace( "Error in loading ase file" );
+				trace( "Error in loading text file" );
 				dispatchEvent( failEvent );
 			}
 			

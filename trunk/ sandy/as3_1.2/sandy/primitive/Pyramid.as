@@ -58,9 +58,9 @@ package sandy.primitive {
 		public function Pyramid (h:Number = 6, lg:Number = 6, rad:Number = 100 )
 		{
 			super ();
-			_radius =(undefined == rad	) ?  100 :  rad ;
-			_h = (undefined == h	) ? 6 :  h ;
-			_lg =(undefined == lg	) ? 6 :  lg ;
+			_radius = rad ;
+			_h = h ;
+			_lg = lg ;
 			generate ();
 		}
 		

@@ -45,6 +45,7 @@ package sandy.skin {
 		//////////////////
 		protected var _filters:Array;
 		protected var _useLight : Boolean;
+		
 		private var _id:Number;
 		private static var _ID_:Number = 0;
 

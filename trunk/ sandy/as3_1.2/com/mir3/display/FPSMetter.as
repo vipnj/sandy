@@ -32,6 +32,7 @@
 		private var graph: FPSGraph;
 		private var line: Shape;
 		private var lineFull: Shape;
+		private var globalStage: Stage;
 		
 		private var fs: int;
 		private var ms: int;
@@ -97,8 +98,10 @@
 			
 			if (p_stage)
 			{
+				globalStage = p_stage;
+				
 				// -- Stage resizing
-				//p_stage.scaleMode = StageScaleMode.NO_SCALE;
+				p_stage.scaleMode = StageScaleMode.NO_SCALE;
 				p_stage.align = StageAlign.TOP_LEFT;
 				p_stage.addEventListener(Event.RESIZE, stageResized);
 				
@@ -173,8 +176,8 @@
 		
 		private function stageResized(p_event:Event):void
 		{
-			sw = stage.stageWidth;
-			sh = stage.stageHeight;
+			sw = globalStage.stageWidth;
+			sh = globalStage.stageHeight;
 			
 			x = 5;
 			y = sh - height - 5;

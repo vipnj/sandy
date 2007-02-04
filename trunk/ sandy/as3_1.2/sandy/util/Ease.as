@@ -92,7 +92,7 @@ limitations under the License.
 		 * @param f An additional function the returned function can wrap
 		 * @return A function which applies a tween to a number passed into it when called.
 		 */
-		public function create(f:Object = undefined):Function 
+		public function create(f:Object = null):Function 
 		{
 			if (!this.type) return this.method;
 			var em = this.method;
@@ -164,7 +164,7 @@ limitations under the License.
 		 */
 		public function easingIn(a:Number):Ease 
 		{
-			if (a == undefined || a == 1)
+			if (a == 1 || a == NaN)
 			{
 				this.type = null; // easing in is prototyped/default
 			}
@@ -186,7 +186,7 @@ limitations under the License.
 		 */
 		public function easingOut(a:Number):Ease 
 		{
-			if (a == undefined || a == 1)
+			if (a == NaN || a == 1)
 			{
 				this.type = function(t:Number, e:Function):Number 
 				{
@@ -293,7 +293,7 @@ limitations under the License.
 		private function easeComb(a:Number, c:Number, p1:Function, p2:Function, k:Boolean):Ease 
 		{
 			// default changeover - halfway
-			if (c == undefined) c = .5;
+			if (c == NaN) c = .5;
 				
 			// get type functions for each side of the ease
 			if (p1 == p2)
@@ -429,7 +429,7 @@ limitations under the License.
 		 */
 		public function quadraticBezier(c:Number):Ease 
 		{ // c for control point
-			if (c == undefined) c = .5;
+			if (c == NaN) c = .5;
 			this.method = function(t:Number)
 			{
 				return 2*t*(1-t)*c + t*t;
@@ -445,8 +445,8 @@ limitations under the License.
 		 */
 		public function cubicBezier(c1:Number, c2:Number):Ease 
 		{ // c for control points
-			if (c1 == undefined) c1 = .25;
-			if (c2 == undefined) c2 = .75;
+			if (c1 == NaN) c1 = .25;
+			if (c2 == NaN) c2 = .75;
 			this.method = function(t:Number)
 			{
 				var s = t*t;

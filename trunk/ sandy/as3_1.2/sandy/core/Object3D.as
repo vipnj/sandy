@@ -84,6 +84,8 @@ package sandy.core
 		public var aNormals:Array;
 		
 		public var aClipped:Array;
+		
+		public var depth:Number;
 	
 		
 		
@@ -99,7 +101,7 @@ package sandy.core
 		private var _visible : Boolean;
 		private var _enableForcedDepth:Boolean;
 		private var _forcedDepth:Number;
-		protected var _fCallback:Function;
+		//protected var _fCallback:Function;
 		private var _mc:Sprite;
 		private var _aSorted:Array;
 		private var _oBBox:BBox;
@@ -141,9 +143,6 @@ package sandy.core
 			_forcedDepth = 0;
 			_oBBox = null;
 			_oBSphere = null;
-			
-			// --
-			_fCallback = __renderFaces
 			
 			// -- We also set skin to Default constant
 			setSkin( DEFAULT_SKIN );
@@ -218,7 +217,7 @@ package sandy.core
 		*/
 		override public function toString ():String
 		{
-			return getQualifiedClassName(this) + " [Faces: " + aFaces.length + ", Points: " + aPoints.length + "]";
+			return getQualifiedClassName(this) + " [Faces: " + aFaces.length + ", Points: " + aPoints.length + ", Depth: " + depth + "] Position: " + getPosition();
 		}
 		
 		/**
@@ -443,16 +442,19 @@ package sandy.core
 		{
 			var l:int = aPoints.length;
 			var p:int = l;
-			var lDepth:Number = 0;
+			depth = 0;
 			while( --l > -1 ) 
 			{
-				lDepth += (aPoints[int(l)].wz);
+				depth += (aPoints[int(l)].wz);
 			}
 			
-			ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback, o3d:this } );
+			depth /= p;
+			
+			//ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback, o3d:this } );
+			ZBuffer.push( this );
 		}
 		
-		private function __renderFaces():void
+		public function __renderFaces():void
 		{
 			var ndepth:Number;
 			// -- local copy because it's faster

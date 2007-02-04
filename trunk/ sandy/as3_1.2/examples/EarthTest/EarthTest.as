@@ -17,10 +17,11 @@ package
 	import sandy.core.transform.Transform3D;
 	import sandy.core.World3D;
 	import sandy.core.Object3D;
+	import sandy.core.Sprite3D;
 	import sandy.events.SandyEvent;
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.Sphere;
-	//import sandy.skin.MixedSkin;
+	//import sandy.skin.MovieSkin;
 	import sandy.skin.SimpleColorSkin;
 	import sandy.skin.Skin;
 	import sandy.util.Ease;
@@ -88,7 +89,7 @@ package
 			var bg : Group = new Group ();
 			World3D.getInstance().setRootGroup (bg);
 			
-			for (var i:int = 0; i<30; i++) {
+			for (var i:int = 0; i<1; i++) {
 				createScene(bg);
 			}
 			
@@ -119,7 +120,7 @@ package
 		
 		private function createScene (bg : Group) : void
 		{
-			_earthRadius = new Vector( 200, 0, 0 );
+			_earthRadius = new Vector( 200, 0, 100 );
 			_sunPosition = new Vector( 0, 0, 500 );
 			
 			

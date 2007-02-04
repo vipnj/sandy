@@ -69,7 +69,7 @@ package sandy.primitive {
 			_radius = radius;
 			_quality = quality;
 			_height = height;
-			_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
+			_mode = ( mode != 'tri' && mode != 'quad') ? 'tri' : mode;
 			generate();
 		}
 		
@@ -88,6 +88,7 @@ package sandy.primitive {
 			var auv:Array = new Array();
 			var points:Array = new Array();
 			var faces:Array = new Array();
+			
 			//-- Variables locales
 			var cos:Function = Math.cos;
 			var sin:Function = Math.sin;

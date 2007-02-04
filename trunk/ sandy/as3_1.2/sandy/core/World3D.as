@@ -70,8 +70,8 @@ package sandy.core {
 			_isRunning = false;
 			
 			trace("World3D start");
-			trace(FastMath.sin(10));
-			trace(Math.sin(10));
+			trace("FastMath Test: FastMath.cos(10): " + FastMath.sin(10));
+			trace("FastMath Test: Math.cos(10): " + Math.sin(10));
 		
 			
 			//setContainer(l_container);
@@ -79,10 +79,14 @@ package sandy.core {
 		
 		public function setContainer( mc:DisplayObjectContainer):void
 		{
+			mc.cacheAsBitmap = true;
+			
 			_bg = new Sprite();
+			_bg.cacheAsBitmap = true;
 			mc.addChild(_bg);
 			
-			_scene = new MovieClip();
+			_scene = new Sprite();
+			_scene.cacheAsBitmap = true;
 			mc.addChild(_scene);
 			
 			dispatchEvent(containerCreatedEvent);
@@ -91,7 +95,7 @@ package sandy.core {
 		public function clearSceneContainer():DisplayObjectContainer
 		{
 			_scene.parent.removeChild(_scene);
-			_scene = new MovieClip();
+			_scene = new Sprite();
 			_bg.parent.addChild(_scene);
 			
 			return _scene;
@@ -417,7 +421,8 @@ package sandy.core {
 			{
 				var l = a.length
 				
-				n.render();
+				// it'a transform
+				n.render(); 
 				while( --l > -1 )
 				{
 					__parseTree( a[int(l)], cache || lCache );
@@ -451,7 +456,7 @@ package sandy.core {
 		private var startEvent:Event = new Event(SandyEvent.START);
 		private var renderEvent:Event = new Event(SandyEvent.RENDER);
 		
-		private var _scene : MovieClip;
+		private var _scene : Sprite;
 		private var _bg : Sprite;
 	}
 }

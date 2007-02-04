@@ -8,6 +8,7 @@ package
 	import flash.events.*;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
+	import flash.display.StageScaleMode;
 	
 	import sandy.core.data.Vector;
 	import sandy.core.group.Group;
@@ -24,7 +25,6 @@ package
 	import com.mir3.display.FPSMetter;
 	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
-	
 	
 	
 	/**
@@ -44,6 +44,8 @@ package
 		
 		public function ClippingTest()
 		{
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			
 			// -- User interfaces
 			KeyManager.initStage(stage);
 			KeyManager.addKeyDown(keyDown);
@@ -95,9 +97,9 @@ package
 										break;
 				case Keyboard.LEFT	: 	cam.rotateY ( -1 ); 		
 										break;
-				case Keyboard.UP	: 	cam.moveForward ( 4 ); 	
+				case Keyboard.UP	: 	cam.moveForward ( 2 ); 	
 										break;
-				case Keyboard.DOWN	: 	cam.moveForward ( -4 ); 	
+				case Keyboard.DOWN	: 	cam.moveForward ( -2 ); 	
 										break;
 										
 				//case Key.isDown (Key.SHIFT)	: cam.tilt ( 1 ); 		break;

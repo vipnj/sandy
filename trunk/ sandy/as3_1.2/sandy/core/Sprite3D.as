@@ -18,6 +18,7 @@ package sandy.core
 {
 	import flash.events.Event;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.display.DisplayObject;
 
 	import sandy.core.buffer.ZBuffer;
@@ -71,7 +72,7 @@ package sandy.core
 		{
 			if ( !(s is MovieSkin) )
 			{
-				trace("#Warning [Sprite3D] setSkin Wrong parameter type: MovieSkin expected.");
+				//trace("#Warning [Sprite3D] setSkin Wrong parameter type: MovieSkin expected.");
 				return false;
 			}
 			
@@ -81,18 +82,19 @@ package sandy.core
 				__updateContent(null);
 			else
 				_s.addEventListener( SandyEvent.UPDATE, __updateContent);
+				
 			return true;
 		}
 		
 		private function __updateContent(p_event:Event):void
 		{
-			if( _s.getMovie().totalFrames != 360 )
+			if( MovieClip(_s.getMovie()).totalFrames != 360 )
 			{
 				trace("Sprite3D:: Error, the skin movie must have 360 frames");
 			}
 			else
 			{
-				skin = _s.attach( getContainer() );
+				setContainer( Sprite(_s.attach( getContainer() )) );
 				
 			}
 		}
@@ -105,9 +107,8 @@ package sandy.core
 		override public function render ():void
 		{
 			if (!_s.isInitialized()) return;
-			var l_mc:MovieClip = MovieClip(skin);
 			
-			var ndepth:Number = _v.wz;
+			var l_mc:MovieClip = MovieClip(getContainer());
 			
 			//
 			var vNormale:Vector = new Vector( _v.wx - aPoints[1].wx, _v.wy - aPoints[1].wy, _v.wz - aPoints[1].wz );
@@ -117,10 +118,10 @@ package sandy.core
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
 			l_mc.gotoAndStop( __frameFromAngle( angle ) );
 			
-			//l_mc.visible = true;
-			ZBuffer.push( { movie:l_mc, depth : _v.wz, callback:_fCallback, o3d:this } );
-			setModified( false );
+			
+			super.render();
 		}
+		
 		
 		private function __frameFromAngle(a:Number):int
 		{
@@ -155,7 +156,7 @@ package sandy.core
 		private var _nOffset:int;
 		private var _nScale:Number;
 		private var _vView:Vector;
-		private var skin:DisplayObject;
+		private var skinClip:DisplayObject;
 		
 	}
 }

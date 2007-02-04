@@ -79,35 +79,42 @@ package sandy.skin {
 				_loaded = true;
 				_initialized = false;
 				
-				var resLoader:URLLoaderQueue =  new URLLoaderQueue([url], URLLoaderQueue.SWF);
+				var resLoader:URLLoaderQueue = new URLLoaderQueue();
+
+				if (url.substring(url.length-3) == "swf" )
+				{
+					isSwf = true;
+					resLoader.addResource(url, URLLoaderQueue.SWF);
+				} else {
+					
+					// we're assuming it's a bitmap
+					resLoader.addResource(url, URLLoaderQueue.BITMAP);
+				}
+				
 				resLoader.addEventListener(SandyEvent.ALL_FINISHED, loadingComplete);
 				resLoader.load();
 				
 			} else 
-				if (_mc is MovieClip) 
+				if (_mc is MovieClip || _mc is Bitmap) 
 				{
 					_loaded = false;
 					_initialized = true;
-					_animated = _mc.totalFrames > 1;
+					isSwf = true;
+					_animated = MovieClip(_mc).totalFrames > 1;
 					_h = _mc.height;
 					_w = _mc.width;
 					
 					updateTexture();
-				} else {
-					trace("#Error [MovieSkin] Cannot load specified MovieClip: " + url + ".");
+					
+				} else 
+				{
+					trace("#Error [MovieSkin] Cannot load specified skin: " + url + ".");
 				}
-			
 			//
 			_m = new Matrix();
 			_bSmooth = false;
 			_p = new Point(0, 0);
 			_cmf = new ColorMatrixFilter();
-			
-			//
-			if( _initialized ) 
-			{
-				World3D.getInstance().addEventListener( SandyEvent.RENDER, updateTexture );
-			}
 		}
 		
 		public function attach( mc:Sprite ):DisplayObject
@@ -116,10 +123,15 @@ package sandy.skin {
 			{
 				if ( _animated )
 				{
+					// Only animated stuff needs to be refreshed every frame
+					World3D.getInstance().addEventListener( SandyEvent.RENDER, updateTexture );
+					
 					return DisplayUtil.replaceObject(mc, _mc);
 					
 				} else {
+					
 					mc.addChild( new Bitmap(_texture));
+					
 					return mc;
 				}
 			}
@@ -129,7 +141,17 @@ package sandy.skin {
 		
 		private function loadingComplete(p_event:Event):void 
 		{
-			_mc = MovieClip(p_event.target.getResources()[0]);
+			trace("[MovieSkin] Asset loaded successfully.");
+			trace(p_event.target.getResources()[0]);
+			
+			if (isSwf)
+			{
+				_mc = MovieClip(p_event.target.getResources()[0]);
+			} else 
+			{
+				_mc = Bitmap(p_event.target.getResources()[0]);
+			
+			}
 			
 			if( !_initialized )
 			{
@@ -138,14 +160,17 @@ package sandy.skin {
 				
 				updateTexture();
 				
-				_mc.stop();
+				if (isSwf)
+				{
+					MovieClip(_mc).stop();
+					_animated = MovieClip(_mc).totalFrames > 1;
+				}
 				
 				_initialized = true;
-				_animated = _mc.totalFrames > 1;
 				
 				dispatchEvent( updateEvent );
 				
-				World3D.getInstance().addEventListener( SandyEvent.RENDER, updateTexture );
+				//World3D.getInstance().addEventListener( SandyEvent.RENDER, updateTexture );
 			}
 		
         }
@@ -181,7 +206,7 @@ package sandy.skin {
 		* @param	void
 		* @return	MovieClip The movieclip which is used to texture objects
 		*/
-		public function getMovie():MovieClip
+		public function getMovie():DisplayObject
 		{
 			return _mc;
 		}
@@ -234,7 +259,9 @@ package sandy.skin {
 				// and in aplying the filter only to the considered part of the texture!
 				_tmp.applyFilter( _tmp , _tmp.rect, _p,  _cmf );
 				mc.filters = _filters;
-				mc.graphics.beginBitmapFill( _tmp, rMat, false, _bSmooth );
+				mc.graphics.beginBitmapFill( _tmp.clone(), rMat, false, _bSmooth );
+				_tmp.dispose();
+				_tmp = null;
 			}
 			else
 			{
@@ -252,7 +279,7 @@ package sandy.skin {
 		*/ 	
 		override public function end( f:IPolygon, mc:Sprite ):void
 		{
-			//Sprite(mc).graphics.endFill();
+			mc.graphics.endFill();
 		}
 
 		public function updateTexture(p_event:Event = null):void
@@ -269,8 +296,13 @@ package sandy.skin {
 				_tmp = null;
 			}
 			
-			if (_mc)
-				_texture = BitmapUtil.movieToBitmap( _mc );
+			if (_mc is MovieClip)
+				_texture = BitmapUtil.movieToBitmap( MovieClip(_mc) );
+			else 
+				if (_mc is Bitmap)
+				{
+					_texture = Bitmap(_mc).bitmapData;
+				}
 		}
 		
 		private function __concat( m1:Matrix, m2:Matrix ):Matrix
@@ -312,7 +344,8 @@ package sandy.skin {
 			
 		// --
 		private var _url:String;
-		private var _mc:MovieClip;
+		private var isSwf:Boolean;
+		private var _mc:DisplayObject;
 		private var _animated:Boolean;
 		private var _h:Number;
 		private var _w:Number;

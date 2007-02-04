@@ -18,7 +18,9 @@ package sandy.core
 {
 
 	import flash.display.MovieClip;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	import sandy.core.buffer.ZBuffer;
 	import sandy.core.data.Vertex;
@@ -73,7 +75,7 @@ package sandy.core
 		{
 			if ( !(s is MovieSkin) )
 			{
-				trace("#Warning [Sprite2D] setSkin Wrong parameter type: MovieSkin expected.");
+				//trace("#Warning [Sprite2D] setSkin Wrong parameter type: MovieSkin expected.");
 				return false;
 			}
 			
@@ -81,7 +83,8 @@ package sandy.core
 			
 			if( _s.isInitialized() )
 			{
-				__updateContent();
+				__updateContent(null);
+				
 			} else {
 				_s.addEventListener( SandyEvent.UPDATE, __updateContent);
 			}
@@ -89,7 +92,7 @@ package sandy.core
 			return true;
 		}
 		
-		private function __updateContent():void
+		private function __updateContent(p_event:Event):void
 		{
 			_s.attach( getContainer() );
 		}
@@ -135,28 +138,24 @@ package sandy.core
 			}
 		}
 		
-		/**
-		* Render the Object3D.
-		* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
-		*/ 
 		override public function render ():void
-		{		
+		{
+			//if (!_s.isInitialized()) return;
+			
 			getContainer().visible = true;
 			
-			ZBuffer.push( { movie:getContainer(), depth:_v.wz, callback:_fCallback } );
-			
-			setModified( false );
+			super.render();
 		}
 		
-		private function __renderFaces():void
+		override public function __renderFaces():void
 		{
-			// --
-			var cste:Number	= _nScale * 100 / _v.wz;
-			var mc:MovieClip =  MovieClip(getContainer());
+			
+			var cste:Number	= _nScale * 10 / _v.wz;
+			var mc:DisplayObject =  getContainer();
 			
 			// --
-			mc.xscale = 100 * cste;
-			mc.yscale = 100 * cste;
+			mc.scaleX = cste * 10;
+			mc.scaleY = cste * 10;
 			
 			// --
 			mc.x = _v.sx - mc.width  / 2;

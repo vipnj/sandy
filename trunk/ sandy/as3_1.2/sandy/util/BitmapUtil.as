@@ -47,7 +47,7 @@ package sandy.util {
 			}
 			
 			var scale:Matrix = new Matrix();
-			scale.scale( mc.scaleX, mc.scaleY );
+			//scale.scale( mc.scaleX, mc.scaleY );
 			bmp.draw( mc, scale, mc.transform.colorTransform );
 			
 			//
@@ -56,7 +56,7 @@ package sandy.util {
 		
 		public static function getScaledBitmap( b:BitmapData, scalex:Number, scaley:Number ):BitmapData
 		{
-			scaley = (undefined == scaley) ? scalex : scaley;
+			scaley = (NaN == scaley) ? scalex : scaley;
 			var tex:BitmapData = new BitmapData( scalex * b.width, scaley * b.height);
 			tex.draw( b, new Matrix( scalex, 0, scaley, 0 ) );
 			return tex;

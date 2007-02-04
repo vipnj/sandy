@@ -86,7 +86,7 @@ package sandy.primitive {
 		*/
 		public function setSkin( s:SimpleLineSkin, bOverWrite:Boolean = false):Boolean
 		{
-			bOverWrite = (bOverWrite == undefined ) ? false : bOverWrite;
+			bOverWrite = bOverWrite;
 			super.setSkin( s, bOverWrite );
 			return true;
 		}

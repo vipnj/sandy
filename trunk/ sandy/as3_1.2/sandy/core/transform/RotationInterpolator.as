@@ -226,7 +226,7 @@ package sandy.core.transform {
 		
 		private function __updateRotation():void
 		{	
-			if( undefined == _vRef ) 
+			if( !_vRef ) 
 			{
 				_m = Matrix4Math.axisRotationVector( _vAxis, _current );
 			} else {

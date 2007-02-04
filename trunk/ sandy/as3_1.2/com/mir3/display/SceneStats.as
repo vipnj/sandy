@@ -34,6 +34,7 @@
 		private var graph: FPSGraph;
 		private var line: Shape;
 		private var lineFull: Shape;
+		private var globalStage: Stage;
 		
 		private var isSilent: Boolean;
 		
@@ -79,7 +80,7 @@
 			fps.autoSize = "left";
 			fps.defaultTextFormat = format;
 			fps.antiAliasType = AntiAliasType.ADVANCED;
-			fps.text = "ZBuffer: 0000 faces";
+			fps.text = "ZBuffer: ____ faces,  ____ 2d,  ____ 3D";
 			
 			graphics.beginFill(0x000000, 1);
             graphics.drawRect(0, 0, width+1, GRAPH_HEIGHT+2);
@@ -99,10 +100,13 @@
 			
 			if (p_stage)
 			{
+				globalStage = p_stage;
+				
 				// -- Stage resizing
-				//p_stage.scaleMode = StageScaleMode.NO_SCALE;
-				p_stage.align = StageAlign.TOP_LEFT;
+				p_stage.scaleMode = StageScaleMode.NO_SCALE;
+				p_stage.align = StageAlign.BOTTOM;
 				p_stage.addEventListener(Event.RESIZE, stageResized);
+				
 				
 				if (p_bar)
 					maxBarWidth = p_stage.stageWidth - line.x - 10;
@@ -143,7 +147,12 @@
 		private function update():void
 		{
 			var l_faces:int = ZBuffer.getFacesNum();
-			fps.text = "ZBuffer: " + l_faces + " faces";
+			var l_sprites2d:int = ZBuffer.getSprites2DNum();
+			var l_sprites3d:int = ZBuffer.getSprites3DNum();
+			
+			fps.text = "ZBuffer: " +	l_faces + " faces,  " + 
+										l_sprites2d + " 2D,  " + 
+										l_sprites3d + " 3D";
 			
 			if (graph)
 				graph.addValue(l_faces);
@@ -168,8 +177,8 @@
 		
 		private function stageResized(p_event:Event):void
 		{
-			sw = stage.stageWidth;
-			sh = stage.stageHeight;
+			sw = globalStage.stageWidth;
+			sh = globalStage.stageHeight;
 			
 			x = 5;
 			y = sh - 7 - height * 2;

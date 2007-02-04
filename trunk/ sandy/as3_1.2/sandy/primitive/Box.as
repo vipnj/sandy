@@ -80,15 +80,15 @@ package sandy.primitive {
 		* @param mode String represent the two available modes to generates the faces.
 		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 		*/
-		public function Box ( rad:Number = 100, h:Number = 6, lg:Number = 6, mode:String = 'tri', quality:Number = 1)
+		public function Box ( rad:Number = 100, h:Number = 6, lg:Number = 6, mode:String = 'tri', quality:int = 1)
 		{
 			super ();
 			
 			_h = h ;
 			_lg = lg ;
 			_radius = rad ;
-			_q = (undefined == quality || quality <= 0 || quality > 10) ?  1 : int(quality) ;
-			_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
+			_q = (quality <= 0 || quality > 10) ?  1 : quality ;
+			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
 			generate ();
 		}
 		

@@ -55,7 +55,7 @@ package sandy.core.group {
 		*/
 		public function isParent( n:Node ):Boolean
 		{
-			return (_parent == n && n != undefined);
+			return (_parent == n && n != null);
 		}
 		
 		/**

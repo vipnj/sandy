@@ -43,6 +43,10 @@ package sandy.view
 	public class ClipScreen implements IScreen
 	{
 
+		private var sceneContainer:DisplayObjectContainer;
+		private var visibleObjectsNum:Number = 0;
+		
+		
 		/**
 		* Create a new ClipScreen.
 		*
@@ -189,6 +193,35 @@ package sandy.view
 				l_container.addChild(l_2Render.getContainer());
 				l_2Render.__renderFaces();
 			}
+			
+		}
+		
+		public function render3 ( a:Array ):void
+		{
+			var l_unvisibleNum:int = visibleObjectsNum - a.length;
+			
+			// -- 
+			// (1)	set up new containers for all rendered objects
+			//		in the proper order
+			var l:int = a.length;
+			var l_2render:Object3D;
+			
+			for(var i:int=0; i < l; i++) 
+			{
+				l_2render = a[int(i)];
+				l_2render.setContainer(Sprite(_mc.getChildAt(i)));
+				l_2render.__renderFaces();
+			}
+			
+			// (2)	clear the rest
+			while (--l_unvisibleNum > 0)
+			{
+				Sprite(_mc.getChildAt(i)).graphics.clear();
+			}
+			// --
+			
+			// (2)	save new number of visible objects
+			visibleObjectsNum = a.length;
 			
 		}
 		

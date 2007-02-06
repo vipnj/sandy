@@ -25,8 +25,7 @@ package sandy.core
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.*;
-	
-	import sandy.core.buffer.ZBuffer;
+
 	import sandy.core.data.BBox;
 	import sandy.core.data.BSphere;
 	import sandy.core.data.Vector;

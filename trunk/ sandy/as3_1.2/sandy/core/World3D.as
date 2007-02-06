@@ -17,7 +17,6 @@ limitations under the License.
 package sandy.core {
 
 	import sandy.core.buffer.MatrixBuffer;
-	import sandy.core.buffer.ZBuffer;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
@@ -29,7 +28,6 @@ package sandy.core {
 	import sandy.core.Object3D;
 	import sandy.math.Matrix4Math;
 	import sandy.view.Camera3D;
-	import sandy.view.IScreen;
 	import sandy.core.light.Light3D;
 
 	import flash.events.EventDispatcher;

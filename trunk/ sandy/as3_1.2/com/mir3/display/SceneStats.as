@@ -17,9 +17,6 @@
 	import com.mir3.utils.KeyManager;
 	import com.mir3.display.FPSGraph;
 	
-	import sandy.core.buffer.ZBuffer;
-	
-	
 	
 	/**
 	*	@author Mirek Mencel //miras@polychrome.pl 
@@ -146,9 +143,9 @@
 		
 		private function update():void
 		{
-			var l_faces:int = ZBuffer.getFacesNum();
-			var l_sprites2d:int = ZBuffer.getSprites2DNum();
-			var l_sprites3d:int = ZBuffer.getSprites3DNum();
+			var l_faces:int = 0;//ZBuffer.getFacesNum();
+			var l_sprites2d:int =0;// ZBuffer.getSprites2DNum();
+			var l_sprites3d:int = 0;//ZBuffer.getSprites3DNum();
 			
 			fps.text = "ZBuffer: " +	l_faces + " faces,  " + 
 										l_sprites2d + " 2D,  " + 

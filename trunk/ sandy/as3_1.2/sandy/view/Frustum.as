@@ -252,19 +252,14 @@ package sandy.view {
 			tmp = clipPolygon( aPlanes[TOP], tmp ); // bottom
 			if( tmp && tmp.length <= 2 ) return tmp;
 			tmp = clipPolygon( aPlanes[NEAR], tmp ); // near
-			if( tmp.length <= 2 ) return tmp;
-			tmp = clipPolygon( aPlanes[FAR], tmp ); // far
+			//if( tmp.length <= 2 ) return tmp;
+			//tmp = clipPolygon( aPlanes[FAR], tmp ); // far
 			return tmp;
 
 		}
 
 		public function clipPolygon( p:Plane, pts:Array ):Array
 		{	
-			if (!pts)
-			{
-				return [];
-			}
-			
 			var allin:Boolean = true, allout:Boolean = true;
 			var v:Vertex;
 			var i:Number, l:Number = pts.length;

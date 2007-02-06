@@ -89,7 +89,6 @@ package sandy.core
 	
 	    public var container:Sprite;
 		
-		
 	// ______________
 	// [PRIVATE] DATA________________________________________________		
 	
@@ -106,7 +105,7 @@ package sandy.core
 		private var _oBBox:BBox;
 		private var _oBSphere:BSphere;
 		private var _t:ITransform3D;
-	
+	    private var _bPolyClipped:Boolean;
 	// ___________
 	// CONSTRUCTOR___________________________________________________
 	
@@ -131,6 +130,7 @@ package sandy.core
 			container   = new Sprite();
 			//
 			_backFaceCulling = true;
+			_bPolyClipped    = false;
 			_bEv = false;
 			_needRedraw = false;
 			_visible = true;
@@ -495,10 +495,8 @@ package sandy.core
 		{
 			// -- we update its texture matrix
 			f.updateTextureMatrix();
-			
 			// -- store the face
 			aFaces.push( f );
-			
 			// --
 			setModified( true );
 		}
@@ -515,14 +513,11 @@ package sandy.core
 			for (var i:int = 0; i<l; i++) 
 			{
 				f = p_list[int(i)];
-				
 				// -- we update its texture matrix
 				f.updateTextureMatrix();
-			
 				// -- store the face
 				aFaces.push( f );
 			}
-			
 			// --
 			setModified( true );
 		}
@@ -547,7 +542,6 @@ package sandy.core
 			{
 				aFaces[int(l)].destroy();
 			}
-			
 			// --
 			_s.removeEventListener( SandyEvent.UPDATE, __onSkinUpdated );
 			
@@ -580,7 +574,6 @@ package sandy.core
 		
 		public function clip( frustum:Frustum ):Boolean
 		{
-		
 			var result:Boolean = false;
 			var res:Number;
 		    var l:int;	
@@ -589,9 +582,19 @@ package sandy.core
 			// Is clipping enable on that object
 			if( _enableClipping )
 			{
+				// If a polygon was intersecting previously, we need to initialize its faces at their original state.
+				if( _bPolyClipped )
+				{
+    			    l = aFaces.length;
+    				while( --l > -1 )
+    				{
+    				    aFaces[int(l)].clipped  = false;
+    				}
+    				_bPolyClipped = false;
+				}
+				// --
 				_oBSphere = null;
 				_oBSphere = new BSphere( this );
-				
 				res = frustum.sphereInFrustum( _oBSphere );
 				if( res  == Frustum.OUTSIDE )
 				{
@@ -620,41 +623,19 @@ package sandy.core
 							aClipped = aClipped.concat( aFaces[int(l)].clip( frustum ) );
 						}
 						// We consider that the object is not clipped and needs to be draw.
-						result = false;
-					}
-					else
-					{
-						l = aFaces.length;
-						while( --l > -1 )
-						{
-						    aFaces[int(l)].clipped  = false;
-						}
-						// INSIDE
-						result = false;
-					}
-				}
-				else
-				{
-					// INSIDE 
-					return false;
-				}
-			}
-			else
-			{
-				result =  false;
-			}
+						_bPolyClipped = true;
+					} // ELSE => INSIDE
+				} //ELSE => INSIDE 
+			}// ELSE => INSIDE
 			
 			if( result ) container.graphics.clear();
-			
 			return result;
 		}
-		
 		
 		//////////////
 		/// PRIVATE
 		//////////////
 
-		
 		/**
 		* called when the skin of an object change.
 		* We want this object to notify that it has changed to redrawn, so we change its modified property.

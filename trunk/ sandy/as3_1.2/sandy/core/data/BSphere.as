@@ -44,8 +44,8 @@ package sandy.core.data
 			var x:Number, y:Number, z:Number, d:Number;
 			var p:Array = new Array(pPoints.length);
 			p[0] = Vertex(pPoints[0]).getWorldVector();
-			var i:int, j:int;
-			for( i = 1; i < pPoints.length; i++) 
+			var i:int, j:int, l:int = pPoints.length;
+			for( i = 1; i < l; i++) 
 			{
 				p[i] = Vertex(pPoints[int(i)]).getWorldVector();
 			}
@@ -54,9 +54,9 @@ package sandy.core.data
 			var p2:Vector = p[0];
 			// find the farthest couple of points
 			var dmax:Number = 0;
-			for( i = 0; i < p.length; i++) 
+			for( i = 0; i < l; i++) 
 			{
-				for( j = i + 1; j < p.length; j++) 
+				for( j = i + 1; j < l; j++) 
 				{
 					x = p[int(j)].x - p[int(i)].x;
 					y = p[int(j)].y - p[int(i)].y;

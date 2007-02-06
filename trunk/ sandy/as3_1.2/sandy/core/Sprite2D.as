@@ -83,7 +83,9 @@ package sandy.core
 			{
 				__updateContent(null);
 				
-			} else {
+			} 
+			else 
+			{
 				_s.addEventListener( SandyEvent.UPDATE, __updateContent);
 			}
 			
@@ -101,12 +103,6 @@ package sandy.core
 		 */
 		override public function setBackSkin( s:Skin/*, bOverWrite:Boolean */):Boolean
 		{
-			/*if ( !(s is MovieSkin) )
-			{
-				trace("#Warning [Sprite2D] setSkin Wrong parameter type: MovieSkin expected.");
-				return;
-			}*/
-			
 			return false;
 		}
 

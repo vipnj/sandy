@@ -268,6 +268,7 @@ package sandy.core {
 			var v:Vertex;
 			var crt:Node, crtId:Number;
 			
+			var aF:Array  = [];
 			// we set a variable to remember the number of objects and in the same time we strop if no objects are displayable
 			if( !_oRoot)
 			{
@@ -293,7 +294,7 @@ package sandy.core {
 			mp = _mProj = cam.getProjectionMatrix() ;
 			
 			//
-			offx = cam.getXOffset(); offy = cam.getYOffset(); 
+			offx = cam.viewport.w2; offy = cam.viewport.h2; 
 			
 			// now we check if there are some modifications on that branch
 			// if true something has changed and we need to compute again
@@ -331,14 +332,9 @@ package sandy.core {
 						m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
 						m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
 						
+						obj.depth = 0;
 						// Now we can transform the objet vertices into the camera coordinates
-						aV = obj.aPoints.slice();
-						
-						var l_bbox:BBox = obj.getBBox();
-						if (l_bbox) {
-							aV.push( l_bbox.max, l_bbox.min );
-						}
-						
+						aV = obj.aPoints;	
 						lp = aV.length;
 						while( --lp > -1 )
 						{
@@ -346,14 +342,16 @@ package sandy.core {
 							v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
 							v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 							v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
+							obj.depth += v.wz;
 						}
 						
-						
+						obj.depth /= aV.length;
+		
 						// Now we clip the object and in case it is visible or patially visible, we project it
 						// into the screen coordinates
 						if( obj.clip( cam.frustrum ) == false )
 						{
-							
+							aF.push( obj );
 							//
 							mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
 							mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
@@ -371,27 +369,28 @@ package sandy.core {
 								v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
 								v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 							}
-							
-							obj.render();
 						}
 					}// end objects loop
 					else
 					{
-						obj.render();
+						;
 					}
 				}
 			}
 			
 			// we sort visibles Faces
-			var aF:Array = ZBuffer.sort();
 			
-			var s:IScreen = cam.getScreen();
+			aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+			var l_length:int = aF.length;
+			var l_2Render:Object3D;
 			
-			// -- we draw all sorted Faces
-			s.render( aF );
+			for(var i:int=0; i < l_length; i++) 
+			{
+				l_2Render = aF[int(i)];
+				_scene.addChild( l_2Render.container );
+				l_2Render.render();
+			}
 			
-			// -- we clear the ZBuffer
-			ZBuffer.dispose ();
 		} // end method
 
 		

@@ -252,8 +252,8 @@ package sandy.view {
 			tmp = clipPolygon( aPlanes[TOP], tmp ); // bottom
 			if( tmp && tmp.length <= 2 ) return tmp;
 			tmp = clipPolygon( aPlanes[NEAR], tmp ); // near
-			//if( tmp.length <= 2 ) return tmp;
-			//tmp = clipPolygon( aPlanes[FAR], tmp ); // far
+			if( tmp.length <= 2 ) return tmp;
+			tmp = clipPolygon( aPlanes[FAR], tmp ); // far
 			return tmp;
 
 		}

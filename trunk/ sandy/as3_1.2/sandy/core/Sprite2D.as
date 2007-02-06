@@ -22,7 +22,6 @@ package sandy.core
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
-	import sandy.core.buffer.ZBuffer;
 	import sandy.core.data.Vertex;
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
@@ -31,9 +30,7 @@ package sandy.core
 	import sandy.skin.Skin;
 	import sandy.view.Frustum;
 	import sandy.util.DisplayUtil;
-	import sandy.events.SandyEvent;
-	
-	
+	import sandy.events.SandyEvent;	
 	
 	/**
 	 * @author		Thomas Pfeiffer - kiroukou
@@ -42,6 +39,7 @@ package sandy.core
 	 **/
 	public class Sprite2D extends Object3D 
 	{
+		
 		/**
 		* Sprite2D constructor.
 		* A sprite is a special Object3D because it's in fact a bitmap in a 3D space.
@@ -53,7 +51,7 @@ package sandy.core
 			super();
 			
 			// Special case - is using MovieClip rather than default Sprite
-			setContainer( Sprite(DisplayUtil.replaceObject(getContainer(), new MovieClip())) );
+			container = new MovieClip();
 				
 			// -- we create a fictive point
 			_v = new Vertex( 0, 0, 0 );
@@ -94,7 +92,7 @@ package sandy.core
 		
 		private function __updateContent(p_event:Event):void
 		{
-			_s.attach( getContainer() );
+			_s.attach( container );
 		}
 
 		/**
@@ -139,27 +137,15 @@ package sandy.core
 		}
 		
 		override public function render ():void
-		{
-			//if (!_s.isInitialized()) return;
-			
-			getContainer().visible = true;
-			
-			super.render();
-		}
-		
-		override public function __renderFaces():void
-		{
-			
-			var cste:Number	= _nScale * 10 / _v.wz;
-			var mc:DisplayObject =  getContainer();
+		{			
+			var cste:Number	= _nScale * 10 / _v.wz;			
+			// --
+			container.scaleX = cste * 10;
+			container.scaleY = cste * 10;
 			
 			// --
-			mc.scaleX = cste * 10;
-			mc.scaleY = cste * 10;
-			
-			// --
-			mc.x = _v.sx - mc.width  / 2;
-			mc.y = _v.sy - mc.height / 2;
+			container.x = _v.sx - container.width  / 2;
+			container.y = _v.sy - container.height / 2;
 			
 			// --
 		}
@@ -177,7 +163,7 @@ package sandy.core
 		*/
 		override public function addPoint( x:Number, y:Number, z:Number ):uint
 		{
-			return -1;
+			return 0;
 		}
 		
 		override public function enableClipping( b:Boolean ):void
@@ -194,14 +180,19 @@ package sandy.core
 				if( frustum.pointInFrustum( _v.getWorldVector() ) == Frustum.OUTSIDE )
 				{
 					result =  true;
-				} else {
+				} 
+				else 
+				{
 					result =  false;
 				}
-			} else {
+			} 
+			else 
+			{
 				result =  false;
 			}
 			
-			if( result ) getContainer().visible = false;
+			if( result ) container.visible = false;
+			else container.visible = true;
 			
 			return result;
 		}

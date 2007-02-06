@@ -87,6 +87,7 @@ package sandy.core
 		
 		public var depth:Number;
 	
+	    public var container:Sprite;
 		
 		
 	// ______________
@@ -101,16 +102,11 @@ package sandy.core
 		private var _visible : Boolean;
 		private var _enableForcedDepth:Boolean;
 		private var _forcedDepth:Number;
-		//protected var _fCallback:Function;
-		private var _mc:Sprite;
 		private var _aSorted:Array;
 		private var _oBBox:BBox;
 		private var _oBSphere:BSphere;
 		private var _t:ITransform3D;
-		
-		
-		
-		
+	
 	// ___________
 	// CONSTRUCTOR___________________________________________________
 	
@@ -127,35 +123,26 @@ package sandy.core
 		public function Object3D ()
 		{
 			super();
-			
+			//
 			aPoints		= new Array ();
 			aFaces		= new Array ();
 			_aSorted	= new Array ();
 			aNormals 	= new Array ();
-			
+			container   = new Sprite();
+			//
 			_backFaceCulling = true;
 			_bEv = false;
 			_needRedraw = false;
 			_visible = true;
 			_enableForcedDepth = false;
 			_enableClipping = false;
-			
 			_forcedDepth = 0;
 			_oBBox = null;
 			_oBSphere = null;
-			
 			// -- We also set skin to Default constant
 			setSkin( DEFAULT_SKIN );
 			setBackSkin( DEFAULT_SKIN );
-			
-			// --
-			_mc = Sprite(createObjectContainer());
-			
-			World3D.getInstance().addEventListener( SandyEvent.CONTAINER_CREATED, __onWorldContainer );
 		}
-		
-		
-		
 		
 		
 	// __________________
@@ -337,18 +324,18 @@ package sandy.core
 			{
 				if( !_bEv )
 				{
-					_mc.addEventListener(MouseEvent.CLICK, _onPress);
-					_mc.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-					_mc.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
-					_mc.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+					container.addEventListener(MouseEvent.CLICK, _onPress);
+					container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
+					container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
+					container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 				}
 			}
 			else if( !b && _bEv )
 			{
-				_mc.addEventListener(MouseEvent.CLICK, _onPress);
-				_mc.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
-				_mc.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
-				_mc.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+				container.addEventListener(MouseEvent.CLICK, _onPress);
+				container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
+				container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
+				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 			}
 			_bEv = b;
 		}
@@ -400,15 +387,6 @@ package sandy.core
 				aFaces[int(i)].swapCulling();
 			}
 			
-			// -- swap the skins too
-			/*
-			var tmp:Skin;
-			tmp = _sb;
-			_sb = _s;
-			_s = tmp;
-			*/
-			// --
-			
 			_needRedraw = true;	
 			setModified( true );
 		}
@@ -433,37 +411,19 @@ package sandy.core
 			return aPoints.push ( p_vertex );
 		}
 		
-		
+
 		/**
 		* Render the Object3D.
 		* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
-		*/ 
-		override public function render ():void
-		{
-			var l:int = aPoints.length;
-			var p:int = l;
-			depth = 0;
-			while( --l > -1 ) 
-			{
-				depth += (aPoints[int(l)].wz);
-			}
-			
-			depth /= p;
-			
-			//ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback, o3d:this } );
-			ZBuffer.push( this );
-		}
-		
-		public function __renderFaces():void
+		*/ 		
+		override public function render():void
 		{
 			var ndepth:Number;
 			// -- local copy because it's faster
 			var l:int = aFaces.length;
 			var f:Polygon;
-			
 			//
-			_mc.graphics.clear();
-			
+			container.graphics.clear();
 			//
 			_aSorted = new Array();
 			
@@ -474,23 +434,17 @@ package sandy.core
 				if ( f.isVisible() || !_backFaceCulling) 
 				{
 					ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-					if(ndepth) _aSorted.push( { face:f, depth:ndepth } );
+					if(ndepth) _aSorted.push( f );
 				}
-				
 			}
-			
 			//
 			_aSorted.sortOn( "depth", Array.NUMERIC );
-			
-			//trace('_aSorted: ' + _aSorted);
-			
 			//
 			l = _aSorted.length;
 			while( --l > -1 )
 			{
-				_aSorted[int(l)].face.render( _mc, _s, _sb );				
+				_aSorted[int(l)].render( container, _s, _sb );				
 			}
-			
 			// -- 
 			_needRedraw = false;
 		}
@@ -502,12 +456,12 @@ package sandy.core
 			var l:int = a.length;
 			
 			//
-			_mc.graphics.clear();
+			container.graphics.clear();
 			
 			//
 			while( --l > -1 )
 			{
-				a[l].refresh( _mc, _s, _sb );
+				a[l].refresh( container, _s, _sb );
 			}
 			
 			// -- 
@@ -626,19 +580,10 @@ package sandy.core
 		
 		public function clip( frustum:Frustum ):Boolean
 		{
-			/*
-			var aF:Array = aFaces;
-			var l:Number = aF.length;
-			var f:IPolygon;
-			while( --l > -1 )
-			{
-				bClipped = bClipped || aF[l].clip( frustum );
-			}
-			*/
-			
+		
 			var result:Boolean = false;
 			var res:Number;
-					
+		    var l:int;	
 			aClipped = aPoints;
 			
 			// Is clipping enable on that object
@@ -667,10 +612,9 @@ package sandy.core
 					else if (res == Frustum.INTERSECT )
 					{
 						aClipped = new Array();
-						
 						// We are intersecting a place one more time. The object shall be at the limit
 						// of the frustum volume. Let's try to clip the faces against it.
-						var l:Number = aFaces.length;
+						l = aFaces.length;
 						while( --l > -1 )
 						{
 							aClipped = aClipped.concat( aFaces[int(l)].clip( frustum ) );
@@ -680,6 +624,11 @@ package sandy.core
 					}
 					else
 					{
+						l = aFaces.length;
+						while( --l > -1 )
+						{
+						    aFaces[int(l)].clipped  = false;
+						}
 						// INSIDE
 						result = false;
 					}
@@ -695,40 +644,16 @@ package sandy.core
 				result =  false;
 			}
 			
-			if( result ) _mc.graphics.clear();
+			if( result ) container.graphics.clear();
 			
 			return result;
-		}
-
-		public function getContainer():Sprite
-		{
-			return _mc;
-		}
-		
-		public function setContainer(p_mc:Sprite):void
-		{
-			if (p_mc) 
-			{
-				_mc = p_mc;
-				
-			} else {
-				trace("#Error [Object3D] setContainer() Passed parameter is null.");
-			}
 		}
 		
 		
 		//////////////
 		/// PRIVATE
 		//////////////
-		private function __onWorldContainer( e:Event ):void
-		{
-			_mc.parent.removeChild(_mc);
-			
-			_mc = createObjectContainer();
-			
-			_mc.graphics.clear();
-		}
-		
+
 		
 		/**
 		* called when the skin of an object change.
@@ -739,15 +664,7 @@ package sandy.core
 		{
 			_needRedraw = true;
 		}
-		
-		private static function createObjectContainer():Sprite
-		{
-			var p_container:Sprite = new Sprite();
-			p_container.cacheAsBitmap = true;
-			World3D.getInstance().getSceneContainer().addChild(p_container);
-			
-			return p_container;
-		}
+
 		
 		private function _onPress(e:MouseEvent):void
 		{

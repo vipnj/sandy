@@ -43,6 +43,9 @@ package sandy.core.face
 	**/
 	public class Polygon implements IPolygon
 	{
+		public var depth:Number;
+		public var clipped:Boolean;
+		
 		public function Polygon( oref:Object3D, ...rest)
 		{
 			_o = oref;
@@ -53,6 +56,8 @@ package sandy.core.face
 			_aClipped = _aVertex.slice();
 			_nCL = _nL = _aVertex.length;
 			_aUV = new Array(3);
+			depth = 0;
+			clipped = false;
 		}
 		
 		/**
@@ -145,11 +150,8 @@ package sandy.core.face
 		public function render( mc:Sprite, pS:Skin, pSb:Skin ): void
 		{
 			var s:Skin;
-			var l:int = _nCL;
-			
-			if( l == 0 ) return;
-			
-			var a:Array = _aClipped;
+			var l:int = (clipped == true) ? _nCL : _nL;
+			var a:Array = (clipped == true) ? _aClipped : _aVertex;
 			//
 			if( _bfc == 1 ) s = (_s == null) ? pS : _s;
 			else	        s = (_sb == null) ? pSb : _sb;
@@ -174,23 +176,19 @@ package sandy.core.face
 		public function refresh( mc:Sprite, pS:Skin, pSb:Skin ):void
 		{
 			var s:Skin;
-			var l:int = _nCL;
-			
-			if( l == 0 ) return;
-					
-			var a:Array = _aClipped;
-			
+			var l:int = (clipped == true) ? _nCL : _nL;
+			var a:Array = (clipped == true) ? _aClipped : _aVertex;
 			//
 			if( _bfc == 1 ) 
 			{
 				s = _s || pS;
-			} else {
+			} 
+			else 
+			{
 				s = _sb || pSb;
 			}
-			
 			//
 			s.begin( this, mc) ;
-			
 			//
 			mc.graphics.lineTo( a[0].sx, a[0].sy );
 			
@@ -215,6 +213,7 @@ package sandy.core.face
 			updateTextureMatrix();
 		}
 		
+		
 		/**
 		 * Return the depth average of the face.
 		 * <p>Useful for z-sorting.</p>
@@ -231,7 +230,7 @@ package sandy.core.face
 				d += _aClipped[int(l)].wz;
 			}
 			
-			return d / _nCL;
+			return depth = d / _nCL;
 		}
 		
 		/**
@@ -284,7 +283,7 @@ package sandy.core.face
 		{
 			_aClipped = null;
 			_aClipped = frustum.clipFrustum( _aVertex );
-			_nCL = _aClipped.length;
+			clipped = ( _nCL = _aClipped.length ) ? true : false;
 			return _aClipped;
 		}
 

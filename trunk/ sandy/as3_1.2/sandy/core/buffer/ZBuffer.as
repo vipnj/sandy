@@ -34,8 +34,6 @@ package sandy.core.buffer
 	* </p>
 	* 
 	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin C�dric - thecaptain
-	* @author		Nicolas Coevoet - [ NikO ]
 	* @date 		28.03.2006
 	*/
 	public class ZBuffer

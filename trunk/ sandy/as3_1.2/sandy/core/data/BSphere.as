@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
-
+package sandy.core.data 
+{
 	import flash.utils.*;
 
 	import sandy.core.Object3D;
@@ -73,7 +73,7 @@ package sandy.core.data {
 
 			center = new Vector((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2);
 			radius = Math.sqrt(dmax) / 2;
-
+            /*
 			var r:Array = pointsOutofSphere(p);
 			if(r.length == 0) 
 			{
@@ -95,6 +95,7 @@ package sandy.core.data {
 			center = q;
 
 			radius = computeRadius(p);
+			*/
 		}
 	  
 	  

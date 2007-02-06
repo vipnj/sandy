@@ -28,7 +28,7 @@ package sandy.view
 	import sandy.util.NumberUtil;
 	import sandy.util.Rectangle;
 	import sandy.view.Frustum;
-	import sandy.view.IScreen;
+	import sandy.view.ViewPort;
 	import sandy.events.SandyEvent;
 	import sandy.core.transform.BasicInterpolator;
 	import sandy.math.FastMath;
@@ -48,13 +48,19 @@ package sandy.view
 		public var frustrum:Frustum;
 		
 		/**
+		 * Te viewport associated to the camera
+		 */
+		public var viewport:ViewPort;
+		
+		/**
 		 * Create a new Camera3D.
 		 * The default camera projection is the perspective one with default parameters values.
 		 * @param nFoc The focal of the Camera3D
 		 * @param s the screen associated to the camera
 		 */
-		public function Camera3D( s:IScreen )
+		public function Camera3D( p_nWidth:Number=500, p_nHeight:Number=500, p_nFov:Number=45, p_nNear:Number = 50, p_nFar:Number=3000  )
 		{
+			viewport = new ViewPort( p_nWidth, p_nHeight );
 			_p 		= new Vector();
 			// --
 			_vOut 	= new Vector( 0, 0, 1 );
@@ -66,9 +72,8 @@ package sandy.view
 			_nTilt 	= 0;
 			_nYaw  	= 0;
 			// --
-			setScreen( s );
 			frustrum = new Frustum();
-			setPerspectiveProjection();
+			setPerspectiveProjection(p_nFov, viewport.ratio, p_nNear, p_nFar );
 			//setPerspective();
 			// --
 			_mt = _mf = _mv = Matrix4.createIdentity();
@@ -76,39 +81,7 @@ package sandy.view
 			_oInt = null;
 		}
 
-		/**
-		* Set the camera's screen. Very important in order to represent the 3D world.
-		* @param	s The screen instance
-		*/
-		public function setScreen( s:IScreen ):void
-		{
-			_is = s;
-			_is.setCamera ( this );
-			updateScreen();
-		}
-		
-		/**
-		* Get the screen associated to the camera.
-		* @param	void
-		* @return The screen instance.
-		*/
-		public function getScreen():IScreen
-		{
-			return _is;
-		}
-		
-		/**
-		* Update the sreen properties when they changed. Usually this method is called by the screen directly.
-		* This is very important because the camera pre-compute some values for performances reasons, and they need to be updated.
-		* @param	void
-		*/
-		public function updateScreen():void
-		{
-			_rDim 	= _is.getSize();
-			_wo 	= _rDim.width/2;
-			_ho 	= _rDim.height/2;
-		}
-		
+        
 		/**
 		 * Allow the camera to translate along its side vector. 
 		 * If you imagine yourself in a game, it would be a step on your right or on your left
@@ -360,26 +333,8 @@ package sandy.view
 			_p.x = x;
 			_p.y = y;
 			_p.z = z;	
-			trace("Camera::setPosition :"+x+" "+y+" "+z);
 		}
-		
-		/**
-		* Get the offset of the screen of the camera along  axis.
-		* @return a Number corresponding to the offset
-		*/
-		public function getXOffset():Number
-		{
-			return _wo;
-		}
-		
-		/**
-		* Get the offset of the screen of the camera along Y axis.
-		* @return a Number corresponding to the offset
-		*/
-		public function getYOffset():Number
-		{
-			return _ho;
-		}
+
 		
 		/**
 		* Get the position of the camera.
@@ -534,15 +489,11 @@ package sandy.view
 		* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
 		* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
 		*/
-		public function setPerspectiveProjection(fovY:Number = 45, aspectRatio:Number = undefined, zNear:Number = 50, zFar:Number = 3000):void
+		public function setPerspectiveProjection(fovY:Number = 45, aspectRatio:Number=1, zNear:Number = 50, zFar:Number = 3000):void
 		{
 			var cotan:Number, Q:Number;
-			
 			// --
-			if( !aspectRatio ) aspectRatio = _is.getRatio();
-			
 			frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
-			
 			// --
 			fovY = NumberUtil.toRadian( fovY );
 			cotan = 1 / Math.tan(fovY / 2);
@@ -550,78 +501,17 @@ package sandy.view
 			
 			_mp = null;
 			_mp = Matrix4.createZero();
-			//trace(_mp);
+
 			_mp.n11 = cotan / aspectRatio;
 			_mp.n22 = cotan;
 			_mp.n33 = Q;
 			_mp.n34 = -Q*zNear;
 			_mp.n43 = 1;
-			//trace(_mp);
+	
 			_compiled = false;
 			
 		}
-		
-	public function setPerspective( par_f_fieldOfViewVerticalDeg:Number = 45, 
-									par_f_aspectRatio:Number = undefined, 
-									par_f_zNear:Number = 50, 
-									par_f_zFar:Number = 3000):void
-	{
-	   /* Start of user code */
-	   var loc_f_x:Number;
-	   var loc_f_y:Number;
-		
-		if( undefined == par_f_aspectRatio ) par_f_aspectRatio = _is.getRatio();
-		
-		frustrum.computePlanes(par_f_aspectRatio, par_f_zNear, par_f_zFar, par_f_fieldOfViewVerticalDeg );
 			
-	   par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
-
-	   loc_f_y = (par_f_zNear * FastMath.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
-
-	   loc_f_x = par_f_aspectRatio * loc_f_y;
-
-		// FIXME Sign modification to be left handed
-	   frustum(  loc_f_x, -loc_f_x,
-				 loc_f_y, -loc_f_y,
-				  par_f_zNear, par_f_zFar);
-		
-		_compiled = false;
-		/* End of user code */
-		return;
-	}
-
-	public function frustum( par_f_left:Number, par_f_right:Number, par_f_bottom:Number, par_f_top:Number, par_f_near:Number, par_f_far:Number):void
-	{
-		/* Start of user code */
-		var   loc_f_width:Number;
-		var   loc_f_height:Number;
-		var   loc_f_depth:Number;
-
-		_mp = null;
-		_mp = Matrix4.createZero();
-
-		loc_f_width  = par_f_right  -   par_f_left;
-		loc_f_height = par_f_top    -   par_f_bottom;
-		loc_f_depth  = par_f_near   -   par_f_far;
-
-		_mp.n11 = (2 * par_f_near) / loc_f_width;
-		_mp.n22 = (2 * par_f_near) / loc_f_height;
-
-		_mp.n13 = (par_f_right + par_f_left)  / loc_f_width;
-		_mp.n23 = (par_f_top   + par_f_bottom) / loc_f_width;
-
-		_mp.n33 = (par_f_far + par_f_near    ) / loc_f_depth;
-		_mp.n34 = (par_f_far * par_f_near * 2) / loc_f_depth;
-		
-		_mp.n43 = -1;
-
-		_compiled = false;
-		
-		/* End of user code */
-		return;
-	}
-
-		
 		private function __updateTransformMatrix ():void
 		{
 			_mt.n11 = _vSide.x; 
@@ -728,36 +618,26 @@ package sandy.view
 		/**
 		 * Nodal Distance of camera ( and not Focal ;) )
 		 */
-		private var _nFocal : Number;
+		private var _nFocal:Number;
 		
 		/**
 		 * current tilt value
 		 */
-		private var _nTilt : Number;
+		private var _nTilt:Number;
 		
 		/**
 		 * current yaw value
 		 */
-		private var _nYaw : Number;
+		private var _nYaw:Number;
 		
 		/**
 		 * current roll value
 		 */
-		private var _nRoll : Number;  
+		private var _nRoll:Number; 	
 		
-		/**
-		 * associated screen
-		 */
-		private var _is:IScreen;
 		// Private absolute down vector
 		private var _vLookatDown:Vector;
-		/**
-		 * screen size useful to create an offset
-		 */
-		private var _rDim : Rectangle;	
-		// screen offset
-		private var _wo:Number;
-		private var _ho:Number;
+
 		/**
 		* The interpolator
 		*/

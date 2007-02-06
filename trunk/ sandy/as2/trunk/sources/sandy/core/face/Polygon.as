@@ -36,6 +36,9 @@ import sandy.view.Frustum;
 **/
 class sandy.core.face.Polygon implements IPolygon
 {
+	public var depth:Number;
+	public var clipped:Boolean;
+	
 	public function Polygon( oref:Object3D /* ... */ )
 	{
 		_o = oref;
@@ -46,6 +49,8 @@ class sandy.core.face.Polygon implements IPolygon
 		_aClipped = _aVertex.slice();
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
+		depth = 0;
+		clipped = false;
 	}
 	
 	/**
@@ -129,9 +134,8 @@ class sandy.core.face.Polygon implements IPolygon
 	public function render( mc:MovieClip, pS:Skin, pSb:Skin ): Void
 	{
 		var s:Skin;
-		var l:Number = _nCL;
-		if( l == 0 ) return;
-		var a:Array = _aClipped;
+		var l:Number = (clipped == true) ? _nCL : _nL;
+		var a:Array = (clipped == true) ? _aClipped : _aVertex;
 		//
 		if( _bfc == 1 ) s = (_s == null) ? pS : _s;
 		else	        s = (_sb == null) ? pSb : _sb;
@@ -153,9 +157,8 @@ class sandy.core.face.Polygon implements IPolygon
 	public function refresh( mc:MovieClip, pS:Skin, pSb:Skin ):Void
 	{
 		var s:Skin;
-		var l:Number = _nCL;
-		if( l == 0 ) return;
-		var a:Array = _aClipped;
+		var l:Number = (clipped == true) ? _nCL : _nL;
+		var a:Array = (clipped == true) ? _aClipped : _aVertex;
 		//
 		if( _bfc == 1 ) s = (_s == undefined) ? pS : _s;
 		else	        s = (_sb == undefined) ? pSb : _sb;
@@ -194,7 +197,7 @@ class sandy.core.face.Polygon implements IPolygon
 		var l:Number = _nCL;
 		while( --l > -1 )
 			d += _aClipped[l].wz;
-		return d / _nCL;
+		return depth = d / _nCL;
 	}
 	
 	/**
@@ -239,8 +242,7 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		delete _aClipped;
 		_aClipped = frustum.clipFrustum( _aVertex );
-		_nCL = _aClipped.length;
-		trace(_nCL );
+		clipped = ( _nCL = _aClipped.length ) ? true : false;
 		return _aClipped;
 	}
 

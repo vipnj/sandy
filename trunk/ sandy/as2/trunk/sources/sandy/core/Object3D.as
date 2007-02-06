@@ -63,6 +63,10 @@ class sandy.core.Object3D extends Leaf
 	
 	public var aClipped:Array;
 	
+	public var depth:Number;
+	
+	public var container:MovieClip;
+	
 	/**
 	* Array of the faces of the Object3D.
 	*/ 
@@ -88,7 +92,9 @@ class sandy.core.Object3D extends Leaf
 		aPoints		= new Array ();
 		aFaces		= new Array ();
 		_aSorted	= new Array ();
+		depth = 0;
 		_backFaceCulling = true;
+		_bPolyClipped    = false;
 		_bEv = false;
 		_needRedraw = false;
 		_visible = true;
@@ -97,9 +103,6 @@ class sandy.core.Object3D extends Leaf
 		_forcedDepth = 0;
 		_oBBox = null;
 		_oBSphere = null;
-		//
-		var d:Delegate = new Delegate(this, __renderFaces);
-		_fCallback = d.getFunction();
 		//
 		_oEB = new EventBroadcaster( this );
 		_oOnPress = new ObjectEvent( ObjectEvent.onPressEVENT, this );
@@ -111,7 +114,7 @@ class sandy.core.Object3D extends Leaf
 		setSkin( DEFAULT_SKIN, true );
 		setBackSkin( DEFAULT_SKIN, true );
 		//
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip("object_"+_id, _id);
+		container = World3D.getInstance().getContainer().createEmptyMovieClip("object_"+_id, _id);
 		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}	
 
@@ -279,32 +282,32 @@ class sandy.core.Object3D extends Leaf
 			{
 				var dpress:Delegate = new Delegate(this, __sendObjectEvent);
 				dpress.setArguments( _oOnPress );
-				_mc.onPress = dpress.getFunction();
+				container.onPress = dpress.getFunction();
 				//
 				var drollover:Delegate = new Delegate(this, __sendObjectEvent);
 				drollover.setArguments( _oOnRollOver );
-				_mc.onRollOver = drollover.getFunction();
+				container.onRollOver = drollover.getFunction();
 				//
 				var drollout:Delegate = new Delegate(this, __sendObjectEvent);
 				drollout.setArguments( _oOnRollOut );
-				_mc.onRollOut = drollout.getFunction();
+				container.onRollOut = drollout.getFunction();
 				//
 				var drelease:Delegate = new Delegate(this, __sendObjectEvent);
 				drelease.setArguments( _oOnRelease );
-				_mc.onRelease = drelease.getFunction();
+				container.onRelease = drelease.getFunction();
 				//
 				var dreleaseout:Delegate = new Delegate(this, __sendObjectEvent);
 				dreleaseout.setArguments( _oOnReleaseOutside );
-				_mc.onReleaseOutside = dreleaseout.getFunction();
+				container.onReleaseOutside = dreleaseout.getFunction();
 			}
 		}
 		else if( !b && _bEv )
 		{
-			_mc.onPress = null;
-			_mc.onRollOver = null;
-			_mc.onRollOut = null;
-			_mc.onRelease = null;
-			_mc.onReleaseOutside = null;
+			container.onPress = null;
+			container.onRollOver = null;
+			container.onRollOut = null;
+			container.onRelease = null;
+			container.onReleaseOutside = null;
 		}
 		_bEv = b;
 	}
@@ -384,21 +387,12 @@ class sandy.core.Object3D extends Leaf
 	*/ 
 	public function render ( Void ):Void
 	{
-		var l:Number = aPoints.length;
-		var p:Number = l;
-		var lDepth:Number = 0;
-		while( --l > -1 ) lDepth += aPoints[l].wz;
-		ZBuffer.push( { movie:_mc, depth:(lDepth/p), callback:_fCallback } );
-	}
-	
-	private function __renderFaces( Void ):Void
-	{
 		var ndepth:Number;
 		// -- local copy because it's faster
 		var l:Number = aFaces.length;
 		var f:IPolygon;
 		//
-		_mc.clear();
+		container.clear();
 		//
 		_aSorted = [];
 		while( --l > -1 )
@@ -407,7 +401,7 @@ class sandy.core.Object3D extends Leaf
 			if ( f.isVisible() || !_backFaceCulling ) 
 			{
 				ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-				if(ndepth) _aSorted.push( { face:f, depth:ndepth } );
+				if(ndepth) _aSorted.push( f );
 			}
 		}
 		//
@@ -416,7 +410,7 @@ class sandy.core.Object3D extends Leaf
 		l = _aSorted.length;
 		while( --l > -1 )
 		{
-			_aSorted[l].face.render( _mc, _s, _sb );				
+			_aSorted[l].render( container, _s, _sb );				
 		}
 		// -- 
 		_needRedraw = false;
@@ -428,11 +422,11 @@ class sandy.core.Object3D extends Leaf
 		var f:IPolygon;
 		var l:Number = a.length;
 		//
-		_mc.clear();
+		container.clear();
 		//
 		while( --l > -1 )
 		{
-			a[l].refresh( _mc, _s, _sb );
+			a[l].refresh( container, _s, _sb );
 		}
 		// -- 
 		_needRedraw = false;
@@ -536,11 +530,22 @@ class sandy.core.Object3D extends Leaf
 		*/
 		var result:Boolean = false;
 		var res:Number;
-		
+		var l:Number;
 		aClipped = aPoints;
 		// Is clipping enable on that object
 		if( _enableClipping )
 		{
+			// If a polygon was intersecting previously, we need to initialize its faces at their original state.
+			if( _bPolyClipped )
+			{
+			    l = aFaces.length;
+				while( --l > -1 )
+				{
+				    aFaces[int(l)].clipped  = false;
+				}
+				_bPolyClipped = false;
+			}
+				
 			delete _oBSphere;
 			_oBSphere = new BSphere( this );
 			res = frustum.sphereInFrustum( _oBSphere );
@@ -566,38 +571,19 @@ class sandy.core.Object3D extends Leaf
 					aClipped = new Array();
 					// We are intersecting a place one more time. The object shall be at the limit
 					// of the frustum volume. Let's try to clip the faces against it.
-					var l:Number = aFaces.length;
+					l = aFaces.length;
 					while( --l > -1 )
 					{
 						aClipped = aClipped.concat( aFaces[l].clip( frustum ) );
 					}
 					// We consider that the object is not clipped and needs to be draw.
-					result = false;
-				}
-				else
-				{
-					// INSIDE
-					result = false;
-				}
-			}
-			else
-			{
-				// INSIDE 
-				return false;
-			}
-		}
-		else
-		{
-			result =  false;
-		}
+					_bPolyClipped = true;
+				}// ELSE => INSIDE
+			}// ELSE => INSIDE
+		}// ELSE => INSIDE
 		
-		if( result ) _mc.clear();
+		if( result ) container.clear();
 		return result;
-	}
-
-	public function getContainer( Void ):MovieClip
-	{
-		return _mc;
 	}
 
 	/**
@@ -644,9 +630,8 @@ class sandy.core.Object3D extends Leaf
 	//////////////
 	private function __onWorldContainer( e:BasicEvent ):Void
 	{
-		_mc.removeMovieClip();
-		_mc = World3D.getInstance().getContainer().createEmptyMovieClip( "object_"+_id, _id );
-		_mc.clear();
+		container.removeMovieClip();
+		container = World3D.getInstance().getContainer().createEmptyMovieClip( "object_"+_id, _id );
 	}
 	
 	private function __sendObjectEvent( e:ObjectEvent ):Void
@@ -669,7 +654,6 @@ class sandy.core.Object3D extends Leaf
 	private var _enableForcedDepth:Boolean;
 	private var _forcedDepth:Number;
 	private var _fCallback:Function;
-	private var _mc:MovieClip;
 	private var _aSorted:Array;
 	private var _eventDelegate:Delegate;
 	private var _oBBox:BBox;
@@ -681,6 +665,8 @@ class sandy.core.Object3D extends Leaf
 	private var _oOnRollOver:ObjectEvent;
 	private var _oOnRollOut:ObjectEvent;
 	private var _oEB:EventBroadcaster;	
+	private var _bPolyClipped:Boolean;
+	
 	/**
 	* called when the skin of an object change.
 	* We want this object to notify that it has changed to redrawn, so we change its modified property.

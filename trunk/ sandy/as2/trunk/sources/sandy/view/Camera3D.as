@@ -24,7 +24,7 @@ import sandy.math.VectorMath;
 import sandy.util.NumberUtil;
 import sandy.util.Rectangle;
 import sandy.view.Frustum;
-import sandy.view.IScreen;
+import sandy.view.Viewport;
 
 /**
 * Camera3D
@@ -39,13 +39,15 @@ class sandy.view.Camera3D
  	 */
  	public var frustrum:Frustum;
  	
+ 	public var viewport:Viewport;
+ 	
 	/**
 	 * Create a new Camera3D.
 	 * The default camera projection is the perspective one with default parameters values.
 	 * @param nFoc The focal of the Camera3D
 	 * @param s the screen associated to the camera
 	 */
-	public function Camera3D( s:IScreen )
+	public function Camera3D( p_nWidth:Number, p_nHeight:Number )
 	{
 		_p 		= new Vector();
 		// --
@@ -58,7 +60,7 @@ class sandy.view.Camera3D
 		_nTilt 	= 0;
 		_nYaw  	= 0;
 		// --
-		setScreen( s );
+		viewport = new Viewport( p_nWidth, p_nWidth );
 		frustrum = new Frustum();
 		setPerspectiveProjection();
 		//setPerspective();
@@ -68,37 +70,16 @@ class sandy.view.Camera3D
 		_oInt = null;
 	}
 
-	/**
-	* Set the camera's screen. Very important in order to represent the 3D world.
-	* @param	s The screen instance
-	*/
-	public function setScreen( s:IScreen ):Void
-	{
-		_is      = s;
-		_is.setCamera ( this );
-		updateScreen();
-	}
 	
 	/**
-	* Get the screen associated to the camera.
-	* @param	Void
-	* @return The screen instance.
-	*/
-	public function getScreen( Void ):IScreen
-	{
-		return _is;
-	}
-	
-	/**
-	* Update the sreen properties when they changed. Usually this method is called by the screen directly.
-	* This is very important because the camera pre-compute some values for performances reasons, and they need to be updated.
+	* Update the sreen viewport dimensions
 	* @param	Void
 	*/
-	public function updateScreen( Void ):Void
+	public function resize( p_nWidth:Number, p_nHeight:Number ):Void
 	{
-		_rDim 	= _is.getSize();
-		_wo 	= _rDim.width/2;
-		_ho 	= _rDim.height/2;
+		delete viewport;	
+		viewport = new Viewport( p_nWidth, p_nWidth );
+		_compiled = false;
 	}
 	
 	/**
@@ -354,23 +335,6 @@ class sandy.view.Camera3D
 		_p.z = z;	
 	}
 	
-	/**
-	* Get the offset of the screen of the camera along  axis.
-	* @return a Number corresponding to the offset
-	*/
-	public function getXOffset( Void ):Number
-	{
-		return _wo;
-	}
-	
-	/**
-	* Get the offset of the screen of the camera along Y axis.
-	* @return a Number corresponding to the offset
-	*/
-	public function getYOffset( Void ):Number
-	{
-		return _ho;
-	}
 	
 	/**
 	* Get the position of the camera.
@@ -531,7 +495,7 @@ class sandy.view.Camera3D
 		var cotan:Number, Q:Number;
 		// --
 		if( undefined == fovY ) fovY = 45;
-		if( undefined == aspectRatio ) aspectRatio = _is.getRatio();
+		if( undefined == aspectRatio ) aspectRatio = viewport.ratio;
 		if( undefined == zNear ) zNear = 50;
 		if( undefined == zFar ) zFar = 3000;
 		// --
@@ -553,64 +517,6 @@ class sandy.view.Camera3D
 		
 	}
 	
-	public function setPerspective( par_f_fieldOfViewVerticalDeg:Number, par_f_aspectRatio:Number, par_f_zNear:Number, par_f_zFar:Number):Void
-	{
-	   /* Start of user code */
-	   var loc_f_x:Number;
-	   var loc_f_y:Number;
-		
-		if( undefined == par_f_fieldOfViewVerticalDeg ) par_f_fieldOfViewVerticalDeg = 45;
-		if( undefined == par_f_aspectRatio ) par_f_aspectRatio = _is.getRatio();
-		if( undefined == par_f_zNear ) par_f_zNear = 50;
-		if( undefined == par_f_zFar ) par_f_zFar = 3000;
-		
-		frustrum.computePlanes(par_f_aspectRatio, par_f_zNear, par_f_zFar, par_f_fieldOfViewVerticalDeg );
-			
-	   par_f_fieldOfViewVerticalDeg = par_f_fieldOfViewVerticalDeg * 0.5;
-	
-	   loc_f_y = (par_f_zNear * Math.sin(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg))) / Math.cos(NumberUtil.toRadian(par_f_fieldOfViewVerticalDeg));
-	
-	   loc_f_x = par_f_aspectRatio * loc_f_y;
-	
-		// FIXME Sign modification to be left handed
-	   frustum(  loc_f_x, -loc_f_x,
-	             loc_f_y, -loc_f_y,
-	              par_f_zNear, par_f_zFar);
-		
-		_compiled = false;
-		/* End of user code */
-		return;
-	}
-	
-	public function frustum( par_f_left:Number, par_f_right:Number, par_f_bottom:Number, par_f_top:Number, par_f_near:Number, par_f_far:Number):Void
-	{
-		/* Start of user code */
-	 	var   loc_f_width:Number;
-	 	var   loc_f_height:Number;
-	 	var   loc_f_depth:Number;
-	
-		delete _mp;
-		_mp = Matrix4.createZero();
-	
-	 	loc_f_width  = par_f_right  -   par_f_left;
-		loc_f_height = par_f_top    -   par_f_bottom;
-	 	loc_f_depth  = par_f_near   -   par_f_far;
-	
-	 	_mp.n11 = (2 * par_f_near) / loc_f_width;
-	 	_mp.n22 = (2 * par_f_near) / loc_f_height;
-	
-	 	_mp.n13 = (par_f_right + par_f_left)  / loc_f_width;
-	 	_mp.n23 = (par_f_top   + par_f_bottom) / loc_f_width;
-	
-	   	_mp.n33 = (par_f_far + par_f_near    ) / loc_f_depth;
-	  	_mp.n34 = (par_f_far * par_f_near * 2) / loc_f_depth;
-	  	
-	  	_mp.n43 = -1;
-	
-		_compiled = false;
-		/* End of user code */
-		return;
-	}
 
 	
 	private function __updateTransformMatrix ( Void ):Void
@@ -631,40 +537,6 @@ class sandy.view.Camera3D
 		_mt.n34 = - VectorMath.dot( _vOut, _p );
 		
 		_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
-		/*
-		var n11:Number = _vSide.x; 
-		var n12:Number = _vSide.y; 
-		var n13:Number = _vSide.z; 
-		var n21:Number = _vUp.x; 
-		var n22:Number = _vUp.y; 
-		var n23:Number = _vUp.z; 
-		var n31:Number = _vOut.x; 
-		var n32:Number = _vOut.y; 
-		var n33:Number = _vOut.z; 
-		
-		var px:Number = _p.x,  py:Number = _p.y, pz:Number = _p.z;
-
-		var det: Number = n11 * ( n22 * n33 - n23 * n32 ) + n21 * ( n32 * n13 - n12 * n33 ) + n31 * ( n12 * n23 - n22 * n13 );
-
-		if( det == 0 ) return;
-
-		_mt.n11 = ( n22 * n33 - n32 * n23 ) / det;
-		_mt.n12 = ( n31 * n23 - n21 * n33 ) / det;
-		_mt.n13 = ( n21 * n32 - n31 * n22 ) / det;
-
-		_mt.n21 = ( n32 * n13 - n21 * n33 ) / det;
-		_mt.n22 = ( n11 * n33 - n31 * n13 ) / det;
-		_mt.n23 = ( n31 * n12 - n11 * n32 ) / det;
-
-		_mt.n31 = ( n12 * n23 - n22 * n13 ) / det;
-		_mt.n32 = ( n21 * n13 - n11 * n23 ) / det;
-		_mt.n33 = ( n11 * n22 - n21 * n12 ) / det;
-
-		_mt.n14 = -( px * _mt.n11 + py * _mt.n12 + pz * _mt.n13 );
-		_mt.n24 = -( px * _mt.n21 + py * _mt.n22 + pz * _mt.n23 );
-		_mt.n34 = -( px * _mt.n31 + py * _mt.n32 + pz * _mt.n33 );
-		*/
-
 	}
 	
 	/**
@@ -736,19 +608,12 @@ class sandy.view.Camera3D
 	 */
 	private var _nRoll : Number;  
 	
-	/**
-	 * associated screen
-	 */
-	private var _is:IScreen;
 	// Private absolute down vector
 	private var _vLookatDown:Vector;
 	/**
 	 * screen size useful to create an offset
 	 */
 	private var _rDim : Rectangle;	
-	// screen offset
-	private var _wo:Number;
-	private var _ho:Number;
 	/**
 	* The interpolator
 	*/

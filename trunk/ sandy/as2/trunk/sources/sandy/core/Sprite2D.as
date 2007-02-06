@@ -65,7 +65,7 @@ class sandy.core.Sprite2D extends Object3D
 	
 	private function __updateContent( Void ):Void
 	{
-		_s.attach( _mc );
+		_s.attach( container );
 	}
 
 	/**
@@ -109,22 +109,16 @@ class sandy.core.Sprite2D extends Object3D
 	*/ 
 	public function render ( Void ):Void
 	{		
-		_mc._visible = true;
-		ZBuffer.push( { movie:_mc, depth : _v.wz, callback:_fCallback } );
-		setModified( false );
-	}
-	
-	private function __renderFaces( Void ):Void
-	{
-		// --
+		container._visible = true;
 		var cste:Number	= _nScale * 100 / _v.wz;
 		// --
-		_mc._xscale = 100 * cste;
-		_mc._yscale = 100 * cste;
+		container._xscale = 100 * cste;
+		container._yscale = 100 * cste;
 		// --
-		_mc._x = _v.sx - _mc._width  / 2;
-		_mc._y = _v.sy - _mc._height / 2;
+		container._x = _v.sx - container._width  / 2;
+		container._y = _v.sy - container._height / 2;
 		// --
+		setModified( false );
 	}
 	
 	public function addFace( f:IPolygon ):Void
@@ -164,7 +158,7 @@ class sandy.core.Sprite2D extends Object3D
 			result =  false;
 		}
 		
-		if( result ) _mc._visible = false;
+		if( result ) container._visible = false;
 		return result;
 	}
 	

@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core {
-
+package sandy.core 
+{
 	import sandy.core.buffer.MatrixBuffer;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
@@ -68,11 +68,6 @@ package sandy.core {
 			_isRunning = false;
 			
 			trace("World3D start");
-			trace("FastMath Test: FastMath.cos(10): " + FastMath.sin(10));
-			trace("FastMath Test: Math.cos(10): " + Math.sin(10));
-		
-			
-			//setContainer(l_container);
 		}
 		
 		public function setContainer( mc:DisplayObjectContainer):void
@@ -158,7 +153,6 @@ package sandy.core {
 		public function setLight ( l:Light3D ):void
 		{
 			if(_light) _light.destroy();
-			
 			// --
 			_light = l;
 			dispatchEvent( lightAddedEvent ); 
@@ -205,9 +199,7 @@ package sandy.core {
 			if( !_isRunning)
 			{
 				_isRunning = true;
-				
 				dispatchEvent( startEvent )
-				
 				getSceneContainer().addEventListener(Event.ENTER_FRAME, __onEnterFrame);
 			}
 		}
@@ -218,8 +210,6 @@ package sandy.core {
 		 */	
 		public function stop():void
 		{
-			//FPSBeacon.getInstance().stop();
-			//FPSBeacon.getInstance().removeFrameListener( new Delegate( this, __onEnterFrame ) );
 			_isRunning = false;
 		}
 		
@@ -230,7 +220,6 @@ package sandy.core {
 		{
 			//-- we broadcast the event
 			dispatchEvent( renderEvent );
-			
 			//-- we make the active BranchGroup render
 			__render();
 		}
@@ -310,7 +299,9 @@ package sandy.core {
 						obj.refresh();
 					}
 				}
-			} else {
+			} 
+			else 
+			{
 				while( --l > -1 )
 				{
 					obj = _aObjects[ int(l) ];
@@ -376,17 +367,16 @@ package sandy.core {
 				}
 			}
 			
-			// we sort visibles Faces
-			
+			// we sort visibles Faces			
 			aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 			var l_length:int = aF.length;
-			var l_2Render:Object3D;
+			var l_oRender:Object3D;
 			
 			for(var i:int=0; i < l_length; i++) 
 			{
-				l_2Render = aF[int(i)];
-				_scene.addChild( l_2Render.container );
-				l_2Render.render();
+				l_oRender = aF[int(i)];
+				_scene.addChild( l_oRender.container );
+				l_oRender.render();
 			}
 			
 		} // end method

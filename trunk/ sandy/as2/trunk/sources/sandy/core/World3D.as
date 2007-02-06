@@ -30,10 +30,8 @@ import sandy.core.group.INode;
 import sandy.core.group.Node;
 import sandy.core.light.Light3D;
 import sandy.core.Object3D;
-import sandy.events.ObjectEventManager;
 import sandy.math.Matrix4Math;
 import sandy.view.Camera3D;
-import sandy.view.IScreen;
 
 /**
 * The 3D world for displaying the Objects.
@@ -80,7 +78,6 @@ class sandy.core.World3D
 		// default light
 		_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 		_isRunning = false;
-		_oEventManager = new ObjectEventManager();
 		setContainer( _root );
 	}
 	
@@ -126,15 +123,6 @@ class sandy.core.World3D
 		return _aObjects;
 	}
 	
-	/**
-	* Allows to get the array of objects which are listened.
-	* @param	Void
-	* @return Object3D array
-	*/
-	public function getObjectEventManager( Void ):ObjectEventManager
-	{
-		return _oEventManager;
-	}
 	
 	/**
 	 * Get the Singleton instance of World3D.
@@ -289,6 +277,7 @@ class sandy.core.World3D
 		_aObjects	= [];
 		_aMatrix 	= [];
 		_aCache 	= [];
+		var aF:Array  = [];
 		MatrixBuffer.init();
 		//
 		__parseTree( _oRoot, _oRoot.isModified() );
@@ -299,7 +288,7 @@ class sandy.core.World3D
 		mt = cam.getTransformMatrix();
 		mp = _mProj = cam.getProjectionMatrix() ;
 		//
-		offx = cam.getXOffset(); offy = cam.getYOffset(); 
+		offx = cam.viewport.nW2; offy = cam.viewport.nH2; 
 		// now we check if there are some modifications on that branch
 		// if true something has changed and we need to compute again
 		l = nbObjects = _aObjects.length;
@@ -333,8 +322,8 @@ class sandy.core.World3D
 					m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
 					m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
 					// Now we can transform the objet vertices into the camera coordinates
-					aV = obj.aPoints.slice();
-					aV.push( obj.getBBox().max, obj.getBBox().min );
+					obj.depth = 0;
+					aV = obj.aPoints;
 					lp = aV.length;
 					while( --lp > -1 )
 					{
@@ -342,11 +331,16 @@ class sandy.core.World3D
 						v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
 						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
+						obj.depth += v.wz;
 					}
+					//
+					obj.depth /= aV.length;
 					// Now we clip the object and in case it is visible or patially visible, we project it
 					// into the screen coordinates
 					if( obj.clip( cam.frustrum ) == false )
 					{
+						// we add the object to the list of the rendered objects
+						aF.push( obj );
 						//
 						mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
 						mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
@@ -362,24 +356,22 @@ class sandy.core.World3D
 							v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
 							v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 						}
-						
-						obj.render();
+
 					}
 				}// end objects loop
-				else
-				{
-					obj.render();
-				}
 			}
 		}
 		
-		// we sort visibles Faces
-		var aF:Array = ZBuffer.sort();
-		var s:IScreen = cam.getScreen();
-		// -- we draw all sorted Faces
-		s.render( aF );
-		// -- we clear the ZBuffer
-		ZBuffer.dispose ();
+		aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		var l_length:Number = aF.length;
+		//
+		for(var i:Number=0; i < l_length; i++) 
+		{
+			obj = aF[i];
+			obj.container.swapDepths(i);
+			obj.render();
+		}
+			
 	} // end method
 
 	
@@ -431,7 +423,6 @@ class sandy.core.World3D
 	private var _eRender:BasicEvent;
 	private var _eStart:BasicEvent;
 	private var _isRunning:Boolean;
-	private var _oEventManager:ObjectEventManager;
 	private var _bGlbCache:Boolean;
 	private var _aObjects:Array;
 	private var _aMatrix:Array;

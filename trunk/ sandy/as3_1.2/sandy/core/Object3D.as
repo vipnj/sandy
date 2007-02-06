@@ -68,8 +68,6 @@ package sandy.core
 		public static function get DEFAULT_SKIN():Skin  { return _DEFAUT_SKIN; }
 		
 		
-	
-		
 	// _____________
 	// [PUBLIC] DATA_________________________________________________		
 	
@@ -453,16 +451,13 @@ package sandy.core
 			var a:Array = _aSorted;
 			var f:Polygon;
 			var l:int = a.length;
-			
 			//
 			container.graphics.clear();
-			
 			//
 			while( --l > -1 )
 			{
 				a[l].refresh( container, _s, _sb );
 			}
-			
 			// -- 
 			_needRedraw = false;
 		}

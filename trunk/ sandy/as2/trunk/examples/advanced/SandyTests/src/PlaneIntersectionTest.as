@@ -18,12 +18,11 @@ import sandy.primitive.Line3D;
 import sandy.primitive.Plane3D;
 import sandy.skin.MixedSkin;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
+import sandy.view.Viewport;
 
 class PlaneIntersectionTest
 {
 	private var _mc:MovieClip;
-	private var __screen:ClipScreen;
 	private var __cam:Camera3D;
 	private var __rootGrp:Group;
 	private var __grille3D:Plane3D;
@@ -51,10 +50,10 @@ class PlaneIntersectionTest
 	{
 		//Initialisation de la vue
 		//_mc = _root.createEmptyMovieClip('screen', 7);
-		__screen = new ClipScreen( 600, 300 );
+
 		World3D.getInstance().setContainer(_mc);
 		//Initialisation de la camera
-		__cam = new Camera3D(__screen);
+		__cam = new Camera3D(600, 300);
 		//__cam.setPerspectiveProjection(_fov,_ratio,1.0,1000.0);
 		__cam.setPosition(0.0, 10.0, 35.0);
 		__cam.lookAt(0,0,0);
@@ -135,9 +134,10 @@ class PlaneIntersectionTest
 		trace("Univers : grillePress !!! ");
 		//for( var a:String in e.getTarget().aPoints )
 		//	trace(e.getTarget().aPoints[a].toString() );
-			
-		var monX:Number =  ( __screen.getClip()._xmouse  - World3D.getInstance().getCamera().getXOffset() ) / World3D.getInstance().getCamera().getXOffset() ;
-		var monY:Number = -( __screen.getClip()._ymouse  - World3D.getInstance().getCamera().getYOffset() ) / World3D.getInstance().getCamera().getYOffset() ;
+		var viewp:Viewport = World3D.getInstance().getCamera().viewport;
+		var mc:MovieClip = World3D.getInstance().getContainer();
+		var monX:Number =  ( mc._xmouse  - viewp.nW2 ) / viewp.nW2 ;
+		var monY:Number = -( mc._ymouse - viewp.nH2 ) / viewp.nH2 ;
 		trace("Mouse : (" + monX + ";" + monY + ")");
 		//récupération de la matrice de projection
 		var c:Camera3D = World3D.getInstance().getCamera();

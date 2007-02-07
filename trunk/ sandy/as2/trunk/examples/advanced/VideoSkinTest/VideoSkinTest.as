@@ -65,12 +65,11 @@ class VideoSkinTest
 	 */
 	private function __createCams ( Void ):Void
 	{
-		var mc:MovieClip;var cam:Camera3D;var screen:ClipScreen;
+		var mc:MovieClip;var cam:Camera3D;
 		mc = _mc.createEmptyMovieClip( 'screen', 1 );
-		screen = new ClipScreen( mc, 300, 300 );
-		cam = new Camera3D( 700, screen );
+		cam = new Camera3D( 300, 300 );
 		//cam.lookAt( _sunPosition.x, _sunPosition.y, _sunPosition.z );
-		World3D.getInstance().addCamera( cam );
+		World3D.getInstance().setCamera( cam );
 	}
 	
 
@@ -96,8 +95,8 @@ class VideoSkinTest
 		//
 		var rotint:RotationInterpolator = new RotationInterpolator( myEase.create(), 500 );
 		// -- listener
-		rotint.addEventListener( BasicInterpolator.onEndEVENT, this, __yoyo );
-		rotint.addEventListener( BasicInterpolator.onProgressEVENT, this, __playMouse );
+		rotint.addEventListener( InterpolationEvent.onEndEVENT, this, __yoyo );
+		rotint.addEventListener( InterpolationEvent.onProgressEVENT, this, __playMouse );
 		
 		var skin:Skin = new VideoSkin( _mc.video );
 		//skin.setLightingEnable( true );

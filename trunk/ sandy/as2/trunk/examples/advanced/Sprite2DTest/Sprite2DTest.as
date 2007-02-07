@@ -65,8 +65,7 @@ class Sprite2DTest
 	{
 		var mc:MovieClip = _mc.createEmptyMovieClip( 'screen', 1 );
 		World3D.getInstance().setContainer( mc );
-		var screen:ClipScreen = new ClipScreen( 300, 300 );
-		var cam:Camera3D = new Camera3D(  screen );
+		var cam:Camera3D = new Camera3D(  300, 300 );
 		World3D.getInstance().setCamera( cam );
 	}
 

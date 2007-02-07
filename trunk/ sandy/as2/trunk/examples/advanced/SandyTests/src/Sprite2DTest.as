@@ -8,7 +8,6 @@ import sandy.core.transform.Transform3D;
 import sandy.core.World3D;
 import sandy.skin.MovieSkin;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
 
 class Sprite2DTest 
 {
@@ -68,8 +67,7 @@ class Sprite2DTest
 	{
 		var mc:MovieClip = _mc.createEmptyMovieClip( 'screen', 2 );
 		World3D.getInstance().setContainer( mc );
-		var screen:ClipScreen = new ClipScreen( 300, 300 );
-		var cam:Camera3D = new Camera3D( screen );
+		var cam:Camera3D = new Camera3D( 300, 300 );
 		cam.setPosition( 0, 0, 0 );
 		World3D.getInstance().setCamera( cam );
 /*		

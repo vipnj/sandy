@@ -8,7 +8,7 @@ import sandy.core.transform.*;
 import sandy.events.InterpolationEvent;
 import sandy.util.*;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
+
 
 /**
 * @mtasc -main CameraTest -swf CameraTest.swf -header 300:300:120:FFFFFF -version 8 -wimp -trace org.flashdevelop.utils.FlashConnect.mtrace org/flashdevelop/utils/FlashConnect.as 
@@ -33,8 +33,7 @@ class CameraTest
 
 	public function init()
 	{
-		var screen:ClipScreen = new ClipScreen( 300, 300 );
-		var cam:Camera3D = new Camera3D( screen );
+		var cam:Camera3D = new Camera3D( 300, 300 );
 		cam.setPosition( 0, 0, -500 );
 		World3D.getInstance().setCamera( cam );
 		var g:Group = new Group();

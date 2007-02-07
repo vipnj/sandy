@@ -71,13 +71,10 @@ class EarthTest
 	 */
 	private function __createCams ( Void ):Void
 	{
-		var mc:MovieClip;var cam:Camera3D;var screen:ClipScreen;
+		var mc:MovieClip;var cam:Camera3D;
 		mc = _mc.createEmptyMovieClip( 'screen', 1 );
-		screen = new ClipScreen( mc, 600, 600 );
-		cam = new Camera3D( 700, screen );
-		cam.setPosition( 0, 0, 0 );
-		//cam.lookAt( _sunPosition.x, _sunPosition.y, _sunPosition.z );
-		World3D.getInstance().addCamera( cam );
+		cam = new Camera3D( 600, 600 );
+		World3D.getInstance().setCamera( cam );
 	}
 	
 
@@ -108,8 +105,8 @@ class EarthTest
 		rotintEarth.setPointOfReference( _earthRadius );
 		var rotintSun:RotationInterpolator 		= new RotationInterpolator( myEase.create(), 1000 );
 		// -- listener
-		rotintEarth.addEventListener( BasicInterpolator.onEndEVENT, this, __yoyo );
-		rotintSun.addEventListener( BasicInterpolator.onEndEVENT, this, __yoyo );
+		rotintEarth.addEventListener( InterpolationEvent.onEndEVENT, this, __yoyo );
+		rotintSun.addEventListener( InterpolationEvent.onEndEVENT, this, __yoyo );
 		// -- earth
 		var earth:Sphere = new Sphere( 10, 3, 'quad' );
 		var skinEarth:Skin;

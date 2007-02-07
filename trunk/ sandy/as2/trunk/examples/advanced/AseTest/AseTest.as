@@ -75,11 +75,10 @@ class AseTest
 
 	private function __createCams ( Void ):Void
 	{
-		var mc:MovieClip;var cam:Camera3D;var screen:ClipScreen;
+		var mc:MovieClip;var cam:Camera3D;
 		mc = _mc.createEmptyMovieClip( 'screen', 1 );
 		World3D.getInstance().setContainer( mc );
-		screen = new ClipScreen( 300, 300 );
-		cam = new Camera3D(screen );
+		cam = new Camera3D(300, 300 );
 		World3D.getInstance().setCamera( cam );
 	}
 	

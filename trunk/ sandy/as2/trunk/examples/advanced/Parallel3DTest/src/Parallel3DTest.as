@@ -16,7 +16,6 @@ import sandy.skin.MixedSkin;
 import sandy.skin.Skin;
 import sandy.util.Ease;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
 
 class Parallel3DTest
 {
@@ -34,8 +33,7 @@ class Parallel3DTest
 	function init () : Void
 	{
 		World3D.getInstance().setContainer(_mc.createEmptyMovieClip ('screen', 1));
-		var screen : ClipScreen = new ClipScreen( 600, 300);
-		var cam : Camera3D = new Camera3D (screen);
+		var cam : Camera3D = new Camera3D (600, 300);
 		cam.setPosition (0, 0, -500);
 		World3D.getInstance().setCamera (cam);
 		var bg : Group = new Group ();

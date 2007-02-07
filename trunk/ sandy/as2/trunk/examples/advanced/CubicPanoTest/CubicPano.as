@@ -8,8 +8,6 @@ import sandy.core.face.*;
 import sandy.primitive.Box;
 import sandy.skin.*;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
-import sandy.view.IScreen;
 import sandy.core.World3D;
 import sandy.util.*;
 
@@ -110,9 +108,8 @@ class CubicPano
 		_yaw = _pitch = 0;
 		// We have built all the objects; now we can display them 
 		_world.setContainer(_scope.createEmptyMovieClip("screen", _scope.getNextHighestDepth()));
-		var screen:IScreen = new ClipScreen( ANIM_DIM, ANIM_DIM);
 		__createFPS();
-		var cam:Camera3D = new Camera3D( screen);
+		var cam:Camera3D = new Camera3D( ANIM_DIM, ANIM_DIM);
 		//cam.setPosition( 0, 0, -500 );
 		_world.setCamera(cam);
 		_world.setRootGroup( makeScene() );

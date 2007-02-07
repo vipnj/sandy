@@ -14,7 +14,6 @@ import sandy.util.AseParser;
 import sandy.util.Ease;
 import sandy.util.SaParser;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
 import sandy.util.NumberUtil;
 import sandy.skin.Skin;
 import sandy.skin.MixedSkin;
@@ -132,11 +131,10 @@ class KittyDemo
 	
 	private function __createCams ( Void ):Void
 	{
-		var mc:MovieClip;var cam:Camera3D;var screen:ClipScreen;
+		var mc:MovieClip;var cam:Camera3D;
 		mc = _mc.createEmptyMovieClip( 'screen', 2 );
 		World3D.getInstance().setContainer(mc);
-		screen = new ClipScreen( 600, 600, 0xFFCC99 );
-		_cam = new Camera3D( screen );
+		_cam = new Camera3D( 600, 600 );
 		
 		distanceH = distance = 2000;
 		_cam.setPosition(Math.cos(circlePlace1*Math.PI/360)*distanceH, distance , Math.sin(circlePlace1*Math.PI/360)*distanceH);

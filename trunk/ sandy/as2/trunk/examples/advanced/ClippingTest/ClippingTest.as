@@ -10,7 +10,6 @@ import sandy.primitive.Sphere;
 import sandy.skin.MixedSkin;
 import sandy.util.Ease;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
 import sandy.util.TransformUtil;
 import sandy.skin.Skin;
 import sandy.skin.SimpleColorSkin;
@@ -39,9 +38,8 @@ class ClippingTest
 	
 	function __init () : Void
 	{
-		var screen : ClipScreen = new ClipScreen ( 600, 600);
 		World3D.getInstance().setContainer(_mc.createEmptyMovieClip ('screen', 1) );
-		var cam : Camera3D = new Camera3D (screen);
+		var cam : Camera3D = new Camera3D (600, 600);
 		cam.setPosition( 0, 80, 0 );
 		World3D.getInstance().setCamera (cam);
 		var bg : Group = new Group ();

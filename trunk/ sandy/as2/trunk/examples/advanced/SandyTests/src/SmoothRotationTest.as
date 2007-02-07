@@ -8,7 +8,6 @@ import sandy.events.ObjectEvent;
 import sandy.primitive.Box;
 import sandy.skin.MixedSkin;
 import sandy.view.Camera3D;
-import sandy.view.ClipScreen;
 import sandy.primitive.Cylinder;
 import sandy.primitive.Sphere;
 
@@ -66,8 +65,7 @@ class SmoothRotationTest
 		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __refreshFps );
 		// --
 		World3D.getInstance().setContainer(_mc.createEmptyMovieClip ('screen', 1));
-		var screen : ClipScreen = new ClipScreen ( WIDTH, HEIGHT);
-		var cam : Camera3D = new Camera3D (screen);
+		var cam : Camera3D = new Camera3D (WIDTH, HEIGHT);
 		cam.setPosition (0, 0, -500);
 		World3D.getInstance().setCamera (cam);
 		// --

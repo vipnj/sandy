@@ -21,17 +21,13 @@ Note : This General Public License does not permit incorporating your program
 
 import sandy.core.data.Vertex;
 import sandy.core.Object3D;
-import sandy.core.face.Face;
-import sandy.core.face.QuadFace3D;
-import sandy.core.face.TriFace3D;
+import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
 
 /**
 * Pyramid
 *
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin Cédric - thecaptain
-* @author		Nicolas Coevoet - [ NikO ]
 * @version		1.0
 * @date 		12.01.2006 
 **/

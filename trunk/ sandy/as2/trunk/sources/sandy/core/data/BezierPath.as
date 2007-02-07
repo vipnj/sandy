@@ -109,31 +109,35 @@ class sandy.core.data.BezierPath
 	public function compile( Void ):Void
 	{
 		_nNbPoints = _aContainer.length;
-		if( _nNbPoints>=3 &&  _nNbPoints%2 == 1 )
+		if( _nNbPoints>=3 && _nNbPoints%2 == 1 )
 		{
-			trace('sandy.core.data.BezierPath ERROR: Number of points incompatible');
+			_bCompiled = true;
+			_nNbSegments = 0;
+			var a:Vector, b:Vector, c:Vector;
+			for (var i:Number = 0; i <= _nNbPoints-2; i+=2 )
+			{
+				a = _aContainer[i]; 
+				b = _aContainer[i+1];
+				c = _aContainer[i+2];
+				_aSegments.push( [ a, b, c ] );
+			}
+			if( _bBoucle )
+			{
+				_aSegments.push([ 	_aContainer[ _nNbPoints ], 
+									BezierUtil.getQuadControlPoints(_aContainer[ _nNbPoints ],_aContainer[ 0 ],_aContainer[ 1 ]), 
+									_aContainer[ 0 ] 
+								]);
+			}
+			// -- 
+			_nNbSegments = _aSegments.length;
+			_nRatio = 1 / _nNbSegments;
+		}
+		else
+		{
+			trace('sandy.core.data.BezierPath ERROR: Number of points incompatible '+_nNbPoints+' '+_nNbPoints%2);
 			return;
 		}
-		_bCompiled = true;
-		_nNbSegments = 0;
-		var a:Vector, b:Vector, c:Vector;
-		for (var i:Number = 0; i <= _nNbPoints-2; i+=2 )
-		{
-			a = _aContainer[i]; 
-			b = _aContainer[i+1];
-			c = _aContainer[i+2];
-			_aSegments.push( [ a, b, c ] );
-		}
-		if( _bBoucle )
-		{
-			_aSegments.push([ 	_aContainer[ _nNbPoints ], 
-								BezierUtil.getQuadControlPoints(_aContainer[ _nNbPoints ],_aContainer[ 0 ],_aContainer[ 1 ]), 
-								_aContainer[ 0 ] 
-							]);
-		}
-		// -- 
-		_nNbSegments = _aSegments.length;
-		_nRatio = 1 / _nNbSegments;
+		
 	}
 		
 	/**

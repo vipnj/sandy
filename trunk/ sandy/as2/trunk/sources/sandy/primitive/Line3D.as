@@ -17,10 +17,10 @@ limitations under the License.
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.Object3D;
-import sandy.core.face.Edge3D;
+import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
 import sandy.skin.SimpleLineSkin;
-import sandy.core.face.Polygon;
+
 
 /**
 * Line3D

@@ -74,7 +74,7 @@ class sandy.core.Sprite3D extends Sprite2D
 		}
 		else
 		{
-			_s.attach( _mc );
+			_s.attach( container );
 		}
 	}
 
@@ -85,18 +85,14 @@ class sandy.core.Sprite3D extends Sprite2D
 	*/ 
 	public function render ( Void ):Void
 	{
-		// private property access hack for speed purpose. Please use the equivalent public method in your code!
-		var ndepth:Number = _v.wz;
 		//
 		var vNormale:Vector = new Vector( _v.wx - aPoints[1].wx, _v.wy - aPoints[1].wy, _v.wz - aPoints[1].wz );
 		var angle:Number = VectorMath.getAngle( _vView, vNormale );
 		if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
 		// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
-		_mc.gotoAndStop( __frameFromAngle( angle ) );
+		container.gotoAndStop( __frameFromAngle( angle ) );
 		//
-		_mc._visible = true;
-		ZBuffer.push( { movie:_mc, depth : _v.wz, callback:_fCallback } );
-		setModified( false );
+		super.render();
 	}
 	
 	private function __frameFromAngle(a:Number):Number

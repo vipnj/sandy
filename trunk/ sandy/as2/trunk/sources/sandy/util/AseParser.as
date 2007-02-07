@@ -19,7 +19,6 @@ import com.bourre.events.EventType;
 import com.bourre.events.IEvent;
 
 import sandy.core.data.UVCoord;
-import sandy.core.face.Face;
 import sandy.core.face.IPolygon;
 import sandy.core.face.Polygon;
 import sandy.core.Object3D;
@@ -259,7 +258,7 @@ class sandy.util.AseParser
 			var chunk: String;
 			var content: String;
 			var l:Number;
-			var f:Face;
+			var f:Polygon;
 			var faces:Array = new Array();
 			var uvCoordinates:Array = new Array();
 			var o:Object3D = new Object3D();

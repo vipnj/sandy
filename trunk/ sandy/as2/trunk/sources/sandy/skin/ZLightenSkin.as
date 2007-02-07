@@ -134,11 +134,11 @@ class sandy.skin.ZLightenSkin extends BasicSkin implements Skin
 		nx /= nl;
 		ny /= nl;
 		//-- compute gray values
-		var aB:BBox = Object3D(f['_o']).getBounds();
-		var diff:Number = aB.max.wz - aB.min.wz;
+		var aB:BBox = Object3D(f['_o']).getBBox();
+		var diff:Number = aB.max.z - aB.min.z;
 		// --
-		var g0: Number = 0xff - ( v0.wz - aB.min.wz ) / diff * 0xff;
-		var g1: Number = 0xff - ( v2.wz - aB.min.wz ) / diff * 0xff;
+		var g0: Number = 0xff - ( v0.wz - aB.min.z ) / diff * 0xff;
+		var g1: Number = 0xff - ( v2.wz - aB.min.z ) / diff * 0xff;
 		//-- compute gradient matrix
 		var dx20: Number = x2 - x0;
 		var dy20: Number = y2 - y0;

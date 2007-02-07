@@ -19,7 +19,6 @@ import com.bourre.events.EventType;
 import com.bourre.events.IEvent;
 
 import sandy.core.face.Polygon;
-import sandy.core.face.TriFace3D;
 import sandy.core.Object3D;
 import sandy.events.ParserEvent;
 import sandy.util.StringUtil;
@@ -168,7 +167,7 @@ class sandy.util.WrlParser
 			{
 				// -- local variables
 				var coords:Array;
-				var f:TriFace3D;
+				var f:Polygon;
 				var i: Number, l:Number, idV:Number;
 				var obj:String 		= _CONTEXT.aObjects.shift();
 				var vertice:String 	= _CONTEXT.aVertices.shift();

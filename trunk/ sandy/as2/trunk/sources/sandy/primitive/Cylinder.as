@@ -16,10 +16,7 @@ limitations under the License.
 
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
-import sandy.core.face.Face;
-import sandy.core.face.NFace3D;
-import sandy.core.face.QuadFace3D;
-import sandy.core.face.TriFace3D;
+import sandy.core.face.Polygon;
 import sandy.core.Object3D;
 import sandy.primitive.Primitive3D;
 import sandy.core.data.UVCoord;
@@ -129,15 +126,15 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 			aPoints.push(v);
 		}
 		
-		var f:Face;
+		var f:Polygon;
 		//Pour la partie du haut du cylindre
 		if ( _mode == 'tri' )
 		{
 			for(var i:Number=2; i<=l-2; i+=2)
 			{
 				var j:Number = ( (i+2) >= l )?  2 : i+2 ;
-				f = new TriFace3D( this, aPoints[0], aPoints[i], aPoints[j] );
-				f.setUVCoordinates( auv[0], auv[i], auv[j] );
+				f = new Polygon( this, aPoints[0], aPoints[i], aPoints[j] );
+				f.setUVCoordss( auv[0], auv[i], auv[j] );
 				addFace( f );
 				//f = this.createFace( [0, i, j ], [0, i, j] ) ;
 			}
@@ -151,8 +148,8 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 				aId.push( aPoints[i] );
 				aIduv.push( auv[i] );
 			}
-			f = new NFace3D( this, aId );
-			NFace3D(f).setUVCoordinates( aIduv );
+			f = new Polygon( this, aId );
+			Polygon(f).setUVCoordinates( aIduv );
 			addFace( f );
 			//f = this.createFace( aId, [0,0,0,0]);
 		}
@@ -173,13 +170,13 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 			//faces.push( new QFace3d(this, pt1, pt2, pt4, pt3 ) );
 			if( _mode == 'tri' )
 			{
-				f = new TriFace3D( this, aPoints[pt1], aPoints[pt2], aPoints[pt3] );
-				f.setUVCoordinates( auv[pt1], auv[pt1+1], auv[pt1+2] );
+				f = new Polygon( this, aPoints[pt1], aPoints[pt2], aPoints[pt3] );
+				f.setUVCoords( auv[pt1], auv[pt1+1], auv[pt1+2] );
 				addFace( f );
 				n = f.createNormale();
 
-				f = new TriFace3D( this, aPoints[pt2], aPoints[pt4], aPoints[pt3] );
-				f.setUVCoordinates( auv[pt1], auv[pt1+3], auv[pt1+2] );
+				f = new Polygon( this, aPoints[pt2], aPoints[pt4], aPoints[pt3] );
+				f.setUVCoords( auv[pt1], auv[pt1+3], auv[pt1+2] );
 				addFace( f );
 				f.setNormale( n );
 		
@@ -187,8 +184,8 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 			}
 			else if( _mode == 'quad' )
 			{
-				f = new QuadFace3D( this, aPoints[pt1], aPoints[pt2], aPoints[pt4], aPoints[pt3] );
-				f.setUVCoordinates( auv[pt1], auv[pt1+1], auv[pt1+3], auv[pt1+2] );
+				f = new Polygon( this, aPoints[pt1], aPoints[pt2], aPoints[pt4], aPoints[pt3] );
+				f.setUVCoords( auv[pt1], auv[pt1+1], auv[pt1+3], auv[pt1+2] );
 				addFace( f );
 				aNormals.push ( f.createNormale() );
 			}
@@ -199,8 +196,8 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 			for(var i:Number=l-1; i> 1; i-=2)
 			{
 				var j:Number = ( (i-2) <= 1 )? l-1  : i-2 ;
-				f = new TriFace3D( this, aPoints[1], aPoints[i], aPoints[j] );
-				f.setUVCoordinates( auv[1], auv[i], auv[j] );
+				f = new Polygon( this, aPoints[1], aPoints[i], aPoints[j] );
+				f.setUVCoords( auv[1], auv[i], auv[j] );
 				addFace( f );
 			}
 		}
@@ -213,8 +210,8 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 				aId.push( aPoints[i] );
 				aIduv.push( auv[i] );
 			}
-			f = new NFace3D( this, aId );
-			NFace3D(f).setUVCoordinates( aIduv );
+			f = new Polygon( this, aId );
+			Polygon(f).setUVCoords( aIduv );
 			addFace( f );
 		}
 		

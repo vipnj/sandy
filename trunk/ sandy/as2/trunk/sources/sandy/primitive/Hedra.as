@@ -16,15 +16,14 @@ limitations under the License.
 
 import sandy.core.data.Vertex;
 import sandy.core.Object3D;
-import sandy.core.face.TriFace3D;
-import sandy.core.face.Face;
+import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
 
 /**
 * Hedra
 *
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin Cédric - thecaptain
+* @author		Tabin Cï¿½dric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
 * @version		1.0
 * @date 		12.01.2006 

@@ -285,13 +285,14 @@ class sandy.view.Frustum
 		// Clip a polygon against a plane
 		var aClipped:Array = new Array();
 		var v1:Vertex = pts[0];
+		var v2:Vertex;
 		//
 		var dist2:Number, dist1:Number = aDist[0];
 		var clipped:Boolean = false, inside:Boolean = (dist1 >= 0);
 		var curv:Number = 0;
 		for (i=1; i<= l; i++)
-		{	 
-			var v2:Vertex = pts[i%l];
+		{	     
+			v2 = pts[i%l];
 			dist2= aDist[i%l];
 			// Sutherland-hodgeman clipping
 			if ( inside && (dist2 >= 0) ) 
@@ -323,10 +324,10 @@ class sandy.view.Frustum
 				
 				aClipped.push( t );
 			} 
-			else
-			{
+			//else
+			//{
 				clipped = true;		// Both out
-			}
+			//}
 			v1 = v2;
 			dist1 = dist2;
 		}

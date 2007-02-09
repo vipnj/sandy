@@ -242,7 +242,8 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		delete _aClipped;
 		_aClipped = frustum.clipFrustum( _aVertex );
-		clipped = ( _nCL = _aClipped.length ) ? true : false;
+		_nCL = _aClipped.length;
+		clipped = true;
 		return _aClipped;
 	}
 

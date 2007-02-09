@@ -16,7 +16,6 @@ limitations under the License.
 
 package sandy.core 
 {
-
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -82,10 +81,7 @@ package sandy.core
 		
 		public var aClipped:Array;
 		
-		public var depth:Number;
-	
-	    public var container:Sprite;
-		
+		public var aVisibleFaces:Array;
 	// ______________
 	// [PRIVATE] DATA________________________________________________		
 	
@@ -98,7 +94,6 @@ package sandy.core
 		private var _visible : Boolean;
 		private var _enableForcedDepth:Boolean;
 		private var _forcedDepth:Number;
-		private var _aSorted:Array;
 		private var _oBBox:BBox;
 		private var _oBSphere:BSphere;
 		private var _t:ITransform3D;
@@ -122,9 +117,8 @@ package sandy.core
 			//
 			aPoints		= new Array ();
 			aFaces		= new Array ();
-			_aSorted	= new Array ();
+			aVisibleFaces	= new Array ();
 			aNormals 	= new Array ();
-			container   = new Sprite();
 			//
 			_backFaceCulling = true;
 			_bPolyClipped    = false;
@@ -201,7 +195,7 @@ package sandy.core
 		*/
 		override public function toString ():String
 		{
-			return getQualifiedClassName(this) + " [Faces: " + aFaces.length + ", Points: " + aPoints.length + ", Depth: " + depth + "] Position: " + getPosition();
+			return getQualifiedClassName(this) + " [Faces: " + aFaces.length + ", Points: " + aPoints.length + "] Position: " + getPosition();
 		}
 		
 		/**
@@ -250,23 +244,20 @@ package sandy.core
 		*/
 		public function setSkin( pS:Skin ):Boolean
 		{
-			//
 			if (_s)
 			{
 				_s.removeEventListener( SandyEvent.UPDATE, __onSkinUpdated );
 			}
-			
 			// Now we register to the update event
 			_s = pS;
 			_s.addEventListener( SandyEvent.UPDATE, __onSkinUpdated );
-			
 			//
 			var l:int = aFaces.length;
 			while( --l > -1 )
 			{
-				aFaces[int(l)].updateTextureMatrix( _s );
+				aFaces[int(l)].setSkin( _s );
+				aFaces[int(l)].updateTextureMatrix();
 			}
-			
 			//
 			_needRedraw = true;
 			return true;
@@ -282,24 +273,20 @@ package sandy.core
 		*/
 		public function setBackSkin( pSb:Skin ):Boolean
 		{
-			//
 			if(_sb)
 			{
 				_sb.removeEventListener( SandyEvent.UPDATE, __onSkinUpdated  );
 			}
-			
 			// Now we register to the update event
 			_sb = pSb;
-			
 			_sb.addEventListener( SandyEvent.UPDATE, __onSkinUpdated );
-			
 			//
 			var l:int = aFaces.length;
 			while( --l > -1 )
 			{
-				aFaces[int(l)].updateTextureMatrix( _sb );
+			    aFaces[int(l)].setBackSkin( pSb );
+				//aFaces[int(l)].updateTextureMatrix(); FIXME not available for back skin for instance
 			}
-			
 			//
 			_needRedraw = true;
 			return true;
@@ -316,23 +303,34 @@ package sandy.core
 		*/
 		public function enableEvents( b:Boolean ):void
 		{
+			var l:int;
 			// -- 
 			if( b )
 			{
 				if( !_bEv )
 				{
-					container.addEventListener(MouseEvent.CLICK, _onPress);
-					container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-					container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
-					container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+					l = aFaces.length;
+        			while( --l > -1 )
+        			{
+        			    aFaces[int(l)].enableEvents( true );
+    					aFaces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
+    					aFaces[int(l)].container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
+    					aFaces[int(l)].container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
+    					aFaces[int(l)].container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+        			}
 				}
 			}
 			else if( !b && _bEv )
 			{
-				container.addEventListener(MouseEvent.CLICK, _onPress);
-				container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
-				container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
-				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+				l = aFaces.length;
+        		while( --l > -1 )
+        		{
+        	        aFaces[int(l)].enableEvents( false );
+    				aFaces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
+    				aFaces[int(l)].container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
+    				aFaces[int(l)].container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
+    				aFaces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+        		}
 			}
 			_bEv = b;
 		}
@@ -377,13 +375,11 @@ package sandy.core
 		*/
 		public function swapCulling():void
 		{
-			var s:String;
 			var l:int = aFaces.length;
 			for( var i:int = 0;i < l; i++ )
 			{
 				aFaces[int(i)].swapCulling();
 			}
-			
 			_needRedraw = true;	
 			setModified( true );
 		}
@@ -420,9 +416,7 @@ package sandy.core
 			var l:int = aFaces.length;
 			var f:Polygon;
 			//
-			container.graphics.clear();
-			//
-			_aSorted = new Array();
+			aVisibleFaces = new Array();
 			
 			while( --l > -1 )
 			{
@@ -431,32 +425,25 @@ package sandy.core
 				if ( f.isVisible() || !_backFaceCulling) 
 				{
 					ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-					if(ndepth) _aSorted.push( f );
+					if( ndepth ) aVisibleFaces.push( f );
+				}
+				else
+				{
+				    ;
 				}
 			}
-			//
-			_aSorted.sortOn( "depth", Array.NUMERIC );
-			//
-			l = _aSorted.length;
-			while( --l > -1 )
-			{
-				_aSorted[int(l)].render( container, _s, _sb );				
-			}
-			// -- 
 			_needRedraw = false;
 		}
 		
 		public function refresh():void
 		{
-			var a:Array = _aSorted;
+			var a:Array = aVisibleFaces;
 			var f:Polygon;
 			var l:int = a.length;
 			//
-			container.graphics.clear();
-			//
 			while( --l > -1 )
 			{
-				a[l].refresh( container, _s, _sb );
+				a[l].refresh();
 			}
 			// -- 
 			_needRedraw = false;
@@ -621,8 +608,7 @@ package sandy.core
 					} // ELSE => INSIDE
 				} //ELSE => INSIDE 
 			}// ELSE => INSIDE
-			
-			if( result ) container.graphics.clear();
+
 			return result;
 		}
 		

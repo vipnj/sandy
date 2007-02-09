@@ -16,11 +16,14 @@ limitations under the License.
 
 package sandy.core.face 
 {
-
 	import flash.geom.Matrix;
 	import flash.utils.getQualifiedClassName;
 	import flash.display.Sprite;
-	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.EventDispatcher;
+		
+	import sandy.core.World3D;
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
@@ -32,8 +35,6 @@ package sandy.core.face
 	import sandy.skin.SkinType;
 	import sandy.skin.TextureSkin;
 	import sandy.view.Frustum;
-
-	
 	
 	/**
 	* Polygon
@@ -41,10 +42,11 @@ package sandy.core.face
 	* @version		1.0
 	* @date 		12.01.2006 
 	**/
-	public class Polygon implements IPolygon
+	public class Polygon extends EventDispatcher implements IPolygon 
 	{
 		public var depth:Number;
 		public var clipped:Boolean;
+		public var container:Sprite;
 		
 		public function Polygon( oref:Object3D, ...rest)
 		{
@@ -58,23 +60,22 @@ package sandy.core.face
 			_aUV = new Array(3);
 			depth = 0;
 			clipped = false;
+			container = new Sprite();
+			// Add this graphical object to the World display list
+			World3D.getInstance().getSceneContainer().addChild( container );
 		}
 		
 		/**
 		 * FIXME, the matrix i available only for front skin, the same thing shall be applied for back skins!
 		 **/
-		public function updateTextureMatrix( s:Skin = null ):void
-		{
-			if (!s) {
-				s = _s;
-			}
-			
-			if (!s) return;
-			
+		public function updateTextureMatrix():void
+		{			
+			// This can be done only when a skin has been applied
+			if( _s == null ) return;
 			if( _nL > 2 )
 			{
 				var w:Number = 0, h:Number = 0;
-
+                var s:Skin = _s;
 				if (s.getType() == SkinType.TEXTURE)
 				{
 					w = TextureSkin(s).texture.width;
@@ -94,20 +95,17 @@ package sandy.core.face
 					var v1: Number = _aUV[1].v;
 					var u2: Number = _aUV[2].u;
 					var v2: Number = _aUV[2].v;
-					
 					// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 					if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 					{
 						u0 -= (u0 > 0.05)? 0.05 : -0.05;
 						v0 -= (v0 > 0.07)? 0.07 : -0.07;
-					}	
-					
+					}		
 					if( u2 == u1 && v2 == v1 )
 					{
 						u2 -= (u2 > 0.05)? 0.04 : -0.04;
 						v2 -= (v2 > 0.06)? 0.06 : -0.06;
 					}
-					
 					_m = new Matrix( (u1 - u0), h*(v1 - v0)/w, w*(u2 - u0)/h, (v2 - v0), u0*w, v0*h );
 					_m.invert();
 				}
@@ -144,61 +142,49 @@ package sandy.core.face
 		
 		/** 
 		 * Render the face into a MovieClip.
-		 *
 		 * @param	{@code mc}	A {@code MovieClip}.
 		 */
-		public function render( mc:Sprite, pS:Skin, pSb:Skin ): void
+		public function render(): void
 		{
 			var s:Skin;
-			var l:int = (clipped == true) ? _nCL : _nL;
+			var l:int   = (clipped == true) ? _nCL : _nL;
 			var a:Array = (clipped == true) ? _aClipped : _aVertex;
 			//
-			if( _bfc == 1 ) s = (_s == null) ? pS : _s;
-			else	        s = (_sb == null) ? pSb : _sb;
-			
+			if( _bfc == 1 ) s = _s;
+			else	        s = _sb;
 			//
-			s.begin( this, mc) ;
-			
+			s.begin( this, container) ;
 			//
-			mc.graphics.moveTo( a[0].sx, a[0].sy );
+			container.graphics.moveTo( a[0].sx, a[0].sy );
 			while( --l > -1 )
 			{
-				mc.graphics.lineTo( a[int(l)].sx, a[int(l)].sy);
+				container.graphics.lineTo( a[int(l)].sx, a[int(l)].sy);
 			}
-			
-			// -- we launch the rendering with the appropriate skin
-			s.end( this, mc );
+			// we launch the rendering with the appropriate skin
+			s.end( this, container );
 		}
 		
 		/** 
 		 * Refresh the face display
 		 */
-		public function refresh( mc:Sprite, pS:Skin, pSb:Skin ):void
+		public function refresh():void
 		{
 			var s:Skin;
-			var l:int = (clipped == true) ? _nCL : _nL;
+			var l:int   = (clipped == true) ? _nCL : _nL;
 			var a:Array = (clipped == true) ? _aClipped : _aVertex;
 			//
-			if( _bfc == 1 ) 
-			{
-				s = _s || pS;
-			} 
-			else 
-			{
-				s = _sb || pSb;
-			}
+			if( _bfc == 1 ) s = _s;
+			else	        s = _sb;
 			//
-			s.begin( this, mc) ;
+			s.begin( this, container) ;
 			//
-			mc.graphics.lineTo( a[0].sx, a[0].sy );
-			
+			container.graphics.lineTo( a[0].sx, a[0].sy );
 			while( --l > -1 )
 			{
-				mc.graphics.lineTo( a[int(l)].sx, a[int(l)].sy);
+				container.graphics.lineTo( a[int(l)].sx, a[int(l)].sy);
 			}
-			
 			// -- we launch the rendering with the appropriate skin
-			s.end( this, mc );
+			s.end( this, container );
 		}
 
 		/**
@@ -217,19 +203,20 @@ package sandy.core.face
 		/**
 		 * Return the depth average of the face.
 		 * <p>Useful for z-sorting.</p>
-		 *
 		 * @return	A Number as depth average.
 		 */
 		public function getZAverage() : Number
 		{
-			// -- We normalize the sum and return it
-			var d:Number = 0;
+			// We normalize the sum and return it
+			var a:Array = (clipped == true) ? _aClipped : _aVertex;
+			if( a == null ) return 0;
 			var l:Number = _nCL;
+			
+			var d:Number = 0;
 			while( --l > -1 )
 			{
-				d += _aClipped[int(l)].wz;
+				d += a[int(l)].wz;
 			}
-			
 			return depth = d / _nCL;
 		}
 		
@@ -240,14 +227,14 @@ package sandy.core.face
 		 */
 		public function getMinDepth ():Number
 		{
+			var a:Array = (clipped == true) ? _aClipped : _aVertex;
+			if( a == null ) return 0;
 			var l:Number = _nCL;
-			var min:Number = _aClipped[0].wz;
-			
+			var min:Number = a[0].wz;
 			while( --l > 0 )
 			{
-				min = Math.min( min, _aClipped[int(l)].wz );
+				min = Math.min( min, a[int(l)].wz );
 			}
-			
 			return min;
 		}
 
@@ -258,23 +245,22 @@ package sandy.core.face
 		 */
 		public function getMaxDepth ():Number
 		{
+			var a:Array = (clipped == true) ? _aClipped : _aVertex;
+			if( a == null ) return 0;
 			var l:Number = _nCL;
-			var max:Number = _aClipped[0].wz;
-			
+			var max:Number = a[0].wz;
 			while( --l > 0 )
 			{
-				max = Math.max( max, _aClipped[int(l)].wz );
+				max = Math.max( max, a[int(l)].wz );
 			}
-			
 			return max;
 		}
 		
 		/**
-		* Get a String represntation of the {@code NFace3D}.
-		* 
+		* Get a String represntation of the {@code NFace3D}. 
 		* @return	A String representing the {@code NFace3D}.
 		*/
-		public function toString(): String
+		override public function toString(): String
 		{
 			return getQualifiedClassName(this) + " [Points: " + _aVertex.length + ", Clipped: " + _aClipped.length + "]";
 		}
@@ -293,26 +279,39 @@ package sandy.core.face
 		*/
 		public function enableEvents( b:Boolean ):void
 		{
-			_bEv = b;
+			
+            if( b && !_bEv )
+            {
+        		container.addEventListener(MouseEvent.CLICK, _onPress);
+        		container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
+        		container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
+        		container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+			}
+			else if( !b && _bEv )
+			{
+    			container.addEventListener(MouseEvent.CLICK, _onPress);
+    			container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
+    			container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
+    			container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+        	}
+        	_bEv = b;
 		}
 
 		/**
 		 * isvisible 
 		 * <p>Say if the face is visible or not</p>
-		 *
 		 * @param void
 		 * @return a Boolean, true if visible, false otherwise
 		 */	
 		public function isVisible(): Boolean
 		{
+			var a:Array = (clipped == true) ? _aClipped : _aVertex;
 			if( _nL < 3 ) return _bV = true;
-			else return _bV = ( _bfc * ((_aVertex[1].sx - _aVertex[0].sx)*(_aVertex[2].sy - _aVertex[0].sy)-(_aVertex[1].sy - _aVertex[0].sy)*(_aVertex[2].sx - _aVertex[0].sx)) < 0 );
-
+			else return _bV = ( _bfc * ((a[1].sx - a[0].sx)*(a[2].sy - a[0].sy)-(a[1].sy - a[0].sy)*(a[2].sx - a[0].sx)) < 0 );
 		}
 
 		/**
 		 * Create the normal vector of the face.
-		 *
 		 * @return	The resulting {@code Vertex} corresponding to the normal.
 		 */	
 		public function createNormale():Vector
@@ -323,11 +322,11 @@ package sandy.core.face
 				var a:Vertex = _aVertex[0], b:Vertex = _aVertex[1], c:Vertex = _aVertex[2];
 				v = new Vector( b.wx - a.wx, b.wy - a.wy, b.wz - a.wz );
 				w = new Vector( b.wx - c.wx, b.wy - c.wy, b.wz - c.wz );
-				// -- we compute de cross product
-				_vn = VectorMath.cross( v, w );//new Vector( (w.y * v.z) - (w.z * v.y) , (w.z * v.x) - (w.x * v.z) , (w.x * v.y) - (w.y * v.x) );
-				// -- we normalize the resulting vector
+				// we compute de cross product
+				_vn = VectorMath.cross( v, w );
+				// we normalize the resulting vector
 				VectorMath.normalize( _vn ) ;
-				// -- we return the resulting vertex
+				// we return the resulting vertex
 				return _vn;
 			}
 			else
@@ -338,7 +337,6 @@ package sandy.core.face
 
 		/**
 		 * Set the normal vector of the face.
-		 *
 		 * @param	Vertex
 		 */
 		public function setNormale( n:Vector ):void
@@ -359,7 +357,6 @@ package sandy.core.face
 
 		/**
 		 * Get the skin of the face
-		 *
 		 * @return	The Skin
 		 */
 		public function getSkin():Skin
@@ -410,6 +407,26 @@ package sandy.core.face
 			return _m;
 		}
 
+/************************
+ ***** EVENTS ***********
+ ************************/
+		
+		private function _onPress(e:MouseEvent):void
+		{
+			dispatchEvent(e);
+		}
+		
+		private function _onRollOver(e:MouseEvent):void
+		{
+			dispatchEvent(e);
+		}
+		
+		private function _onRollOut(e:MouseEvent):void
+		{
+			dispatchEvent(e);
+		}
+		
+		
 		
 		private var _aUV:Array;
 		private var _aVertex:Array;
@@ -449,7 +466,6 @@ package sandy.core.face
 		/**
 		* The latest movieclip used to render the face
 		*/
-
 		private var _m:Matrix;
 
 	}

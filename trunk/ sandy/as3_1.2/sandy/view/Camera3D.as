@@ -48,7 +48,7 @@ package sandy.view
 		public var frustrum:Frustum;
 		
 		/**
-		 * Te viewport associated to the camera
+		 * The viewport associated to the camera
 		 */
 		public var viewport:ViewPort;
 		

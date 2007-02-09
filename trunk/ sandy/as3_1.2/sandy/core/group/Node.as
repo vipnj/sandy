@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.group {
-
+package sandy.core.group 
+{
 	import flash.events.EventDispatcher;
 	import flash.display.DisplayObject;
 	import flash.utils.getQualifiedClassName;

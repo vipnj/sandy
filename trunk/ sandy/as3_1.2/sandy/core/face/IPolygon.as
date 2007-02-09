@@ -13,17 +13,16 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.face {
-		
+package sandy.core.face 
+{		
 	import sandy.core.data.Vector;
 	import sandy.skin.Skin;
 	import flash.geom.Matrix;
 	import sandy.core.data.UVCoord;
 
 	import flash.display.Sprite;
-	
 	/**
-	* Face
+	* Polygon
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
 	* @version		1.0
@@ -64,10 +63,8 @@ package sandy.core.face {
 		/**
 		* Display the Face of the Object3D into a MovieClip.
 		* <p>This method is called when we want to display the face. It calls it skin {@link mb.sandy.skin.Skin} specific rendering method, depending of the type of the face</p>
-		* <p>{@code mc} represent the MovieClip where the Face must be displayed. 
-		* @param	mc		The MovieClip
 		*/
-		function render( mc:Sprite, pS:Skin, pSb:Skin  ):void;
+		function render():void;
 		
 		/**
 		* Set the normale vector of the face. Useful when the normale for this face is alleady computed
@@ -103,7 +100,7 @@ package sandy.core.face {
 		/**
 		 * Update the texture matrix in case that one of its vertex has been changed
 		 */
-		function updateTextureMatrix( s:Skin = null):void;
+		function updateTextureMatrix():void;
 
 		/**
 		 * Returns the precomputed matrix for the texture algorithm.
@@ -143,7 +140,7 @@ package sandy.core.face {
 		* refresh the movieclip, not to compute it again.
 		* @param	void
 		*/
-		function refresh( mc:Sprite, pS:Skin, pSb:Skin  ):void;
+		function refresh():void;
 		
 		/**
 		* This method change the value of the "normal" clipping side.

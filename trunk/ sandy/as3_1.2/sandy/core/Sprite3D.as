@@ -52,11 +52,9 @@ package sandy.core
 		public function Sprite3D( pScale:Number, pOffset:int = 0 ) 
 		{
 			super(pScale);
-			
 			// -- we create a fictive normal vector
 			aPoints[1] = new Vertex( 0, 0, -1 );
 			_vView = new Vector(0, 0, 1);
-			
 			// -- set the offset
 			_nOffset = pOffset;
 		}
@@ -94,7 +92,7 @@ package sandy.core
 			}
 			else
 			{
-				container =  Sprite(_s.attach( container ));
+				container =  MovieClip(_s.attach( container ));
 			}
 		}
 
@@ -106,14 +104,13 @@ package sandy.core
 		override public function render ():void
 		{
 			if (!_s.isInitialized()) return;
-					
 			//
 			var vNormale:Vector = new Vector( _v.wx - aPoints[1].wx, _v.wy - aPoints[1].wy, _v.wz - aPoints[1].wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );
 			if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
-			
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
-			MovieClip(container).gotoAndStop( __frameFromAngle( angle ) );
+			container.gotoAndStop( __frameFromAngle( angle ) );
+			super.render();
 		}
 		
 		
@@ -144,7 +141,6 @@ package sandy.core
 		{
 			_nOffset = n;
 		}
-
 		
 		// -- frames offset
 		private var _nOffset:int;

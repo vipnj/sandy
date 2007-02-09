@@ -39,7 +39,8 @@ package sandy.core
 	 **/
 	public class Sprite2D extends Object3D 
 	{
-		
+	    public var container:MovieClip;
+	    
 		/**
 		* Sprite2D constructor.
 		* A sprite is a special Object3D because it's in fact a bitmap in a 3D space.
@@ -134,16 +135,10 @@ package sandy.core
 		
 		override public function render ():void
 		{			
-			var cste:Number	= _nScale * 10 / _v.wz;			
-			// --
-			container.scaleX = cste * 10;
-			container.scaleY = cste * 10;
-			
+			container.scaleX = container.scaleY = (_nScale * 100 / _v.wz);
 			// --
 			container.x = _v.sx - container.width  / 2;
 			container.y = _v.sy - container.height / 2;
-			
-			// --
 		}
 		
 		override public function addFace( f:IPolygon ):void

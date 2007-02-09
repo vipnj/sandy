@@ -29,6 +29,7 @@ package sandy.core
 	import sandy.math.Matrix4Math;
 	import sandy.view.Camera3D;
 	import sandy.core.light.Light3D;
+	import sandy.core.face.Polygon;
 
 	import flash.events.EventDispatcher;
 	import flash.events.Event;
@@ -70,7 +71,7 @@ package sandy.core
 			trace("World3D start");
 		}
 		
-		public function setContainer( mc:DisplayObjectContainer):void
+		public function setContainer( mc:DisplayObjectContainer ):void
 		{
 			mc.cacheAsBitmap = true;
 			
@@ -254,39 +255,32 @@ package sandy.core
 			var obj:Object3D;
 			var v:Vertex;
 			var crt:Node, crtId:Number;
-			
-			var aF:Array  = [];
+			var aF:Array  = new Array();
 			// we set a variable to remember the number of objects and in the same time we strop if no objects are displayable
 			if( !_oRoot)
 			{
 				return;
 			}
-			
 			//-- we initialize
 			_bGlbCache = false;
 			_aObjects	= [];
 			_aMatrix 	= [];
 			_aCache 	= [];
 			MatrixBuffer.init();
-			
 			//
 			__parseTree( _oRoot, _oRoot.isModified() );
-			
 			//		
 			cam = _oCamera;
 			camCache = cam.isModified();
-			
 			//
 			mt = cam.getTransformMatrix();
 			mp = _mProj = cam.getProjectionMatrix() ;
-			
 			//
-			offx = cam.viewport.w2; offy = cam.viewport.h2; 
-			
+			offx = cam.viewport.w2; 
+			offy = cam.viewport.h2; 
 			// now we check if there are some modifications on that branch
 			// if true something has changed and we need to compute again
 			l = nbObjects = _aObjects.length;
-			
 			// If nothing has changed in the whole world
 			if( !_bGlbCache && !camCache )
 			{
@@ -314,14 +308,11 @@ package sandy.core
 							m = Matrix4Math.multiply(mt,m);
 						else
 							m = mt;	
-							
 						//
 						m11 = m.n11; m21 = m.n21; m31 = m.n31; m41 = m.n41;
 						m12 = m.n12; m22 = m.n22; m32 = m.n32; m42 = m.n42;
 						m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
 						m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
-						
-						obj.depth = 0;
 						// Now we can transform the objet vertices into the camera coordinates
 						aV = obj.aPoints;	
 						lp = aV.length;
@@ -331,28 +322,23 @@ package sandy.core
 							v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
 							v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 							v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
-							obj.depth += v.wz;
 						}
-						
-						obj.depth /= aV.length;
-		
 						// Now we clip the object and in case it is visible or patially visible, we project it
 						// into the screen coordinates
 						if( obj.clip( cam.frustrum ) == false )
 						{
-							aF.push( obj );
+						    obj.render();
+							aF = aF.concat( obj.aVisibleFaces );
 							//
 							mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
 							mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
 							mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
 							mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
-							
 							//
 							aV = obj.aClipped;
 							lp = aV.length;
 							while( --lp > -1 )
 							{
-								//
 								v = aV[int(lp)];
 								var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
 								v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
@@ -370,15 +356,19 @@ package sandy.core
 			// we sort visibles Faces			
 			aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 			var l_length:int = aF.length;
-			var l_oRender:Object3D;
-			
-			for(var i:int=0; i < l_length; i++) 
+			var l_oPoly:Polygon;
+			var i:int;
+			for( i; i < _scene.numChildren; i++ )
 			{
-				l_oRender = aF[int(i)];
-				_scene.addChild( l_oRender.container );
-				l_oRender.render();
+			   Sprite(_scene.getChildAt(i)).graphics.clear();
 			}
-			
+			    
+			for(i=0; i < l_length; i++) 
+			{
+				l_oPoly = aF[int(i)];
+				l_oPoly.render();
+				_scene.setChildIndex( l_oPoly.container, i );
+			}
 		} // end method
 
 		

@@ -38,16 +38,17 @@ package sandy.core.data
 		public var center:Vector;
 		public var radius:Number;
 		public var owner:Object3D;
+		public var position:Vector;
 		
 		public function compute( pPoints:Array ):void
 		{
 			var x:Number, y:Number, z:Number, d:Number;
 			var p:Array = new Array(pPoints.length);
-			p[0] = Vertex(pPoints[0]).getWorldVector();
+			p[0] = pPoints[0].getVector();
 			var i:int, j:int, l:int = pPoints.length;
 			for( i = 1; i < l; i++) 
 			{
-				p[i] = Vertex(pPoints[int(i)]).getWorldVector();
+				p[i] = pPoints[int(i)].getVector();
 			}
 
 			var p1:Vector = p[0];
@@ -125,9 +126,9 @@ package sandy.core.data
 		public function distance(point:Vector):Number
 		{
 			
-			var x = point.x - center.x;
-			var y = point.y - center.y;
-			var z = point.z - center.z;
+			var x:Number = point.x - center.x;
+			var y:Number = point.y - center.y;
+			var z:Number = point.z - center.z;
 			return  Math.sqrt(x * x + y * y + z * z) - radius;
 		}
 		  
@@ -155,8 +156,18 @@ package sandy.core.data
 		public function BSphere( obj:Object3D )
 		{
 			owner	= obj;
+			center = new Vector();
+			position = new Vector();
 			compute( obj.aPoints );
-		}		
+		}
+		
+	    public function transform( p_oMatrix:Matrix4 ):void
+	    {
+	        position.x = center.x + p_oMatrix.n14;
+	        position.y = center.y + p_oMatrix.n24;
+	        position.z = center.z + p_oMatrix.n34;
+	    }
+	    		
 		/**
 		* Get a String represntation of the {@code BSphere}.
 		* 

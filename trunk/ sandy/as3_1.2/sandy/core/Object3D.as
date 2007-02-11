@@ -13,7 +13,6 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
 package sandy.core 
 {
 	import flash.display.DisplayObjectContainer;
@@ -38,6 +37,8 @@ package sandy.core
 	import sandy.skin.SimpleLineSkin;
 	import sandy.skin.Skin ;
 	import sandy.view.Frustum;
+	import sandy.view.Camera3D;
+	import sandy.math.Matrix4Math;
 	import sandy.events.SandyEvent;
 
 	
@@ -45,8 +46,6 @@ package sandy.core
 	* <p>Represent an Object3D in a World3D</p>
 	* 
 	* @author	Thomas Pfeiffer - kiroukou
-	* @author	Tabin Cédric - thecaptain
-	* @author	Nicolas Coevoet - [ NikO ]
 	* @version	1.0
 	* @date 	23.06.2006
 	*/
@@ -66,7 +65,6 @@ package sandy.core
 		*/
 		public static function get DEFAULT_SKIN():Skin  { return _DEFAUT_SKIN; }
 		
-		
 	// _____________
 	// [PUBLIC] DATA_________________________________________________		
 	
@@ -78,10 +76,7 @@ package sandy.core
 		
 		/** Array of normals vertex. UNUSED in the current version of the engine. */
 		public var aNormals:Array;
-		
-		public var aClipped:Array;
-		
-		public var aVisibleFaces:Array;
+
 	// ______________
 	// [PRIVATE] DATA________________________________________________		
 	
@@ -117,7 +112,6 @@ package sandy.core
 			//
 			aPoints		= new Array ();
 			aFaces		= new Array ();
-			aVisibleFaces	= new Array ();
 			aNormals 	= new Array ();
 			//
 			_backFaceCulling = true;
@@ -409,44 +403,152 @@ package sandy.core
 		* Render the Object3D.
 		* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
 		*/ 		
-		override public function render():void
+		override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
-			var ndepth:Number;
-			// -- local copy because it's faster
-			var l:int = aFaces.length;
-			var f:Polygon;
+			// VISIBILITY CHECK
+			if( isVisible() == false ) return;
 			//
-			aVisibleFaces = new Array();
+			var l_nDepth:Number;
+			var l_oFace:Polygon;
+			var l_oFrustum:Frustum = p_oCamera.frustrum;
+			var l_bCache:Boolean = p_bCache || _modified;
+			// FIXME If the cache is enabled here, take the old matrix
+			var l_oModelMatrix:Matrix4;
+			var l_oMatrix:Matrix4 = getMatrix();
+			if( l_oMatrix == null && p_oViewMatrix == null)
+			{
+			   l_oModelMatrix = p_oCamera.getTransformMatrix();
+			}
+			else if( l_oMatrix == null )
+			{
+			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), p_oViewMatrix );
+			}
+			else if ( p_oViewMatrix == null )
+			{
+			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), l_oMatrix );
+			}
+			else
+			{
+			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oViewMatrix, l_oMatrix );
+			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), l_oModelMatrix );
+			}
+			/**
+             * Now we consider the camera
+             * Fixme consider the possible cache system for camera.
+             */
+			l_oMatrix = p_oCamera.getProjectionMatrix() ;
+            // Before doing any transformation of the object geometry, we are just going to transform its bounding volumes
+            // and check if it is still in the camera field of view. If yes we do the transformations and the projection.
+            var res:Number;
+            var l_bClipped:Boolean = false;
+            var l_aPoints:Array = aPoints;
+            /////////////////////////
+            //// BOUNDING SPHERE ////
+            /////////////////////////
+            if( _oBSphere == null ) _oBSphere = new BSphere( this );
+           _oBSphere.transform( l_oModelMatrix );
+            res = l_oFrustum.sphereInFrustum( _oBSphere );
+			//
+			if( res  == Frustum.OUTSIDE )
+			{
+				return;
+			}
+			else if( res == Frustum.INTERSECT )
+			{
+                ////////////////////////
+                ////  BOUNDING BOX  ////
+                ////////////////////////
+                if( _oBBox == null ) _oBBox = new BBox( this );
+                _oBBox.transform( l_oModelMatrix );
+                res = l_oFrustum.boxInFrustum( _oBBox );
+                //
+				if( res == Frustum.OUTSIDE )
+				{
+					// OUSIDE, the objet is clipped
+					return;
+				}
+				else if (res == Frustum.INTERSECT && _enableClipping )
+				{
+				    l_bClipped = true;
+				}
+			}
+
+            ///////////////////////////////////
+            ///// VERTICES TRANSFORMATION /////
+            ///////////////////////////////////
+            // If we are here, is that the object shall be displayed. So we can transform its vertices into the camera
+            // view coordinates
+            var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
+			var l_oVertex:Vertex;
+			var l_lId:int;
+            //
+            m11 = l_oModelMatrix.n11; m21 = l_oModelMatrix.n21; m31 = l_oModelMatrix.n31; m41 = l_oModelMatrix.n41;
+			m12 = l_oModelMatrix.n12; m22 = l_oModelMatrix.n22; m32 = l_oModelMatrix.n32; m42 = l_oModelMatrix.n42;
+			m13 = l_oModelMatrix.n13; m23 = l_oModelMatrix.n23; m33 = l_oModelMatrix.n33; m43 = l_oModelMatrix.n43;
+			m14 = l_oModelMatrix.n14; m24 = l_oModelMatrix.n24; m34 = l_oModelMatrix.n34; m44 = l_oModelMatrix.n44;
+			// Now we can transform the objet vertices into the camera coordinates	
+			for( l_lId = 0; l_oVertex = l_aPoints[int(l_lId)]; l_lId ++ )
+			{
+				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
+				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
+				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
+			}
 			
-			while( --l > -1 )
+			/////////////////////////////////////
+			///////// FRUSTUM CLIPPING //////////
+			/////////////////////////////////////
+			if( l_bClipped )
 			{
-				f = aFaces[int(l)];
-				
-				if ( f.isVisible() || !_backFaceCulling) 
-				{
-					ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-					if( ndepth ) aVisibleFaces.push( f );
-				}
-				else
-				{
-				    ;
+			    l_aPoints = new Array();
+				for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
+			    {	
+				    l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
 				}
 			}
-			_needRedraw = false;
-		}
-		
-		public function refresh():void
-		{
-			var a:Array = aVisibleFaces;
-			var f:Polygon;
-			var l:int = a.length;
+			else
+			{
+				for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
+			    {	
+				    l_oFace.clipped = false;
+				}
+			}
+				    
+			///////////////////////////////////
+			///////  SCREEN PROJECTION ////////
+			///////////////////////////////////
+			var l_nCste:Number;
+			var l_nOffx:Number = p_oCamera.viewport.w2;
+			var l_nOffy:Number = p_oCamera.viewport.h2;
+			var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
 			//
-			while( --l > -1 )
+			mp11 = l_oMatrix.n11; mp21 = l_oMatrix.n21; mp31 = l_oMatrix.n31; mp41 = l_oMatrix.n41;
+			mp12 = l_oMatrix.n12; mp22 = l_oMatrix.n22; mp32 = l_oMatrix.n32; mp42 = l_oMatrix.n42;
+			mp13 = l_oMatrix.n13; mp23 = l_oMatrix.n23; mp33 = l_oMatrix.n33; mp43 = l_oMatrix.n43;
+			mp14 = l_oMatrix.n14; mp24 = l_oMatrix.n24; mp34 = l_oMatrix.n34; mp44 = l_oMatrix.n44;
+			//
+			for( l_lId = 0; l_oVertex = l_aPoints[int(l_lId)]; l_lId++ )
 			{
-				a[l].refresh();
+				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
+				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
 			}
-			// -- 
-			_needRedraw = false;
+			
+            ///////////////////////////////////
+            /////      FACES  DISPLAY     /////
+            ///////////////////////////////////
+			for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
+			{				
+				if ( l_oFace.isVisible() || !_backFaceCulling) 
+				{
+					l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
+					if( l_nDepth > 0 )
+					{
+					    l_oFace.render();
+					    p_oCamera.addToDisplayList( l_oFace.container, l_nDepth );  
+					} 
+				}
+			}
+            
 		}
 		
 		/**
@@ -551,65 +653,6 @@ package sandy.core
 		public function getMatrix():Matrix4
 		{
 			return _t ? _t.getMatrix():null;
-		}
-		
-		public function clip( frustum:Frustum ):Boolean
-		{
-			var result:Boolean = false;
-			var res:Number;
-		    var l:int;	
-			aClipped = aPoints;
-			
-			// Is clipping enable on that object
-			if( _enableClipping )
-			{
-				// If a polygon was intersecting previously, we need to initialize its faces at their original state.
-				if( _bPolyClipped )
-				{
-    			    l = aFaces.length;
-    				while( --l > -1 )
-    				{
-    				    aFaces[int(l)].clipped  = false;
-    				}
-    				_bPolyClipped = false;
-				}
-				// --
-				_oBSphere = null;
-				_oBSphere = new BSphere( this );
-				res = frustum.sphereInFrustum( _oBSphere );
-				if( res  == Frustum.OUTSIDE )
-				{
-					result = true;
-				}
-				else if( res == Frustum.INTERSECT )
-				{
-					// The bounding sphere is intersecting a place at least.
-					// Let's check the bounding box volume.
-					_oBBox = null;
-					_oBBox = new BBox( this );
-					res = frustum.boxInFrustum( _oBBox );
-					if( res == Frustum.OUTSIDE )
-					{
-						// OUSIDE, the objet is clipped
-						result =  true;
-					}
-					else if (res == Frustum.INTERSECT )
-					{
-						aClipped = new Array();
-						// We are intersecting a place one more time. The object shall be at the limit
-						// of the frustum volume. Let's try to clip the faces against it.
-						l = aFaces.length;
-						while( --l > -1 )
-						{
-							aClipped = aClipped.concat( aFaces[int(l)].clip( frustum ) );
-						}
-						// We consider that the object is not clipped and needs to be draw.
-						_bPolyClipped = true;
-					} // ELSE => INSIDE
-				} //ELSE => INSIDE 
-			}// ELSE => INSIDE
-
-			return result;
 		}
 		
 		//////////////

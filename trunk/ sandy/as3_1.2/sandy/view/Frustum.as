@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.view {
-
+package sandy.view 
+{
 	import sandy.core.data.BBox;
 	import sandy.core.data.BSphere;
 	import sandy.core.data.Matrix4;
@@ -25,12 +25,10 @@ package sandy.view {
 	import sandy.math.PlaneMath;
 	import sandy.util.NumberUtil;
 	import sandy.math.VectorMath;	
-	
-	
+
 	/**
 	* Frustum
 	* Class used to determine if a box, a sphere, or a point is in the frustrum of the camera.
-	* UNUSED class right now.
 	* @author		Thomas Pfeiffer - kiroukou
 	* @since		1.0
 	* @version		1.0
@@ -57,18 +55,17 @@ package sandy.view {
 		// right plane : aNormals[3], aConstants[3] <-> aPoints[0], aPoints[3], aPoints[4], aPoints[7]
 		// left plane  : aNormals[4], aConstants[4] <-> aPoints[1], aPoints[2], aPoints[5], aPoints[6]
 		// back plane  : aNormals[5], aConstants[5] <-> aPoints[4], aPoints[5], aPoints[6], aPoints[7] 	
-		public static var FAR:Number 	= 0;
-		public static var TOP:Number 	= 1;
-		public static var BOTTOM:Number = 2; 
-		public static var RIGHT:Number 	= 3;
-		public static var LEFT:Number 	= 4;
-		public static var NEAR:Number 	= 5;
+		public static const FAR:int 	= 0;
+		public static const TOP:int 	= 1;
+		public static const BOTTOM:int = 2; 
+		public static const RIGHT:int 	= 3;
+		public static const LEFT:int	= 4;
+		public static const NEAR:int 	= 5;
 
-		
-		public static function get INSIDE():int { return 1; }
-		public static function get OUTSIDE():int { return  -1; }
-		public static function get INTERSECT():int { return  0; }
-		public static function get EPSILON():Number { return  0.005; }
+		public static const INSIDE:int = 1;
+		public static const OUTSIDE:int = -1;
+		public static const INTERSECT:int = 0;
+		public static const EPSILON:Number = 0.005;
 		
 		public function Frustum() 
 		{
@@ -172,7 +169,7 @@ package sandy.view {
 		{
 			var d:Number;
 			var r:Number = s.radius; // radius
-			var p:Vector = s.center;//VectorMath.addVector(s.center, s.owner.getPosition()); // position (center)
+			var p:Vector = s.position;
 			
 			for( var i:int = 0; i < 6; i++) 
 			{
@@ -195,7 +192,7 @@ package sandy.view {
 			var k:int;			
 			var d:Number;
 			var plane:Plane;
-			var p:Array = box.getCorners(true);
+			var p:Array = box.aTransformedCorners;
 			// for each plane do ...
 			for(var i:int = 0; i < 6; i++) 
 			{
@@ -239,7 +236,7 @@ package sandy.view {
 			
 			
 			var tmp:Array = new Array( cvert.length );
-			for( var i:Number=0; i < cvert.length; i++ ) tmp[i] = new Vertex( cvert[i].wx, cvert[i].wy, cvert[i].wz );
+			for( var i:Number=0; i < cvert.length; i++ ) tmp[i] = cvert[i].clone();
 			
 			tmp = clipPolygon( aPlanes[LEFT], tmp ); // left
 			if( tmp && tmp.length <= 2 ) return tmp;
@@ -274,7 +271,8 @@ package sandy.view {
 				v = pts[i];
 				aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d;
 				if (aDist[i] < 0) allin = false;
-				if (aDist[i] >= 0) allout = false;			}
+				if (aDist[i] >= 0) allout = false;			
+			}
 			
 			if (allin)
 			{
@@ -288,6 +286,8 @@ package sandy.view {
 			var aClipped:Array = new Array();
 			var v1:Vertex = pts[0];
 			//
+			var d:Number;
+			var t:Vertex;
 			var dist2:Number, dist1:Number = aDist[0];
 			var clipped:Boolean = false, inside:Boolean = (dist1 >= 0);
 			var curv:Number = 0;
@@ -303,8 +303,8 @@ package sandy.view {
 				else if ( (!inside) && (dist2>=0) )		// Coming in
 				{	 
 					clipped = inside = true;
-					var t:Vertex = new Vertex();
-					var  d:Number = dist1/(dist1-dist2);
+					t = new Vertex();
+					d = dist1/(dist1-dist2);
 					t.wx = (v1.wx+(v2.wx-v1.wx)*d);
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
 					t.wz = (v1.wz+(v2.wz-v1.wz)*d);
@@ -316,8 +316,8 @@ package sandy.view {
 				{	 
 					clipped=true;
 					inside=false;
-					var t:Vertex = new Vertex();
-					var d:Number = dist1/(dist1-dist2);
+					t = new Vertex();
+					d = dist1/(dist1-dist2);
 					
 					t.wx = (v1.wx+(v2.wx-v1.wx)*d);
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
@@ -332,7 +332,6 @@ package sandy.view {
 				v1 = v2;
 				dist1 = dist2;
 			}
-			
 			aDist = null;
 			if (!clipped)
 			{

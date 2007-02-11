@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
-
+package sandy.core.data 
+{
 	import flash.utils.*;
 
 	import sandy.core.data.Vector;
@@ -23,6 +23,7 @@ package sandy.core.data {
 	import sandy.core.Object3D;
 	//import sandy.math.VertexMath;
 	import sandy.math.VectorMath;
+	import sandy.math.Matrix4Math;
 
 	/**
 	* BoundingBox object used to clip the object faster.
@@ -39,40 +40,40 @@ package sandy.core.data {
 		/**
 		 * max vector, representing the upper point of the cube volume
 		 */
-		public var max:Vertex;		
+		public var max:Vector;		
 		
 		/**
 		 * min vector, representing the lower point of the cube volume.
 		 */
-		public var min:Vertex;		
+		public var min:Vector;		
 		
+		public var aCorners:Array;
+		public var aTransformedCorners:Array;
 		
 		/**
 		 * the 3D object owning the Bounding Box
 		 */
 		public var owner:Object3D;
 		
-		
-		
 		/**
 		 * Create a BBox object, representing a Bounding Box volume englobing the 3D object passed in parameters.
 		 * Verry usefull for clipping and so performance !
-		 * @param obj Object3D The object that you want to add a bounding Box volume.
+		 * 
 		 */
-		public function compute( a:Array ):void
+		private function __compute( a:Array ):void
 		{
 			var l:int = a.length;
-			min.x = max.x = a[0].wx; min.y = max.y = a[0].wy; min.z = max.z = a[0].wz;
+			min.x = max.x = a[0].x; min.y = max.y = a[0].y; min.z = max.z = a[0].z;
 			while( --l > 0 )
 			{
 				var v:Vertex = a[int(l)];
 				// --
-				if( v.wx < min.x )		min.x = v.wx;
-				else if( v.wx > max.x )	max.x = v.wx;
-				if( v.wy < min.y )		min.y = v.wy;
-				else if( v.wy > max.y )	max.y = v.wy;
-				if( v.wz < min.z )		min.z = v.wz;
-				else if( v.wz > max.z )	max.z = v.wz;
+				if( v.x < min.x )		min.x = v.x;
+				else if( v.x > max.x )	max.x = v.x;
+				if( v.y < min.y )		min.y = v.y;
+				else if( v.y > max.y )	max.y = v.y;
+				if( v.z < min.z )		min.z = v.z;
+				else if( v.z > max.z )	max.z = v.z;
 				
 			}
 		}	
@@ -83,15 +84,20 @@ package sandy.core.data {
 		* @param	obj		the object owner
 		* @param	radius	The radius of the Sphere
 		*/ 	
-		public function BBox( pobj:Object3D )
+		public function BBox( pobj:Object3D=null )
 		{
 			owner	= pobj;
-			min		= new Vertex();
-			max		= new Vertex();
-			_aCorners = new Array(8);
+			min		= new Vector();
+			max		= new Vector();
+			aCorners = new Array(8);
+			aTransformedCorners = new Array(8);
 			var l:int = 8;
-			while( --l > -1 ) _aCorners[int(l)] = new Vertex();
-			compute( owner.aPoints );
+			while( --l > -1 )
+			{
+			    aCorners[int(l)] = new Vector();
+			}
+			__compute( owner.aPoints );
+			__computeCorners();
 		}		
 		
 		/**
@@ -122,30 +128,34 @@ package sandy.core.data {
 		 * @param b Boolean the b is set to true, we will compute the array of vertex once again, otherwise it will return the last compute array.
 		 * @return The array containing 8 Vertex representing the Bounding Box corners.
 		 */
-		public function getCorners ( b:Boolean ):Array
+		private function __computeCorners():void
 		{
-			if( b )
-			{
-				var minx:Number = min.x;
-				var miny:Number = min.y;
-				var minz:Number = min.z;
-				
-				var maxx:Number = max.x;
-				var maxy:Number = max.y;
-				var maxz:Number = max.z;
-				
-				_aCorners[0].x = (minx);_aCorners[0].y =  (maxy); _aCorners[0].z =  (maxz);
-				_aCorners[1].x = (maxx);_aCorners[1].y =  (maxy); _aCorners[1].z =  (maxz);
-				_aCorners[2].x = (maxx);_aCorners[2].y =  (miny); _aCorners[2].z =  (maxz);
-				_aCorners[3].x = (minx);_aCorners[3].y =  (miny); _aCorners[3].z =  (maxz);
-				_aCorners[4].x = (minx);_aCorners[4].y =  (maxy); _aCorners[4].z =  (minz);
-				_aCorners[5].x = (maxx);_aCorners[5].y =  (maxy); _aCorners[5].z =  (minz);
-				_aCorners[6].x = (maxx);_aCorners[6].y =  (miny); _aCorners[6].z =  (minz);
-				_aCorners[7].x = (minx);_aCorners[7].y =  (miny); _aCorners[7].z =  (minz);
-
-			}
-			return _aCorners;
-		}		
+			var minx:Number = min.x;
+			var miny:Number = min.y;
+			var minz:Number = min.z;
+			
+			var maxx:Number = max.x;
+			var maxy:Number = max.y;
+			var maxz:Number = max.z;
+			
+			aCorners[0].x = (minx);aCorners[0].y =  (maxy); aCorners[0].z =  (maxz);
+			aCorners[1].x = (maxx);aCorners[1].y =  (maxy); aCorners[1].z =  (maxz);
+			aCorners[2].x = (maxx);aCorners[2].y =  (miny); aCorners[2].z =  (maxz);
+			aCorners[3].x = (minx);aCorners[3].y =  (miny); aCorners[3].z =  (maxz);
+			aCorners[4].x = (minx);aCorners[4].y =  (maxy); aCorners[4].z =  (minz);
+			aCorners[5].x = (maxx);aCorners[5].y =  (maxy); aCorners[5].z =  (minz);
+			aCorners[6].x = (maxx);aCorners[6].y =  (miny); aCorners[6].z =  (minz);
+			aCorners[7].x = (minx);aCorners[7].y =  (miny); aCorners[7].z =  (minz);
+		}	
+		
+	
+	    public function transform( p_oMatrix:Matrix4 ):void
+	    {
+	        var l_nId:int;
+	        for( l_nId = 0; l_nId < 8; l_nId++ )
+	            aTransformedCorners[l_nId] = Matrix4Math.vectorMult( p_oMatrix, aCorners[l_nId] );
+	    }
+	    
 		/**
 		* Get a String represntation of the {@code BBox}.
 		* 
@@ -156,7 +166,16 @@ package sandy.core.data {
 			return getQualifiedClassName(this);
 		}
 		
-		private var _aCorners:Array;
+		
+		public function clone():BBox
+		{
+		    var l_oBBox:BBox = new BBox();
+		    l_oBBox.owner = owner;
+		    l_oBBox.max = max.clone();
+		    l_oBBox.min = min.clone();
+		    return l_oBBox;
+		}
+		
 	}
 
 }

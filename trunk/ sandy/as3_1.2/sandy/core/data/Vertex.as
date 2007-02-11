@@ -14,13 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
-
+package sandy.core.data 
+{
 	import flash.utils.getQualifiedClassName;
 	
 	import sandy.core.data.Vector;
-
-	
 	
 	/**
 	* Vertex of a 3D mesh.
@@ -60,12 +58,10 @@ package sandy.core.data {
 		public function Vertex(px:Number = 0, py:Number = 0, pz:Number = 0)
 		{
 			super(px,py,pz);
-			
 			// -- 
 			wx = px; 
 			wy = py; 
 			wz = pz;
-			
 			// --
 			sy = sx = sz = 0;
 		}
@@ -80,6 +76,20 @@ package sandy.core.data {
 			return new Vector( wx, wy, wz );
 		}
 			
+	    public function getVector():Vector
+	    {
+	        return new Vector( x, y, z );
+	    }
+	    
+		override public function clone():*
+		{
+		    var l_oV:Vertex = new Vertex( x, y, z );
+		    l_oV.wx = wx;    l_oV.sx = sx;
+		    l_oV.wy = wy;    l_oV.sy = sy;
+		    l_oV.wz = wz;    l_oV.sz = sz;
+		    return l_oV;
+		}
+		
 		/**
 		* Get a String represntation of the {@code Vertex}.
 		* 

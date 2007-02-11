@@ -16,8 +16,8 @@ limitations under the License.
 
 package sandy.core.group 
 {
-	import flash.events.EventDispatcher;
 	import flash.display.DisplayObject;
+	import flash.events.EventDispatcher;
 	import flash.utils.getQualifiedClassName;
 
 	/**
@@ -30,11 +30,7 @@ package sandy.core.group
 	 * @version		1.0
 	 * @date 		16.05.2006
 	 **/
-	 
-	 
-	 
-	
-	public class Node extends EventDispatcher implements INode
+	public class Node extends EventDispatcher
 	{
 		/**
 		* Retuns the unique ID Number that represents the node.
@@ -53,7 +49,7 @@ package sandy.core.group
 		* @param	n The Node you are going to test the patternity
 		* @return Boolean  True is the node in argument if the father of the current one, false otherwise.
 		*/
-		public function isParent( n:Node ):Boolean
+		public function isParent( n:INode ):Boolean
 		{
 			return (_parent == n && n != null);
 		}
@@ -82,7 +78,7 @@ package sandy.core.group
 		* @param	void
 		* @return	Boolean false is nothing has been done, true if the operation succeded
 		*/
-		public function setParent( n:Node ):Boolean
+		public function setParent( n:INode ):Boolean
 		{
 			if( n )
 			{
@@ -101,7 +97,7 @@ package sandy.core.group
 		* @param	void
 		* @return Node The parent node reference, which is null if no parents (for exemple for a root object).
 		*/
-		public function getParent():Node
+		public function getParent():INode
 		{
 			return _parent;
 		}
@@ -121,9 +117,9 @@ package sandy.core.group
 		* the child is automatically conencted to it's parent thanks to its parent property.
 		* @param	child
 		*/
-		public function addChild( child:Node ): void 
+		public function addChild( child:INode ):void 
 		{
-			child.setParent( this );
+			child.setParent( INode(this) );
 			setModified( true );
 			_aChilds.push( child );
 		}	
@@ -143,7 +139,7 @@ package sandy.core.group
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node
 		*/
-		public function getChild( index:int ):Node 
+		public function getChild( index:int ):INode 
 		{
 			return _aChilds[ index ];
 		}
@@ -153,7 +149,7 @@ package sandy.core.group
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node or null is no child with this ID has been found
 		*/
-		public function getChildFromId( id:int ):Node 
+		public function getChildFromId( id:int ):INode 
 		{
 			var l:int = _aChilds.length;
 			while( -- l > -1 )
@@ -171,7 +167,7 @@ package sandy.core.group
 		* @param	index Number The name of the child you want to get
 		* @return 	Node The desired Node or null is no child with this name has been found
 		*/
-		public function getChildByName( pName:String ):Node 
+		public function getChildByName( pName:String ):INode 
 		{
 			var l:int = _aChilds.length;
 			while( -- l > -1 )
@@ -266,7 +262,6 @@ package sandy.core.group
 		 */
 		public function remove() : void 
 		{
-			//
 			var l:int = _aChilds.length;
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
@@ -280,16 +275,7 @@ package sandy.core.group
 			_parent = null;
 			setModified( true );
 		}
-		
-		public function dispose():void
-		{
-			// to implement;
-		}
-		
-		public function render():void
-		{
-			// to implement;
-		}
+	
 		
 		override public function toString():String
 		{
@@ -313,9 +299,9 @@ package sandy.core.group
 		}
 		
 		internal static var _ID_:Number = 0;
-		private var _aChilds:Array;
+		protected var _aChilds:Array;
 		private var _id:Number;
-		private var _parent:Node;
+		protected var _parent:INode;
 		protected var _modified:Boolean;
 		public var name:String;
 	}

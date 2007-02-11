@@ -205,19 +205,23 @@ package sandy.core.face
 		 * <p>Useful for z-sorting.</p>
 		 * @return	A Number as depth average.
 		 */
-		public function getZAverage() : Number
+		public function getZAverage():Number
 		{
 			// We normalize the sum and return it
 			var a:Array = (clipped == true) ? _aClipped : _aVertex;
-			if( a == null ) return 0;
-			var l:Number = _nCL;
-			
+			var l:int   = (clipped == true) ? _nCL : _nL;
+			if( a == null || l <= 0 ) 
+			    return 0;
+			var l_nLength:int = l;
 			var d:Number = 0;
+			//
 			while( --l > -1 )
 			{
 				d += a[int(l)].wz;
 			}
-			return depth = d / _nCL;
+			//
+			depth = d / l_nLength;
+			return depth;
 		}
 		
 		/**
@@ -279,7 +283,6 @@ package sandy.core.face
 		*/
 		public function enableEvents( b:Boolean ):void
 		{
-			
             if( b && !_bEv )
             {
         		container.addEventListener(MouseEvent.CLICK, _onPress);
@@ -305,9 +308,8 @@ package sandy.core.face
 		 */	
 		public function isVisible(): Boolean
 		{
-			var a:Array = (clipped == true) ? _aClipped : _aVertex;
 			if( _nL < 3 ) return _bV = true;
-			else return _bV = ( _bfc * ((a[1].sx - a[0].sx)*(a[2].sy - a[0].sy)-(a[1].sy - a[0].sy)*(a[2].sx - a[0].sx)) < 0 );
+			else return createNormale().z <= 0;
 		}
 
 		/**

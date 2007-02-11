@@ -14,10 +14,12 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.group {
-
+package sandy.core.group 
+{
 	import sandy.core.group.Node;
 	import sandy.core.group.INode;
+    import sandy.view.Camera3D;
+    import sandy.core.data.Matrix4;
 
 	/**
 	 * Class implementing the Abstract class Node.
@@ -27,7 +29,7 @@ package sandy.core.group {
 	 * @version		1.0
 	 * @date 		28.03.2006
 	 **/
-	public class Group extends Node
+	public class Group extends Node implements INode
 	{
 		/**
 		* Constructor of Group class.
@@ -38,7 +40,22 @@ package sandy.core.group {
 		public function Group() 
 		{
 			super();
-		}	
+		}
 		
+		public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
+		{
+			var l_bCache:Boolean = p_bCache || _modified;
+			//
+			var l_iNode:INode;
+			var l_lId:int;
+			//
+			for( l_lId = 0; l_iNode = _aChilds[l_lId]; l_lId++ )
+			    l_iNode.render( p_oCamera, p_oViewMatrix, l_bCache );
+		}
+		
+		public function dispose():void
+		{
+		    ;
+		}
 	}
 }

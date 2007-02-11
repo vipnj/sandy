@@ -14,9 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-
-package sandy.core.data {
-	
+package sandy.core.data 
+{
 	import flash.utils.getQualifiedClassName;
 	
 	/**
@@ -26,8 +25,6 @@ package sandy.core.data {
 	* can represent the time coordinate in a 3D world</p>
 	*
 	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin Cédric - thecaptain
-	* @author		Nicolas Coevoet - [ NikO ]
 	* @since		0.1
 	* @version		0.3
 	* @date 		28.03.2006
@@ -52,6 +49,12 @@ package sandy.core.data {
 			z = pz;
 		}
 		
+		
+		public function clone():*
+		{
+		    var l_oV:Vector = new Vector( x, y, z );
+		    return l_oV;
+		}
 		
 		/**
 		* Get a String represntation of the {@code Vector}.

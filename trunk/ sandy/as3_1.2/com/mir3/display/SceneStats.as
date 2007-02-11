@@ -77,7 +77,7 @@
 			fps.autoSize = "left";
 			fps.defaultTextFormat = format;
 			fps.antiAliasType = AntiAliasType.ADVANCED;
-			fps.text = "ZBuffer: ____ faces,  ____ 2d,  ____ 3D";
+			fps.text = "Scene: ____ faces,  ____ 2d,  ____ 3D";
 			
 			graphics.beginFill(0x000000, 1);
             graphics.drawRect(0, 0, width+1, GRAPH_HEIGHT+2);
@@ -147,7 +147,7 @@
 			var l_sprites2d:int =0;// ZBuffer.getSprites2DNum();
 			var l_sprites3d:int = 0;//ZBuffer.getSprites3DNum();
 			
-			fps.text = "ZBuffer: " +	l_faces + " faces,  " + 
+			fps.text = "Scene: " +	l_faces + " faces,  " + 
 										l_sprites2d + " 2D,  " + 
 										l_sprites3d + " 3D";
 			

@@ -16,31 +16,27 @@ limitations under the License.
 
 package sandy.core 
 {
-	import sandy.core.buffer.MatrixBuffer;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.MovieClip;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
+	import sandy.core.data.BBox;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.core.data.BBox;
+	import sandy.core.face.Polygon;
 	import sandy.core.group.Group;
 	import sandy.core.group.INode;
 	import sandy.core.group.Node;
 	import sandy.core.light.Light3D;
-	import sandy.core.Object3D;
-	import sandy.math.Matrix4Math;
-	import sandy.view.Camera3D;
-	import sandy.core.light.Light3D;
-	import sandy.core.face.Polygon;
-
-	import flash.events.EventDispatcher;
-	import flash.events.Event;
-	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.display.MovieClip;
-	
 	import sandy.events.SandyEvent;
 	import sandy.math.FastMath;
+	import sandy.math.Matrix4Math;
+	import sandy.view.Camera3D;
 	
 	/**
 	* The 3D world for displaying the Objects.
@@ -245,170 +241,17 @@ package sandy.core
 		 */
 		private function __render() : void 
 		{
-			var l:Number, lp:Number, vx:Number, vy:Number, vz:Number, offx:Number, offy:Number, nbObjects:Number;
-			var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
-			var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
-			var aV:Array;
-			var mp:Matrix4, m:Matrix4, mt:Matrix4;
-			var cam:Camera3D ;
-			var camCache:Boolean;
-			var obj:Object3D;
-			var v:Vertex;
-			var crt:Node, crtId:Number;
-			var aF:Array  = new Array();
 			// we set a variable to remember the number of objects and in the same time we strop if no objects are displayable
-			if( !_oRoot)
+			if( _oRoot)
 			{
-				return;
-			}
-			//-- we initialize
-			_bGlbCache = false;
-			_aObjects	= [];
-			_aMatrix 	= [];
-			_aCache 	= [];
-			MatrixBuffer.init();
-			//
-			__parseTree( _oRoot, _oRoot.isModified() );
-			//		
-			cam = _oCamera;
-			camCache = cam.isModified();
-			//
-			mt = cam.getTransformMatrix();
-			mp = _mProj = cam.getProjectionMatrix() ;
-			//
-			offx = cam.viewport.w2; 
-			offy = cam.viewport.h2; 
-			// now we check if there are some modifications on that branch
-			// if true something has changed and we need to compute again
-			l = nbObjects = _aObjects.length;
-			// If nothing has changed in the whole world
-			if( !_bGlbCache && !camCache )
-			{
-				while( --l > -1 )
-				{
-					obj = _aObjects[ int(l) ];
-					
-					if( obj.needRefresh() )
-					{
-						obj.refresh();
-					}
-				}
-			} 
-			else 
-			{
-				while( --l > -1 )
-				{
-					obj = _aObjects[ int(l) ];
-					
-					if( _aCache[ int(l) ] == true || camCache == true )
-					{
-						m = _aMatrix[ int(l) ];
-						
-						if (m) 
-							m = Matrix4Math.multiply(mt,m);
-						else
-							m = mt;	
-						//
-						m11 = m.n11; m21 = m.n21; m31 = m.n31; m41 = m.n41;
-						m12 = m.n12; m22 = m.n22; m32 = m.n32; m42 = m.n42;
-						m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
-						m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
-						// Now we can transform the objet vertices into the camera coordinates
-						aV = obj.aPoints;	
-						lp = aV.length;
-						while( --lp > -1 )
-						{
-							v = aV[int(lp)];
-							v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
-							v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
-							v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
-						}
-						// Now we clip the object and in case it is visible or patially visible, we project it
-						// into the screen coordinates
-						if( obj.clip( cam.frustrum ) == false )
-						{
-						    obj.render();
-							aF = aF.concat( obj.aVisibleFaces );
-							//
-							mp11 = mp.n11; mp21 = mp.n21; mp31 = mp.n31; mp41 = mp.n41;
-							mp12 = mp.n12; mp22 = mp.n22; mp32 = mp.n32; mp42 = mp.n42;
-							mp13 = mp.n13; mp23 = mp.n23; mp33 = mp.n33; mp43 = mp.n43;
-							mp14 = mp.n14; mp24 = mp.n24; mp34 = mp.n34; mp44 = mp.n44;
-							//
-							aV = obj.aClipped;
-							lp = aV.length;
-							while( --lp > -1 )
-							{
-								v = aV[int(lp)];
-								var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-								v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
-								v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
-							}
-						}
-					}// end objects loop
-					else
-					{
-						;
-					}
-				}
-			}
-			
-			// we sort visibles Faces			
-			aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
-			var l_length:int = aF.length;
-			var l_oPoly:Polygon;
-			var i:int;
-			for( i; i < _scene.numChildren; i++ )
-			{
-			   Sprite(_scene.getChildAt(i)).graphics.clear();
-			}
-			    
-			for(i=0; i < l_length; i++) 
-			{
-				l_oPoly = aF[int(i)];
-				l_oPoly.render();
-				_scene.setChildIndex( l_oPoly.container, i );
-			}
+    			_oCamera.compile();
+    			_oCamera.clearDisplayList();
+    			_oRoot.render( _oCamera, null, false );
+                _oCamera.renderDisplayList( _scene );
+            }
+   
 		} // end method
 
-		
-		private function __parseTree( n:INode, cache:Boolean ):void
-		{
-			if (!n) return;
-			
-			var lCache:Boolean = n.isModified();
-			_bGlbCache = _bGlbCache || lCache;
-			var m:Matrix4;
-			
-			var a:Array = n.getChildList();
-			
-			if( !a )
-			{
-				if( Object3D( n ).isVisible() )
-				{
-					_aObjects.push( n );
-					_aCache.push( cache || lCache );
-					m = Object3D( n ).getMatrix();
-					if( m ) MatrixBuffer.push( m );
-					_aMatrix.push( MatrixBuffer.getCurrentMatrix() );
-					if( m ) MatrixBuffer.pop();
-				}
-			}
-			else
-			{
-				var l = a.length
-				
-				// it'a transform
-				n.render(); 
-				while( --l > -1 )
-				{
-					__parseTree( a[int(l)], cache || lCache );
-				}
-				n.dispose();
-			}
-			n.setModified( false );
-			return;
-		}
 		
 		override public function toString():String
 		{

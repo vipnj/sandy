@@ -14,15 +14,15 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.group {
-
+package sandy.core.group 
+{
 	import sandy.core.group.Node;
 	import sandy.core.group.INode;
-
+    import sandy.view.Camera3D;
+    import sandy.core.data.Matrix4;
+    
 	import flash.utils.*;
 
-	
-	
 	/**
 	* <p>Abstract class used to represent the Leaf of the Sandy's scene tree.
 	* This class should not be used directly, except for typing purpose.
@@ -31,7 +31,7 @@ package sandy.core.group {
 	 * @version		1.0
 	 * @date 		16.05.2006
 	 **/
-	public class Leaf extends Node
+	public class Leaf extends Node implements INode
 	{
 		
 		public function Leaf() 
@@ -44,7 +44,7 @@ package sandy.core.group {
 		 * @param n Node The Node to set as a child of the current node. But it will not be done !
 		 * @return
 		 */
-		override public function addChild ( child:Node ):void
+		override public function addChild ( child:INode ):void
 		{
 			;// nothing here
 		}
@@ -64,7 +64,7 @@ package sandy.core.group {
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node
 		*/
-		override public function getChild( index:int ):Node 
+		override public function getChild( index:int ):INode 
 		{
 			return null;
 		}
@@ -84,17 +84,15 @@ package sandy.core.group {
 			return false;
 		}
 		
-		override public function dispose():void
+		public function dispose():void
 		{
 			;
 		}
 		
-		override public function render():void
+		public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
 			;
 		}
-		
-		
 		
 	}
 }

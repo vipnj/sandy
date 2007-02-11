@@ -14,18 +14,17 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.group {
-
+package sandy.core.group 
+{
 	import sandy.core.group.Node;
 	import sandy.core.group.INode;
-	import sandy.core.buffer.MatrixBuffer;
 	import sandy.core.transform.ITransform3D;
-	import sandy.core.data.Matrix4;
+    import sandy.view.Camera3D;
+    import sandy.core.data.Matrix4;
+    import sandy.math.Matrix4Math;
 	
 	import flash.utils.*;
 
-	
-	
 	/**
 	* @author		Thomas Pfeiffer - kiroukou
 	* @version		1.0
@@ -42,9 +41,7 @@ package sandy.core.group {
 		public function TransformGroup( transform:ITransform3D = null)
 		{
 			super();
-			
 			_t = transform;
-			_bPop = false;
 		}
 		
 		/**
@@ -66,6 +63,14 @@ package sandy.core.group {
 			return _t;
 		}
 		
+		/**
+		 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
+		 * @return	The transformation 
+		 */
+		public function getMatrix():Matrix4
+		{
+			return _t ? _t.getMatrix():null;
+		}
 		/**
 		* Allows you to know if this node has been modified (true value) or not (false value). 
 		* Mainly usefull for the cache system.
@@ -89,17 +94,17 @@ package sandy.core.group {
 		 * Render the actual node. Object3D's node are rendered, TransformGroup concat (multiply) their matrix to
 		 * update the 3D transformations view.
 		 */
-		override public function render ():void
+		override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
-			if( _t )
-			{
-				var m:Matrix4 = _t.getMatrix();
-				if( m )
-				{
-					_bPop = true;
-					MatrixBuffer.push( m );
-				}
-			}
+			var l_oMatrix:Matrix4 = getMatrix();
+			var l_bCache:Boolean = p_bCache || _modified;
+			var l_oViewMatrix =  ( p_oViewMatrix == null ) ? l_oMatrix : (l_oMatrix == null ) ? p_oViewMatrix : Matrix4Math.multiply4x3( p_oViewMatrix, l_oMatrix );
+			//
+			var l_iNode:INode;
+			var l_lId:int;
+			//
+			for( l_lId = 0; l_iNode = _aChilds[l_lId]; l_lId++ )
+			    l_iNode.render( p_oCamera, l_oViewMatrix, l_bCache );
 		}
 		
 		/**
@@ -108,11 +113,7 @@ package sandy.core.group {
 		 */
 		override public function dispose ():void
 		{
-			if( _bPop )
-			{
-				MatrixBuffer.pop();
-				_bPop = false;
-			}
+			;
 		}
 
 		/**
@@ -138,7 +139,6 @@ package sandy.core.group {
 		* The transformation of this TransformGroup
 		*/
 		private var _t:ITransform3D;
-		private var _bPop:Boolean;
 
 	}
 

@@ -19,10 +19,13 @@ package sandy.view
 
 	import flash.events.Event;
 	
+	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.transform.Interpolator3D;
 	import sandy.core.transform.TransformType;
+	import sandy.core.transform.BasicInterpolator;
+	import sandy.core.face.Polygon;
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
@@ -30,10 +33,11 @@ package sandy.view
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
 	import sandy.events.SandyEvent;
-	import sandy.core.transform.BasicInterpolator;
 	import sandy.math.FastMath;
+	import flash.display.Sprite;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.DisplayObject;
 	
-
 	/**
 	* Camera3D
 	* @author		Thomas Pfeiffer - kiroukou
@@ -51,6 +55,9 @@ package sandy.view
 		 * The viewport associated to the camera
 		 */
 		public var viewport:ViewPort;
+		
+		
+		private var _displayList:Array;
 		
 		/**
 		 * Create a new Camera3D.
@@ -74,13 +81,44 @@ package sandy.view
 			// --
 			frustrum = new Frustum();
 			setPerspectiveProjection(p_nFov, viewport.ratio, p_nNear, p_nFar );
-			//setPerspective();
 			// --
 			_mt = _mf = _mv = Matrix4.createIdentity();
 			_compiled = false;
 			_oInt = null;
+			_displayList = new Array();
 		}
-
+		
+		public function clearDisplayList():void
+		{
+		    var l_oDisplayElt:DisplayListElement = null;
+		    var i:int;
+		    //
+			for( i=0; l_oDisplayElt = _displayList[i]; i++ )
+			{
+			   l_oDisplayElt.m_oSprite.graphics.clear();
+			}
+			//
+			_displayList = [];
+		}
+		
+		public function addToDisplayList( p_oDisplayObj:Sprite, p_nDepth:Number ):void
+		{
+		    /* FIXME I don't like this. SHall find a solution with maps objects or something else */
+		    _displayList.push( new DisplayListElement(p_oDisplayObj, p_nDepth) );
+		}
+		
+		public function renderDisplayList( p_oScene:DisplayObjectContainer ):void
+		{
+		   var l_oDisplayElt:DisplayListElement = null;
+		    var i:int;
+		    //
+		    _displayList.sortOn( "m_nDepth", Array.NUMERIC | Array.DESCENDING );
+		    //
+		    for( i=0; l_oDisplayElt = _displayList[i]; i++ )
+			{
+				p_oScene.setChildIndex( l_oDisplayElt.m_oSprite, i );
+			}
+		}
         
 		/**
 		 * Allow the camera to translate along its side vector. 
@@ -188,9 +226,9 @@ package sandy.view
 			nAngle = (nAngle + 360)%360;
 			var n:Number = Math.sqrt( ax*ax + ay*ay + az*az );
 			var m : Matrix4 = Matrix4Math.axisRotation( ax/n, ay/n, az/n, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vSide);
-			Matrix4Math.vectorMult3x3( m, _vUp);
-			Matrix4Math.vectorMult3x3( m, _vOut);
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		}
 	 
 		/**
@@ -221,9 +259,9 @@ package sandy.view
 			_compiled = false;
 			nAngle = (nAngle + 360)%360;
 			var m:Matrix4 = Matrix4Math.axisRotation ( 1, 0, 0, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vUp);
-			Matrix4Math.vectorMult3x3( m, _vSide);
-			Matrix4Math.vectorMult3x3( m, _vOut);
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		}
 		
 		/**
@@ -236,9 +274,9 @@ package sandy.view
 			_compiled = false;
 			nAngle = (nAngle + 360)%360;
 			var m:Matrix4 = Matrix4Math.axisRotation ( 0, 1, 0, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vUp);
-			Matrix4Math.vectorMult3x3( m, _vSide);
-			Matrix4Math.vectorMult3x3( m, _vOut);
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		}
 		
 		/**
@@ -251,9 +289,9 @@ package sandy.view
 			_compiled = false;
 			nAngle = (nAngle + 360)%360;
 			var m:Matrix4 = Matrix4Math.axisRotation ( 0, 0, 1, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vUp);
-			Matrix4Math.vectorMult3x3( m, _vSide);
-			Matrix4Math.vectorMult3x3( m, _vOut);
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		}	
 		
 		/**
@@ -269,8 +307,8 @@ package sandy.view
 			_compiled = false;
 			nAngle = (nAngle + 360)%360;
 			var m:Matrix4 = Matrix4Math.axisRotation ( _vSide.x, _vSide.y, _vSide.z, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vUp);
-			Matrix4Math.vectorMult3x3( m, _vOut);
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		}
 		
 		/**
@@ -284,8 +322,8 @@ package sandy.view
 			_compiled = false;
 			nAngle = (nAngle + 360)%360;
 			var m:Matrix4 = Matrix4Math.axisRotation ( _vUp.x, _vUp.y, _vUp.z, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vSide);
-			Matrix4Math.vectorMult3x3( m, _vOut);
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		}
 		
 		/**
@@ -301,8 +339,8 @@ package sandy.view
 			_compiled = false;
 			nAngle = (nAngle + 360)%360;
 			var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, nAngle );
-			Matrix4Math.vectorMult3x3( m, _vSide);
-			Matrix4Math.vectorMult3x3( m, _vUp);
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 		}	
 
 		public function getRoll():Number
@@ -530,40 +568,6 @@ package sandy.view
 			_mt.n34 = - VectorMath.dot( _vOut, _p );
 			
 			_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
-			/*
-			var n11:Number = _vSide.x; 
-			var n12:Number = _vSide.y; 
-			var n13:Number = _vSide.z; 
-			var n21:Number = _vUp.x; 
-			var n22:Number = _vUp.y; 
-			var n23:Number = _vUp.z; 
-			var n31:Number = _vOut.x; 
-			var n32:Number = _vOut.y; 
-			var n33:Number = _vOut.z; 
-			
-			var px:Number = _p.x,  py:Number = _p.y, pz:Number = _p.z;
-
-			var det: Number = n11 * ( n22 * n33 - n23 * n32 ) + n21 * ( n32 * n13 - n12 * n33 ) + n31 * ( n12 * n23 - n22 * n13 );
-
-			if( det == 0 ) return;
-
-			_mt.n11 = ( n22 * n33 - n32 * n23 ) / det;
-			_mt.n12 = ( n31 * n23 - n21 * n33 ) / det;
-			_mt.n13 = ( n21 * n32 - n31 * n22 ) / det;
-
-			_mt.n21 = ( n32 * n13 - n21 * n33 ) / det;
-			_mt.n22 = ( n11 * n33 - n31 * n13 ) / det;
-			_mt.n23 = ( n31 * n12 - n11 * n32 ) / det;
-
-			_mt.n31 = ( n12 * n23 - n22 * n13 ) / det;
-			_mt.n32 = ( n21 * n13 - n11 * n23 ) / det;
-			_mt.n33 = ( n11 * n22 - n21 * n12 ) / det;
-
-			_mt.n14 = -( px * _mt.n11 + py * _mt.n12 + pz * _mt.n13 );
-			_mt.n24 = -( px * _mt.n21 + py * _mt.n22 + pz * _mt.n23 );
-			_mt.n34 = -( px * _mt.n31 + py * _mt.n32 + pz * _mt.n33 );
-			*/
-
 		}
 		
 		/**
@@ -643,4 +647,17 @@ package sandy.view
 		*/
 		private var _oInt:BasicInterpolator;
 	}
+}
+
+import flash.display.Sprite;
+internal final class DisplayListElement
+{
+    public var m_oSprite:Sprite;
+    public var m_nDepth:Number;
+    
+    public function DisplayListElement( p_oSprite:Sprite, p_nDepth:Number )
+    {
+        m_oSprite = p_oSprite;
+        m_nDepth = p_nDepth;
+    }
 }

@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.math {
-		
+package sandy.math 
+{	
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.util.NumberUtil;
@@ -182,14 +182,13 @@ package sandy.math {
 		 *
 		 * @param {@code m} Matrix4.
 		 * @param {@code v} Vertex
-		 * @return void
+		 * @return Vector
 		 */    
-		public static function vectorMult( m:Matrix4, v:Vector ): void
+		public static function vectorMult( m:Matrix4, v:Vector ):Vector
 		{
-			var vx:Number,vy:Number,vz:Number;
-			v.x =	(vx=v.x) * m.n11 + (vy=v.y) * m.n12 + (vz=v.z) * m.n13 + m.n14;
-			v.y = 	vx * m.n21 + vy * m.n22 + vz * m.n23 + m.n24;
-			v.z = 	vx * m.n31 + vy * m.n32 + vz * m.n33 + m.n34;
+			return new Vector ( v.x * m.n11 + v.y * m.n12 + v.z * m.n13 + m.n14,
+                                v.x * m.n21 + v.y * m.n22 + v.z * m.n23 + m.n24,
+                                v.x * m.n31 + v.y * m.n32 + v.z * m.n33 + m.n34 );
 		}
 
 		/**
@@ -198,14 +197,13 @@ package sandy.math {
 		 *
 		 * @param {@code m} Matrix4.
 		 * @param {@code v} Vector
-		 * @return void
+		 * @return the transformed vector
 		 */
-		public static function vectorMult3x3( m:Matrix4, v:Vector ): void
+		public static function vectorMult3x3( m:Matrix4, v:Vector ):Vector
 		{
-			var vx:Number, vy:Number, vz:Number; 
-			v.x =	(vx=v.x) * m.n11 + (vy=v.y) * m.n12 + (vz=v.z) * m.n13;
-			v.y = 	vx * m.n21 + vy * m.n22 + vz * m.n23;
-			v.z = 	vx * m.n31 + vy * m.n32 + vz * m.n33;
+			return new Vector ( v.x * m.n11 + v.y * m.n12 + v.z * m.n13,
+                                v.x * m.n21 + v.y * m.n22 + v.z * m.n23,
+                                v.x * m.n31 + v.y * m.n32 + v.z * m.n33);
 		}
 		
 		/**

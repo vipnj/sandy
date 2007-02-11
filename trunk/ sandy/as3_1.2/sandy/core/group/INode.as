@@ -14,11 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.group {
-
+package sandy.core.group 
+{
 	import sandy.core.group.Node;
-	
-	
+	import sandy.view.Camera3D;
+	import sandy.core.data.Matrix4;
 	
 	/**
 	 * @author		Thomas Pfeiffer - kiroukou
@@ -42,7 +42,7 @@ package sandy.core.group {
 		* @param	n The Node you are going to test the patternity
 		* @return Boolean  True is the node in argument if the father of the current one, false otherwise.
 		*/
-		function isParent( n:Node ):Boolean;
+		function isParent( n:INode ):Boolean;
 		
 		/**
 		* Allows you to know if this node has been modified (true value) or not (false value). 
@@ -62,14 +62,14 @@ package sandy.core.group {
 		* @param	void
 		* @return	Boolean false is nothing has been done, true if the operation succeded
 		*/
-		function setParent( n:Node ):Boolean;
+		function setParent( n:INode ):Boolean;
 		
 		/**
 		* Returns the parent node reference
 		* @param	void
 		* @return Node The parent node reference, which is null if no parents (for exemple for a root object).
 		*/
-		function getParent():Node;
+		function getParent():INode;
 		
 		/**
 		* Allows the user to know if the current node have a parent or not.
@@ -83,7 +83,7 @@ package sandy.core.group {
 		* the child is automatically conencted to it's parent thanks to its parent property.
 		* @param	child
 		*/
-		function addChild( child:Node ): void;	
+		function addChild( child:INode ): void;	
 		
 		/**
 		 * Returns all the childs of the current group in an array
@@ -92,13 +92,13 @@ package sandy.core.group {
 		 */
 		function getChildList ():Array;
 		
-		function getChildByName( pName:String ):Node;
+		function getChildByName( pName:String ):INode;
 		/**
 		* Returns the child node at the specific index.
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node
 		*/
-		function getChild( index:int ):Node;
+		function getChild( index:int ):INode;
 
 		/**
 		* Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
@@ -125,7 +125,8 @@ package sandy.core.group {
 		 */
 		function remove() : void ;
 		
-		function render():void;
+		function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void;
+		
 		function dispose():void;
 	}
 }

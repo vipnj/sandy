@@ -55,17 +55,18 @@ package sandy.view
 		// right plane : aNormals[3], aConstants[3] <-> aPoints[0], aPoints[3], aPoints[4], aPoints[7]
 		// left plane  : aNormals[4], aConstants[4] <-> aPoints[1], aPoints[2], aPoints[5], aPoints[6]
 		// back plane  : aNormals[5], aConstants[5] <-> aPoints[4], aPoints[5], aPoints[6], aPoints[7] 	
-		public static const FAR:int 	= 0;
-		public static const TOP:int 	= 1;
-		public static const BOTTOM:int = 2; 
-		public static const RIGHT:int 	= 3;
-		public static const LEFT:int	= 4;
-		public static const NEAR:int 	= 5;
-
-		public static const INSIDE:int = 1;
-		public static const OUTSIDE:int = -1;
-		public static const INTERSECT:int = 0;
+		public static const NEAR:int 	= 0;
+		public static const FAR:int 	= 1;
+		public static const RIGHT:int 	= 2;
+		public static const LEFT:int	= 3;
+        public static const TOP:int 	= 4;
+		public static const BOTTOM:int  = 5; 
+		
+		public static const INSIDE:uint = 1;
+		public static const OUTSIDE:uint = 2;
+		public static const INTERSECT:uint = 3;
 		public static const EPSILON:Number = 0.005;
+
 		
 		public function Frustum() 
 		{
@@ -82,8 +83,9 @@ package sandy.view
 			// compute width and height of the near and far plane sections
 			var tang:Number = Math.tan(lRadAngle * 0.5) ;
 			
-			// we inverse the vertical axis as Flash a a vertical axis inversed by our 3D one. VERY IMPORTANT
-			var yNear:Number = -tang * fNear;			var xNear:Number = yNear * nAspect;
+			// we inverse the vertical axis as Flash as a vertical axis inversed by our 3D one. VERY IMPORTANT
+			var yNear:Number = -tang * fNear;			
+			var xNear:Number = yNear * nAspect;
 			var yFar:Number = yNear * fFar / fNear;
 			var xFar:Number = xNear * fFar / fNear;
 			fNear = -fNear;
@@ -168,13 +170,13 @@ package sandy.view
 		public function sphereInFrustum( s:BSphere ):int
 		{
 			var d:Number;
-			var r:Number = s.radius; // radius
-			var p:Vector = s.position;
+			var r:Number = s.m_nTRadius; // radius
+			var p:Vector = s.m_oPosition;
 			
 			for( var i:int = 0; i < 6; i++) 
 			{
 				d = PlaneMath.distanceToPoint( aPlanes[int(i)], p );
-				if ( d < -r )
+				if ( d <= -r )
 				{
 					return Frustum.OUTSIDE; // outside
 				}
@@ -186,13 +188,65 @@ package sandy.view
 			return Frustum.INSIDE ; // inside
 		}
 		
-		public function boxInFrustum( box:BBox ):int
+		
+		public function boxInFrustum( p_oBox:BBox ):int
+		{
+        	var mode:uint = 0;// set IN and OUT bit to 0
+        	var i:int;
+        	var d:Number;
+            var plane:Plane;
+            var box:Array = new Array();
+            box.push( p_oBox.m_oTMin.x, p_oBox.m_oTMin.y, p_oBox.m_oTMin.z, p_oBox.m_oTMax.x, p_oBox.m_oTMax.y, p_oBox.m_oTMax.z );
+            
+            for ( i = 0; i < 6; ++i)
+            {
+                plane = aPlanes[int(i)]; 
+                mode &= OUTSIDE;        // clear the IN bit to 0 
+                d=(plane.a*box[0] + plane.b*box[1] + plane.c*box[2]+ plane.d);
+                if ( d >= 0) mode |= INSIDE;  // set IN bit to 1
+                else mode |= OUTSIDE;     // set OUT bit to 1
+                if (mode == INTERSECT) continue;  // if we found a vertex IN for THIS plane and 
+                // a vertex OUT of ANY plane continue ( we have enough information to say: 
+                // INTERSECT! IF there is not vertex missing from the FRONT of the remaining planes)
+                if (plane.a*box[3] + plane.b*box[1] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[0] + plane.b*box[4] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[3] + plane.b*box[4] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[0] + plane.b*box[1] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[3] + plane.b*box[1] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                       
+                if (plane.a*box[0] + plane.b*box[4] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[3] + plane.b*box[4] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                // if we arrive to this point, then there are two possibilities:
+                // there is not vertices in or there is not intersection till know, if 
+                // there is a vertice in, continue (we are not over!) 
+                if (mode == INSIDE) continue;
+                // there is not vertex IN front of this plane, so the box is COMPLETE_OUT
+                return OUTSIDE;
+            }
+            // All planes has a vertex IN FRONT so or the box is intersecting or complete IN
+            if (mode == INTERSECT) return INTERSECT;
+            else return INSIDE;
+        }
+ 
+		public function boxInFrustum2( box:BBox ):int
 		{
 			var result:Number = Frustum.INSIDE, out:Number,iin:Number;
 			var k:int;			
 			var d:Number;
 			var plane:Plane;
-			var p:Array = box.aTransformedCorners;
+			var p:Array = [];; /* FIXME */
 			// for each plane do ...
 			for(var i:int = 0; i < 6; i++) 
 			{
@@ -225,48 +279,31 @@ package sandy.view
 			return result;
 		}
 
-		public function clipFrustum( cvert: Array ):Array
+		public function clipFrustum( cvert: Array ):void
 		{
-			if (!cvert) return null;
-			
-			if( cvert.length <= 2 )
-			{
-				return cvert;
-			}
-			
-			
-			var tmp:Array = new Array( cvert.length );
-			for( var i:Number=0; i < cvert.length; i++ ) tmp[i] = cvert[i].clone();
-			
-			tmp = clipPolygon( aPlanes[LEFT], tmp ); // left
-			if( tmp && tmp.length <= 2 ) return tmp;
-			tmp = clipPolygon( aPlanes[RIGHT], tmp ); // right
-			if( tmp && tmp.length <= 2 ) return tmp;
-			tmp = clipPolygon( aPlanes[BOTTOM], tmp ); // top
-			if( tmp && tmp.length <= 2 ) return tmp;
-			tmp = clipPolygon( aPlanes[TOP], tmp ); // bottom
-			if( tmp && tmp.length <= 2 ) return tmp;
-			tmp = clipPolygon( aPlanes[NEAR], tmp ); // near
-			//if( tmp.length <= 2 ) return tmp;
-			//tmp = clipPolygon( aPlanes[FAR], tmp ); // far
-			return tmp;
-
+            if( cvert.length <= 2 ) return;
+			clipPolygon( aPlanes[NEAR], cvert ); // near
+			if( cvert.length <= 2 ) return;
+			clipPolygon( aPlanes[LEFT], cvert ); // left
+			if( cvert.length <= 2 ) return;
+			clipPolygon( aPlanes[RIGHT], cvert ); // right
+			if( cvert.length <= 2 ) return;
+	        clipPolygon( aPlanes[BOTTOM], cvert ); // top
+			if( cvert.length <= 2 ) return;
+		    clipPolygon( aPlanes[TOP], cvert ); // bottom	
 		}
 
-		public function clipPolygon( p:Plane, pts:Array ):Array
+        
+        
+		public function clipPolygon( p:Plane, pts:Array ):void
 		{	
 			var allin:Boolean = true, allout:Boolean = true;
 			var v:Vertex;
-			var i:Number, l:Number = pts.length;
+			var i:int, l:int = pts.length;
 			// -- If no points, we return null
-			if( !l )
-			{
-				return [];
-			}
-			
 			var aDist:Array = new Array( pts.length );
 			// -- otherwise we compute the distances to frustum plane
-			for ( i=0; i<l; i++)
+			for ( i = 0; i < l; i++)
 			{	 
 				v = pts[i];
 				aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d;
@@ -275,16 +312,16 @@ package sandy.view
 			}
 			
 			if (allin)
-			{
-				return pts;
-			} 
+				return;
 			else if (allout)
 			{
-				return [];
+				// we return an empty array
+				pts.splice(0);
+				return;
 			}
 			// Clip a polygon against a plane
-			var aClipped:Array = new Array();
-			var v1:Vertex = pts[0];
+			var tmp:Array = pts.splice(0);
+			var v1:Vertex = tmp[0];
 			//
 			var d:Number;
 			var t:Vertex;
@@ -293,12 +330,12 @@ package sandy.view
 			var curv:Number = 0;
 			for (i=1; i<= l; i++)
 			{	 
-				var v2:Vertex = pts[i%l];
+				var v2:Vertex = tmp[i%l];
 				dist2= aDist[i%l];
 				// Sutherland-hodgeman clipping
 				if ( inside && (dist2 >= 0) ) 
 				{
-					aClipped.push(v2);	// Both in
+					pts.push(v2);	// Both in
 				}
 				else if ( (!inside) && (dist2>=0) )		// Coming in
 				{	 
@@ -309,8 +346,8 @@ package sandy.view
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
 					t.wz = (v1.wz+(v2.wz-v1.wz)*d);
 
-					aClipped.push( t );
-					aClipped.push( v2 );
+					pts.push( t );
+					pts.push( v2 );
 				} 
 				else if ( inside && (dist2<0) )		// Going out
 				{	 
@@ -323,7 +360,7 @@ package sandy.view
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
 					t.wz = (v1.wz+(v2.wz-v1.wz)*d);
 					
-					aClipped.push( t );
+					pts.push( t );
 				} 
 				else
 				{
@@ -332,15 +369,82 @@ package sandy.view
 				v1 = v2;
 				dist1 = dist2;
 			}
+			// we free the distance array
 			aDist = null;
-			if (!clipped)
-			{
-				return pts;
-			}
-			else
-			{
-				return aClipped;
-			}
 		}
-	}
+	
+
+        /**
+        * Fast try of Andre michelle code
+        */
+        public function clipPolygon2( p_oPlane:Plane, p_aPoints:Array ):void
+        {
+            var overt: Array = p_aPoints.splice( 0 );
+            
+			var p0: Vertex;
+			var p1: Vertex;
+			var tmp:Vertex;
+			
+			//-- PLANE EQUATION
+			var a: Number = p_oPlane.a;
+			var b: Number = p_oPlane.b;
+			var c: Number = p_oPlane.c;
+			var d: Number = p_oPlane.d;
+			
+			//-- COUNTER
+			var i: int;
+			var j: int;
+			
+			//-- INTERSECTION RATIO
+			var m: Number;
+			
+			var d0: Number;
+			var d1: Number;
+			
+			var k: int = overt.length;
+			
+			for( j = k - 1, i = 0 ; i < k ; j = i, i++ )
+			{
+				p0 = overt[i];
+				p1 = overt[j];
+				
+				d0 = a * p0.wx + b * p0.wy + c * p0.wz - d;
+				d1 = a * p1.wx + b * p1.wy + c * p1.wz - d;
+				
+				if( d0 <= 0 || d1 <= 0 )
+				{
+					if( d1 > 0 )
+					{
+						m = d1 / ( d1 - d0 );
+
+						p_aPoints.push
+						(
+							new Vertex
+							(
+								p1.wx + ( p0.wx - p1.wx ) * m,
+								p1.wy + ( p0.wy - p1.wy ) * m,
+								p1.wz + ( p0.wz - p1.wz ) * m
+							)
+						);
+					}
+					else if( d0 > 0 )
+					{
+						p_aPoints.push( p1 );
+
+						m = d1 / ( d1 - d0 );
+
+						p_aPoints.push
+						(
+							new Vertex(p1.wx + ( p0.wx - p1.wx ) * m, p1.wy + ( p0.wy - p1.wy ) * m, p1.wz + ( p0.wz - p1.wz ) * m	)
+						);
+					}
+					else
+					{
+						p_aPoints.push( p1 );
+					}
+				}
+			}
+        }
+    }
+        
 }

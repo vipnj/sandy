@@ -54,9 +54,8 @@ package sandy.core.face
 			_bfc = 1;
 			_id = Polygon._ID_ ++;
 			_s = _sb = null;
-			_aVertex = rest;
-			_aClipped = _aVertex.slice();
-			_nCL = _nL = _aVertex.length;
+			aVertices = rest;
+			aClipped = aVertices.slice();
 			_aUV = new Array(3);
 			depth = 0;
 			clipped = false;
@@ -132,12 +131,12 @@ package sandy.core.face
 		*/
 		public function getVertices():Array
 		{
-			return _aVertex;
+			return aVertices;
 		}
 		
 		public function getClippedVertices():Array
 		{
-			return _aClipped;
+			return aClipped;
 		}
 		
 		/** 
@@ -147,8 +146,8 @@ package sandy.core.face
 		public function render(): void
 		{
 			var s:Skin;
-			var l:int   = (clipped == true) ? _nCL : _nL;
-			var a:Array = (clipped == true) ? _aClipped : _aVertex;
+			var a:Array = (clipped == true) ? aClipped : aVertices;
+			var l:int   = a.length;
 			//
 			if( _bfc == 1 ) s = _s;
 			else	        s = _sb;
@@ -170,8 +169,8 @@ package sandy.core.face
 		public function refresh():void
 		{
 			var s:Skin;
-			var l:int   = (clipped == true) ? _nCL : _nL;
-			var a:Array = (clipped == true) ? _aClipped : _aVertex;
+			var a:Array = (clipped == true) ? aClipped : aVertices;
+			var l:int   = a.length;
 			//
 			if( _bfc == 1 ) s = _s;
 			else	        s = _sb;
@@ -208,8 +207,8 @@ package sandy.core.face
 		public function getZAverage():Number
 		{
 			// We normalize the sum and return it
-			var a:Array = (clipped == true) ? _aClipped : _aVertex;
-			var l:int   = (clipped == true) ? _nCL : _nL;
+			var a:Array = (clipped == true) ? aClipped : aVertices;
+			var l:int   = a.length;
 			if( a == null || l <= 0 ) 
 			    return 0;
 			var l_nLength:int = l;
@@ -231,9 +230,10 @@ package sandy.core.face
 		 */
 		public function getMinDepth ():Number
 		{
-			var a:Array = (clipped == true) ? _aClipped : _aVertex;
-			if( a == null ) return 0;
-			var l:Number = _nCL;
+			var a:Array = (clipped == true) ? aClipped : aVertices;
+			var l:int   = a.length;
+			if( a == null || l <= 0 ) 
+			    return 0;
 			var min:Number = a[0].wz;
 			while( --l > 0 )
 			{
@@ -249,9 +249,10 @@ package sandy.core.face
 		 */
 		public function getMaxDepth ():Number
 		{
-			var a:Array = (clipped == true) ? _aClipped : _aVertex;
-			if( a == null ) return 0;
-			var l:Number = _nCL;
+			var a:Array = (clipped == true) ? aClipped : aVertices;
+			var l:int   = a.length;
+			if( a == null || l <= 0 ) 
+			    return 0;
 			var max:Number = a[0].wz;
 			while( --l > 0 )
 			{
@@ -266,15 +267,14 @@ package sandy.core.face
 		*/
 		override public function toString(): String
 		{
-			return getQualifiedClassName(this) + " [Points: " + _aVertex.length + ", Clipped: " + _aClipped.length + "]";
+			return getQualifiedClassName(this) + " [Points: " + aVertices.length + ", Clipped: " + aClipped.length + "]";
 		}
 
-		public function clip( frustum:Frustum ):Array
+		public function clip( frustum:Frustum ):void
 		{
-			_aClipped = null;
-			_aClipped = frustum.clipFrustum( _aVertex );
-			clipped = ( _nCL = _aClipped.length ) ? true : false;
-			return _aClipped;
+			aClipped = aVertices.slice(); // recopie
+			frustum.clipFrustum( aClipped );
+			clipped = true;
 		}
 
 		/**
@@ -308,8 +308,8 @@ package sandy.core.face
 		 */	
 		public function isVisible(): Boolean
 		{
-			if( _nL < 3 ) return _bV = true;
-			else return createNormale().z <= 0;
+			createNormale();
+			return _vn.z < 0;
 		}
 
 		/**
@@ -318,10 +318,10 @@ package sandy.core.face
 		 */	
 		public function createNormale():Vector
 		{
-			if( _nL > 2 )
+			if( aVertices.length > 2 )
 			{
 				var v:Vector, w:Vector;
-				var a:Vertex = _aVertex[0], b:Vertex = _aVertex[1], c:Vertex = _aVertex[2];
+				var a:Vertex = aVertices[0], b:Vertex = aVertices[1], c:Vertex = aVertices[2];
 				v = new Vector( b.wx - a.wx, b.wy - a.wy, b.wz - a.wz );
 				w = new Vector( b.wx - c.wx, b.wy - c.wy, b.wz - c.wz );
 				// we compute de cross product
@@ -333,7 +333,7 @@ package sandy.core.face
 			}
 			else
 			{
-				return _vn = null;
+				return _vn = new Vector();
 			}
 		}
 
@@ -397,8 +397,8 @@ package sandy.core.face
 		 */
 		public function destroy():void
 		{
-			_aClipped = null;
-			_aVertex = null;
+			aClipped = null;
+			aVertices = null;
 		}
 
 		/**
@@ -431,8 +431,8 @@ package sandy.core.face
 		
 		
 		private var _aUV:Array;
-		private var _aVertex:Array;
-		private var _aClipped:Array;
+		public var aVertices:Array;
+		public var aClipped:Array;
 		private var _nL:int;
 		private var _nCL:int;
 		private var _o:Object3D; // reference to is owner object

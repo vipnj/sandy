@@ -14,11 +14,10 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.math {
-	
+package sandy.math 
+{	
 	import sandy.core.data.Plane;
 	import sandy.core.data.Vector;
-	//import sandy.primitive.Plane3D;
 	import sandy.math.VectorMath;
 
 	

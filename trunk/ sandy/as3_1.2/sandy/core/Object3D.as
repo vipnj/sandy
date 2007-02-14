@@ -441,13 +441,13 @@ package sandy.core
             // and check if it is still in the camera field of view. If yes we do the transformations and the projection.
             var res:Number;
             var l_bClipped:Boolean = false;
-            var l_aPoints:Array = aPoints;
             /////////////////////////
             //// BOUNDING SPHERE ////
             /////////////////////////
             if( _oBSphere == null ) _oBSphere = new BSphere( this );
            _oBSphere.transform( l_oModelMatrix );
             res = l_oFrustum.sphereInFrustum( _oBSphere );
+            res = Frustum.INTERSECT;
 			//
 			if( res  == Frustum.OUTSIDE )
 			{
@@ -458,9 +458,10 @@ package sandy.core
                 ////////////////////////
                 ////  BOUNDING BOX  ////
                 ////////////////////////
-                if( _oBBox == null ) _oBBox = new BBox( this );
+                //if( _oBBox == null ) _oBBox = new BBox( this );
                 _oBBox.transform( l_oModelMatrix );
                 res = l_oFrustum.boxInFrustum( _oBBox );
+                res = Frustum.INTERSECT;
                 //
 				if( res == Frustum.OUTSIDE )
 				{
@@ -472,10 +473,13 @@ package sandy.core
 				    l_bClipped = true;
 				}
 			}
-
+            
+            
             ///////////////////////////////////
             ///// VERTICES TRANSFORMATION /////
             ///////////////////////////////////
+            var l_aPoints:Array = aPoints;  // TODO, we shall transform the normals too to have a faster isVisible face computation!
+            
             // If we are here, is that the object shall be displayed. So we can transform its vertices into the camera
             // view coordinates
             var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
@@ -497,21 +501,33 @@ package sandy.core
 			/////////////////////////////////////
 			///////// FRUSTUM CLIPPING //////////
 			/////////////////////////////////////
-			if( l_bClipped )
-			{
-			    l_aPoints = new Array();
-				for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
-			    {	
-				    l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
+			///////////////////////////////////
+            /////      FACES  DISPLAY     /////
+            ///////////////////////////////////
+			// TODO, set all the face visibility computation here, and avoid the projection for non visible faces !
+			// This may ask to change the camera display list parameters, but that's shall be ok to receive a polygon
+			
+			// Il the polygons will be clipped, we shall allocate a new array container the clipped vertex.
+			if( l_bClipped ) l_aPoints = [];
+			
+			for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
+			{	
+			    if ( l_oFace.isVisible() || !_backFaceCulling) 
+				{
+					l_oFace.clipped = false;
+					if( l_bClipped )
+					{
+					    l_oFace.clip( l_oFrustum );
+					    if( l_oFace.aClipped != null ) 
+				            l_aPoints = l_aPoints.concat( l_oFace.aClipped );
+				    }
+					l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
+					if( l_nDepth > 0 )
+					{		
+					    p_oCamera.addToDisplayList( l_oFace );  
+					}
 				}
-			}
-			else
-			{
-				for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
-			    {	
-				    l_oFace.clipped = false;
-				}
-			}
+			}	
 				    
 			///////////////////////////////////
 			///////  SCREEN PROJECTION ////////
@@ -531,24 +547,7 @@ package sandy.core
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
-			}
-			
-            ///////////////////////////////////
-            /////      FACES  DISPLAY     /////
-            ///////////////////////////////////
-			for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
-			{				
-				if ( l_oFace.isVisible() || !_backFaceCulling) 
-				{
-					l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
-					if( l_nDepth > 0 )
-					{
-					    l_oFace.render();
-					    p_oCamera.addToDisplayList( l_oFace.container, l_nDepth );  
-					} 
-				}
-			}
-            
+			}            
 		}
 		
 		/**

@@ -90,33 +90,33 @@ package sandy.view
 		
 		public function clearDisplayList():void
 		{
-		    var l_oDisplayElt:DisplayListElement = null;
+		    var l_oDisplayElt:Polygon = null;
 		    var i:int;
 		    //
 			for( i=0; l_oDisplayElt = _displayList[i]; i++ )
 			{
-			   l_oDisplayElt.m_oSprite.graphics.clear();
+			   l_oDisplayElt.container.graphics.clear();
 			}
 			//
 			_displayList = [];
 		}
 		
-		public function addToDisplayList( p_oDisplayObj:Sprite, p_nDepth:Number ):void
+		public function addToDisplayList( p_oPolygon:Polygon ):void
 		{
-		    /* FIXME I don't like this. SHall find a solution with maps objects or something else */
-		    _displayList.push( new DisplayListElement(p_oDisplayObj, p_nDepth) );
+		    _displayList.push( p_oPolygon );
 		}
 		
 		public function renderDisplayList( p_oScene:DisplayObjectContainer ):void
 		{
-		   var l_oDisplayElt:DisplayListElement = null;
+		   var l_oDisplayElt:Polygon = null;
 		    var i:int;
 		    //
-		    _displayList.sortOn( "m_nDepth", Array.NUMERIC | Array.DESCENDING );
+		    _displayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    //
 		    for( i=0; l_oDisplayElt = _displayList[i]; i++ )
 			{
-				p_oScene.setChildIndex( l_oDisplayElt.m_oSprite, i );
+				l_oDisplayElt.render();
+				p_oScene.setChildIndex( l_oDisplayElt.container, i );
 			}
 		}
         
@@ -648,7 +648,7 @@ package sandy.view
 		private var _oInt:BasicInterpolator;
 	}
 }
-
+/*
 import flash.display.Sprite;
 internal final class DisplayListElement
 {
@@ -661,3 +661,4 @@ internal final class DisplayListElement
         m_nDepth = p_nDepth;
     }
 }
+*/

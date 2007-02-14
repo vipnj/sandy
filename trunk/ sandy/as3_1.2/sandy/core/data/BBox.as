@@ -46,10 +46,9 @@ package sandy.core.data
 		 * min vector, representing the lower point of the cube volume.
 		 */
 		public var min:Vector;		
-		
-		public var aCorners:Array;
-		public var aTransformedCorners:Array;
-		
+
+		public var m_oTMin:Vector;
+		public var m_oTMax:Vector;
 		/**
 		 * the 3D object owning the Bounding Box
 		 */
@@ -89,15 +88,7 @@ package sandy.core.data
 			owner	= pobj;
 			min		= new Vector();
 			max		= new Vector();
-			aCorners = new Array(8);
-			aTransformedCorners = new Array(8);
-			var l:int = 8;
-			while( --l > -1 )
-			{
-			    aCorners[int(l)] = new Vector();
-			}
 			__compute( owner.aPoints );
-			__computeCorners();
 		}		
 		
 		/**
@@ -128,32 +119,28 @@ package sandy.core.data
 		 * @param b Boolean the b is set to true, we will compute the array of vertex once again, otherwise it will return the last compute array.
 		 * @return The array containing 8 Vertex representing the Bounding Box corners.
 		 */
-		private function __computeCorners():void
+		private function computeCorners():Array
 		{
-			var minx:Number = min.x;
-			var miny:Number = min.y;
-			var minz:Number = min.z;
-			
-			var maxx:Number = max.x;
-			var maxy:Number = max.y;
-			var maxz:Number = max.z;
-			
-			aCorners[0].x = (minx);aCorners[0].y =  (maxy); aCorners[0].z =  (maxz);
-			aCorners[1].x = (maxx);aCorners[1].y =  (maxy); aCorners[1].z =  (maxz);
-			aCorners[2].x = (maxx);aCorners[2].y =  (miny); aCorners[2].z =  (maxz);
-			aCorners[3].x = (minx);aCorners[3].y =  (miny); aCorners[3].z =  (maxz);
-			aCorners[4].x = (minx);aCorners[4].y =  (maxy); aCorners[4].z =  (minz);
-			aCorners[5].x = (maxx);aCorners[5].y =  (maxy); aCorners[5].z =  (minz);
-			aCorners[6].x = (maxx);aCorners[6].y =  (miny); aCorners[6].z =  (minz);
-			aCorners[7].x = (minx);aCorners[7].y =  (miny); aCorners[7].z =  (minz);
+			var minx:Number = min.x;    var miny:Number = min.y;    var minz:Number = min.z;
+			var maxx:Number = max.x;    var maxy:Number = max.y;    var maxz:Number = max.z;
+			var aCorners:Array = new Array( 8 );
+			aCorners[0] = new Vector((minx), (maxy), (maxz));
+			aCorners[1] = new Vector((maxx), (maxy), (maxz));
+			aCorners[2] = new Vector((maxx), (miny), (maxz));
+			aCorners[3] = new Vector((minx), (miny), (maxz));
+			aCorners[4] = new Vector((minx), (maxy), (minz));
+			aCorners[5] = new Vector((maxx), (maxy), (minz));
+			aCorners[6] = new Vector((maxx), (miny), (minz));
+			aCorners[7] = new Vector((minx), (miny), (minz));
+			return aCorners;
 		}	
 		
 	
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-	        var l_nId:int;
-	        for( l_nId = 0; l_nId < 8; l_nId++ )
-	            aTransformedCorners[l_nId] = Matrix4Math.vectorMult( p_oMatrix, aCorners[l_nId] );
+		    m_oTMin = Matrix4Math.vectorMult( p_oMatrix, min );
+		    m_oTMax = Matrix4Math.vectorMult( p_oMatrix, max );
+		    
 	    }
 	    
 		/**
@@ -173,6 +160,8 @@ package sandy.core.data
 		    l_oBBox.owner = owner;
 		    l_oBBox.max = max.clone();
 		    l_oBBox.min = min.clone();
+		    l_oBBox.m_oTMax = m_oTMax.clone();
+		    l_oBBox.m_oTMin = m_oTMin.clone();
 		    return l_oBBox;
 		}
 		

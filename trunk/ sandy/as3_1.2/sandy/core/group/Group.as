@@ -43,7 +43,7 @@ package sandy.core.group
 		}
 		
 		public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
-		{
+		{  
 			var l_bCache:Boolean = p_bCache || _modified;
 			//
 			var l_iNode:INode;

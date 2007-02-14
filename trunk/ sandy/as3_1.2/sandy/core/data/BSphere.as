@@ -18,6 +18,7 @@ package sandy.core.data
 {
 	import flash.utils.*;
 
+    import sandy.math.Matrix4Math;
 	import sandy.core.Object3D;
 	import sandy.math.VectorMath;
 	import sandy.core.data.Vector;
@@ -38,7 +39,10 @@ package sandy.core.data
 		public var center:Vector;
 		public var radius:Number;
 		public var owner:Object3D;
-		public var position:Vector;
+		// -----------------------------
+		//    [TRANSFORMED]  -----------
+		public var m_oPosition:Vector;
+		public var m_nTRadius:Number;
 		
 		public function compute( pPoints:Array ):void
 		{
@@ -157,15 +161,15 @@ package sandy.core.data
 		{
 			owner	= obj;
 			center = new Vector();
-			position = new Vector();
+			m_oPosition = new Vector();
 			compute( obj.aPoints );
 		}
 		
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-	        position.x = center.x + p_oMatrix.n14;
-	        position.y = center.y + p_oMatrix.n24;
-	        position.z = center.z + p_oMatrix.n34;
+	        m_oPosition = Matrix4Math.vectorMult( p_oMatrix, center );
+	        var l_ncale:Number = Math.sqrt( p_oMatrix.n11 * p_oMatrix.n11 + p_oMatrix.n22 * p_oMatrix.n22 + p_oMatrix.n33 * p_oMatrix.n33 );
+	        m_nTRadius = radius * l_ncale;
 	    }
 	    		
 		/**

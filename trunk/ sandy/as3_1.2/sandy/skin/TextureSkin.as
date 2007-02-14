@@ -193,7 +193,7 @@ package sandy.skin
 		*/ 	
 		override public function begin( f:IPolygon, mc:Sprite ):void
 		{
-			var a:Array = f.getVertices();
+			var a:Array = f.getClippedVertices();
 			var m:Matrix = f.getTextureMatrix();
 			
 			// --
@@ -213,31 +213,19 @@ package sandy.skin
 											y0 );
 			// --
 			var rMat:Matrix = __concat( m, sMat );
-			
+			// --
+			mc.filters = _filters;
 			// -- 
 			if( _useLight )
 			{
-				//TODO copy only the little part which is needed is the bitmap if possible.
-				_tmp = _texture.clone();
 				var l:Light3D 	= World3D.getInstance().getLight();
 				var lp:Number	= 0.01 * l.getPower();
 				var dot:Number 	= lp - ( VectorMath.dot( l.getDirectionVector(), f.createNormale() ) );
-				
 				// -- update the color transform matrix
 				_cmf.matrix = __getBrightnessTransform( dot );
-				
-				// TODO: Optimize here with a different way to produce the light effect
-				// and in aplying the filter only to the considered part of the texture!
-				_tmp.applyFilter( _tmp , _tmp.rect, _p,  _cmf );
-				mc.filters = _filters;
-				mc.graphics.beginBitmapFill( _tmp, rMat, false, _bSmooth );
-				_tmp.dispose();
-				_tmp = null;
-			} else {
-				// -- 
-				mc.filters = _filters;
-				mc.graphics.beginBitmapFill( texture, rMat, false, _bSmooth );
-			}
+				mc.filters.push( _cmf );
+			} 
+			mc.graphics.beginBitmapFill( texture, rMat, false, _bSmooth );
 		}
 		
 		

@@ -239,6 +239,7 @@ package sandy.view
             if (mode == INTERSECT) return INTERSECT;
             else return INSIDE;
         }
+        
  
 		public function boxInFrustum2( box:BBox ):int
 		{
@@ -246,7 +247,7 @@ package sandy.view
 			var k:int;			
 			var d:Number;
 			var plane:Plane;
-			var p:Array = [];; /* FIXME */
+			var p:Array = box.computeCorners(true);
 			// for each plane do ...
 			for(var i:int = 0; i < 6; i++) 
 			{
@@ -372,79 +373,7 @@ package sandy.view
 			// we free the distance array
 			aDist = null;
 		}
-	
 
-        /**
-        * Fast try of Andre michelle code
-        */
-        public function clipPolygon2( p_oPlane:Plane, p_aPoints:Array ):void
-        {
-            var overt: Array = p_aPoints.splice( 0 );
-            
-			var p0: Vertex;
-			var p1: Vertex;
-			var tmp:Vertex;
-			
-			//-- PLANE EQUATION
-			var a: Number = p_oPlane.a;
-			var b: Number = p_oPlane.b;
-			var c: Number = p_oPlane.c;
-			var d: Number = p_oPlane.d;
-			
-			//-- COUNTER
-			var i: int;
-			var j: int;
-			
-			//-- INTERSECTION RATIO
-			var m: Number;
-			
-			var d0: Number;
-			var d1: Number;
-			
-			var k: int = overt.length;
-			
-			for( j = k - 1, i = 0 ; i < k ; j = i, i++ )
-			{
-				p0 = overt[i];
-				p1 = overt[j];
-				
-				d0 = a * p0.wx + b * p0.wy + c * p0.wz - d;
-				d1 = a * p1.wx + b * p1.wy + c * p1.wz - d;
-				
-				if( d0 <= 0 || d1 <= 0 )
-				{
-					if( d1 > 0 )
-					{
-						m = d1 / ( d1 - d0 );
-
-						p_aPoints.push
-						(
-							new Vertex
-							(
-								p1.wx + ( p0.wx - p1.wx ) * m,
-								p1.wy + ( p0.wy - p1.wy ) * m,
-								p1.wz + ( p0.wz - p1.wz ) * m
-							)
-						);
-					}
-					else if( d0 > 0 )
-					{
-						p_aPoints.push( p1 );
-
-						m = d1 / ( d1 - d0 );
-
-						p_aPoints.push
-						(
-							new Vertex(p1.wx + ( p0.wx - p1.wx ) * m, p1.wy + ( p0.wy - p1.wy ) * m, p1.wz + ( p0.wz - p1.wz ) * m	)
-						);
-					}
-					else
-					{
-						p_aPoints.push( p1 );
-					}
-				}
-			}
-        }
     }
         
 }

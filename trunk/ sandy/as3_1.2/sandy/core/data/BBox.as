@@ -119,10 +119,19 @@ package sandy.core.data
 		 * @param b Boolean the b is set to true, we will compute the array of vertex once again, otherwise it will return the last compute array.
 		 * @return The array containing 8 Vertex representing the Bounding Box corners.
 		 */
-		private function computeCorners():Array
+		public function computeCorners( b:Boolean ):Array
 		{
-			var minx:Number = min.x;    var miny:Number = min.y;    var minz:Number = min.z;
-			var maxx:Number = max.x;    var maxy:Number = max.y;    var maxz:Number = max.z;
+			var minx:Number,miny:Number,minz:Number,maxx:Number,maxy:Number,maxz:Number;
+			if( b == true )
+			{
+			    minx = m_oTMin.x;    miny = m_oTMin.y;    minz = m_oTMin.z;
+			    maxx = m_oTMax.x;    maxy = m_oTMax.y;    maxz = m_oTMax.z;
+			}
+			else
+			{
+			    minx = min.x;    miny = min.y;    minz = min.z;
+			    maxx = max.x;    maxy = max.y;    maxz = max.z;
+			}
 			var aCorners:Array = new Array( 8 );
 			aCorners[0] = new Vector((minx), (maxy), (maxz));
 			aCorners[1] = new Vector((maxx), (maxy), (maxz));
@@ -138,8 +147,30 @@ package sandy.core.data
 	
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-		    m_oTMin = Matrix4Math.vectorMult( p_oMatrix, min );
-		    m_oTMax = Matrix4Math.vectorMult( p_oMatrix, max );
+		    //var l_oTmp:Vector = new Vector( p_oMatrix.n14, p_oMatrix.n24, p_oMatrix.n34 );
+		    //m_oTMin = VectorMath.addVector( l_oTmp, min );
+		    //m_oTMax = VectorMath.addVector( l_oTmp, max );
+		    //m_oTMin = Matrix4Math.vectorMult( p_oMatrix, min );
+		    //m_oTMax = Matrix4Math.vectorMult( p_oMatrix, max );
+		    // TODO : Can be done once and saved. Some CPU can be saved here
+		    var v:Vector;
+		    var l_aCorners:Array = computeCorners(false);
+		    var i:int, l:int = 8;
+		    for(i=0; i<l; i++)
+		        l_aCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
+		        
+		    m_oTMin = m_oTMax = l_aCorners[0];
+			while( --l > 0 )
+			{
+				v = l_aCorners[int(l)];
+				// --
+				if( v.x < m_oTMin.x )		m_oTMin.x = v.x;
+				else if( v.x > m_oTMax.x )	m_oTMax.x = v.x;
+				if( v.y < m_oTMin.y )		m_oTMin.y = v.y;
+				else if( v.y > m_oTMax.y )	m_oTMax.y = v.y;
+				if( v.z < m_oTMin.z )		m_oTMin.z = v.z;
+				else if( v.z > m_oTMax.z )	m_oTMax.z = v.z;
+			}
 		    
 	    }
 	    

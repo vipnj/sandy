@@ -136,7 +136,7 @@ package sandy.core.face
 		
 		public function getClippedVertices():Array
 		{
-			return aClipped;
+			return (clipped) ? aClipped : aVertices;
 		}
 		
 		/** 

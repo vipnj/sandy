@@ -155,6 +155,8 @@ package sandy.core.face
 		*/
 		function getVertices():Array;
 		
+		function getClippedVertices():Array;
+		
 		/**
 		* Destroy the face instance and remove all the event it was listening.
 		*/

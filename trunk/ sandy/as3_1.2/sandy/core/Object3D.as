@@ -458,10 +458,9 @@ package sandy.core
                 ////////////////////////
                 ////  BOUNDING BOX  ////
                 ////////////////////////
-                //if( _oBBox == null ) _oBBox = new BBox( this );
+                if( _oBBox == null ) _oBBox = new BBox( this );
                 _oBBox.transform( l_oModelMatrix );
                 res = l_oFrustum.boxInFrustum( _oBBox );
-                res = Frustum.INTERSECT;
                 //
 				if( res == Frustum.OUTSIDE )
 				{
@@ -496,6 +495,7 @@ package sandy.core
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
+				l_oVertex.projected = false;
 			}
 			
 			/////////////////////////////////////
@@ -544,9 +544,11 @@ package sandy.core
 			//
 			for( l_lId = 0; l_oVertex = l_aPoints[int(l_lId)]; l_lId++ )
 			{
+				if( l_oVertex.projected ) continue;
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
+				l_oVertex.projected = true;
 			}            
 		}
 		

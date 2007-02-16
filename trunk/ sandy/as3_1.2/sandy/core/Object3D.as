@@ -30,7 +30,7 @@ package sandy.core
 	import sandy.core.data.Vertex;
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
-	import sandy.core.group.Leaf;
+	import sandy.core.scenegraph.Leaf;
 	import sandy.core.World3D;
 	import sandy.core.transform.ITransform3D;
 	import sandy.core.data.Matrix4;
@@ -406,6 +406,7 @@ package sandy.core
 		override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
 			// VISIBILITY CHECK
+			return;
 			if( isVisible() == false ) return;
 			//
 			var l_nDepth:Number;
@@ -444,10 +445,10 @@ package sandy.core
             /////////////////////////
             //// BOUNDING SPHERE ////
             /////////////////////////
+            /*
             if( _oBSphere == null ) _oBSphere = new BSphere( this );
            _oBSphere.transform( l_oModelMatrix );
             res = l_oFrustum.sphereInFrustum( _oBSphere );
-            res = Frustum.INTERSECT;
 			//
 			if( res  == Frustum.OUTSIDE )
 			{
@@ -456,8 +457,9 @@ package sandy.core
 			else if( res == Frustum.INTERSECT )
 			{
                 ////////////////////////
-                ////  BOUNDING BOX  ////
+                ////  BOUNDING BOX  //// DISABLED FOR THE MOMENT SINCE IT IS NOT CORRECT
                 ////////////////////////
+                
                 if( _oBBox == null ) _oBBox = new BBox( this );
                 _oBBox.transform( l_oModelMatrix );
                 res = l_oFrustum.boxInFrustum( _oBBox );
@@ -470,9 +472,11 @@ package sandy.core
 				else if (res == Frustum.INTERSECT && _enableClipping )
 				{
 				    l_bClipped = true;
+			        
 				}
 			}
-            
+            */
+            l_bClipped = true;
             
             ///////////////////////////////////
             ///// VERTICES TRANSFORMATION /////

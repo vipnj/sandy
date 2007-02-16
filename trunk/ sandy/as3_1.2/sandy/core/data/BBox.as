@@ -63,7 +63,7 @@ package sandy.core.data
 		{
 			var l:int = a.length;
 			min.x = max.x = a[0].x; min.y = max.y = a[0].y; min.z = max.z = a[0].z;
-			while( --l > 0 )
+			while( --l > 1 )
 			{
 				var v:Vertex = a[int(l)];
 				// --
@@ -153,6 +153,7 @@ package sandy.core.data
 		    //m_oTMin = Matrix4Math.vectorMult( p_oMatrix, min );
 		    //m_oTMax = Matrix4Math.vectorMult( p_oMatrix, max );
 		    // TODO : Can be done once and saved. Some CPU can be saved here
+		 
 		    var v:Vector;
 		    var l_aCorners:Array = computeCorners(false);
 		    var i:int, l:int = 8;
@@ -160,7 +161,7 @@ package sandy.core.data
 		        l_aCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
 		        
 		    m_oTMin = m_oTMax = l_aCorners[0];
-			while( --l > 0 )
+			while( --l > 1 )
 			{
 				v = l_aCorners[int(l)];
 				// --
@@ -171,7 +172,7 @@ package sandy.core.data
 				if( v.z < m_oTMin.z )		m_oTMin.z = v.z;
 				else if( v.z > m_oTMax.z )	m_oTMax.z = v.z;
 			}
-		    
+		  
 	    }
 	    
 		/**

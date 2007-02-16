@@ -29,9 +29,9 @@ package sandy.core
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.face.Polygon;
-	import sandy.core.group.Group;
-	import sandy.core.group.INode;
-	import sandy.core.group.Node;
+	import sandy.core.scenegraph.Group;
+	import sandy.core.scenegraph.INode;
+	import sandy.core.scenegraph.Node;
 	import sandy.core.light.Light3D;
 	import sandy.events.SandyEvent;
 	import sandy.math.FastMath;
@@ -196,7 +196,7 @@ package sandy.core
 			if( !_isRunning)
 			{
 				_isRunning = true;
-				dispatchEvent( startEvent )
+				dispatchEvent( startEvent );
 				getSceneContainer().addEventListener(Event.ENTER_FRAME, __onEnterFrame);
 			}
 		}

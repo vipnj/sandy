@@ -14,10 +14,10 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.group 
+package sandy.core.scenegraph 
 {
-	import sandy.core.group.Node;
-	import sandy.core.group.INode;
+	import sandy.core.scenegraph.Node;
+	import sandy.core.scenegraph.INode;
     import sandy.view.Camera3D;
     import sandy.core.data.Matrix4;
     

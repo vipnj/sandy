@@ -408,7 +408,7 @@ package sandy.core
 			// VISIBILITY CHECK
 			return;
 			if( isVisible() == false ) return;
-			//
+			//			
 			var l_nDepth:Number;
 			var l_oFace:Polygon;
 			var l_oFrustum:Frustum = p_oCamera.frustrum;
@@ -436,7 +436,7 @@ package sandy.core
 			/**
              * Now we consider the camera
              * Fixme consider the possible cache system for camera.
-             */
+             */           
 			l_oMatrix = p_oCamera.getProjectionMatrix() ;
             // Before doing any transformation of the object geometry, we are just going to transform its bounding volumes
             // and check if it is still in the camera field of view. If yes we do the transformations and the projection.

@@ -63,23 +63,12 @@ package sandy.core
 			// default light
 			_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 			_isRunning = false;
-			
-			trace("World3D start");
 		}
 		
 		public function setContainer( mc:DisplayObjectContainer ):void
 		{
-			mc.cacheAsBitmap = true;
-			
-			_bg = new Sprite();
-			_bg.cacheAsBitmap = true;
-			mc.addChild(_bg);
-			
 			_scene = new Sprite();
-			_scene.cacheAsBitmap = true;
 			mc.addChild(_scene);
-			
-			dispatchEvent(containerCreatedEvent);
 		}
 		
 		public function clearSceneContainer():DisplayObjectContainer

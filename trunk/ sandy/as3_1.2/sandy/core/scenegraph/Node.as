@@ -16,7 +16,6 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
 	import flash.utils.getQualifiedClassName;
 

@@ -406,7 +406,6 @@ package sandy.core
 		override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
 			// VISIBILITY CHECK
-			return;
 			if( isVisible() == false ) return;
 			//			
 			var l_nDepth:Number;

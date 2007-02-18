@@ -84,11 +84,6 @@ package sandy.core.scenegraph
 			return false;
 		}
 		
-		public function dispose():void
-		{
-			;
-		}
-		
 		public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
 			;

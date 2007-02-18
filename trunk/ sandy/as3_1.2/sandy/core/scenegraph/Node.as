@@ -191,16 +191,18 @@ package sandy.core.scenegraph
 		public function removeChild( pId:int ):Boolean 
 		{
 			var found:Boolean = false;
-			if( pId > 0 && pId < _aChilds.length )
+			var i:int, l:int = _aChilds.length;
+			if( pId > 0 && pId < l )
 			{
-				if( _aChilds[int(pId)]  )
-				{
-					_aChilds.splice( pId, 1 );
-
-
-					setModified( true );
-					found = true;
-				}
+				for( i = 0; i < l && !found; i++ )
+			    {
+    				if( _aChilds[int(i)].getId() == pId  )
+    				{
+    					_aChilds.splice( pId, 1 );
+    					setModified( true );
+    					found = true;
+    				}
+    			}
 			}
 			
 			return found;

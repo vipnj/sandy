@@ -440,7 +440,8 @@ package sandy.core
             // Before doing any transformation of the object geometry, we are just going to transform its bounding volumes
             // and check if it is still in the camera field of view. If yes we do the transformations and the projection.
             var res:Number;
-            var l_bClipped:Boolean = false;
+            // TODO change this once the bounding volumes tests has been implemented
+            var l_bClipped:Boolean = _enableClipping;
             /////////////////////////
             //// BOUNDING SPHERE ////
             /////////////////////////
@@ -475,7 +476,6 @@ package sandy.core
 				}
 			}
             */
-            l_bClipped = true;
             
             ///////////////////////////////////
             ///// VERTICES TRANSFORMATION /////

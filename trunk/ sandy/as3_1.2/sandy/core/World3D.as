@@ -65,17 +65,15 @@ package sandy.core
 			_isRunning = false;
 		}
 		
-		public function setContainer( mc:DisplayObjectContainer ):void
+		public function setContainer( pContainer:DisplayObjectContainer ):void
 		{
-			_scene = new Sprite();
-			mc.addChild(_scene);
+			_scene = pContainer;
 		}
 		
 		public function clearSceneContainer():DisplayObjectContainer
 		{
 			_scene.parent.removeChild(_scene);
-			_scene = new Sprite();
-			_bg.parent.addChild(_scene);
+			_scene = new DisplayObjectContainer();
 			
 			return _scene;
 		}
@@ -84,11 +82,7 @@ package sandy.core
 		{
 			return _scene;
 		}
-		
-		public function getBGContainer():DisplayObjectContainer
-		{
-			return _bg;
-		}
+
 		
 		/**
 		* Allows to get the array of all the objects
@@ -265,8 +259,7 @@ package sandy.core
 		private var startEvent:Event = new Event(SandyEvent.START);
 		private var renderEvent:Event = new Event(SandyEvent.RENDER);
 		
-		private var _scene : Sprite;
-		private var _bg : Sprite;
+		private var _scene:DisplayObjectContainer;
 	}
 }
 

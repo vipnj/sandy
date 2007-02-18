@@ -106,23 +106,15 @@ package sandy.core.scenegraph
 			for( l_lId = 0; l_iNode = _aChilds[l_lId]; l_lId++ )
 			    l_iNode.render( p_oCamera, l_oViewMatrix, l_bCache );
 		}
-		
-		/**
-		 * Dispose the actual node. Object3D's node are rendered, TransformGroup concat (multiply) their matrix to
-		 * update the 3D transformations view.
-		 */
-		override public function dispose ():void
-		{
-			;
-		}
+
 
 		/**
 		* 
 		*/
 		override public function destroy():void
 		{
-			super.destroy();
 			_t.destroy();
+			super.destroy();
 		}
 		
 		/**

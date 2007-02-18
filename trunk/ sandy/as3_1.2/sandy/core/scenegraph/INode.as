@@ -126,7 +126,5 @@ package sandy.core.scenegraph
 		function remove() : void ;
 		
 		function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void;
-		
-		function dispose():void;
 	}
 }

@@ -52,10 +52,5 @@ package sandy.core.scenegraph
 			for( l_lId = 0; l_iNode = _aChilds[l_lId]; l_lId++ )
 			    l_iNode.render( p_oCamera, p_oViewMatrix, l_bCache );
 		}
-		
-		public function dispose():void
-		{
-		    ;
-		}
 	}
 }

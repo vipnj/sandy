@@ -190,7 +190,11 @@ package sandy.core
 		 */	
 		public function stop():void
 		{
-			_isRunning = false;
+            if( _isRunning)
+            {
+                getSceneContainer().removeEventListener(Event.ENTER_FRAME, __onEnterFrame);
+            }
+            _isRunning = false;
 		}
 		
 		/**

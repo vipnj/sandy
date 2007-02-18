@@ -47,9 +47,10 @@ package sandy.core.scenegraph
 			var l_bCache:Boolean = p_bCache || _modified;
 			//
 			var l_iNode:INode;
-			var l_lId:int;
+			var l_nId:int;
+			var l_nLength:int = _aChilds.length;
 			//
-			for( l_lId = 0; l_iNode = _aChilds[l_lId]; l_lId++ )
+			for( l_nId = 0; l_iNode = _aChilds[l_nId]; l_nId++ )
 			    l_iNode.render( p_oCamera, p_oViewMatrix, l_bCache );
 		}
 	}

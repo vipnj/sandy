@@ -108,7 +108,7 @@ package sandy.view
 		
 		public function renderDisplayList( p_oScene:DisplayObjectContainer ):void
 		{
-		   var l_oDisplayElt:Polygon = null;
+		    var l_oDisplayElt:Polygon = null;
 		    var i:int;
 		    //
 		    _displayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );

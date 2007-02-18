@@ -253,7 +253,6 @@ package sandy.core.scenegraph
 				_aChilds[int(l)] = null;	
 			}
 			_aChilds = null;
-			_parent = null;
 		}
 
 		/**
@@ -273,7 +272,6 @@ package sandy.core.scenegraph
 				_parent.addChild( _aChilds[int(l)]);
 			}
 			_aChilds = null;
-			_parent = null;
 			setModified( true );
 		}
 	

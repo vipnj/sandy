@@ -13,7 +13,6 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
 package sandy.core.data 
 {
 	import flash.utils.*;
@@ -21,17 +20,13 @@ package sandy.core.data
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.Object3D;
-	//import sandy.math.VertexMath;
 	import sandy.math.VectorMath;
 	import sandy.math.Matrix4Math;
 
 	/**
 	* BoundingBox object used to clip the object faster.
-	* 
 	* <p>Create a bounding box that contains the whole object</p>
-	*
 	* @author		Thomas Pfeiffer - kiroukou
-	* @since		0.3
 	* @version		0.1
 	* @date 		22.03.2006
 	*/
@@ -76,17 +71,15 @@ package sandy.core.data
 				else if( v.y > max.y )	max.y = v.y;
 				if( v.z < min.z )		min.z = v.z;
 				else if( v.z > max.z )	max.z = v.z;
-				
 			}
 		}	
 		
 		/**
 		* <p>Create a new {@code BBox} Instance</p>
-		* 
 		* @param	obj		the object owner
 		* @param	radius	The radius of the Sphere
 		*/ 	
-		public function BBox( pobj:Object3D=null )
+		public function BBox( pobj:Object3D )
 		{
 			owner	= pobj;
 			min		= new Vector();
@@ -96,7 +89,7 @@ package sandy.core.data
 			aCorners = new Array(8);
 			aTCorners = new Array(8);
 			__compute( owner.aPoints );
-			computeCorners(false);
+			__computeCorners(false);
 		}		
 		
 		/**
@@ -127,7 +120,7 @@ package sandy.core.data
 		 * @param b Boolean the b is set to true, we will compute the array of vertex once again, otherwise it will return the last compute array.
 		 * @return The array containing 8 Vertex representing the Bounding Box corners.
 		 */
-		private function computeCorners( b:Boolean ):Array
+		private function __computeCorners( b:Boolean ):Array
 		{
 			var minx:Number,miny:Number,minz:Number,maxx:Number,maxy:Number,maxz:Number;
 			if( b == true )
@@ -140,6 +133,7 @@ package sandy.core.data
 			    minx = min.x;    miny = min.y;    minz = min.z;
 			    maxx = max.x;    maxy = max.y;    maxz = max.z;
 			}
+			// --
 			aCorners[0] = new Vector((minx), (maxy), (maxz));
 			aCorners[1] = new Vector((maxx), (maxy), (maxz));
 			aCorners[2] = new Vector((maxx), (miny), (maxz));
@@ -148,33 +142,20 @@ package sandy.core.data
 			aCorners[5] = new Vector((maxx), (maxy), (minz));
 			aCorners[6] = new Vector((maxx), (miny), (minz));
 			aCorners[7] = new Vector((minx), (miny), (minz));
+			// --
 			return aCorners;
 		}	
 		
 	
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-		    //var l_oTmp:Vector = new Vector( p_oMatrix.n14, p_oMatrix.n24, p_oMatrix.n34 );
-		    //m_oTMin = VectorMath.addVector( l_oTmp, min );
-		    //m_oTMax = VectorMath.addVector( l_oTmp, max );
-		    /*
-		    var v:Vector;var w:Vector;
-		    v = Matrix4Math.vectorMult( p_oMatrix, min );
-		    w = Matrix4Math.vectorMult( p_oMatrix, max );
-		    
-		    if( v.x < w.x ) {m_oTMin.x = v.x; m_oTMax.x = w.x;}
-		    else            {m_oTMin.x = w.x; m_oTMax.x = v.x;}
-		    if( v.y < w.y ) {m_oTMin.y = v.y; m_oTMax.y = w.y;}
-		    else            {m_oTMin.y = w.y; m_oTMax.y = v.y;}
-		    if( v.z < w.z ) {m_oTMin.z = v.z; m_oTMax.z = w.z;}
-		    else            {m_oTMin.z = w.z; m_oTMax.z = v.z;}
-		    */
 		    var v:Vector;
 		    var l_aCorners:Array = aCorners;
 		    var i:int, l:int = 8;
+		    // --
 		    for(i=0; i<l; i++)
 		        aTCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
-		        
+		    // --
 		    m_oTMin = m_oTMax = aTCorners[0];
 			for( i=1; i<l; i++ )
 			{
@@ -182,10 +163,10 @@ package sandy.core.data
 				// --
 				if( v.x < m_oTMin.x )		m_oTMin.x = v.x;
 				else if( v.x > m_oTMax.x )	m_oTMax.x = v.x;
-				//
+				// --
 				if( v.y < m_oTMin.y )		m_oTMin.y = v.y;
 				else if( v.y > m_oTMax.y )	m_oTMax.y = v.y;
-				//
+				// --
 				if( v.z < m_oTMin.z )		m_oTMin.z = v.z;
 				else if( v.z > m_oTMax.z )	m_oTMax.z = v.z;
 	    	}
@@ -193,7 +174,6 @@ package sandy.core.data
 	    
 		/**
 		* Get a String represntation of the {@code BBox}.
-		* 
 		* @return	A String representing the BoundingBox
 		*/ 	
 		public function toString():String
@@ -204,8 +184,7 @@ package sandy.core.data
 		
 		public function clone():BBox
 		{
-		    var l_oBBox:BBox = new BBox();
-		    l_oBBox.owner = owner;
+		    var l_oBBox:BBox = new BBox(owner);
 		    l_oBBox.max = max.clone();
 		    l_oBBox.min = min.clone();
 		    l_oBBox.m_oTMax = m_oTMax.clone();

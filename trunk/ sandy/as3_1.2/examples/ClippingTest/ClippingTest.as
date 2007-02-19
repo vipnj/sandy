@@ -10,7 +10,7 @@ package
 	import flash.display.StageScaleMode;
 	
 	import sandy.core.data.Vector;
-	import sandy.core.group.Group;
+	import sandy.core.scenegraph.Group;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.World3D;
 	import sandy.primitive.Plane3D;
@@ -19,11 +19,12 @@ package
 	import sandy.skin.SimpleColorSkin;
 	import sandy.view.Camera3D;
 	import sandy.util.TransformUtil;
-
+	import sandy.events.SandyEvent;
+	import sandy.core.Object3D;
+	
 	import com.mir3.display.FPSMetter;
 	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
-	import sandy.events.SandyEvent;
 
     [SWF(width="500", height="600", backgroundColor="#FFFFFF", frameRate=120)] 
 			
@@ -52,7 +53,7 @@ package
 			// -- FPS
 			addChild(new FPSMetter(false, 110, stage));
 			// -- STATS
-			addChild(new SceneStats(false, false, false, stage));			
+			//addChild(new SceneStats(false, false, false, stage));			
 			// - INIT
 			keyPressed = [];
 			
@@ -81,7 +82,7 @@ package
 			World3D.getInstance().setContainer(world);
 			// ---
 			var cam : Camera3D = new Camera3D (SCREEN_WIDTH, SCREEN_HEIGHT);
-			cam.setPosition( 0, 80, -300 );
+			cam.setPosition( 0, 80, -100 );
 			World3D.getInstance().setCamera (cam);
 			var bg : Group = new Group ();
 			World3D.getInstance().setRootGroup (bg);
@@ -95,11 +96,33 @@ package
 		private function onRender( e:Event ):void
 		{
 			var cam:Camera3D = World3D.getInstance ().getCamera();
-			
-			if( keyPressed[Keyboard.RIGHT] )    cam.rotateY ( 1 ); 		
-			if( keyPressed[Keyboard.LEFT] )     cam.rotateY ( -1 ); 		
-			if( keyPressed[Keyboard.UP] )       cam.moveForward ( 2 ); 	
-			if( keyPressed[Keyboard.DOWN] )     cam.moveForward ( -2 ); 	
+
+			if( keyPressed[Keyboard.RIGHT] ) 
+			{   
+			    cam.rotateY ( 1 ); 		
+			}
+			if( keyPressed[Keyboard.LEFT] )     
+			{
+			    cam.rotateY ( -1 ); 
+			}		
+			if( keyPressed[Keyboard.UP] )
+			{ 
+			    cam.moveForward ( 2 ); 	
+			}
+			if( keyPressed[Keyboard.DOWN] )
+			{ 
+			    cam.moveForward ( -2 ); 
+			}	
+			if( keyPressed[Keyboard.ENTER] )   
+			{  
+			    var l_oW:World3D = World3D.getInstance();
+			    var l_oG:Group = l_oW.getRootGroup();
+			    var l_oPlane:Object3D = Object3D( l_oG.getChild( 0 ) );//l_oG.getChildByName("floor") );
+			    if( l_oPlane ) l_oPlane.destroy();
+			    
+			    keyPressed[Keyboard.ENTER] = 0;
+			}
+
 		}
 		
 		private function createScene (bg : Group) : void
@@ -164,19 +187,10 @@ package
 			bg.addChild( rightWall );
 			bg.addChild( backWall );
 			bg.addChild( frontWall );
-			bg.addChild( floor );
 			bg.addChild( roof );
+			bg.addChild( floor );
+			
 		}
-		
-		private function __redo( e:Event ):void
-		{
-			e.target.redo();
-		}
-		
-		private function __yoyo( e:Event ):void
-		{
-			e.target.yoyo();
-		}
-				
+			
 	}
 }

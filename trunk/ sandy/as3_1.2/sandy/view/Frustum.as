@@ -109,8 +109,6 @@ package sandy.view
 			
 			for( var i:Number = 0; i < 6; i++ )
 				PlaneMath.normalizePlane( aPlanes[i] );	
-			
-
 		}
 		
 		public function extractPlanes( comboMatrix:Matrix4, normalize:Boolean ):void
@@ -239,7 +237,6 @@ package sandy.view
 		}
 
         
-        
 		public function clipPolygon( p:Plane, pts:Array ):void
 		{	
 			var allin:Boolean = true, allout:Boolean = true;
@@ -319,7 +316,7 @@ package sandy.view
 		}
 
     }
-        
+
 }
 
 /*

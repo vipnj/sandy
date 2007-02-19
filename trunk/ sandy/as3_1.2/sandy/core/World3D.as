@@ -45,16 +45,13 @@ package sandy.core
 	*
 	* @author		Thomas Pfeiffer - kiroukou
 	* @version		1.0
-	* @date 		16.05.2006
 	* @see			sandy.core.Object3D
-	* 
 	**/
 	public class World3D extends EventDispatcher
 	{
 		
 		/**
 		 * Private Constructor.
-		 * 
 		 * <p>You can have only one World3D</p>
 		 * 
 		 */
@@ -96,7 +93,6 @@ package sandy.core
 		
 		/**
 		 * Get the Singleton instance of World3D.
-		 * 
 		 * @return World3D, the only one instance possible
 		 */
 		public static function getInstance() : World3D
@@ -107,7 +103,6 @@ package sandy.core
 		
 		/**
 		 * Set the {@code Camera3D} of the world.
-		 * 
 		 * @param	cam	The new {@link Camera3D}
 		 */	
 		public function setCamera ( pCam:Camera3D ):void
@@ -117,7 +112,6 @@ package sandy.core
 		
 		/**
 		 * Get the {@code Camera3D} of the world.
-		 * 
 		 * @return	 The {@link Camera3D}
 		 */	
 		public function getCamera ():Camera3D
@@ -150,7 +144,6 @@ package sandy.core
 		
 		/**
 		* Add a {@code Group} to the world.
-		* 
 		* @param	objGroup	The group to add. It must not be a transformGroup !
 		* @return	Number		The identifier of the object in the list. With that you will be able to use getGroup method.
 		*/
@@ -162,7 +155,6 @@ package sandy.core
 		
 		/**
 		* Get the root {@code Group} of the world.
-		*
 		* @return	Group	THe root group of the World3D instance.
 		*/
 		public function getRootGroup():Group
@@ -258,7 +250,6 @@ package sandy.core
 		private var _aMatrix:Array;
 		private var _aCache:Array;
 		
-		private var containerCreatedEvent:Event = new Event(SandyEvent.CONTAINER_CREATED);
 		private var lightAddedEvent:Event = new Event(SandyEvent.LIGHT_ADDED);
 		private var startEvent:Event = new Event(SandyEvent.START);
 		private var renderEvent:Event = new Event(SandyEvent.RENDER);

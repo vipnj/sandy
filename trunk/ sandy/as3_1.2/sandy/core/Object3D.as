@@ -440,12 +440,11 @@ package sandy.core
             // Before doing any transformation of the object geometry, we are just going to transform its bounding volumes
             // and check if it is still in the camera field of view. If yes we do the transformations and the projection.
             var res:Number;
-            // TODO change this once the bounding volumes tests has been implemented
-            var l_bClipped:Boolean = _enableClipping;
+            var l_bClipped:Boolean = false;
             /////////////////////////
             //// BOUNDING SPHERE ////
             /////////////////////////
-            /*
+            
             if( _oBSphere == null ) _oBSphere = new BSphere( this );
            _oBSphere.transform( l_oModelMatrix );
             res = l_oFrustum.sphereInFrustum( _oBSphere );
@@ -459,7 +458,6 @@ package sandy.core
                 ////////////////////////
                 ////  BOUNDING BOX  //// DISABLED FOR THE MOMENT SINCE IT IS NOT CORRECT
                 ////////////////////////
-                
                 if( _oBBox == null ) _oBBox = new BBox( this );
                 _oBBox.transform( l_oModelMatrix );
                 res = l_oFrustum.boxInFrustum( _oBBox );
@@ -471,11 +469,9 @@ package sandy.core
 				}
 				else if (res == Frustum.INTERSECT && _enableClipping )
 				{
-				    l_bClipped = true;
-			        
+				    l_bClipped = true;		 
 				}
 			}
-            */
             
             ///////////////////////////////////
             ///// VERTICES TRANSFORMATION /////
@@ -628,7 +624,9 @@ package sandy.core
 			while( --l > -1 )
 			{
 				aFaces[int(l)].destroy();
+				aFaces[int(l)] = null;
 			}
+			aFaces = null;
 			// --
 			_s.removeEventListener( SandyEvent.UPDATE, __onSkinUpdated );
 			

@@ -74,7 +74,7 @@ package sandy.core.scenegraph
 		* @param	child Node The node you want to remove.
 		* @return Boolean Return everytime false value;
 		*/
-		override public function removeChild( pId:int ):Boolean 
+		override public function removeChildById( pId:int ):Boolean 
 		{
 			return false;
 		}

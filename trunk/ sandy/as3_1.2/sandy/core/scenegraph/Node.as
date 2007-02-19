@@ -38,7 +38,7 @@ package sandy.core.scenegraph
 		* @param	void
 		* @return	Number the node ID.
 		*/
-		public function getId():int
+		public final function getId():int
 		{
 			return _id;
 		}
@@ -48,7 +48,7 @@ package sandy.core.scenegraph
 		* @param	n The Node you are going to test the patternity
 		* @return Boolean  True is the node in argument if the father of the current one, false otherwise.
 		*/
-		public function isParent( n:INode ):Boolean
+		public final function isParent( n:INode ):Boolean
 		{
 			return (_parent == n && n != null);
 		}
@@ -58,16 +58,16 @@ package sandy.core.scenegraph
 		* Mainly usefull for the cache system.
 		* @return	Boolean Value specifying the statut of the node. A true value means the node has been modified, it it should be rendered again
 		*/
-		public function isModified():Boolean
+		public final function isModified():Boolean
 		{
-			return _modified
+			return _modified;
 		}
 
 		/**
 		* Allows you to set the modified property of the node.
 		* @param b Boolean true means the node is modified, and false the opposite.
 		*/
-		public function setModified( b:Boolean ):void
+		public final function setModified( b:Boolean ):void
 		{
 			_modified = b;
 		}
@@ -96,7 +96,7 @@ package sandy.core.scenegraph
 		* @param	void
 		* @return Node The parent node reference, which is null if no parents (for exemple for a root object).
 		*/
-		public function getParent():INode
+		public final function getParent():INode
 		{
 			return _parent;
 		}
@@ -106,9 +106,9 @@ package sandy.core.scenegraph
 		* @param	void
 		* @return Boolean. True is the node has a parent, False otherwise
 		*/
-		public function hasParent():Boolean
+		public final function hasParent():Boolean
 		{
-			return _parent || false;
+			return ( _parent != null );
 		}	
 		
 		/**
@@ -128,7 +128,7 @@ package sandy.core.scenegraph
 		 * @param void
 		 * @return Array The array containing all the childs node of this group
 		 */
-		public function getChildList ():Array
+		public function getChildList():Array
 		{
 			return _aChilds;
 		}
@@ -143,7 +143,7 @@ package sandy.core.scenegraph
 			return _aChilds[ index ];
 		}
 
-				/**
+		/**
 		* Returns the child node with the specified ID
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node or null is no child with this ID has been found
@@ -188,21 +188,19 @@ package sandy.core.scenegraph
 		* @param	child Node The node you want to remove.
 		* @return Boolean True if the node has been removed from the list, false otherwise.
 		*/
-		public function removeChild( pId:int ):Boolean 
+		public function removeChildById( pId:int ):Boolean 
 		{
 			var found:Boolean = false;
 			var i:int, l:int = _aChilds.length;
-			if( pId > 0 && pId < l )
-			{
-				for( i = 0; i < l && !found; i++ )
-			    {
-    				if( _aChilds[int(i)].getId() == pId  )
-    				{
-    					_aChilds.splice( pId, 1 );
-    					setModified( true );
-    					found = true;
-    				}
-    			}
+
+			for( i = 0; i < l && !found; i++ )
+		    {
+				if( _aChilds[int(i)].getId() == pId  )
+				{
+					_aChilds.splice( i, 1 );
+					setModified( true );
+					found = true;
+				}
 			}
 			
 			return found;
@@ -240,11 +238,8 @@ package sandy.core.scenegraph
 		 * Delete all the childs of this node, and also the datas it is actually storing.
 		 * Do a recurssive call to child's destroy method.
 		 */
-		public function destroy() : void 
-		{
-			// the unlink this node to his parent
-			if( hasParent() == true ) _parent.removeChild( this._id );
-			
+		public function destroy():void 
+		{			
 			// should we kill all the childs, or just make them childs of current node parent ?
 			var l:int = _aChilds.length;
 			while( --l > -1 )
@@ -253,6 +248,9 @@ package sandy.core.scenegraph
 				_aChilds[int(l)] = null;	
 			}
 			_aChilds = null;
+			
+			// the unlink this node to his parent
+			if( hasParent() == true ) _parent.removeChildById( this._id );
 		}
 
 		/**
@@ -265,11 +263,11 @@ package sandy.core.scenegraph
 			var l:int = _aChilds.length;
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
-			_parent.removeChild( this.getId() );
+			_parent.removeChildById( this.getId() );
 			// now we make current node children the current parent's node children
 			while( --l > -1 )
 			{
-				_parent.addChild( _aChilds[int(l)]);
+				_parent.addChild( _aChilds[int(l)] );
 			}
 			_aChilds = null;
 			setModified( true );

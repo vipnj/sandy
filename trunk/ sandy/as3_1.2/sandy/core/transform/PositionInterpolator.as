@@ -13,8 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.transform {
-
+package sandy.core.transform 
+{
 	import flash.events.Event;
 	
 	import sandy.events.SandyEvent;
@@ -26,10 +26,7 @@ package sandy.core.transform {
 	import sandy.math.Matrix4Math;
 	import sandy.core.World3D;
 	import sandy.core.transform.TransformType;
-	
-	
-	
-	
+
 	/**
 	* PositionInterpolator
 	*  
@@ -47,9 +44,7 @@ package sandy.core.transform {
 		private var _vDiff:Vector;
 		private var _current:Vector;
 		
-		
-		
-		
+
 	// ___________
 	// CONSTRUCTOR___________________________________________________
 		
@@ -69,7 +64,7 @@ package sandy.core.transform {
 		{
 			super( f, pnFrames );
 			
-			_type = TransformType.TRANSLATION_INTERPOLATION
+			_type = TransformType.TRANSLATION_INTERPOLATION;
 			
 			_vMin = min;
 			_vMax = max;

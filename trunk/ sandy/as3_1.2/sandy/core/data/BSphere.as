@@ -169,7 +169,7 @@ package sandy.core.data
 	    {
 	        m_oPosition = Matrix4Math.vectorMult( p_oMatrix, center );
 	        var l_ncale:Number = Math.sqrt( p_oMatrix.n11 * p_oMatrix.n11 + p_oMatrix.n22 * p_oMatrix.n22 + p_oMatrix.n33 * p_oMatrix.n33 );
-	        m_nTRadius = radius * l_ncale;
+	        m_nTRadius = radius;// * l_ncale;
 	    }
 	    		
 		/**

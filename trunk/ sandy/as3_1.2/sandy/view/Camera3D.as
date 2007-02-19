@@ -110,13 +110,18 @@ package sandy.view
 		{
 		    var l_oDisplayElt:Polygon = null;
 		    var i:int;
+		    var l_nLength:int = _displayList.length;
 		    //
 		    _displayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    //
-		    for( i=0; l_oDisplayElt = _displayList[i]; i++ )
+		    for( i=0; i< l_nLength; i++ )
 			{
-				l_oDisplayElt.render();
-				p_oScene.setChildIndex( l_oDisplayElt.container, i );
+			    // In case that the polygon has been deleted meanwhile
+			    if( (l_oDisplayElt = _displayList[i]) != null )
+			    {
+    				l_oDisplayElt.render();
+    				p_oScene.setChildIndex( l_oDisplayElt.container, i );
+			    }
 			}
 		}
         

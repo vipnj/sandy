@@ -61,12 +61,12 @@ package sandy.core.transform
 		
 		private function __onWorldStart( e:Event ):void
 		{
-			
+			;
 		}
 		
 		private function __onWorldStop( e:Event ):void
 		{
-			
+			;
 		}
 		
 		
@@ -83,7 +83,7 @@ package sandy.core.transform
 		/**
 		 * Resume the motion after it was paused. Broadcast an InterpolationEvent.
 		 */
-		public function resume( void ):void
+		public function resume():void
 		{
 			_paused = false;
 			dispatchEvent( resumeEvent);
@@ -171,7 +171,7 @@ package sandy.core.transform
 		/**
 		 * Process start and end matrix of the interpolator.
 		 */
-		private function processStartEndMatrix(void):void
+		private function processStartEndMatrix():void
 		{
 			_startMatrix = Matrix4Math.multiply(_startMatrix, _aInterpolator[_aInterpolator.length-1].getStartMatrix());
 			_endMatrix = Matrix4Math.multiply(_endMatrix, _aInterpolator[_aInterpolator.length-1].getEndMatrix());
@@ -201,17 +201,17 @@ package sandy.core.transform
 		 * @param void
 		 * @return Number of frame corresponding to the durationoh the interpolator
 		 */
-		public function getDuration ( void ):Number
+		public function getDuration ():Number
 		{
 			return _duration;
 		}
 		
-		public function getDurationElapsed(void):Number 
+		public function getDurationElapsed():Number 
 		{
 			return _longer_interpol.getDurationElapsed();
 		}
 
-		public function getDurationRemaining(void):Number 
+		public function getDurationRemaining():Number 
 		{
 			return _longer_interpol.getDurationRemaining();
 		}
@@ -221,7 +221,7 @@ package sandy.core.transform
 		 * @param void
 		 * @return Matrix4
 		 */
-		public function getEndMatrix( void ):Matrix4
+		public function getEndMatrix():Matrix4
 		{
 			return _endMatrix;
 		}
@@ -231,12 +231,12 @@ package sandy.core.transform
 		 * @param void
 		 * @return Matrix4
 		 */
-		public function getStartMatrix( void ):Matrix4
+		public function getStartMatrix():Matrix4
 		{
 			return _startMatrix;
 		}
 		
-		public function getMatrix( void ):Matrix4
+		public function getMatrix():Matrix4
 		{
 			return _tMatrix;
 		}
@@ -245,7 +245,7 @@ package sandy.core.transform
 		* redo
 		* <p>Make the interpolation starting again</p>
 		*/
-		public function redo( void ):void
+		public function redo():void
 		{
 			var l:Number = _aInterpolator.length;
 			while( --l > -1 ) 
@@ -267,7 +267,7 @@ package sandy.core.transform
 		* yoyo
 		* <p>Make the interpolation going in the inversed way</p>
 		*/
-		public function yoyo( void ):void
+		public function yoyo():void
 		{
 			var l:Number = _aInterpolator.length;		
 			while( --l > -1 )
@@ -290,12 +290,12 @@ package sandy.core.transform
 		* @param	void
 		* @return a Number between [0-1] corresponding on the percentage of the interpolation progress.
 		*/
-		public function getPercent( void ) : Number
+		public function getPercent() : Number
 		{		
 			return _longer_interpol.getPercent();
 		}
 		
-		public function getProgress( void ) : Number
+		public function getProgress() : Number
 		{		
 			return _longer_interpol.getProgress();
 		}
@@ -305,7 +305,7 @@ package sandy.core.transform
 		* @param	void
 		* @return TransformType the type of the interpolation
 		*/
-		public function getType( void ):TransformType 
+		public function getType():TransformType 
 		{
 			return TransformType.MIXED_INTERPOLATION;
 		}
@@ -315,7 +315,7 @@ package sandy.core.transform
 			return 'sandy.core.transform.Parallel3D';
 		}
 		
-		public function destroy(void) : void 
+		public function destroy() : void 
 		{
 			var l:Number = _aInterpolator.length;
 			while( --l > -1 ) 
@@ -327,23 +327,23 @@ package sandy.core.transform
 			_aInterpolator = null;
 		}
 
-		public function getFrame(void) : Number 
+		public function getFrame() : Number 
 		{
 			return _longer_interpol.getFrame();
 		}
 		
-		public function isPaused(void) : Boolean 
+		public function isPaused() : Boolean 
 		{
 			return _paused;
 		}
 
-		public function isFinished(void) : Boolean
+		public function isFinished() : Boolean
 		{
 			
 			return _finished;
 		}
 		
-		public function isModified( void ):Boolean
+		public function isModified():Boolean
 		{
 			return _modified;
 		}

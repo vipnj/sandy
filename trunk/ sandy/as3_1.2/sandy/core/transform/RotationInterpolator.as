@@ -14,8 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.transform {
-
+package sandy.core.transform 
+{
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
@@ -47,8 +47,7 @@ package sandy.core.transform {
 		private var _nMax:Number;
 		private var _nDiff:Number;
 		private var _current:Number;
-		
-		
+	
 		
 		
 	// ___________

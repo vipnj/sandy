@@ -108,7 +108,7 @@ package sandy.core.scenegraph
 		* @param	child Node The node you want to remove.
 		* @return Boolean True if the node has been removed from the list, false otherwise.
 		*/
-		function removeChild( id:int ):Boolean;
+		function removeChildById( id:int ):Boolean;
 
 		function removeChildByName( pName:String ):Boolean;
 		

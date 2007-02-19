@@ -41,12 +41,7 @@ package sandy.core.transform
 	// [PRIVATE] DATA________________________________________________		
 		
 		private var _pPath:BezierPath;	
-		
-		
-		
-		
-		
-		
+
 	// ___________
 	// CONSTRUCTOR___________________________________________________
 		

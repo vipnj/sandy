@@ -54,6 +54,9 @@ package sandy.core.data
 		 */
 		public var owner:Object3D;
 		
+		public var aCorners:Array;
+		public var aTCorners:Array;
+		
 		/**
 		 * Create a BBox object, representing a Bounding Box volume englobing the 3D object passed in parameters.
 		 * Verry usefull for clipping and so performance !
@@ -88,7 +91,12 @@ package sandy.core.data
 			owner	= pobj;
 			min		= new Vector();
 			max		= new Vector();
+			m_oTMin = new Vector();
+			m_oTMax = new Vector();
+			aCorners = new Array(8);
+			aTCorners = new Array(8);
 			__compute( owner.aPoints );
+			computeCorners(false);
 		}		
 		
 		/**
@@ -119,7 +127,7 @@ package sandy.core.data
 		 * @param b Boolean the b is set to true, we will compute the array of vertex once again, otherwise it will return the last compute array.
 		 * @return The array containing 8 Vertex representing the Bounding Box corners.
 		 */
-		public function computeCorners( b:Boolean ):Array
+		private function computeCorners( b:Boolean ):Array
 		{
 			var minx:Number,miny:Number,minz:Number,maxx:Number,maxy:Number,maxz:Number;
 			if( b == true )
@@ -132,7 +140,6 @@ package sandy.core.data
 			    minx = min.x;    miny = min.y;    minz = min.z;
 			    maxx = max.x;    maxy = max.y;    maxz = max.z;
 			}
-			var aCorners:Array = new Array( 8 );
 			aCorners[0] = new Vector((minx), (maxy), (maxz));
 			aCorners[1] = new Vector((maxx), (maxy), (maxz));
 			aCorners[2] = new Vector((maxx), (miny), (maxz));
@@ -150,29 +157,38 @@ package sandy.core.data
 		    //var l_oTmp:Vector = new Vector( p_oMatrix.n14, p_oMatrix.n24, p_oMatrix.n34 );
 		    //m_oTMin = VectorMath.addVector( l_oTmp, min );
 		    //m_oTMax = VectorMath.addVector( l_oTmp, max );
-		    //m_oTMin = Matrix4Math.vectorMult( p_oMatrix, min );
-		    //m_oTMax = Matrix4Math.vectorMult( p_oMatrix, max );
-		    // TODO : Can be done once and saved. Some CPU can be saved here
-		 
+		    /*
+		    var v:Vector;var w:Vector;
+		    v = Matrix4Math.vectorMult( p_oMatrix, min );
+		    w = Matrix4Math.vectorMult( p_oMatrix, max );
+		    
+		    if( v.x < w.x ) {m_oTMin.x = v.x; m_oTMax.x = w.x;}
+		    else            {m_oTMin.x = w.x; m_oTMax.x = v.x;}
+		    if( v.y < w.y ) {m_oTMin.y = v.y; m_oTMax.y = w.y;}
+		    else            {m_oTMin.y = w.y; m_oTMax.y = v.y;}
+		    if( v.z < w.z ) {m_oTMin.z = v.z; m_oTMax.z = w.z;}
+		    else            {m_oTMin.z = w.z; m_oTMax.z = v.z;}
+		    */
 		    var v:Vector;
-		    var l_aCorners:Array = computeCorners(false);
+		    var l_aCorners:Array = aCorners;
 		    var i:int, l:int = 8;
 		    for(i=0; i<l; i++)
-		        l_aCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
+		        aTCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
 		        
-		    m_oTMin = m_oTMax = l_aCorners[0];
-			while( --l > 1 )
+		    m_oTMin = m_oTMax = aTCorners[0];
+			for( i=1; i<l; i++ )
 			{
-				v = l_aCorners[int(l)];
+				v = aTCorners[int(i)];
 				// --
 				if( v.x < m_oTMin.x )		m_oTMin.x = v.x;
 				else if( v.x > m_oTMax.x )	m_oTMax.x = v.x;
+				//
 				if( v.y < m_oTMin.y )		m_oTMin.y = v.y;
 				else if( v.y > m_oTMax.y )	m_oTMax.y = v.y;
+				//
 				if( v.z < m_oTMin.z )		m_oTMin.z = v.z;
 				else if( v.z > m_oTMax.z )	m_oTMax.z = v.z;
-			}
-		  
+	    	}
 	    }
 	    
 		/**

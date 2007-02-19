@@ -84,7 +84,7 @@ package sandy.primitive
 			var faces:Array = new Array();
 			var f:IPolygon;
 			//-- Variables locales
-			var cos:Function = Math.cos;
+			var cos:Function = Math.cos
 			var sin:Function = Math.sin;
 			var abs:Function = Math.abs;
 			var pi:Number = Math.PI;
@@ -149,12 +149,12 @@ package sandy.primitive
 				var v:Vertex = new Vertex(points[int(i)].x,points[int(i)].y,points[int(i)].z);
 				aPoints.push(v);
 			}
-			
+			var id:int;
 			var n:Vector;
 			//--Pour le sommet
-			for(var i:int = 2; i<l; i+=nbptsh)
+			for( i = 2; i<l; i+=nbptsh)
 			{
-				var id:int;
+				
 				id =((i+nbptsh) >= l) ?  ((i+nbptsh)%l+2) : ((i+nbptsh));
 				//TODO checker les UV
 				f = new Polygon(this, aPoints[0], aPoints[int(id)], aPoints[int(i)] );
@@ -164,8 +164,8 @@ package sandy.primitive
 			}
 
 			//--Pour le bas
-			var id:int;
-			for(var i:int = 1+nbptsh; i<l; i+=nbptsh)
+			
+			for( i = 1+nbptsh; i<l; i+=nbptsh)
 			{				
 				id = ((i+nbptsh)>=l)? ((i+nbptsh)%l+2) : ((i+nbptsh));
 				//TODO checker les UV
@@ -177,7 +177,7 @@ package sandy.primitive
 			//--Si on est sur un hedra il n'y a que les sommets
 			if( l <= 6 ) return;
 			//--Pour le centre
-			for( var i:int = 2; i < l-1; i += 1 )
+			for(  i = 2; i < l-1; i += 1 )
 			{
 				//Si on est sur la bas de la sphere on passe
 				if( (i-1)%nbptsh == 0 ) continue;
@@ -199,7 +199,7 @@ package sandy.primitive
 					n = f.createNormale ();
 					aNormals.push ( n  );
 					addFace( f );
-					
+
 					f = new Polygon(this, aPoints[int(pt2)], aPoints[int(pt3)], aPoints[int(pt4)] );
 					f.setUVCoords( texture[int(i+1)], texture[int(i+nbptsh)], texture[int(i+1+nbptsh)] );
 
@@ -216,7 +216,6 @@ package sandy.primitive
 				}
 			}
 		}
-		 
-	}
 
+	}
 }

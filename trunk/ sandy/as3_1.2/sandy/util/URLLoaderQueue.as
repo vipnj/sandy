@@ -42,7 +42,7 @@ package sandy.util {
 		* external resources.
 		* 
 		*/
-		public function URLLoaderQueue(p_urlList:Array = null, p_type = null)
+		public function URLLoaderQueue(p_urlList:Array = null, p_type:* = null)
 		{
 			clear();
 			

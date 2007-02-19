@@ -31,7 +31,7 @@ package sandy.skin {
 	* SimpleColorSkin
 	*   
 	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin Cédric - thecaptain
+	* @author		Tabin Cï¿½dric - thecaptain
 	* @author		Nicolas Coevoet - [ NikO ]
 	* @version		0.2
 	* @date 		12.01.2006 
@@ -57,12 +57,12 @@ package sandy.skin {
 		// SETTERS //
 		/////////////
 
-		public function set alpha( n:Number )
+		public function set alpha( n:Number ):void
 		{
 			_alpha = n/100;
 			dispatchEvent( updateEvent );
 		}
-		public function set color( n:Number )
+		public function set color( n:Number ):void
 		{
 			_color = n;
 			dispatchEvent( updateEvent );

@@ -167,87 +167,31 @@ package sandy.view
 			return INSIDE ;
 		}
 		
-		public function sphereInFrustum( s:BSphere ):int
+		public function sphereInFrustum( p_oS:BSphere ):int
 		{
-			var d:Number;
-			var r:Number = s.m_nTRadius; // radius
-			var p:Vector = s.m_oPosition;
-			
-			for( var i:int = 0; i < 6; i++) 
-			{
-				d = PlaneMath.distanceToPoint( aPlanes[int(i)], p );
-				if ( d <= -r )
-				{
-					return Frustum.OUTSIDE; // outside
-				}
-				else if ( Math.abs(d) < r )
-				{
-					return  Frustum.INTERSECT; // intersect
-				}
-			}
-			return Frustum.INSIDE ; // inside
+            var p:int = 0; 
+            var c:int = 0; 
+            var d:Number; 
+            var center:Vector = p_oS.m_oPosition;
+            var radius:Number = p_oS.m_nTRadius;
+            for( p = 0; p < 6; p++ ) 
+            { 
+                d = aPlanes[p].a * center.x + aPlanes[p].b * center.y + aPlanes[p].c * center.z + aPlanes[p].d; 
+                if( d <= -radius ) 
+                    return OUTSIDE; 
+                if( d > radius ) 
+                    c++; 
+            } 
+            return (c == 6) ? INSIDE : INTERSECT;
 		}
-		
-		
-		public function boxInFrustum( p_oBox:BBox ):int
-		{
-        	var mode:uint = 0;// set IN and OUT bit to 0
-        	var i:int;
-        	var d:Number;
-            var plane:Plane;
-            var box:Array = new Array();
-            box.push( p_oBox.m_oTMin.x, p_oBox.m_oTMin.y, p_oBox.m_oTMin.z, p_oBox.m_oTMax.x, p_oBox.m_oTMax.y, p_oBox.m_oTMax.z );
-            
-            for ( i = 0; i < 6; ++i)
-            {
-                plane = aPlanes[int(i)]; 
-                mode &= OUTSIDE;        // clear the IN bit to 0 
-                d=(plane.a*box[0] + plane.b*box[1] + plane.c*box[2]+ plane.d);
-                if ( d >= 0) mode |= INSIDE;  // set IN bit to 1
-                else mode |= OUTSIDE;     // set OUT bit to 1
-                if (mode == INTERSECT) continue;  // if we found a vertex IN for THIS plane and 
-                // a vertex OUT of ANY plane continue ( we have enough information to say: 
-                // INTERSECT! IF there is not vertex missing from the FRONT of the remaining planes)
-                if (plane.a*box[3] + plane.b*box[1] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                
-                if (plane.a*box[0] + plane.b*box[4] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                
-                if (plane.a*box[3] + plane.b*box[4] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                
-                if (plane.a*box[0] + plane.b*box[1] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                
-                if (plane.a*box[3] + plane.b*box[1] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                       
-                if (plane.a*box[0] + plane.b*box[4] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                
-                if (plane.a*box[3] + plane.b*box[4] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
-                if (mode == INTERSECT) continue;
-                // if we arrive to this point, then there are two possibilities:
-                // there is not vertices in or there is not intersection till know, if 
-                // there is a vertice in, continue (we are not over!) 
-                if (mode == INSIDE) continue;
-                // there is not vertex IN front of this plane, so the box is COMPLETE_OUT
-                return OUTSIDE;
-            }
-            // All planes has a vertex IN FRONT so or the box is intersecting or complete IN
-            if (mode == INTERSECT) return INTERSECT;
-            else return INSIDE;
-        }
-        
- 
-		public function boxInFrustum2( box:BBox ):int
+
+		public function boxInFrustum( box:BBox ):int
 		{
 			var result:Number = Frustum.INSIDE, out:Number,iin:Number;
 			var k:int;			
 			var d:Number;
 			var plane:Plane;
-			var p:Array = box.computeCorners(true);
+			var p:Array = box.aTCorners;
 			// for each plane do ...
 			for(var i:int = 0; i < 6; i++) 
 			{
@@ -377,3 +321,55 @@ package sandy.view
     }
         
 }
+
+/*
+		public function boxInFrustum( p_oBox:BBox ):int
+		{
+        	var mode:uint = 0;// set IN and OUT bit to 0
+        	var i:int;
+        	var d:Number;
+            var plane:Plane;
+            var box:Array = new Array( p_oBox.m_oTMin.x, p_oBox.m_oTMin.y, p_oBox.m_oTMin.z, p_oBox.m_oTMax.x, p_oBox.m_oTMax.y, p_oBox.m_oTMax.z );
+            
+            for ( i = 0; i < 6; ++i)
+            {
+                plane = aPlanes[int(i)]; 
+                mode &= OUTSIDE;        // clear the IN bit to 0 
+                d=(plane.a*box[0] + plane.b*box[1] + plane.c*box[2]+ plane.d);
+                if ( d >= 0) mode |= INSIDE;  // set IN bit to 1
+                else mode |= OUTSIDE;     // set OUT bit to 1
+                if (mode == INTERSECT) continue;  // if we found a vertex IN for THIS plane and 
+                // a vertex OUT of ANY plane continue ( we have enough information to say: 
+                // INTERSECT! IF there is not vertex missing from the FRONT of the remaining planes)
+                if (plane.a*box[3] + plane.b*box[1] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[0] + plane.b*box[4] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[3] + plane.b*box[4] + plane.c*box[2] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[0] + plane.b*box[1] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[3] + plane.b*box[1] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                       
+                if (plane.a*box[0] + plane.b*box[4] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                
+                if (plane.a*box[3] + plane.b*box[4] + plane.c*box[5] + plane.d >= 0) mode |= INSIDE; else mode |= OUTSIDE;
+                if (mode == INTERSECT) continue;
+                // if we arrive to this point, then there are two possibilities:
+                // there is not vertices in or there is not intersection till know, if 
+                // there is a vertice in, continue (we are not over!) 
+                if (mode == INSIDE) continue;
+                // there is not vertex IN front of this plane, so the box is COMPLETE_OUT
+                return OUTSIDE;
+            }
+            // All planes has a vertex IN FRONT so or the box is intersecting or complete IN
+            if (mode == INTERSECT) return INTERSECT;
+            else return INSIDE;
+        }
+*/

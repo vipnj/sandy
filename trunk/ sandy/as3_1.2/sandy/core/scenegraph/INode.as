@@ -16,7 +16,6 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import sandy.core.scenegraph.Node;
 	import sandy.view.Camera3D;
 	import sandy.core.data.Matrix4;
 	

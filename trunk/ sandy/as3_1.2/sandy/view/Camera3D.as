@@ -19,7 +19,6 @@ package sandy.view
 
 	import flash.events.Event;
 	
-	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.transform.Interpolator3D;
@@ -29,11 +28,9 @@ package sandy.view
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
-	import sandy.util.Rectangle;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
 	import sandy.events.SandyEvent;
-	import sandy.math.FastMath;
 	import flash.display.Sprite;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.DisplayObject;

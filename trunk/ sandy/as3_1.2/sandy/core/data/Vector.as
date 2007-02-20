@@ -25,6 +25,7 @@ package sandy.core.data
 	* can represent the time coordinate in a 3D world</p>
 	*
 	* @author		Thomas Pfeiffer - kiroukou
+	* @author		Mirek Mencel
 	* @since		0.1
 	* @version		0.3
 	* @date 		28.03.2006
@@ -64,6 +65,11 @@ package sandy.core.data
 		public function toString():String
 		{
 			return getQualifiedClassName(this) + "("+x+","+y+","+z+ ")";
+		}
+		
+		public function equals(p_vector:Vector):Boolean
+		{
+			return (p_vector.x == x && p_vector.y == y && p_vector.y == y);
 		}
 	}
 

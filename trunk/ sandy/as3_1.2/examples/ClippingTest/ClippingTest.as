@@ -23,7 +23,6 @@ package
 	import sandy.core.Object3D;
 	
 	import com.mir3.display.FPSMetter;
-	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
 
     [SWF(width="500", height="600", backgroundColor="#FFFFFF", frameRate=120)] 
@@ -48,8 +47,8 @@ package
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			// -- User interfaces
-			stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
 			// -- FPS
 			addChild(new FPSMetter(false, 110, stage));
 			// -- STATS
@@ -60,12 +59,12 @@ package
 			init();
 		}
 		
-		public function onKeyDown(e:KeyboardEvent):void
+		public function __onKeyDown(e:KeyboardEvent):void
 		{
             keyPressed[e.keyCode]=true;
         }
         
-        public function onKeyUp(e:KeyboardEvent):void
+        public function __onKeyUp(e:KeyboardEvent):void
         {
             keyPressed[e.keyCode]=false;
         }

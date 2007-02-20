@@ -24,6 +24,7 @@ package sandy.primitive
 	import sandy.core.data.UVCoord;
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
+	import sandy.core.Geometry3D;
 
 	
 
@@ -78,6 +79,8 @@ package sandy.primitive
 		*/
 		public function generate():void
 		{
+			var l_geometry:Geometry3D = new Geometry3D();
+			
 			_radius = _radius;
 			var points:Array = new Array();
 			var texture:Array = new Array();
@@ -146,8 +149,7 @@ package sandy.primitive
 			var l:int = points.length;
 			for(var i:int = 0 ; i < l; i++)
 			{
-				var v:Vertex = new Vertex(points[int(i)].x,points[int(i)].y,points[int(i)].z);
-				aPoints.push(v);
+				l_geometry.addPoint(new Vertex(points[int(i)].x, points[int(i)].y, points[int(i)].z));
 			}
 			var id:int;
 			var n:Vector;
@@ -157,10 +159,8 @@ package sandy.primitive
 				
 				id =((i+nbptsh) >= l) ?  ((i+nbptsh)%l+2) : ((i+nbptsh));
 				//TODO checker les UV
-				f = new Polygon(this, aPoints[0], aPoints[int(id)], aPoints[int(i)] );
-				f.setUVCoords( texture[0], texture[int(id)], texture[int(i)] );
-				aNormals.push ( f.createNormale () );
-				addFace( f );
+				l_geometry.createFaceByIds(0, id, i );
+				l_geometry.addUVCoords( texture[0], texture[int(id)], texture[int(i)] );
 			}
 
 			//--Pour le bas
@@ -169,11 +169,10 @@ package sandy.primitive
 			{				
 				id = ((i+nbptsh)>=l)? ((i+nbptsh)%l+2) : ((i+nbptsh));
 				//TODO checker les UV
-				f = new Polygon(this, aPoints[1], aPoints[int(i)], aPoints[int(id)] );
-				f.setUVCoords( texture[1], texture[int(i)], texture[int(id)] );
-				aNormals.push ( f.createNormale () );
-				addFace( f );
+				l_geometry.createFaceByIds(1, i, id);
+				l_geometry.addUVCoords( texture[1], texture[int(i)], texture[int(id)] );
 			}
+			
 			//--Si on est sur un hedra il n'y a que les sommets
 			if( l <= 6 ) return;
 			//--Pour le centre
@@ -194,27 +193,21 @@ package sandy.primitive
 				pt4 = ((i+1+nbptsh)>=l) ? ((i+1+nbptsh)%l+2) : ((i+1+nbptsh));
 				if( _mode == 'tri' )
 				{
-					f = new Polygon(this, aPoints[int(pt1)], aPoints[int(pt3)], aPoints[int(pt2)] );
-					f.setUVCoords( texture[int(i)], texture[int(i+nbptsh)], texture[int(i+1)] );
-					n = f.createNormale ();
-					aNormals.push ( n  );
-					addFace( f );
+					l_geometry.createFaceByIds(pt1, pt3, pt2 );
+					l_geometry.addUVCoords( texture[int(i)], texture[int(i+nbptsh)], texture[int(i+1)] );
+					
+					l_geometry.createFaceByIds(pt2, pt3, pt4 );
+					l_geometry.addUVCoords( texture[int(i+1)], texture[int(i+nbptsh)], texture[int(i+1+nbptsh)] );
 
-					f = new Polygon(this, aPoints[int(pt2)], aPoints[int(pt3)], aPoints[int(pt4)] );
-					f.setUVCoords( texture[int(i+1)], texture[int(i+nbptsh)], texture[int(i+1+nbptsh)] );
-
-					f.setNormale( n );
-					addFace( f );
 				}
 				else if( _mode == 'quad' )
 				{
-					f = new Polygon(this, aPoints[int(pt1)], aPoints[int(pt3)], aPoints[int(pt4)], aPoints[int(pt2)] );
-					f.setUVCoords( texture[int(pt1)], texture[int(i+nbptsh)], texture[int(i+1+nbptsh)]/*, texture[int(i+1)]*/ );
-					n = f.createNormale ();
-					aNormals.push ( n  );
-					addFace( f );
+					l_geometry.createFaceByIds(pt1, pt3, pt4, pt2 );
+					l_geometry.addUVCoords( texture[int(pt1)], texture[int(i+nbptsh)], texture[int(i+1+nbptsh)]/*, texture[int(i+1)]*/ );
 				}
 			}
+			
+			setGeometry(l_geometry);
 		}
 
 	}

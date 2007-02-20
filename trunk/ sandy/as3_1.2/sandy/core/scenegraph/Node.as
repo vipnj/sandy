@@ -58,7 +58,7 @@ package sandy.core.scenegraph
 		* Mainly usefull for the cache system.
 		* @return	Boolean Value specifying the statut of the node. A true value means the node has been modified, it it should be rendered again
 		*/
-		public final function isModified():Boolean
+		public function isModified():Boolean
 		{
 			return _modified;
 		}
@@ -67,7 +67,7 @@ package sandy.core.scenegraph
 		* Allows you to set the modified property of the node.
 		* @param b Boolean true means the node is modified, and false the opposite.
 		*/
-		public final function setModified( b:Boolean ):void
+		public function setModified( b:Boolean ):void
 		{
 			_modified = b;
 		}

@@ -4,7 +4,7 @@
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.Shape;
-	import flash.events.Event;
+	import flash.events.Event
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.getTimer;

@@ -24,6 +24,7 @@ package sandy.primitive {
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
 	import sandy.events.SandyEvent;
+	import sandy.core.Geometry3D;
 
 	
 
@@ -109,28 +110,29 @@ package sandy.primitive {
 		public function generate () : void
 		{
 			// initialisation
-			aPoints = []; aNormals = [];
+			var l_geometry:Geometry3D = geometry;
+			
 			//we build points
 			var h2 : Number = - _h / 2;
 			var r2 : Number = _radius / 2;
 			var l2 : Number = _lg / 2;
 
 			var p0 : Vertex = new Vertex (-r2,-h2,l2);
-			aPoints.push (p0);
+			l_geometry.addPoint(p0);
 			var p1 : Vertex = new Vertex (r2,-h2,l2);
-			aPoints.push (p1);
+			l_geometry.addPoint(p1);
 			var p2 : Vertex = new Vertex (r2,h2,l2);
-			aPoints.push (p2);
+			l_geometry.addPoint(p2);
 			var p3 : Vertex = new Vertex (-r2,h2,l2);
-			aPoints.push (p3);
+			l_geometry.addPoint(p3);
 			var p4 : Vertex = new Vertex (-r2,-h2,-l2);
-			aPoints.push (p4);
+			l_geometry.addPoint(p4);
 			var p5 : Vertex = new Vertex (r2,-h2,-l2);
-			aPoints.push (p5);
+			l_geometry.addPoint(p5);
 			var p6 : Vertex = new Vertex (r2,h2,-l2);
-			aPoints.push (p6);
+			l_geometry.addPoint(p6);
 			var p7 : Vertex = new Vertex (-r2,h2,-l2);
-			aPoints.push (p7);
+			l_geometry.addPoint(p7);
 			
 			// -- we setup texture coordinates
 			var uv0:UVCoord = new UVCoord (0, 0);
@@ -165,6 +167,7 @@ package sandy.primitive {
 			__tesselate(p1, p5, p6, p2,
 						uv0, uv1, uv3, uv2,
 						_q - 1 );
+						
 
 		}
 		
@@ -172,6 +175,8 @@ package sandy.primitive {
 										uv0:UVCoord, uv1:UVCoord, uv2:UVCoord, uv3:UVCoord,
 										level:int):void
 		{
+			var l_geometry:Geometry3D = geometry;
+			
 			var f:IPolygon;
 			if(level == 0 ) // End of recurssion
 			{
@@ -179,37 +184,38 @@ package sandy.primitive {
 				if( _mode == 'tri' )
 				{
 					//Front Face
-					f = new Polygon( this, p0, p1, p3 );
-					f.setUVCoords( uv0, uv1, uv3 );
-					addFace( f );
+					l_geometry.createFace( p0, p1, p3 );
+					l_geometry.addUVCoords( uv0, uv1, uv3 );
 					
-					f = new Polygon( this, p2, p3, p1 );
-					f.setUVCoords( uv2, uv3, uv1 );
-					addFace( f );
+					l_geometry.createFace( p2, p3, p1 );
+					l_geometry.addUVCoords( uv2, uv3, uv1 );
+					
 				}
 				else if( _mode == 'quad' )
 				{
 					//Front Face
-					f = new Polygon( this, p0, p1, p2, p3 );
-					f.setUVCoords( uv0, uv1, uv2 );
-					
-					addFace( f );
-
+					l_geometry.createFace( p0, p1, p2, p3 );
+					l_geometry.addUVCoords( uv0, uv1, uv2 );
 				}
 			}
 			else
 			{
 				//milieu de p0, p1;
 				var m01:Vertex = new Vertex( (p0.x+p1.x)/2, (p0.y+p1.y)/2, (p0.z+p1.z)/2 );
+				l_geometry.addPoint(m01);
 				// milieu de p1 p2
 				var m12:Vertex = new Vertex( (p1.x+p2.x)/2, (p1.y+p2.y)/2, (p1.z+p2.z)/2 );
+				l_geometry.addPoint(m12);
 				// milieu de p2 p3
 				var m23:Vertex = new Vertex( (p2.x+p3.x)/2, (p2.y+p3.y)/2, (p2.z+p3.z)/2 );
+				l_geometry.addPoint(m23);
 				// milieu de p3 p0
 				var m30:Vertex = new Vertex( (p3.x+p0.x)/2, (p3.y+p0.y)/2, (p3.z+p0.z)/2 );
+				l_geometry.addPoint(m30);
 				// milieu tout court
 				var center:Vertex = new Vertex( (p0.x+p1.x+p2.x+p3.x)/4, (p0.y+p1.y+p2.y+p3.y)/4, (p0.z+p1.z+p2.z+p3.z)/4 );
-				aPoints.push ( m01, m12, m23, m30, center );
+				l_geometry.addPoint(center);
+				//l_geometry.addPoints( m01, m12, m23, m30, center );
 				
 				
 				//milieu de p0, p1;

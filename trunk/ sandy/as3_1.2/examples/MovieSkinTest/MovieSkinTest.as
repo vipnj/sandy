@@ -10,8 +10,8 @@ package
 	import flash.ui.Keyboard;
 	
 	import sandy.core.data.Vector;
-	import sandy.core.group.Group;
-	import sandy.core.group.TransformGroup;
+	import sandy.core.scenegraph.Group;
+	import sandy.core.scenegraph.TransformGroup;
 	//import sandy.core.transform.PositionInterpolator;
 	import sandy.core.transform.RotationInterpolator;
 	import sandy.core.transform.Transform3D;
@@ -21,17 +21,15 @@ package
 	import sandy.primitive.Plane3D;
 	//import sandy.primitive.Sphere;
 	import sandy.primitive.Box;
-	//import sandy.skin.MixedSkin;
+	import sandy.skin.MixedSkin;
 	import sandy.skin.MovieSkin;
 	//import sandy.skin.SimpleColorSkin;
 	import sandy.skin.Skin;
 	import sandy.util.Ease;
 	import sandy.view.Camera3D;
-	import sandy.view.ClipScreen;
 	//import sandy.util.TransformUtil;
 
 	import com.mir3.display.FPSMetter;
-	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
 	
 	
@@ -65,8 +63,6 @@ package
 			// -- FPS
 			addChild(new FPSMetter(false, 110, stage));
 			
-			// -- STATS
-			addChild(new SceneStats(false, false, false, stage));
 			
 			
 			init();
@@ -84,8 +80,7 @@ package
 			World3D.getInstance().setContainer(world);
 			// ---
 			
-			var screen : ClipScreen = new ClipScreen( SCREEN_WIDTH, SCREEN_HEIGHT, 0x222222);
-			var cam : Camera3D = new Camera3D (screen);
+			var cam : Camera3D = new Camera3D (SCREEN_WIDTH, SCREEN_HEIGHT);
 			cam.setPosition( 0, 0, -50 );
 			World3D.getInstance().setCamera (cam);
 			var bg : Group = new Group ();
@@ -120,6 +115,8 @@ package
 		
 		private function createScene (bg : Group) : void
 		{
+			var s:Skin = new MixedSkin( 0x995500, 100 );
+			
 			// -- interpolator
 			var myEase:Ease = new Ease();
 			
@@ -144,7 +141,8 @@ package
 			trace(o);
 			var skin:Skin = /*new SimpleColorSkin(0xFFFF00);//*/ new MovieSkin( 'texture_anim');
 			skin.setLightingEnable( true );
-			o.setSkin( skin );
+			
+			o.setSkin( s );
 			
 			//
 			tgRotation.setTransform( rotint );

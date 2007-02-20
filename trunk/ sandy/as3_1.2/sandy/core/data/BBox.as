@@ -88,7 +88,7 @@ package sandy.core.data
 			m_oTMax = new Vector();
 			aCorners = new Array(8);
 			aTCorners = new Array(8);
-			__compute( owner.aPoints );
+			__compute( owner.geometry.points );
 			__computeCorners(false);
 		}		
 		

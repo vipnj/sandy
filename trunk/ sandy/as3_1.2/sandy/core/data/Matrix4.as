@@ -227,7 +227,7 @@ package sandy.core.data {
 		}
 
 		/**
-		* Create a new Zero Matrix4.
+		* Create a new Zero Matrix4.	
 		* <p>An zero Matrix4 is represented like that :</p>
 		* <code>0 0 0 0 <br>
 		*       0 0 0 0 <br>

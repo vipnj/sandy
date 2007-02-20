@@ -55,5 +55,10 @@ package sandy.core.data {
 		{
 			return getQualifiedClassName(this) + "(u:" + u+", v:" + v + ")";
 		}
+		
+		public function clone():UVCoord
+		{
+			return new UVCoord(u, v);
+		}
 	}
 }

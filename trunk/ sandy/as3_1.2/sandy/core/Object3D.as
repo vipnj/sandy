@@ -40,7 +40,9 @@ package sandy.core
 	import sandy.view.Camera3D;
 	import sandy.math.Matrix4Math;
 	import sandy.events.SandyEvent;
-
+	import sandy.core.Geometry3D;
+	
+	
 	
 	/**
 	* <p>Represent an Object3D in a World3D</p>
@@ -68,14 +70,11 @@ package sandy.core
 	// _____________
 	// [PUBLIC] DATA_________________________________________________		
 	
-		/** Array of Vertex ( Points used in this Object3D )*/
-		public var aPoints:Array;
+		/** Geometry of this object */
+		public var geometry:Geometry3D;
 		
-		/** Array of the faces of the Object3D */ 
-		public var aFaces:Array;
 		
-		/** Array of normals vertex. UNUSED in the current version of the engine. */
-		public var aNormals:Array;
+		
 
 	// ______________
 	// [PRIVATE] DATA________________________________________________		
@@ -106,13 +105,11 @@ package sandy.core
 		* more details.</p>
 		* <p>You can use primitives, or xml to make a specific Object3D</p>
 		*/
-		public function Object3D ()
+		public function Object3D (p_geometry:Geometry3D = null)
 		{
 			super();
 			//
-			aPoints		= new Array ();
-			aFaces		= new Array ();
-			aNormals 	= new Array ();
+			geometry = p_geometry || new Geometry3D();
 			//
 			_backFaceCulling = true;
 			_bPolyClipped    = false;
@@ -189,7 +186,10 @@ package sandy.core
 		*/
 		override public function toString ():String
 		{
-			return getQualifiedClassName(this) + " [Faces: " + aFaces.length + ", Points: " + aPoints.length + "] Position: " + getPosition();
+			return getQualifiedClassName(this) + " " +  geometry.toString();
+		}
+		
+		/**
 		}
 		
 		/**
@@ -212,7 +212,7 @@ package sandy.core
 		*/
 		public function getPosition():Vector
 		{
-			var v:Vertex = aPoints[0];
+			var v:Vertex = geometry.points[0];
 			return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
 		}
 		
@@ -246,11 +246,12 @@ package sandy.core
 			_s = pS;
 			_s.addEventListener( SandyEvent.UPDATE, __onSkinUpdated );
 			//
-			var l:int = aFaces.length;
+			var l_faces:Array = geometry.faces;
+			var l:int = l_faces.length;
 			while( --l > -1 )
 			{
-				aFaces[int(l)].setSkin( _s );
-				aFaces[int(l)].updateTextureMatrix();
+				l_faces[int(l)].setSkin( _s );
+				l_faces[int(l)].updateTextureMatrix();
 			}
 			//
 			_needRedraw = true;
@@ -275,15 +276,26 @@ package sandy.core
 			_sb = pSb;
 			_sb.addEventListener( SandyEvent.UPDATE, __onSkinUpdated );
 			//
-			var l:int = aFaces.length;
+			var l_faces:Array = geometry.faces;
+			var l:int = l_faces.length;
 			while( --l > -1 )
 			{
-			    aFaces[int(l)].setBackSkin( pSb );
+			    l_faces[int(l)].setBackSkin( pSb );
 				//aFaces[int(l)].updateTextureMatrix(); FIXME not available for back skin for instance
 			}
 			//
 			_needRedraw = true;
 			return true;
+		}
+		
+		public function setGeometry(p_geometry:Geometry3D):void
+		{
+			geometry = p_geometry;
+		}
+		
+		public function getGeometry():Geometry3D
+		{
+			return geometry;
 		}
 		
 		/**
@@ -297,33 +309,33 @@ package sandy.core
 		*/
 		public function enableEvents( b:Boolean ):void
 		{
-			var l:int;
+			var l_faces:Array = geometry.faces;
+			var l:int = l_faces.length;
 			// -- 
 			if( b )
 			{
 				if( !_bEv )
 				{
-					l = aFaces.length;
+					
         			while( --l > -1 )
         			{
-        			    aFaces[int(l)].enableEvents( true );
-    					aFaces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
-    					aFaces[int(l)].container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-    					aFaces[int(l)].container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
-    					aFaces[int(l)].container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+        			    l_faces[int(l)].enableEvents( true );
+    					l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
+    					l_faces[int(l)].container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
+    					l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
+    					l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
         			}
 				}
 			}
 			else if( !b && _bEv )
 			{
-				l = aFaces.length;
-        		while( --l > -1 )
+				while( --l > -1 )
         		{
-        	        aFaces[int(l)].enableEvents( false );
-    				aFaces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
-    				aFaces[int(l)].container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
-    				aFaces[int(l)].container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
-    				aFaces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+        	        l_faces[int(l)].enableEvents( false );
+    				l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
+    				l_faces[int(l)].container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
+    				l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
+    				l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
         		}
 			}
 			_bEv = b;
@@ -369,10 +381,13 @@ package sandy.core
 		*/
 		public function swapCulling():void
 		{
-			var l:int = aFaces.length;
+			
+			var l_faces:Array = geometry.faces;
+			var l:int = l_faces.length;
+			
 			for( var i:int = 0;i < l; i++ )
 			{
-				aFaces[int(i)].swapCulling();
+				l_faces[int(i)].swapCulling();
 			}
 			_needRedraw = true;	
 			setModified( true );
@@ -389,13 +404,13 @@ package sandy.core
 		public function addPoint (px :Number, py:Number, pz:Number ):uint
 		{
 			setModified( true );
-			return aPoints.push ( new Vertex ( px, py, pz ) );
+			return geometry.addPoint( new Vertex ( px, py, pz ) );
 		}
 		
 		public function addVertexPoint (p_vertex:Vertex):uint
 		{
 			setModified( true );
-			return aPoints.push ( p_vertex );
+			return geometry.addPoint( p_vertex );
 		}
 		
 
@@ -476,7 +491,7 @@ package sandy.core
             ///////////////////////////////////
             ///// VERTICES TRANSFORMATION /////
             ///////////////////////////////////
-            var l_aPoints:Array = aPoints;  // TODO, we shall transform the normals too to have a faster isVisible face computation!
+            var l_aPoints:Array = geometry.points;  // TODO, we shall transform the normals too to have a faster isVisible face computation!
             
             // If we are here, is that the object shall be displayed. So we can transform its vertices into the camera
             // view coordinates
@@ -509,16 +524,18 @@ package sandy.core
 			// Il the polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			if( l_bClipped ) l_aPoints = [];
 			
-			for( l_lId = 0; l_oFace = aFaces[int(l_lId)]; l_lId++ )
+			var l_faces:Array = geometry.faces;
+			
+			for( l_lId = 0; l_oFace = l_faces[int(l_lId)]; l_lId++ )
 			{	
 			    if ( l_oFace.isVisible() || !_backFaceCulling) 
 				{
-					l_oFace.clipped = false;
+					l_oFace.isClipped = false;
 					if( l_bClipped )
 					{
 					    l_oFace.clip( l_oFrustum );
-					    if( l_oFace.aClipped != null ) 
-				            l_aPoints = l_aPoints.concat( l_oFace.aClipped );
+					    if( l_oFace.clipped != null ) 
+				            l_aPoints = l_aPoints.concat( l_oFace.clipped );
 				    }
 					l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
 					if( l_nDepth > 0 )
@@ -548,7 +565,10 @@ package sandy.core
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
 				l_oVertex.projected = true;
-			}            
+			}
+			
+			
+			geometry.updateNormals(p_oViewMatrix);
 		}
 		
 		/**
@@ -574,7 +594,7 @@ package sandy.core
 		/**
 		 * Add a face to the objet, set the object skins to faces, and notify that there is a modification
 		 */
-		public function addFace( f:IPolygon ):void
+		/*public function addFace( f:IPolygon ):void
 		{
 			// -- we update its texture matrix
 			f.updateTextureMatrix();
@@ -582,12 +602,12 @@ package sandy.core
 			aFaces.push( f );
 			// --
 			setModified( true );
-		}
+		}*/
 		
 		/**
 		 * Add a face to the objet, set the object skins to faces, and notify that there is a modification
 		 */
-		public function addFaceList( p_list:Array ):void
+		/*public function addFaceList( p_list:Array ):void
 		{
 			// TODO:	Check if updateTextureMatrix on each face is necessary here
 			//			If not than just replace it by arrays concatenation		
@@ -603,7 +623,7 @@ package sandy.core
 			}
 			// --
 			setModified( true );
-		}
+		}*/
 
 		/**
 		* This method allows you to know if the object needs to be redrawn or not. It happens only when the OBJECT skin is updated!
@@ -619,14 +639,18 @@ package sandy.core
 		
 		override public function destroy():void
 		{
+			// 	Fix it - it should be more like 
+			//	geometry.destroy();
+			
 			// --
-			var l:int = aFaces.length;
+			var l_faces:Array = geometry.faces;
+			var l:int = l_faces.length;
 			while( --l > -1 )
 			{
-				aFaces[int(l)].destroy();
-				aFaces[int(l)] = null;
+				l_faces[int(l)].destroy();
+				l_faces[int(l)] = null;
 			}
-			aFaces = null;
+			//aFaces = null;
 			// --
 			_s.removeEventListener( SandyEvent.UPDATE, __onSkinUpdated );
 			

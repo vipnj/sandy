@@ -69,7 +69,7 @@ package sandy.core.data
 		
 		public function equals(p_vector:Vector):Boolean
 		{
-			return (p_vector.x == x && p_vector.y == y && p_vector.y == y);
+			return (p_vector.x == x && p_vector.y == y && p_vector.z == z);
 		}
 	}
 

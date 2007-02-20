@@ -162,7 +162,8 @@ package sandy.core.data
 			owner	= obj;
 			center = new Vector();
 			m_oPosition = new Vector();
-			compute( obj.aPoints );
+			trace(obj);
+			compute( obj.geometry.points );
 		}
 		
 	    public function transform( p_oMatrix:Matrix4 ):void

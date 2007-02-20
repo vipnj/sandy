@@ -18,7 +18,7 @@ package sandy.core.face
 	import sandy.core.data.Vector;
 	import sandy.skin.Skin;
 	import flash.geom.Matrix;
-	import sandy.core.data.UVCoord;
+	//import sandy.core.data.UVCoord;
 
 	import flash.display.Sprite;
 	/**
@@ -33,7 +33,7 @@ package sandy.core.face
 	{
 		function getUVCoords():Array;
 		
-		function setUVCoords( pUv1:UVCoord, pUv2:UVCoord, pUv3:UVCoord ):void;
+		function setUVCoordsId( p_id:int):void;
 		
 		/**
 		* create the normal vector of the Face
@@ -72,7 +72,7 @@ package sandy.core.face
 		* <p>{@code n} represent the normale vector, but here as a Vertex, because the Vertex class is used in the engine.
 		* @param	n		the normal Vector
 		*/
-		function setNormale( n:Vector ):void;
+		function setNormalId( n:int):void;
 
 		/**
 		* Set skin of this face.
@@ -100,7 +100,7 @@ package sandy.core.face
 		/**
 		 * Update the texture matrix in case that one of its vertex has been changed
 		 */
-		function updateTextureMatrix():void;
+		function updateTextureMatrix():Matrix;
 
 		/**
 		 * Returns the precomputed matrix for the texture algorithm.
@@ -140,7 +140,7 @@ package sandy.core.face
 		* refresh the movieclip, not to compute it again.
 		* @param	void
 		*/
-		function refresh():void;
+		//function refresh():void;
 		
 		/**
 		* This method change the value of the "normal" clipping side.

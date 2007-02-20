@@ -22,6 +22,7 @@ package sandy.primitive {
 	import sandy.core.face.Polygon;
 
 	import sandy.core.Object3D;
+	import sandy.core.Geometry3D;
 	import sandy.primitive.Primitive3D;
 
 	
@@ -68,7 +69,6 @@ package sandy.primitive {
 			_lg = lg;
 			_q = (q <= 0 || q > 10) ?  1 : Number(q) ;
 			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
-			
 			generate() ;
 		}
 
@@ -81,6 +81,9 @@ package sandy.primitive {
 		*/
 		public function generate():void
 		{
+			
+			var l_geometry:Geometry3D = new Geometry3D();
+			
 					//Creation of the points
 			var uv1:UVCoord, uv2:UVCoord, uv3:UVCoord, uv4:UVCoord;
 			var h2:Number = _h/2;
@@ -100,61 +103,36 @@ package sandy.primitive {
 				
 				do
 				{
-					p = new Vertex(j,0,i); id1 = aPoints.push (p) - 1;
-					p = new Vertex(j+pasL,0,i); id2 = aPoints.push (p) - 1;
-					p = new Vertex(j+pasL,0,i+pasH); id3 = aPoints.push (p) - 1;
-					p = new Vertex(j,0,i+pasH); id4 = aPoints.push (p) - 1;
+					p = new Vertex(j,0,i); id1 = l_geometry.addPoint(p);
+					p = new Vertex(j+pasL,0,i); id2 = l_geometry.addPoint(p);
+					p = new Vertex(j+pasL,0,i+pasH); id3 = l_geometry.addPoint(p);
+					p = new Vertex(j,0,i+pasH); id4 = l_geometry.addPoint(p);
 					
 					//We add the texture coordinates
 					uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
 					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
 					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
 					uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
-
+					
 					//Face creation
 					if( _mode == 'tri' )
 					{
-						f = new Polygon(this, aPoints[int(id1)], aPoints[int(id2)], aPoints[int(id4)] );
-						f.setUVCoords( uv1, uv2, uv4 );
-						addFace( f );
+						l_geometry.createFaceByIds(id1, id2, id4 );
+						l_geometry.addUVCoords( uv1, uv2, uv4 );
 						
-						if(!created)
-						{
-							n = f.createNormale ();
-							aNormals.push (n );
-							created = true;
-						}
-						else
-						{
-							f.setNormale (n);
-						}
-						
-						f = new Polygon(this, aPoints[int(id2)], aPoints[int(id3)], aPoints[int(id4)] );
-						f.setUVCoords( uv2, uv3, uv4 );
-						addFace( f );	
-						f.setNormale( n );
-						
+						l_geometry.createFaceByIds(id2, id3, id4 );
+						l_geometry.addUVCoords( uv2, uv3, uv4 );
 					}
 					else if( _mode == 'quad' )
 					{
-						f = new Polygon(this, aPoints[int(id1)], aPoints[int(id2)], aPoints[int(id3)], aPoints[int(id4)] );
-						f.setUVCoords( uv1, uv2, uv3 );
-						addFace( f );			
-						
-						if(!created)
-						{
-							n = f.createNormale ();
-							aNormals.push (n );
-							created = true;
-						}
-						else
-						{
-							f.setNormale (n);
-						}
+						l_geometry.createFaceByIds(id1, id2, id3, id4 );
+						l_geometry.addUVCoords( uv1, uv2, uv3 );
 					}
 				} while( (j += pasL) < (l2-1) );
 			} while( (i += pasH) < (h2-1) );
 			// Can't understand why I must compute -1 with 3 in quality to have the correct value!
+			
+			setGeometry(l_geometry);
 		}
 	}
 

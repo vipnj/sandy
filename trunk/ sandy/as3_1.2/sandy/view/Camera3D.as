@@ -24,7 +24,7 @@ package sandy.view
 	import sandy.core.transform.Interpolator3D;
 	import sandy.core.transform.TransformType;
 	import sandy.core.transform.BasicInterpolator;
-	import sandy.core.face.Polygon;
+	//import sandy.core.face.Polygon;
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;

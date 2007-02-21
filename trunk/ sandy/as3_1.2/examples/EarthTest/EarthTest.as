@@ -86,7 +86,7 @@ package
 			var bg : Group = new Group ();
 			World3D.getInstance().setRootGroup (bg);
 			
-			for (var i:int = 0; i<1; i++) {
+			for (var i:int = 0; i<30; i++) {
 				createScene(bg);
 			}
 			

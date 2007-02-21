@@ -11,7 +11,7 @@ package
 		
 	import sandy.core.data.Vector;
 	import sandy.core.scenegraph.Group;
-	import sandy.core.scenegraph.TransformGroup;
+	//import sandy.core.scenegraph.TransformGroup;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.World3D;
 	import sandy.core.scenegraph.Object3D;
@@ -23,7 +23,7 @@ package
 	import sandy.view.Camera3D;
 
 	import com.mir3.display.FPSMetter;
-	import com.mir3.display.SceneStats;
+	//import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
 	
 	[SWF(width="500", height="600", backgroundColor="#FFFFFF", frameRate=120)] 
@@ -51,20 +51,20 @@ package
 			// -- User interfaces
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
 			addChild(new FPSMetter(false, 110, stage));
 			keyPressed = [];
 			
 			init();
 		}
 		
-		public function onKeyDown(e:KeyboardEvent):void
+		public function __onKeyDown(e:KeyboardEvent):void
 		{
             keyPressed[e.keyCode]=true;
         }
         
-        public function onKeyUp(e:KeyboardEvent):void
+        public function __onKeyUp(e:KeyboardEvent):void
         {
             keyPressed[e.keyCode]=false;
         }

@@ -281,7 +281,7 @@ package sandy.core.scenegraph
             var l_bClipped:Boolean = false;
             var res:int = __frustumCulling( l_oModelMatrix, p_oCamera.frustrum );
             if( res == Frustum.OUTSIDE ) return;
-            else if( res == Frustum.INTERSECT ) l_bClipped = true;
+            else if( res == Frustum.INTERSECT && _enableClipping ) l_bClipped = true;
             
             ///////////////////////////////////
             ///// VERTICES TRANSFORMATION /////
@@ -346,7 +346,7 @@ package sandy.core.scenegraph
 					l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
 					if( l_nDepth > 0 )
 					{		
-					    p_oCamera.addToDisplayList( l_oFace );  
+					    p_oCamera.addToDisplayList( l_oFace.container, l_nDepth );  
 					}
 				}
 			}	

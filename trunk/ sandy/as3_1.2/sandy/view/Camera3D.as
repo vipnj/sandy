@@ -87,38 +87,36 @@ package sandy.view
 		
 		public function clearDisplayList():void
 		{
-		    var l_oDisplayElt:Polygon = null;
+		    var l_oDisplayElt:DisplayListElement = null;
 		    var i:int;
 		    //
 			for( i=0; l_oDisplayElt = _displayList[i]; i++ )
 			{
-			   l_oDisplayElt.container.graphics.clear();
+			   l_oDisplayElt.m_oSprite.graphics.clear();
 			}
 			//
 			_displayList = [];
 		}
 		
-		public function addToDisplayList( p_oPolygon:Polygon ):void
+		public function addToDisplayList( p_oGraphics:Sprite, p_nDepth:Number ):void
 		{
-		    _displayList.push( p_oPolygon );
+		    p_oGraphics.visible = false;
+		    _displayList.push( new DisplayListElement( p_oGraphics, p_nDepth ) );
 		}
 		
 		public function renderDisplayList( p_oScene:DisplayObjectContainer ):void
 		{
-		    var l_oDisplayElt:Polygon = null;
+		    var l_oDisplayElt:Sprite = null;
 		    var i:int;
 		    var l_nLength:int = _displayList.length;
 		    //
-		    _displayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		    _displayList.sortOn( "m_nDepth", Array.NUMERIC | Array.DESCENDING );
 		    //
-		    for( i=0; i< l_nLength; i++ )
+		    for( i=0; i < l_nLength; i++ )
 			{
-			    // In case that the polygon has been deleted meanwhile
-			    if( (l_oDisplayElt = _displayList[i]) != null )
-			    {
-    				l_oDisplayElt.render();
-    				p_oScene.setChildIndex( l_oDisplayElt.container, i );
-			    }
+    			l_oDisplayElt = _displayList[i].m_oSprite;
+    			l_oDisplayElt.visible = true;
+    			p_oScene.setChildIndex( l_oDisplayElt, i );
 			}
 		}
         
@@ -650,7 +648,7 @@ package sandy.view
 		private var _oInt:BasicInterpolator;
 	}
 }
-/*
+
 import flash.display.Sprite;
 internal final class DisplayListElement
 {
@@ -663,4 +661,3 @@ internal final class DisplayListElement
         m_nDepth = p_nDepth;
     }
 }
-*/

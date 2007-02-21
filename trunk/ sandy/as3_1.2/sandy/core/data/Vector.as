@@ -67,7 +67,7 @@ package sandy.core.data
 			return getQualifiedClassName(this) + "("+x+","+y+","+z+ ")";
 		}
 		
-		public function equals(p_vector:Vector):Boolean
+		public function equals(p_vector:*):Boolean
 		{
 			return (p_vector.x == x && p_vector.y == y && p_vector.z == z);
 		}

@@ -13,26 +13,22 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive {
-
+package sandy.primitive 
+{
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
 
-	import sandy.core.Object3D;
-	import sandy.core.Geometry3D;
+	import sandy.core.scenegraph.Object3D;
+	import sandy.core.scenegraph.Geometry3D;
 	import sandy.primitive.Primitive3D;
 
-	
-	
 	/**
 	* VPlane
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin Cédric - thecaptain
-	* @author		Nicolas Coevoet - [ NikO ]
 	* @since		0.1
 	* @version		0.2
 	* @date 		12.01.2006 
@@ -62,9 +58,9 @@ package sandy.primitive {
 		* @param 	mode String represent the two available modes to generates the faces.
 		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 		*/
-		public function Plane3D(h:Number = 6, lg:Number = 6, q:Number = 1, mode:String = 'tri')
+		public function Plane3D( p_Name:String=null, h:Number = 6, lg:Number = 6, q:Number = 1, mode:String = 'tri')
 		{
-			super( ) ;
+			super( p_Name ) ;
 			_h = h;
 			_lg = lg;
 			_q = (q <= 0 || q > 10) ?  1 : Number(q) ;

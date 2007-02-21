@@ -37,9 +37,9 @@ package sandy.core.scenegraph
 		* 
 		* @param	parent
 		*/
-		public function Group() 
+		public function Group( p_sName:String=null ) 
 		{
-			super();
+			super( p_sName );
 		}
 		
 		public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void

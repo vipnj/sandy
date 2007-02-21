@@ -38,9 +38,9 @@ package sandy.core.scenegraph
 		* It has a matrix which is in fact its Transform3D property matrix.
 		* @param [OPTIONNAL] transform Transform3D The transformation to apply to this transformGroup
 		*/ 	
-		public function TransformGroup( transform:ITransform3D = null)
+		public function TransformGroup( p_sName:String, transform:ITransform3D = null)
 		{
-			super();
+			super( p_sName );
 			_t = transform;
 		}
 		

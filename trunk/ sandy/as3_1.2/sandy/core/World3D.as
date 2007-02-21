@@ -23,8 +23,7 @@ package sandy.core
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	
-	import sandy.core.data.BBox;
+
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;

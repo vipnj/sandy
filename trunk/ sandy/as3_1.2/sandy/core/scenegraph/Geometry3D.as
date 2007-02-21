@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-package sandy.core 
+package sandy.core.scenegraph
 {
 	import sandy.core.face.Polygon;
 	import sandy.core.data.Vertex;
@@ -208,7 +208,7 @@ package sandy.core
 			var l_faceID:int = faces.push(l_face)-1;
 			
 			// 1)	Create normal
-			var l_normal:Vector = l_face.createNormale();
+			var l_normal:Vertex = Vertex.createFromVector( l_face.createNormale() );
 			var l:int = normals.length;
 			
 			// 2)	Check if such normal already exists
@@ -273,33 +273,6 @@ package sandy.core
 			
 			if (faces[i])
 				faces[i].setUVCoordsId(i);
-		}
-		
-		
-		public function updateNormals(p_matrix:Matrix4):void
-		{
-			// Recalculate all normals (correct only if this geometry is static)
-			if (isStatic)
-			{
-				/*
-					NOTE:	We don't have to recreate all normal vectors 
-							as we can transform the old one according to 
-							current view matrix.
-				*/
-				
-				
-				var l:int = normals.length;
-				for( var i:int = 0; i<l; i++)
-				{
-					normals[int(i)] = faces[ uniqueDirections[ int(i)] ].createNormale();
-				}
-				
-				/*var l:int = normals.length;
-				for( var i:int = 0; i<l; i++)
-				{
-					normals[int(i)] = Matrix4Math.vectorMult3x3( p_matrix, normals[int(i)] );
-				}*/
-			}
 		}
 		
 		/**

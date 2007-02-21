@@ -284,13 +284,15 @@ package sandy.core.scenegraph
 		////////////////////
 		
 		// TODO: private function in original implementation
-		public function Node() 
+		public function Node( p_sName:String=null ) 
 		{
 			super( this );
 			_parent = null;
 			_aChilds = [];
 			_id = Node._ID_++;
-			name = String( _id );
+			// --
+			if(p_sName)     name = p_sName;
+			else         name = String( _id );
 			setModified( true );
 			// -- 
 		}

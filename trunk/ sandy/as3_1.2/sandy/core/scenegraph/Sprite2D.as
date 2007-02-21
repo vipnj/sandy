@@ -83,7 +83,6 @@ package sandy.core
 			if( _s.isInitialized() )
 			{
 				__updateContent(null);
-				
 			} 
 			else 
 			{
@@ -96,6 +95,7 @@ package sandy.core
 		private function __updateContent(p_event:Event):void
 		{
 			_s.attach( container );
+			container.cacheAsBitmap = true;
 		}
 
 		/**

@@ -16,8 +16,8 @@ limitations under the License.
 
 package sandy.view 
 {
-	import sandy.core.data.BBox;
-	import sandy.core.data.BSphere;
+	import sandy.bounds.BBox;
+	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Plane;
 	import sandy.core.data.Vector;

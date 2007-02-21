@@ -24,18 +24,17 @@ package sandy.core.face
 	import flash.events.EventDispatcher;
 		
 	import sandy.core.World3D;
-	//import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.face.IPolygon;
-	import sandy.core.Object3D;
+	import sandy.core.scenegraph.Object3D;
 	import sandy.math.VectorMath;
 	import sandy.skin.MovieSkin;
 	import sandy.skin.Skin;
 	import sandy.skin.SkinType;
 	import sandy.skin.TextureSkin;
 	import sandy.view.Frustum;
-	import sandy.core.Geometry3D;
+	import sandy.core.scenegraph.Geometry3D;
 	
 	
 	/**
@@ -51,7 +50,6 @@ package sandy.core.face
 	// STATICS_______________________________________________________	
 		
 		private static var _ID_:int = 0;
-		
 		
 	// ______
 	// PUBLIC________________________________________________________		
@@ -316,10 +314,10 @@ package sandy.core.face
 		public function isVisible(): Boolean
 		{
 			// all normals are resfreshed in every loop
-			return getNormal().z < 0;
+			return getNormal().wz < 0;
 		}
 		
-		public function getNormal():Vector
+		public function getNormal():Vertex
 		{
 			return geometry.normals[int(normalId)];
 		}

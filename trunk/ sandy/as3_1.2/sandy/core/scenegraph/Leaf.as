@@ -34,9 +34,9 @@ package sandy.core.scenegraph
 	public class Leaf extends Node implements INode
 	{
 		
-		public function Leaf() 
+		public function Leaf( p_sName:String=null ) 
 		{
-			super();
+			super( p_sName );
 		}
 
 		/**

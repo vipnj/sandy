@@ -97,6 +97,18 @@ package sandy.core.data
 		    return l_oV;
 		}
 		
+		static public function createFromVector( p_v:Vector ):Vertex
+		{
+		    return new Vertex( p_v.x, p_v.y, p_v.z );
+		}
+
+		override public function equals(p_vertex:*):Boolean
+		{
+			return     (p_vertex.x  ==  x && p_vertex.y  ==  y && p_vertex.z  ==  z) 
+			        && (p_vertex.wx == wx && p_vertex.wy == wy && p_vertex.wz == wz)
+			        && (p_vertex.sx == wx && p_vertex.sy);
+		}
+				
 		/**
 		* Get a String represntation of the {@code Vertex}.
 		* 

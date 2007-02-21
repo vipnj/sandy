@@ -14,7 +14,7 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core 
+package sandy.core.scenegraph
 {
 
 	import flash.display.MovieClip;

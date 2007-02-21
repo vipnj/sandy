@@ -1,4 +1,4 @@
-package 
+package Sprite2DTest
 {
 
 	import flash.display.Sprite;
@@ -10,25 +10,21 @@ package
 	import flash.ui.Keyboard;
 	
 	import sandy.core.data.Vector;
-	import sandy.core.group.Group;
-	import sandy.core.group.TransformGroup;
+	import sandy.core.scenegraph.Group;
+	import sandy.core.scenegraph.TransformGroup;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.World3D;
-	import sandy.core.Object3D;
-	//import sandy.core.Sprite3D;
-	import sandy.core.Sprite2D;
+	import sandy.core.scenegraph.Object3D;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.events.SandyEvent;
 	import sandy.primitive.Plane3D;
 	import sandy.skin.MovieSkin;
 	import sandy.skin.Skin;
 	import sandy.view.Camera3D;
-	import sandy.view.ClipScreen;
-	
+
 	import com.mir3.display.FPSMetter;
 	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
-	
-	
 	
 	/**
 	 * @author tom
@@ -78,8 +74,7 @@ package
 			World3D.getInstance().setContainer(world);
 			// ---
 			
-			var screen : ClipScreen = new ClipScreen( SCREEN_WIDTH, SCREEN_HEIGHT, 0x222222);
-			var cam : Camera3D = new Camera3D (screen);
+			var cam : Camera3D = new Camera3D (SCREEN_WIDTH, SCREEN_HEIGHT);
 			cam.setPosition( 0, 0, -100 );
 			World3D.getInstance().setCamera (cam);
 			
@@ -89,9 +84,6 @@ package
 			createScene(bg);
 			
 			World3D.getInstance().render();
-			
-			//cam.rotateX(10);
-			//cam.rotateX(15);
 			
 		}
 		
@@ -107,9 +99,9 @@ package
 										break;
 				case Keyboard.LEFT	: 	cam.rotateY ( -1 ); 		
 										break;
-				case Keyboard.UP	: 	cam.moveForward ( 10 );
+				case Keyboard.UP	: 	cam.moveForward ( 3 );
 										break;
-				case Keyboard.DOWN	: 	cam.moveForward ( -10 ); 	
+				case Keyboard.DOWN	: 	cam.moveForward ( -3 ); 	
 										break;
 										
 				//case Key.isDown (Key.SHIFT)	: cam.tilt ( 1 ); 		break;
@@ -124,16 +116,13 @@ package
 		
 			for( var i:int = 0; i < NUM_ELEMENTS; i++ )
 			{
-				var s:Sprite2D = new Sprite2D(1);
-				s.enableClipping( true );
+				var s:Sprite2D = new Sprite2D("Sprite_"+i, 1);
 				s.setSkin( skin );
-				var tgT:TransformGroup = new TransformGroup();
 				var trans:Transform3D = new Transform3D();
 				trans.translate( Math.random() * 1000 - 500, 0, Math.random() * 2000 - 1000 );
 				//trans.translate( 0, 0, 100 );
-				tgT.setTransform( trans );
-				tgT.addChild( s );
-				bg.addChild( tgT );
+				s.setTransform( trans );
+				bg.addChild( s );
 			}	
 			
 		}

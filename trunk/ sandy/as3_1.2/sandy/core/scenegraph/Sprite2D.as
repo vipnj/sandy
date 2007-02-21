@@ -22,10 +22,13 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
+	import sandy.core.World3D;
+	import sandy.view.Camera3D;
+	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
 	import sandy.core.face.IPolygon;
 	import sandy.core.face.Polygon;
-	import sandy.core.Object3D;
+	import sandy.core.scenegraph.Shape3D;
 	import sandy.skin.MovieSkin;
 	import sandy.skin.Skin;
 	import sandy.view.Frustum;
@@ -37,7 +40,7 @@ package sandy.core.scenegraph
 	 * @version		1.0
 	 * @date 		20.05.2006
 	 **/
-	public class Sprite2D extends Object3D 
+	public class Sprite2D extends Shape3D 
 	{
 	    public var container:MovieClip;
 	    
@@ -47,20 +50,20 @@ package sandy.core.scenegraph
 		* The sprite is an element which always look at the camera, you'll always see the same face.
 		* @param	void
 		*/
-		public function Sprite2D( pScale:Number = 1.0) 
+		public function Sprite2D( p_name:String, pScale:Number = 1.0) 
 		{
-			super();
+			super(p_name);
 			
 			// Special case - is using MovieClip rather than default Sprite
-			container = new MovieClip();
-				
+			container = new MovieClip();	
 			// -- we create a fictive point
-			_v = new Vertex( 0, 0, 0 );
-			aPoints[0] = _v;
-			aClipped = aPoints;
+			geometry = new Geometry3D( [new Vertex() ] );
+			_v = geometry.points[0];
 			// --
 			_nScale = pScale;
 			// --
+			// Add this graphical object to the World display list
+			World3D.getInstance().getSceneContainer().addChild( container );
 		}
 		
 		/**
@@ -99,15 +102,6 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * This method isn't enable with the Sprite object. You might get the reason ;)
-		 * Returns always false.
-		 */
-		override public function setBackSkin( s:Skin/*, bOverWrite:Boolean */):Boolean
-		{
-			return false;
-		}
-
-		/**
 		* getScale
 		* <p>Allows you to get the scale of the Sprite3D and later change it with setSCale.
 		* It is a number usefull to change the dimension of the sprite rapidly.
@@ -133,60 +127,58 @@ package sandy.core.scenegraph
 			}
 		}
 		
-		override public function render ():void
-		{			
-			container.scaleX = container.scaleY = (_nScale * 100 / _v.wz);
-			// --
-			container.x = _v.sx - container.width  / 2;
-			container.y = _v.sy - container.height / 2;
-		}
-		
-		override public function addFace( f:IPolygon ):void
+	    override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
-			;
-		}
-			
-		/**
-		* Erase the behaviour of the Sprite2D addPoint method because Sprite2D handles itself its points. You can't add vertex by yourself here.
-		* @param	x
-		* @param	y
-		* @param	z
-		*/
-		override public function addPoint( x:Number, y:Number, z:Number ):uint
-		{
-			return 0;
-		}
-		
-		override public function enableClipping( b:Boolean ):void
-		{
-			_enableClipping = b;
-		}
-		
-		override public function clip( frustum:Frustum ):Boolean
-		{
-			var result:Boolean = false;
-			
-			if( _enableClipping )
+		    // VISIBILITY CHECK
+			if( isVisible() == false ) 
 			{
-				if( frustum.pointInFrustum( _v.getWorldVector() ) == Frustum.OUTSIDE )
-				{
-					result =  true;
-				} 
-				else 
-				{
-					result =  false;
-				}
+			    container.visible = false;
+			    return;
+			}
+			
+            var l_oFrustum:Frustum = p_oCamera.frustrum;
+			// 
+			var l_oModelMatrix:Matrix4 = __updateLocalViewMatrix( p_oCamera, p_oViewMatrix, p_bCache );
+            
+            // Now we consider the camera .Fixme consider the possible cache system for camera.
+			var l_oMatrix:Matrix4 = p_oCamera.getProjectionMatrix() ;
+            
+            var v:Vertex;
+            var i:int;
+            for( i=0; v=geometry.points[i]; i++ )
+            {
+                v.wx = v.x * l_oModelMatrix.n11 + v.y * l_oModelMatrix.n12 + v.z * l_oModelMatrix.n13 + l_oModelMatrix.n14;
+			    v.wy = v.x * l_oModelMatrix.n21 + v.y * l_oModelMatrix.n22 + v.z * l_oModelMatrix.n23 + l_oModelMatrix.n24;
+			    v.wz = v.x * l_oModelMatrix.n31 + v.y * l_oModelMatrix.n32 + v.z * l_oModelMatrix.n33 + l_oModelMatrix.n34;
+            }
+            
+			if( l_oFrustum.pointInFrustum( _v.getWorldVector() ) == Frustum.OUTSIDE )
+			{
+			    container.visible = false;
+			    return;
 			} 
 			else 
 			{
-				result =  false;
+    			///////////////////////////////////
+    			///////  SCREEN PROJECTION ////////
+    			///////////////////////////////////
+    			var l_nCste:Number;
+    			var l_nOffx:Number = p_oCamera.viewport.w2;
+    			var l_nOffy:Number = p_oCamera.viewport.h2;
+    			// --
+    			l_nCste = 	1 / ( _v.wx * l_oMatrix.n41 + _v.wy * l_oMatrix.n42 + _v.wz * l_oMatrix.n43 + l_oMatrix.n44 );
+    			_v.sx =  l_nCste * ( _v.wx * l_oMatrix.n11 + _v.wy * l_oMatrix.n12 + _v.wz * l_oMatrix.n13 + l_oMatrix.n14 ) * l_nOffx + l_nOffx;
+    			_v.sy = -l_nCste * ( _v.wx * l_oMatrix.n21 + _v.wy * l_oMatrix.n22 + _v.wz * l_oMatrix.n23 + l_oMatrix.n24 ) * l_nOffy + l_nOffy;
+    			// --
+			    container.scaleX = container.scaleY = (_nScale * 100 / _v.wz);
+			    // --
+			    container.x = _v.sx - container.width  / 2;
+			    container.y = _v.sy - container.height / 2;
+			    // We add the graphic object to the display List.
+			    p_oCamera.addToDisplayList( container, _v.wz );  
 			}
-			
-			if( result ) container.visible = false;
-			else container.visible = true;
-			
-			return result;
 		}
+
 		
 		protected var _v:Vertex;
 		private var _nScale:Number;

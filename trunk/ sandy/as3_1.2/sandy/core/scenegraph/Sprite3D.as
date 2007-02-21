@@ -23,7 +23,7 @@ package sandy.core.scenegraph
 
 	import sandy.core.buffer.ZBuffer;
 	import sandy.core.data.Vector;
-	import sandy.core.Sprite2D;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.core.data.Vertex;
 	import sandy.math.VectorMath;
 	import sandy.skin.MovieSkin;
@@ -34,9 +34,7 @@ package sandy.core.scenegraph
 		
 	/**
 	 * @author		Thomas Pfeiffer - kiroukou
-	 * @since		0.3
-	 * @version		0.3
-	 * @date 		28.03.2006
+	 * @date 		28.02.2007
 	 **/
 	public class Sprite3D extends Sprite2D 
 	{
@@ -49,14 +47,16 @@ package sandy.core.scenegraph
 		* 							isn't adapted to your needs. Default value is 1.0 which means unchanged. A value of 2.0 will make the object
 		* 							twice bigger and so on.
 		*/
-		public function Sprite3D( pScale:Number, pOffset:int = 0 ) 
+		public function Sprite3D( p_Name:String, pScale:Number=1.0, pOffset:int = 0 ) 
 		{
-			super(pScale);
+			super(p_Name, pScale);
 			// -- we create a fictive normal vector
-			aPoints[1] = new Vertex( 0, 0, -1 );
+			_dir = new Vertex( 0, 0, -1 );
 			_vView = new Vector(0, 0, 1);
 			// -- set the offset
 			_nOffset = pOffset;
+			//
+			geometry.addPoint( _dir );
 		}
 		
 		/**
@@ -93,6 +93,7 @@ package sandy.core.scenegraph
 			else
 			{
 				container =  MovieClip(_s.attach( container ));
+				container.cacheAsBitmap = true;
 			}
 		}
 
@@ -101,16 +102,20 @@ package sandy.core.scenegraph
 		* Render the Sprite3D.
 		* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
 		*/ 
-		override public function render ():void
+		override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
 			if (!_s.isInitialized()) return;
-			//
-			var vNormale:Vector = new Vector( _v.wx - aPoints[1].wx, _v.wy - aPoints[1].wy, _v.wz - aPoints[1].wz );
-			var angle:Number = VectorMath.getAngle( _vView, vNormale );
-			if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
-			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
-			container.gotoAndStop( __frameFromAngle( angle ) );
-			super.render();
+					    // VISIBILITY CHECK
+			super.render(p_oCamera, p_oViewMatrix, p_bCache);
+			
+			if( container.visible )
+			{
+                var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
+    			var angle:Number = VectorMath.getAngle( _vView, vNormale );
+    			if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
+    			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
+    			container.gotoAndStop( __frameFromAngle( angle ) );
+			}
 		}
 		
 		
@@ -146,6 +151,7 @@ package sandy.core.scenegraph
 		private var _nOffset:int;
 		private var _nScale:Number;
 		private var _vView:Vector;
+		private var _dir:Vertex;
 		
 	}
 }

@@ -104,7 +104,7 @@ package
 			if( keyPressed[Keyboard.DOWN] ) cam.moveForward ( -3 ); 	
 		}
 		
-		private function createScene (bg : Group) : void
+		private function createScene (bg:Group):void
 		{
 			var skin:MovieSkin = new MovieSkin( 'arbre2.gif', true );
 			//var skin:MovieSkin = new MovieSkin( 'sandy2.png', true );

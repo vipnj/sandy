@@ -20,9 +20,10 @@ package
 	import sandy.view.Camera3D;
 	import sandy.util.TransformUtil;
 	import sandy.events.SandyEvent;
-	import sandy.core.Object3D;
+	import sandy.core.scenegraph.Object3D;
 	
 	import com.mir3.display.FPSMetter;
+	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
 
     [SWF(width="500", height="600", backgroundColor="#FFFFFF", frameRate=120)] 
@@ -47,8 +48,8 @@ package
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			// -- User interfaces
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
 			// -- FPS
 			addChild(new FPSMetter(false, 110, stage));
 			// -- STATS
@@ -59,12 +60,12 @@ package
 			init();
 		}
 		
-		public function __onKeyDown(e:KeyboardEvent):void
+		public function onKeyDown(e:KeyboardEvent):void
 		{
             keyPressed[e.keyCode]=true;
         }
         
-        public function __onKeyUp(e:KeyboardEvent):void
+        public function onKeyUp(e:KeyboardEvent):void
         {
             keyPressed[e.keyCode]=false;
         }
@@ -128,8 +129,7 @@ package
 		{
 			var s:Skin = new MixedSkin( 0x995500, 100 );
 			
-			var leftWall:Plane3D = new Plane3D( 100, 500, 1, "quad" );
-			leftWall.name = "leftWall";
+			var leftWall:Plane3D = new Plane3D( "leftWall", 100, 500, 1, "quad" );
 			var t:Transform3D = TransformUtil.translate(-250,50,0) ;
 			t.combineTransform( TransformUtil.rot(90, 0, 90) );
 			leftWall.setTransform( t );
@@ -137,8 +137,7 @@ package
 			leftWall.enableBackFaceCulling(false);
 			leftWall.setSkin( s );
 			
-			var rightWall:Plane3D = new Plane3D( 100, 500, 1, "quad" );
-			rightWall.name = "rightWall";
+			var rightWall:Plane3D = new Plane3D( "rightWall", 100, 500, 1, "quad" );
 			t = TransformUtil.translate(250,50,0) ;
 			t.combineTransform( TransformUtil.rot(90, 0, 90) );
 			rightWall.setTransform( t );
@@ -146,8 +145,7 @@ package
 			rightWall.enableBackFaceCulling(false);
 			rightWall.setSkin( s );
 			
-			var frontWall:Plane3D = new Plane3D( 500, 100, 1, "quad" );
-			frontWall.name = "frontWall";
+			var frontWall:Plane3D = new Plane3D( "frontWall", 500, 100, 1, "quad" );
 			t = TransformUtil.translate(0,50,250) ;
 			t.combineTransform( TransformUtil.rot(90, 90, 0) );
 			frontWall.setTransform( t );
@@ -155,8 +153,7 @@ package
 			frontWall.enableBackFaceCulling(false);
 			frontWall.setSkin( s );
 			
-			var backWall:Plane3D = new Plane3D( 500, 100, 1, "quad" );
-			backWall.name = "backWall";
+			var backWall:Plane3D = new Plane3D( "backWall", 500, 100, 1, "quad" );
 			t = TransformUtil.translate(0,50,-250) ;
 			t.combineTransform( TransformUtil.rot(90, 90, 0) );
 			backWall.setTransform( t );
@@ -166,15 +163,13 @@ package
 			
 
 			var floorSkin:Skin = new SimpleColorSkin( 0x993300, 100 );
-			var floor:Plane3D = new Plane3D( 500, 500, 1, "quad" );
-			floor.name = "floor";
+			var floor:Plane3D = new Plane3D( "floor", 500, 500, 1, "quad" );
 			floor.enableBackFaceCulling(false);
 			floor.enableClipping( true );
 			floor.setSkin( floorSkin );
 			
 			var roofSkin:Skin = new SimpleColorSkin( 0x888888, 100 );
-			var roof:Plane3D = new Plane3D( 500, 500, 1, "quad" );
-			roof.name = "roof";
+			var roof:Plane3D = new Plane3D( "roof", 500, 500, 1, "quad" );
 			t = TransformUtil.translate(0,100,0);
 			roof.setTransform( t );
 			roof.enableBackFaceCulling(false);

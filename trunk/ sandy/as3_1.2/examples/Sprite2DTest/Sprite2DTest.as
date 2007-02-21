@@ -1,6 +1,5 @@
-package Sprite2DTest
+package
 {
-
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
 	import flash.display.BitmapData;
@@ -8,7 +7,8 @@ package Sprite2DTest
 	import flash.events.*;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
-	
+	import flash.display.StageScaleMode;
+		
 	import sandy.core.data.Vector;
 	import sandy.core.scenegraph.Group;
 	import sandy.core.scenegraph.TransformGroup;
@@ -26,6 +26,8 @@ package Sprite2DTest
 	import com.mir3.display.SceneStats;
 	import com.mir3.utils.KeyManager;
 	
+	[SWF(width="500", height="600", backgroundColor="#FFFFFF", frameRate=120)] 
+	
 	/**
 	 * @author tom
 	 */
@@ -41,27 +43,32 @@ package Sprite2DTest
 		private var oPlane:Plane3D;
 		
 		private var world:MovieClip;
-		private var _earthRadius:Vector;
-		private var _sunPosition:Vector;
-		
-		
-		
+        private var keyPressed:Array;
+        
+        
 		public function Sprite2DTest()
 		{
 			// -- User interfaces
-			KeyManager.initStage(stage);
-			KeyManager.addKeyDown(keyDown);
-			//KeyManager.addKeyUp(keyUp);
+			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-			// -- FPS
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP,onKeyUp);
 			addChild(new FPSMetter(false, 110, stage));
-			
-			// -- STATS
-			addChild(new SceneStats(false, false, false, stage));
+			keyPressed = [];
 			
 			init();
 		}
 		
+		public function onKeyDown(e:KeyboardEvent):void
+		{
+            keyPressed[e.keyCode]=true;
+        }
+        
+        public function onKeyUp(e:KeyboardEvent):void
+        {
+            keyPressed[e.keyCode]=false;
+        }
+
 		
 		private function init () : void
 		{
@@ -72,8 +79,7 @@ package Sprite2DTest
 			world.y = (stage.stageHeight - SCREEN_HEIGHT) / 2;
 			addChild(world);
 			World3D.getInstance().setContainer(world);
-			// ---
-			
+			//
 			var cam : Camera3D = new Camera3D (SCREEN_WIDTH, SCREEN_HEIGHT);
 			cam.setPosition( 0, 0, -100 );
 			World3D.getInstance().setCamera (cam);
@@ -82,31 +88,20 @@ package Sprite2DTest
 			World3D.getInstance().setRootGroup (bg);
 			
 			createScene(bg);
-			
+			World3D.getInstance().addEventListener( SandyEvent.RENDER, onRender );
 			World3D.getInstance().render();
 			
 		}
 		
 
-		private function keyDown(e:KeyboardEvent):void
+		private function onRender(e:Event):void
 		{
-			
 			var cam:Camera3D = World3D.getInstance ().getCamera();
 			
-			switch( e.keyCode )
-			{
-				case Keyboard.RIGHT	:	cam.rotateY ( 1 ); 		
-										break;
-				case Keyboard.LEFT	: 	cam.rotateY ( -1 ); 		
-										break;
-				case Keyboard.UP	: 	cam.moveForward ( 3 );
-										break;
-				case Keyboard.DOWN	: 	cam.moveForward ( -3 ); 	
-										break;
-										
-				//case Key.isDown (Key.SHIFT)	: cam.tilt ( 1 ); 		break;
-				//case Key.isDown (Key.CONTROL) : cam.tilt ( -1 ); 		break;
-			}
+			if( keyPressed[Keyboard.RIGHT] ) cam.rotateY ( 1 ); 		
+			if( keyPressed[Keyboard.LEFT] ) cam.rotateY ( -1 ); 		
+			if( keyPressed[Keyboard.UP] ) cam.moveForward ( 3 );
+			if( keyPressed[Keyboard.DOWN] ) cam.moveForward ( -3 ); 	
 		}
 		
 		private function createScene (bg : Group) : void

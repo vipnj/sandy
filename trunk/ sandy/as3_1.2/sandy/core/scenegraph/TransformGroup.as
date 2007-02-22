@@ -98,13 +98,20 @@ package sandy.core.scenegraph
 		{
 			var l_oMatrix:Matrix4 = getMatrix();
 			var l_bCache:Boolean = p_bCache || _modified;
-			var l_oViewMatrix =  ( p_oViewMatrix == null ) ? l_oMatrix : (l_oMatrix == null ) ? p_oViewMatrix : Matrix4Math.multiply4x3( p_oViewMatrix, l_oMatrix );
+			var l_oViewMatrix;
+			if( l_bCache )
+			    _oCacheMatrix = l_oViewMatrix = ( p_oViewMatrix == null ) ? l_oMatrix : (l_oMatrix == null ) ? p_oViewMatrix : Matrix4Math.multiply4x3( p_oViewMatrix, l_oMatrix );
+			else
+			    l_oViewMatrix = _oCacheMatrix;
 			//
 			var l_iNode:INode;
 			var l_lId:int;
 			//
 			for( l_lId = 0; l_iNode = _aChilds[l_lId]; l_lId++ )
+			{
 			    l_iNode.render( p_oCamera, l_oViewMatrix, l_bCache );
+			    l_iNode.setModified( false );
+			}
 		}
 
 

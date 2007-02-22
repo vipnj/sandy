@@ -18,6 +18,7 @@ package sandy.core.scenegraph
 {
 	import flash.events.EventDispatcher;
 	import flash.utils.getQualifiedClassName;
+	import sandy.core.data.Matrix4;
 
 	/**
 	 * ABSTRACT CLASS
@@ -295,6 +296,7 @@ package sandy.core.scenegraph
 			else         name = String( _id );
 			setModified( true );
 			// -- 
+			_oCacheMatrix = null;
 		}
 		
 		internal static var _ID_:Number = 0;
@@ -303,5 +305,6 @@ package sandy.core.scenegraph
 		protected var _parent:INode;
 		protected var _modified:Boolean;
 		public var name:String;
+		protected var _oCacheMatrix:Matrix4;
 	}
 }

@@ -193,7 +193,7 @@ package sandy.skin
 		*/ 	
 		override public function begin( f:IPolygon, mc:Sprite ):void
 		{
-			var a:Array = f.getClippedVertices();
+			var a:Array = f.getVertices();
 			var m:Matrix = f.getTextureMatrix();
 			
 			// --

@@ -314,7 +314,7 @@ package sandy.core.face
 		public function isVisible(): Boolean
 		{
 			// all normals are resfreshed in every loop
-			return getNormal().wz < 0;
+			return ( backfaceCulling * getNormal().wz ) < 0;
 		}
 		
 		public function getNormal():Vertex

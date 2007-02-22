@@ -44,14 +44,15 @@ package sandy.core.scenegraph
 		
 		public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{  
-			var l_bCache:Boolean = p_bCache || _modified;
-			//
 			var l_iNode:INode;
 			var l_nId:int;
 			var l_nLength:int = _aChilds.length;
 			//
 			for( l_nId = 0; l_iNode = _aChilds[l_nId]; l_nId++ )
-			    l_iNode.render( p_oCamera, p_oViewMatrix, l_bCache );
+			{
+			    l_iNode.render( p_oCamera, p_oViewMatrix, p_bCache );
+			    l_iNode.setModified( false );
+			}
 		}
 	}
 }

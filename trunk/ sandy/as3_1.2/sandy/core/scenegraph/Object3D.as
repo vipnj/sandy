@@ -331,7 +331,8 @@ package sandy.core.scenegraph
 			if( l_bClipped ) l_aPoints = [];
 			
 			var l_faces:Array = geometry.faces;
-			
+			var l_visibleFaces:Array = [];
+			//
 			for( l_lId = 0; l_oFace = l_faces[int(l_lId)]; l_lId++ )
 			{	
 			    if ( l_oFace.isVisible() || !_backFaceCulling) 
@@ -344,10 +345,7 @@ package sandy.core.scenegraph
 				            l_aPoints = l_aPoints.concat( l_oFace.clipped );
 				    }
 					l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
-					if( l_nDepth > 0 )
-					{		
-					    p_oCamera.addToDisplayList( l_oFace.container, l_nDepth );  
-					}
+					if( l_nDepth )	l_visibleFaces.push(l_oFace);
 				}
 			}	
 				    
@@ -372,9 +370,15 @@ package sandy.core.scenegraph
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
 				l_oVertex.projected = true;
 			}	
+			
+			// We render the visible faces and add them into the display List
+			for( l_lId = 0; l_oFace = l_visibleFaces[int(l_lId)]; l_lId++ )
+			{
+			    l_oFace.render();
+			    p_oCamera.addToDisplayList( l_oFace.container, l_oFace.depth );    
+			}	    
 		}
 
-		
 		//////////////
 		/// PRIVATE
 		//////////////

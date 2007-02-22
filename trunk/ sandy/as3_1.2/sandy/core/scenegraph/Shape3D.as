@@ -159,7 +159,7 @@ package sandy.core.scenegraph
 		override public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):void
 		{
 		    // VISIBILITY CHECK
-			if( isVisible() == false ) return;;
+			if( isVisible() == false ) return;
 		}
 
         protected final function __frustumCulling( p_oMatrix:Matrix4, p_oFrustum:Frustum ):int
@@ -186,27 +186,29 @@ package sandy.core.scenegraph
 		protected final function __updateLocalViewMatrix( p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean ):Matrix4
 		{
 		    var l_bCache:Boolean = p_bCache || _modified;
-			// FIXME If the cache is enabled here, take the old matrix
-			var l_oModelMatrix:Matrix4;
-		    var l_oMatrix:Matrix4 = getMatrix();
-		    // --
-			if( l_oMatrix == null && p_oViewMatrix == null)
-			{
-			   l_oModelMatrix = p_oCamera.getTransformMatrix();
-			}
-			else if( l_oMatrix == null )
-			{
-			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), p_oViewMatrix );
-			}
-			else if ( p_oViewMatrix == null )
-			{
-			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), l_oMatrix );
-			}
-			else
-			{
-			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oViewMatrix, l_oMatrix );
-			    l_oModelMatrix = Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), l_oModelMatrix );
-			}
+		    var l_oModelMatrix:Matrix4;
+		    var l_oMatrix:Matrix4;
+		    // if nothing has changed, we can return the cached matrix
+		    if( l_bCache == false )  
+		    {
+		        l_oMatrix = _oCacheMatrix;
+		    }
+		    else
+		    {
+    		    l_oMatrix = getMatrix();
+    		    
+    			if( l_oMatrix == null && p_oViewMatrix != null )
+    			{
+    			    l_oMatrix = p_oViewMatrix;
+    			}
+    			else if( l_oMatrix != null && p_oViewMatrix != null )
+    			{
+    			    l_oMatrix = Matrix4Math.multiply4x3( p_oViewMatrix, l_oMatrix );
+    			}
+    			_oCacheMatrix = l_oMatrix;
+    		}
+			// we save this local matrix
+			l_oModelMatrix = (l_oMatrix) ? Matrix4Math.multiply4x3( p_oCamera.getTransformMatrix(), l_oMatrix ) : p_oCamera.getTransformMatrix();
 			return l_oModelMatrix;
 		}	
 				

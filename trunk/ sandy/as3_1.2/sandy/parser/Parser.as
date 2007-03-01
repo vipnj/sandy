@@ -6,16 +6,15 @@ package sandy.parser
 	import flash.net.URLLoader;
 	import flash.events.Event;
 	
-	import sandy.core.Object3D;
+	import sandy.core.scenegraph.Group;
 	import sandy.events.SandyEvent;
 
-	
-	
+
 	public class Parser extends EventDispatcher 
 	{
 		
-		private var loader:URLLoader;
-		private var _object:Object3D;
+		protected var loader:URLLoader;
+		protected var _oGroup:Group;
 		
 		// Events
 		protected var failEvent:Event = new Event(SandyEvent.FAIL);
@@ -23,15 +22,13 @@ package sandy.parser
 		protected var finishedEvent:Event = new Event(SandyEvent.FINISHED);
 		protected var parsingProgressEvent:Event = new Event(SandyEvent.PARSING_PROGRESS);
 		
-		
-		
-		
+
 		public function Parser()
 		{
-			
+			loader = new URLLoader();
 		}
 		
-		public function parse(p_o3D:Object3D, p_url:String):void
+		public function parse( p_oGroup:Group, p_url:String):void
 		{
 			if (!p_o3D)
 			{
@@ -39,9 +36,7 @@ package sandy.parser
 				return;
 			}
 			
-			_object = p_o3D;
-			
-			loader = new URLLoader();
+			_oGroup = p_oGroup;	
 			
 			loader.addEventListener( Event.COMPLETE, parseData );
 			loader.addEventListener( ProgressEvent.PROGRESS, onProgress);
@@ -62,28 +57,32 @@ package sandy.parser
 			
 		}
 		
-		public function parseData(p_event:Event):void
+		protected function parseData(p_event:Event):void
 		{
 			// this method has to be overriden in allsubclasses
 		}
 		
-		public function onProgress(p_event:ProgressEvent):void
+		protected function onProgress(p_event:ProgressEvent):void
 		{
 			trace( "Loading progress loaded:" + p_event.bytesLoaded + " total: " + p_event.bytesTotal );
 			dispatchEvent(p_event);
 		}
 		
-		public function onIOError(p_event:Event):void
+		protected function onIOError(p_event:Event):void
 		{
 			trace( "#Error [Parser] IO error occured during loading process." );
 			dispatchEvent( failEvent );
 			dispatchEvent( finishedEvent );
-			
 		}
 		
-		public function get object3D():Object3D
+		protected function fireEndParsing( void ):void
 		{
-			return _object;
+			dispatchEvent( finishedEvent );
+		}
+		
+		public function get group():Group
+		{
+			return _oGroup;
 		}
 		
 		public function get progress():Number

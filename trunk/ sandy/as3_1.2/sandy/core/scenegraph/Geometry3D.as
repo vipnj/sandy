@@ -209,7 +209,7 @@ package sandy.core.scenegraph
 			
 			// 1)	Create normal
 			var l_normal:Vertex = Vertex.createFromVector( l_face.createNormale() );
-			var l:int = normals.length;
+			l = normals.length;
 			
 			// 2)	Check if such normal already exists
 			for(i = 0; 	i<l && !normals[i].equals(l_normal); i++);

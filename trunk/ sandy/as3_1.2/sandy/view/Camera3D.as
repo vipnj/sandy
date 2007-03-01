@@ -566,7 +566,8 @@ package sandy.view
 			_mt.n33 = _vOut.z; 
 			_mt.n34 = - VectorMath.dot( _vOut, _p );
 			
-			_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
+			// Not necessary since set at init with identity
+			//_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
 		}
 		
 		/**

@@ -58,16 +58,6 @@ package sandy.core.scenegraph
 		{
 			return null;
 		}
-		
-		/**
-		* Returns a null tovalue since a Leaf doesn't have a child
-		* @param	index Number The ID of the child you want to get
-		* @return 	Node The desired Node
-		*/
-		override public function getChild( index:int ):INode 
-		{
-			return null;
-		}
 
 		/**
 		* Does nothing since a Leaf doesn't have some children. Return false.

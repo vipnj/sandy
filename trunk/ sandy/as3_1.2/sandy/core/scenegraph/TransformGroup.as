@@ -44,24 +44,16 @@ package sandy.core.scenegraph
 			_t = transform;
 		}
 		
-		/**
-		 * Add a transformation to the current TransformGroup. This allows to apply a transformation to all the childs of the Node.
-		 * @param t		The transformation to add
-		 */
-		public function setTransform( t:ITransform3D ):void
-		{
-			_t = t;
+		public function get transform():ITransform3D
+        {
+        	return _transform;
+        }
+        
+        public function set transform( t:ITransform3D ):void
+        {
+        	_transform = t;
 			setModified( true );
-		}
-		
-		/**
-		 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
-		 * @return	The transformation 
-		 */
-		public function getTransform():ITransform3D
-		{
-			return _t;
-		}
+        }
 		
 		/**
 		 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
@@ -69,7 +61,7 @@ package sandy.core.scenegraph
 		 */
 		public function getMatrix():Matrix4
 		{
-			return _t ? _t.getMatrix():null;
+			return _transform ? _transform.getMatrix():null;
 		}
 		/**
 		* Allows you to know if this node has been modified (true value) or not (false value). 
@@ -79,15 +71,15 @@ package sandy.core.scenegraph
 		*/
 		override public function isModified():Boolean
 		{
-			return _modified || _t.isModified();
+			return _modified || _transform.isModified();
 		}
 		
 		override public function setModified( b:Boolean ):void
 		{
 			super.setModified( b );
 			
-			if (_t)
-				_t.setModified( b );
+			if (_transform)
+				_transform.setModified( b );
 		}
 		
 		/**
@@ -120,7 +112,7 @@ package sandy.core.scenegraph
 		*/
 		override public function destroy():void
 		{
-			_t.destroy();
+			_transform.destroy();
 			super.destroy();
 		}
 		
@@ -137,7 +129,7 @@ package sandy.core.scenegraph
 		/**
 		* The transformation of this TransformGroup
 		*/
-		private var _t:ITransform3D;
+		private var _transform:ITransform3D;
 
 	}
 

@@ -13,8 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.transform {
-
+package sandy.core.transform 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.core.transform.TransformType;
 
@@ -23,7 +23,6 @@ package sandy.core.transform {
 	* <p>The Transform3D is applied to each Object3D into a Group.</p>
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin C�dric - thecaptain
 	* @version		1.2
 	* @date 		12.01.2006
 	* 
@@ -51,17 +50,15 @@ package sandy.core.transform {
 		function getType():TransformType;
 		
 		/**
-		* Get the matrix of the transformation
-		* 
-		* @return	Matrix4 The matrix
-		*/
-		function getMatrix():Matrix4;
-		
-		/**
 		* Destroy the instance with all the dependent objects/listeners. Important to call this when it is not automatically done.
 		* @param	void
 		* @return void
 		*/
 		function destroy():void;
+		
+		function get matrix():Matrix4;
+		
+		function set matrix( p_matrix:Matrix4 ):void;
+		
 	}
 }

@@ -27,8 +27,6 @@ package sandy.core.transform
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
 	import sandy.events.SandyEvent;
-
-	
 	
 	
 	/**
@@ -55,10 +53,7 @@ package sandy.core.transform
 		protected var endEvent:Event		= new Event(SandyEvent.END);
 		protected var pauseEvent:Event		= new Event(SandyEvent.PAUSE);
 		protected var resumeEvent:Event		= new Event(SandyEvent.RESUME);
-		protected var renderEvent:Event		= new Event(SandyEvent.RENDER);
-		
-		
-		
+		protected var renderEvent:Event		= new Event(SandyEvent.RENDER);	
 		
 		
 	// 8<--------------
@@ -75,6 +70,17 @@ package sandy.core.transform
 			_type = TransformType.NONE;
 		}
 		
+		public function get matrix():Matrix4
+		{
+			return _m;
+		}
+		
+		public function set matrix( p_matrix:Matrix4 ):void
+		{
+			setModified( true );
+			_m = p_matrix;
+		}
+				
 		/**
 		 * Set the matrix rotation around the X axis.
 		 * @param pAngle Number The angle of rotation in degree.
@@ -309,10 +315,7 @@ package sandy.core.transform
 			__dispatch();
 		}
 		
-		
-		
-		
-		
+	
 	// 8<---------------
 	// _________________
 	// PRIVATE FUNCTIONS________________________________________
@@ -332,10 +335,6 @@ package sandy.core.transform
 			return _bModified;
 		}
 			
-		
-		
-		
-		
 		
 	// 8<--------------
 	// ________________
@@ -358,7 +357,7 @@ package sandy.core.transform
 		{
 			return _m;
 		}
-			
+	
 		/**
 		* Set the transformation as modified or not. Very usefull for the cache transformation system.
 		* WARNING: Do not call this method yourself except if you know exactly what you are doing.
@@ -376,7 +375,6 @@ package sandy.core.transform
 		public function destroy():void
 		{
 			_m = null;
-			//removeAllListeners();
 		}
 	}
 }

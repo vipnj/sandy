@@ -133,23 +133,13 @@ package sandy.core.scenegraph
 		{
 			return _aChilds;
 		}
-		
-		/**
-		* Returns the child node at the specific index.
-		* @param	index Number The ID of the child you want to get
-		* @return 	Node The desired Node
-		*/
-		public function getChild( index:int ):INode 
-		{
-			return _aChilds[ index ];
-		}
 
 		/**
 		* Returns the child node with the specified ID
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node or null is no child with this ID has been found
 		*/
-		public function getChildFromId( id:int ):INode 
+		public function getChildFromId( id:int, p_recurs:Boolean = false ):INode 
 		{
 			var l:int = _aChilds.length;
 			while( -- l > -1 )
@@ -157,6 +147,16 @@ package sandy.core.scenegraph
 				if( Node(_aChilds[int(l)]).getId() == id )
 				{
 					return _aChilds[int(l)];
+				}
+			}
+			if( p_recurs )
+			{
+				var node:INode = null;
+				l = _aChilds.length;
+				while( -- l > -1 )
+				{
+					node = Node(_aChilds[int(l)]).getChildFromId( id, p_recurs );
+					if( node != null ) return node;
 				}
 			}
 			return null;
@@ -167,7 +167,7 @@ package sandy.core.scenegraph
 		* @param	index Number The name of the child you want to get
 		* @return 	Node The desired Node or null is no child with this name has been found
 		*/
-		public function getChildByName( pName:String ):INode 
+		public function getChildByName( pName:String, p_recurs:Boolean = false ):INode 
 		{
 			var l:int = _aChilds.length;
 			while( -- l > -1 )
@@ -175,6 +175,16 @@ package sandy.core.scenegraph
 				if( Node(_aChilds[int(l)]).name == pName )
 				{
 					return _aChilds[int(l)];
+				}
+			}
+			if( p_recurs )
+			{
+				var node:INode = null;
+				l = _aChilds.length;
+				while( -- l > -1 )
+				{
+					node = Node(_aChilds[int(l)]).getChildByName( pName, p_recurs );
+					if( node != null ) return node;
 				}
 			}
 			return null;

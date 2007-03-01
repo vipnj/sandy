@@ -17,6 +17,7 @@ package sandy.core.scenegraph
     import sandy.view.Camera3D;
     import sandy.view.Frustum;
     import sandy.events.SandyEvent;
+    import sandy.core.transform.Transform3D;
     
     public class Shape3D extends Leaf
     {
@@ -35,13 +36,13 @@ package sandy.core.scenegraph
 		/** Geometry of this object */
 		public var geometry:Geometry3D;
 
+		protected var _transform:ITransform3D;
 	// ______________
 	// [PRIVATE] DATA________________________________________________				
 		private var _s:Skin ; // The Skin of this Object3D
 		private var _visible : Boolean;		
 		private var _oBBox:BBox;
-		private var _oBSphere:BSphere;
-		private var _t:ITransform3D;				
+		private var _oBSphere:BSphere;				
         protected var _needRedraw:Boolean; //Say if the object needs to be drawn again or not. Happens when the skin is updated!
 		
 
@@ -57,6 +58,18 @@ package sandy.core.scenegraph
 			__updateBoundingVolumes();
         }
         
+        
+        public function get transform():ITransform3D
+        {
+        	return _transform;
+        }
+        
+        public function set transform( t:ITransform3D ):void
+        {
+        	_transform = t;
+			setModified( true );
+        }
+                
         private final function __updateBoundingVolumes():void
         {
             if( geometry )
@@ -195,7 +208,7 @@ package sandy.core.scenegraph
 		    }
 		    else
 		    {
-    		    l_oMatrix = getMatrix();
+    		    l_oMatrix = _transform.matrix;
     		    
     			if( l_oMatrix == null && p_oViewMatrix != null )
     			{
@@ -251,32 +264,6 @@ package sandy.core.scenegraph
 		{
 			return _s;
 		}	
-
-		
-		/**
-		 * Add a transformation to the current TransformGroup. This allows to apply a transformation to all the childs of the Node.
-		 * @param t		The transformation to add
-		 */
-		public function setTransform( t:ITransform3D ):void
-		{
-			_t = t;
-			setModified( true );
-		}
-		
-		/**
-		 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
-		 * @return	The transformation 
-		 */
-		public function getTransform():ITransform3D
-		{
-			return _t;
-		}
-		
-		public function getMatrix():Matrix4
-		{
-			return _t ? _t.getMatrix():null;
-		}
-		
 				
 		override public function destroy():void
 		{

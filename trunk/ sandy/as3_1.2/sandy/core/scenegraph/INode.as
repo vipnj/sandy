@@ -91,13 +91,13 @@ package sandy.core.scenegraph
 		 */
 		function getChildList ():Array;
 		
-		function getChildByName( pName:String ):INode;
+		function getChildByName( pName:String, p_recurs:Boolean = false ):INode;
 		/**
 		* Returns the child node at the specific index.
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node
 		*/
-		function getChild( index:int ):INode;
+		function getChildFromId( index:int, p_recurs:Boolean = false ):INode;
 
 		/**
 		* Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.

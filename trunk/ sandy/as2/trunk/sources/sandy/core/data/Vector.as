@@ -23,10 +23,12 @@ limitations under the License.
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Tabin Cédric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
+* @author		Bruce Epstein - zeusprod - truncated toString output to 2 decimals
 * @since		0.1
-* @version		0.3
-* @date 		28.03.2006
+* @version		1.2
+* @date 		21.03.2007
 */
+import sandy.util.NumberUtil;
 class sandy.core.data.Vector
 {
 	public var x:Number;
@@ -55,7 +57,11 @@ class sandy.core.data.Vector
 	*/ 	
 	public function toString(Void):String
 	{
-		return "Vector4 : "+x+","+y+","+z;
+		//return "Vector4 : "+x+","+y+","+z;
+		// Round display to two decimals places
+		return "{" + NumberUtil.roundTo(x, .01) + ", " + 
+					 NumberUtil.roundTo(y, .01) + ", " + 
+					 NumberUtil.roundTo(z, .01) + "}";
 	}
 }
 

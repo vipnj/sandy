@@ -40,8 +40,9 @@ import sandy.core.data.Matrix4;
 * @author	Thomas Pfeiffer - kiroukou
 * @author	Tabin Cédric - thecaptain
 * @author	Nicolas Coevoet - [ NikO ]
-* @version	1.0
-* @date 	23.06.2006
+* @author	Bruce Epstein - zeusprod
+* @version	1.2
+* @date 	21.03.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -197,7 +198,28 @@ class sandy.core.Object3D extends Leaf
 	public function getPosition( Void ):Vector
 	{
 		var v:Vertex = aPoints[0];
+		// Does this still need a FIX as per Petit (tx, ty, and tz instead of wx, wy, and wz)?
 		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
+	}
+
+	/**
+	* Returns the position of the center of the Object3D relative to the Flash stage.
+	* @param	Void
+	* @return	Vector with x and y properties. z property is always zero.
+	*/
+	public function getPositionOnStage( Void ):Vector
+	{
+		var centerX:Number = 0;
+		var centerY:Number = 0;
+		for (var i = 0; i < aPoints.length; i++) {
+			centerX += aPoints[i].sx;
+			centerY += aPoints[i].sy;
+		}
+		centerX = centerX / i;
+		centerY = centerY / i;
+		// This could return a 2D Point instead, but I went with Vector since
+		// it is part of the Sandy libraries can we can control the toString(); method.
+		return new Vector (centerX, centerY, 0);
 	}
 	
 	/**

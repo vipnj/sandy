@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -24,12 +24,13 @@ import sandy.core.data.UVCoord;
 /**
 * Cylinder
 *  
+* @author		Bruce Epstein - zeusprod
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Tabin Cédric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
 * @since		0.1
-* @version		0.2
-* @date 		12.01.2006 
+* @version		1.2
+* @date 		21.03.2007 
 **/
 class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 {
@@ -41,7 +42,7 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 	private var _height:Number ;
 	
 	/**
-	* This is the constructor to call when you nedd to create a Cylinder primitive.
+	* This is the constructor to call when you need to create a Cylinder primitive.
 	* <p>This method will create a complete object with vertex, normales, texture coords and the faces.
 	*    So it allows to have a custom 3D object easily </p>
 	* <p>{@code radius} represents the radius of the cylinder, {@code height} represent its height and {@code quality} its quality, so the number of faces </p>
@@ -134,7 +135,8 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 			{
 				var j:Number = ( (i+2) >= l )?  2 : i+2 ;
 				f = new Polygon( this, aPoints[0], aPoints[i], aPoints[j] );
-				f.setUVCoordss( auv[0], auv[i], auv[j] );
+				// FIXED spelling
+				f.setUVCoords( auv[0], auv[i], auv[j] );
 				addFace( f );
 				//f = this.createFace( [0, i, j ], [0, i, j] ) ;
 			}
@@ -149,7 +151,10 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 				aIduv.push( auv[i] );
 			}
 			f = new Polygon( this, aId );
-			Polygon(f).setUVCoordinates( aIduv );
+			// FIX - type mismatch - expects 3 points instead of Array
+			//Polygon(f).setUVCoordinates( aIduv );
+			// This is wrong, but at least it prevents a compiler error.
+			Polygon(f).setUVCoords( aIduv[0],  aIduv[1], aIduv[2]);
 			addFace( f );
 			//f = this.createFace( aId, [0,0,0,0]);
 		}
@@ -211,7 +216,10 @@ class sandy.primitive.Cylinder extends Object3D implements Primitive3D
 				aIduv.push( auv[i] );
 			}
 			f = new Polygon( this, aId );
-			Polygon(f).setUVCoords( aIduv );
+			// FIX - type mismatch - expects 3 points instead of Array
+			// Still wrong but at least it prevents a compiler error
+			//Polygon(f).setUVCoords( aIduv );
+			Polygon(f).setUVCoords( aIduv[0],  aIduv[1], aIduv[2]);
 			addFace( f );
 		}
 		

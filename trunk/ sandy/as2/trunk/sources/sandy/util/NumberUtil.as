@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -20,9 +20,10 @@ limitations under the License.
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Tabin Cédric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
+* @author		Bruce Epstein - zeusprod
 * @since		0.2
-* @version		0.2
-* @date 		12.01.2006 
+* @version		1.2
+* @date 		21.03.2007 
 **/
 
 class sandy.util.NumberUtil 
@@ -116,6 +117,20 @@ class sandy.util.NumberUtil
 	 	return Math.max( Math.min( n, max ) , min );
 	 }
 	 
+	/**
+	 * Round a number to specified accuracy
+	 * @param n Number The number to round
+	 * @param roundToInterval Number The accuracy to which to round
+     *    (i.e., set roundInterval to 0.01 to round 2 to decimal places)
+	 * @return Number The rounded number
+	 */
+
+	 public static function roundTo (n:Number, roundToInterval:Number):Number {
+		if (roundToInterval == undefined) {
+			roundToInterval = 1;
+		}
+		return Math.round(n/roundToInterval) * roundToInterval;
+	}
 	 
 	private static var _fABS:Function = Math.abs;	
 }

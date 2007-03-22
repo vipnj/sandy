@@ -29,8 +29,9 @@ import sandy.view.Viewport;
 /**
 * Camera3D
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		12.07.2006
+* @author		Bruce Epstein - zeusprod
+* @version		1.2.1
+* @date 		22.03.2007
 **/
 class sandy.view.Camera3D 
 {
@@ -60,7 +61,7 @@ class sandy.view.Camera3D
 		_nTilt 	= 0;
 		_nYaw  	= 0;
 		// --
-		viewport = new Viewport( p_nWidth, p_nWidth );
+		viewport = new Viewport( p_nWidth, p_nHeight );
 		frustrum = new Frustum();
 		setPerspectiveProjection();
 		//setPerspective();

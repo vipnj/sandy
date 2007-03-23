@@ -1,3 +1,4 @@
+import com.bourre.log.PixlibStringifier;
 /*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
@@ -51,6 +52,13 @@ class sandy.core.data.Vector
 	    return l_oV;
 	}
 	
+	public function copy( p_oVector:Vector ):Void
+	{
+		x = p_oVector.x;
+		y = p_oVector.y;
+		z = p_oVector.z;
+	}
+	
 	/**
 	* Get a String represntation of the {@code Vector}.
 	* 
@@ -58,7 +66,7 @@ class sandy.core.data.Vector
 	*/ 	
 	public function toString():String
 	{
-		return "sandy.core.data.Vector" + "("+x+","+y+","+z+ ")";
+		return "sandy.core.data.Vector" + "("+x+","+y+","+z+ ")\n"+PixlibStringifier.stringify( this );;
 	}
 	
 	public function equals(p_vector:Vector):Boolean

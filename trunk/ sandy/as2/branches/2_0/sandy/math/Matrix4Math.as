@@ -181,9 +181,10 @@ class sandy.math.Matrix4Math
 	 */    
 	public static function vectorMult( m:Matrix4, pv:Vector ): Vector
 	{
-		return new Vector(	(pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13 + m.n14),
-							(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23 + m.n24),
-							(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33 + m.n34));
+		var l_oVector =  new Vector(	(pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13 + m.n14),
+										(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23 + m.n24),
+										(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33 + m.n34));
+		return l_oVector;
 	}
 
 	/**
@@ -196,9 +197,10 @@ class sandy.math.Matrix4Math
 	 */
 	public static function vectorMult3x3( m:Matrix4, pv:Vector ):Vector
 	{
-		return new Vector(  pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13,
-							pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23,
-							pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33 );
+		var l_oVector =   new Vector((pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13),
+									(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23),
+									(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33) );
+		return l_oVector;
 	}
         
 	/**
@@ -512,9 +514,9 @@ class sandy.math.Matrix4Math
 	public static function axisRotationWithReference( axis:Vector, ref:Vector, pAngle:Number ):Matrix4
 	{
 		var angle:Number = ( pAngle + 360 ) % 360;
-		var m:Matrix4 = Matrix4Math.translation ( ref.x, -ref.y, ref.z );
+		var m:Matrix4 = Matrix4Math.translation ( ref.x, ref.y, ref.z );
 		m = Matrix4Math.multiply ( m, Matrix4Math.axisRotation( axis.x, axis.y, axis.z, angle ));
-		m = Matrix4Math.multiply ( m, Matrix4Math.translation ( -ref.x, ref.y, -ref.z ));
+		m = Matrix4Math.multiply ( m, Matrix4Math.translation ( -ref.x, -ref.y, -ref.z ));
 		return m;
 	}
 	

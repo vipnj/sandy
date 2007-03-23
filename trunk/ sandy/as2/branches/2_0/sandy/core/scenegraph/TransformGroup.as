@@ -14,14 +14,13 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-import sandy.core.abstract.ATransformable;
-import sandy.core.abstract.ITransformable;
 import sandy.core.data.Matrix4;
+import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
+import sandy.core.scenegraph.ITransformable;
 import sandy.core.scenegraph.Node;
 import sandy.core.transform.ITransform3D;
 import sandy.math.Matrix4Math;
-import sandy.math.VectorMath;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
 
@@ -125,20 +124,17 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 			_mt.n11 = _vSide.x * _oScale.x; 
 			_mt.n21 = _vSide.y; 
 			_mt.n23 = _vSide.z; 
-			_mt.n14 = _p.x;//VectorMath.dot( _vSide, _p );
+			_mt.n14 = _p.x;
 			
 			_mt.n12 = _vUp.x; 
 			_mt.n22 = _vUp.y * _oScale.y;
 			_mt.n32 = _vUp.z; 
-			_mt.n24 = _p.y;//VectorMath.dot( _vUp, _p );
+			_mt.n24 = _p.y;
 			
 			_mt.n13 = _vOut.x; 
 			_mt.n23 = _vOut.y; 
 			_mt.n33 = _vOut.z * _oScale.z;
-			_mt.n34 = _p.z;//VectorMath.dot( _vOut, _p );
-			
-			// Not necessary since set at init with identity
-			//_mt.n41 = 0; _mt.n42 = 0; _mt.n43 = 0; _mt.n44 = 1;
+			_mt.n34 = _p.z;
 		}
 	}
 		

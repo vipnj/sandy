@@ -378,7 +378,7 @@ class sandy.core.scenegraph.Node
 		_id = Node._ID_++;
 		// --
 		if(p_sName)  name = p_sName;
-		else         name = String( _id );
+		else         name = String( _id.toString() );
 		changed = true;
 		_visible = true;
 		_oBBox = new BBox();

@@ -28,6 +28,7 @@ import sandy.view.Frustum;
  * @version		1.0
  * @date 		28.03.2006
  **/
+ 
 class sandy.core.scenegraph.Group extends Node
 {
 	/**

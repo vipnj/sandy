@@ -389,7 +389,6 @@ class sandy.core.scenegraph.Node
 		//
 		culled = CullingState.INSIDE;
 	}
-
     		
 	private static var _ID_:Number = 0;
 	private var _aChilds:Array;

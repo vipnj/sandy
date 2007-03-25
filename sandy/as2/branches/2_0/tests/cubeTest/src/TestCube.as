@@ -2,9 +2,13 @@ import com.bourre.commands.Delegate;
 
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Group;
+import sandy.core.scenegraph.TransformGroup;
 import sandy.core.World3D;
 import sandy.primitive.Box;
 import sandy.primitive.Sphere;
+
+import tests.cubeTest.src.TestCube;
+import sandy.skin.MixedSkin;
 
 /**
  * @author thomaspfeiffer
@@ -44,9 +48,6 @@ class TestCube
 	{
 		_world.root = _createScene();
 		_world.camera = new Camera3D(500, 500);
-		_world.camera.near = 100;
-		_world.camera.z = -500;
-		_world.camera.y = 90;
 		// --
 		_world.root.addChild( _world.camera );
 		_world.container = _mc;
@@ -56,18 +57,25 @@ class TestCube
 	private function _createScene( Void ):Group
 	{
 		var g:Group = new Group();
+		var tg:TransformGroup = new TransformGroup("translation");
+		tg.z = 500;
+		
 		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
-		box.enableClipping = true;
-		box.z = 500;
-		//box.tilt = 45;
+		//box.enableClipping = true;
+		box.skin = new MixedSkin( 0xFF00FF, 100 );
 		box.rotateX = 45;
 		box.rotateZ = 45;
-		g.addChild( box );
+		tg.addChild( box );
 		
-		sphere = new Sphere( 100, 2, "quad" );
-		sphere.z = 300;
+		sphere = new Sphere( "mySphere", 100, 2, "quad" );
+		sphere.skin = new MixedSkin( 0x0000FF, 100 );
+		sphere.z = 200;
 		sphere.x = 100;
-		g.addChild( sphere );
+		sphere.rotateAxis(1,1,1, 45);
+		
+		tg.addChild( sphere );
+		//
+		g.addChild( tg );
 		return g;
 	}
 	
@@ -87,9 +95,9 @@ class TestCube
 		//_world.camera.z += 2;
 		//_world.camera.x -= 1;
 		//_world.camera.y += 0.1;
-		_world.camera.rotateY += 1;
+		sphere.pan += 0.2;
 		
-		_world.camera.lookAt( 0, 0, 500 );
+		//_world.camera.lookAt( 0, 0, 500 );
 		_world.render();
 	}
 }

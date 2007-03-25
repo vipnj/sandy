@@ -35,9 +35,8 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 	* Create a new TransformGroup.
 	* This class is one of the most important because it represents a node in the tree scene representation in Sandy.
 	* It has a matrix which is in fact its Transform3D property matrix.
-	* @param [OPTIONNAL] transform Transform3D The transformation to apply to this transformGroup
 	*/ 	
-	public function TransformGroup( p_sName:String, p_transform:ITransform3D)
+	public function TransformGroup( p_sName:String )
 	{
 		super( p_sName );
 	}
@@ -49,23 +48,16 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		if( p_bChanged )
-		{
-			 if( p_oModelMatrix )
-			 	_oModelCacheMatrix = (transform.matrix) ? Matrix4Math.multiply4x3( p_oModelMatrix, transform.matrix ) : p_oModelMatrix;
-			 else
-			 	_oModelCacheMatrix = transform.matrix;
-		}
+		// Shall be called first
+		updateTransform();
 		//
-		super.update();
+		super.update( p_oModelMatrix, p_bChanged );
 		//
-		var l_oNode:Node;
-		var l_nId:Number;
 		var l_nLength:Number = _aChilds.length;
 		//
-		for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
+		while( --l_nLength > -1 )
 		{
-		    l_oNode.update( p_oModelMatrix, changed );
+			_aChilds[l_nLength].update( _oModelCacheMatrix, changed );
 		}
 	}
 
@@ -92,7 +84,7 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 		{
 		    l_oNode.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
-		// FIXME is that correct to call super at the end of an overrding method ?
+		// FIXME is that correct to call super at the end of an overrided method ?
 		super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 	}
 	
@@ -120,21 +112,21 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 	{
 		if( changed )
 		{
-			var _mt:Matrix4 = transform.matrix;
-			_mt.n11 = _vSide.x * _oScale.x; 
-			_mt.n21 = _vSide.y; 
-			_mt.n23 = _vSide.z; 
-			_mt.n14 = _p.x;
+			var mt:Matrix4 = transform.matrix;
+			mt.n11 = _vSide.x * _oScale.x; 
+			mt.n21 = _vSide.y; 
+			mt.n23 = _vSide.z; 
+			mt.n14 = _p.x;
 			
-			_mt.n12 = _vUp.x; 
-			_mt.n22 = _vUp.y * _oScale.y;
-			_mt.n32 = _vUp.z; 
-			_mt.n24 = _p.y;
+			mt.n12 = _vUp.x; 
+			mt.n22 = _vUp.y * _oScale.y;
+			mt.n32 = _vUp.z; 
+			mt.n24 = _p.y;
 			
-			_mt.n13 = _vOut.x; 
-			_mt.n23 = _vOut.y; 
-			_mt.n33 = _vOut.z * _oScale.z;
-			_mt.n34 = _p.z;
+			mt.n13 = _vOut.x; 
+			mt.n23 = _vOut.y; 
+			mt.n33 = _vOut.z * _oScale.z;
+			mt.n34 = _p.z;
 		}
 	}
 		

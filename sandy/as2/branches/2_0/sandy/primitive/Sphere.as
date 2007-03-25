@@ -56,9 +56,9 @@ import sandy.primitive.Primitive3D;
 		* @param mode String represent the two available modes to generates the faces.
 		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 		*/
-		public function Sphere( radius:Number, quality:Number, mode:String)
+		public function Sphere( p_sName:String, radius:Number, quality:Number, mode:String)
 		{
-			super();
+			super(p_sName);
 			_radius = ( radius ) ? radius : 50;
 			quality = (quality) ? quality : 1;
 			quality = (quality <= 0 || quality > 10) ? 10 : quality;

@@ -42,7 +42,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		_forcedDepth = 0;
 		_bEv = false;
 		// --
-		setSkin( DEFAULT_SKIN );
+		skin = DEFAULT_SKIN;
 		// -- 
 		updateBoundingVolumes();
     }
@@ -146,7 +146,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33; m43 = l_oMatrix.n43;
 		m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
 		
-		trace( "MESH3D::render  "+culled);
 		// If necessary we transform the normals vectors
 		if( _backFaceCulling )
 		{
@@ -211,7 +210,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 	* @return	Boolean True to apply the skin to the non default faces skins , false otherwise (default).
 	*/
-	public function setSkin( pS:Skin ):Boolean
+	public function set skin( pS:Skin )
 	{
 		if (_s)
 		{
@@ -235,6 +234,17 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		_needRedraw = true;
 		return true;
 	}
+	
+	/**
+	* Returns the skin instance used by this object.
+	* Be carefull, if your object faces have some skins some specific skins, this method is not able to give you this information.
+	* @param	void
+	* @return 	Skin the skin object
+	*/
+	public function get skin():Skin 
+	{
+		return _s;
+	}
 	       
 	
 	public function set geometry(p_geometry:Geometry3D):Void
@@ -242,7 +252,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		_geometry = p_geometry;
 		updateBoundingVolumes();
 		// update the skin
-		setSkin( _s );
+		skin = _s ;
 	}
 	
 	public function get geometry():Geometry3D
@@ -330,17 +340,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	public function toString ():String
 	{
 		return "sandy.core.scenegraph.Shape3D" + " " +  geometry.toString();
-	}
-
-	/**
-	* Returns the skin instance used by this object.
-	* Be carefull, if your object faces have some skins some specific skins, this method is not able to give you this information.
-	* @param	void
-	* @return 	Skin the skin object
-	*/
-	public function getSkin():Skin 
-	{
-		return _s;
 	}	
 
 	/**
@@ -352,7 +351,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	* the faces that are interessting for you.
 	* @param	b Boolean true to enable event system, false otherwise
 	*/
-	public function enableEvents( b:Boolean ):Void
+	public function set enableEvents( b:Boolean )
 	{
 		var l_faces:Array = geometry.faces;
 		var l:Number = l_faces.length;

@@ -137,7 +137,7 @@ class sandy.skin.MixedSkin extends BasicSkin implements Skin
 		var col:Number = _colorBkg;
 		if( _useLight )
 		{
-			var l:Light3D 	= World3D.getInstance().getLight();
+			var l:Light3D 	= World3D.getInstance().light;
 			var vn:Vector 	= face.createNormale();
 			var vl:Vector 	= l.getDirectionVector();
 			var lp:Number	= l.getPower()/100;

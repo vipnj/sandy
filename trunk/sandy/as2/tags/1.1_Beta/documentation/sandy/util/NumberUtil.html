@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.util.NumberUtil - Sandy 1.1 BETA</title><link href="../../style.css" rel="stylesheet" type="text/css"/><link href="../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.util" rel="up"/><link href="../../sandy/util/Rectangle.html" title="Class sandy.util.Rectangle" rel="prev"/><link href="../../sandy/util/Ease.html" title="Class sandy.util.Ease" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/><meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/></head><body><ul class="main_nav"><li><a href="../../overview-summary.html" title="Overview of Sandy 1.1 BETA">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.util">Package</a></li><li><span class="nav_current">Class</span></li><li><a href="../../index-files/index.html" title="Alpabetical index of types and members">Index</a></li></ul><h1>Class sandy.util.NumberUtil</h1><pre class="type_hierachy"><strong>sandy.util.NumberUtil</strong></pre><div class="type_description"><h2>Description</h2><p>
+ NumberUtil
+  
+ </p></div><div class="field_index"><h2>Field Index</h2><a href="#HALF_PI" title="static public HALF_PI:Number">HALF_PI</a>, <a href="#PI" title="static public PI:Number">PI</a>, <a href="#TO_DEGREE" title="static public TO_DEGREE:Number">TO_DEGREE</a>, <a href="#TO_RADIAN" title="static public TO_RADIAN:Number">TO_RADIAN</a>, <a href="#TOL" title="static public TOL:Number">TOL</a>, <a href="#TWO_PI" title="static public TWO_PI:Number">TWO_PI</a></div><div class="method_index"><h2>Method Index</h2><a href="#method_areEqual" title="static public function areEqual(n:Number, m:Number):Boolean">areEqual()</a>, <a href="#method_constrain" title="static public function constrain(n:Number, min:Number, max:Number):Number">constrain()</a>, <a href="#method_isZero" title="static public function isZero(n:Number):Boolean">isZero()</a>, <a href="#method_toDegree" title="static public function toDegree(n:Number):Number">toDegree()</a>, <a href="#method_toRadian" title="static public function toRadian(n:Number):Number">toRadian()</a></div><div class="field_detail_list"><h2>Field Detail</h2><a name="TWO_PI"></a><h3>TWO_PI</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">TWO_PI</strong>:<span class="unresolved_type_name">Number</span> <em class="read_write_only">[Read Only]</em></code><div class="field_info">
+ Constant used pretty much everywhere. Trick of final const keywords use.
+	 </div></div><a name="PI"></a><h3>PI</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">PI</strong>:<span class="unresolved_type_name">Number</span> <em class="read_write_only">[Read Only]</em></code><div class="field_info">
+ Constant used pretty much everywhere. Trick of final const keywords use.
+	 </div></div><a name="HALF_PI"></a><h3>HALF_PI</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">HALF_PI</strong>:<span class="unresolved_type_name">Number</span> <em class="read_write_only">[Read Only]</em></code><div class="field_info">
+ Constant used pretty much everywhere. Trick of final const keywords use.
+	 </div></div><a name="TO_DEGREE"></a><h3>TO_DEGREE</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">TO_DEGREE</strong>:<span class="unresolved_type_name">Number</span> <em class="read_write_only">[Read Only]</em></code><div class="field_info">
+ Constant used to convert angle from radians to degress
+	 </div></div><a name="TO_RADIAN"></a><h3>TO_RADIAN</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">TO_RADIAN</strong>:<span class="unresolved_type_name">Number</span> <em class="read_write_only">[Read Only]</em></code><div class="field_info">
+ Constant used to convert degress to radians.
+	 </div></div><a name="TOL"></a><h3>TOL</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">TOL</strong>:<span class="unresolved_type_name">Number</span></code><div class="field_info">
+ Value used to compare a number and another one. Basically it's used to say if a number is zero or not.
+	 </div></div></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="method_isZero"></a><h3>isZero</h3><code class="method_synopsis">static public function <strong class="method_name">isZero</strong>(n:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Say if a Number is close enought to zero to ba able to say it's zero. 
+ Adjust TOL property depending on the precision of your Application
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>n</code></td><td>Number The number to compare with zero
+ </td></tr></table><h4>Return</h4><p class="extra_info"> Boolean true if the Number is comparable to zero, false otherwise.
+	 </p></div></div><div class="method_details"><a name="method_areEqual"></a><h3>areEqual</h3><code class="method_synopsis">static public function <strong class="method_name">areEqual</strong>(n:<span class="unresolved_type_name">Number</span>, m:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Say if a Number is close enought to another to ba able to say they are equal. 
+ Adjust TOL property depending on the precision of your Application
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>n</code></td><td>Number The number to compare m
+ </td></tr><tr><td><code>m</code></td><td>Number The number you want to compare with n
+ </td></tr></table><h4>Return</h4><p class="extra_info"> Boolean true if the numbers are comparable to zero, false otherwise.
+	 </p></div></div><div class="method_details alt_row"><a name="method_toDegree"></a><h3>toDegree</h3><code class="method_synopsis">static public function <strong class="method_name">toDegree</strong>(n:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Convert an angle from Radians to Degrees unit
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>n</code></td><td>Number Number representing the angle in radian
+ </td></tr></table><h4>Return</h4><p class="extra_info"> Number The angle in degrees unit
+	 </p></div></div><div class="method_details"><a name="method_toRadian"></a><h3>toRadian</h3><code class="method_synopsis">static public function <strong class="method_name">toRadian</strong>(n:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Convert an angle from Degrees to Radians unit
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>n</code></td><td>Number Number representing the angle in dregrees
+ </td></tr></table><h4>Return</h4><p class="extra_info"> Number The angle in radian unit
+	 </p></div></div><div class="method_details alt_row"><a name="method_constrain"></a><h3>constrain</h3><code class="method_synopsis">static public function <strong class="method_name">constrain</strong>(n:<span class="unresolved_type_name">Number</span>, min:<span class="unresolved_type_name">Number</span>, max:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Add a constrain to the number which must be between min and max values. Usually name clamp ?
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>n</code></td><td>Number The number to constrain
+ </td></tr><tr><td><code>min</code></td><td>Number The minimal valid value
+ </td></tr><tr><td><code>max</code></td><td>Number The maximal valid value
+ </td></tr></table><h4>Return</h4><p class="extra_info"> Number The number constrained
+	 </p></div></div></div><div class="footer"><span>Generated by </span><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a><span> FlashDevelop edition.</span></div></body></html>

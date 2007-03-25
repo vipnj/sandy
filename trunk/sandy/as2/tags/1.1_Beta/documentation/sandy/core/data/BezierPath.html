@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.core.data.BezierPath - Sandy 1.1 BETA</title><link href="../../../style.css" rel="stylesheet" type="text/css"/><link href="../../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.core.data" rel="up"/><link href="../../../sandy/core/data/AnimationData.html" title="Class sandy.core.data.AnimationData" rel="prev"/><link href="../../../sandy/core/data/Vertex.html" title="Class sandy.core.data.Vertex" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/><meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/></head><body><ul class="main_nav"><li><a href="../../../overview-summary.html" title="Overview of Sandy 1.1 BETA">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.core.data">Package</a></li><li><span class="nav_current">Class</span></li><li><a href="../../../index-files/index.html" title="Alpabetical index of types and members">Index</a></li></ul><h1>Class sandy.core.data.BezierPath</h1><pre class="type_hierachy"><strong>sandy.core.data.BezierPath</strong></pre><div class="type_description"><h2>Description</h2><p>
+ A 3D path interpolated with Bezier equations
+ 
+ <p>A Bezier path is basically an array of 3D points, but the path is interpolated thanks to Bezier equations, allowing
+ some nice movements</p>
+ 
+ </p></div><div class="method_index"><h2>Method Index</h2><p><code>new <a href="#method_BezierPath" title="public function BezierPath()">BezierPath()</a></code></p><a href="#method_addPoint" title="public function addPoint(x:Number, y:Number, z:Number):Boolean">addPoint()</a>, <a href="#method_compile" title="public function compile(Void):Void">compile()</a>, <a href="#method_getNumberOfSegments" title="public function getNumberOfSegments(Void):Number">getNumberOfSegments()</a>, <a href="#method_getPosition" title="public function getPosition(p:Number):Vector">getPosition()</a>, <a href="#method_getSegment" title="public function getSegment(pnId:Number):Array">getSegment()</a>, <a href="#method_toString" title="public function toString(Void):String">toString()</a></div><div class="constructor_detail_list"><h2>Constructor Detail</h2><div class="method_details"><a name="method_BezierPath"></a><h3>BezierPath</h3><code class="method_synopsis">public function <strong class="method_name">BezierPath</strong>()</code><div class="method_info"><p>
+ Create a new <code> BezierPath</code> Instance.
+	</p></div></div></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="method_getSegment"></a><h3>getSegment</h3><code class="method_synopsis">public function <strong class="method_name">getSegment</strong>(pnId:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Array</span></code><div class="method_info"><p>
+ Returns the segment that fits to the percentage number passed in arguments.
+ You can imagine the whole path length as the 1.0 value (100%). Now if you need the segment when you are at only 10% of the whole path
+ you just have to pass 0.1 in argument, and the returned array contain the bezierCurve points [startPoint, controlPoint, endPoint]
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>pnId</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info">	Array array containing the segment's bezierCurve points [startPoint, controlPoint, endPoint]
+	</p></div></div><div class="method_details"><a name="method_getPosition"></a><h3>getPosition</h3><code class="method_synopsis">public function <strong class="method_name">getPosition</strong>(p:<span class="unresolved_type_name">Number</span>):<a href="../../../sandy/core/data/Vector.html" class="class_name" title="Class sandy.core.data.Vector">Vector</a></code><div class="method_info"><p>
+ Returns the position in the 3D space at a specific percentage.
+ You can imagine the whole path length as the 1.0 value (100%). Now if you need the position when you are at only 10% of the whole path
+ you just have to pass 0.1 in argument, and the returned value is the position on that percentage of the whole path.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>p</code></td><td>Number A percentage between [0-1]
+ </td></tr></table><h4>Return</h4><p class="extra_info">	Vector The 3D position on the path at the current percentage.
+	</p></div></div><div class="method_details alt_row"><a name="method_addPoint"></a><h3>addPoint</h3><code class="method_synopsis">public function <strong class="method_name">addPoint</strong>(x:<span class="unresolved_type_name">Number</span>, y:<span class="unresolved_type_name">Number</span>, z:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Add a point to the path.
+ WARNING : You can't add a point to the path once it has been compiled.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>x</code></td><td>Number
+ </td></tr><tr><td><code>y</code></td><td>Number
+ </td></tr><tr><td><code>z</code></td><td>Number
+ </td></tr></table><h4>Return</h4><p class="extra_info"> 	Boolean true if operation succeed, false otherwise.
+	</p></div></div><div class="method_details"><a name="method_compile"></a><h3>compile</h3><code class="method_synopsis">public function <strong class="method_name">compile</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Computes all the control points. 
+ Must be called before being used by Sandy's engine. Should be called once tha last point of the path has been added.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table></div></div><div class="method_details alt_row"><a name="method_getNumberOfSegments"></a><h3>getNumberOfSegments</h3><code class="method_synopsis">public function <strong class="method_name">getNumberOfSegments</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ returns the number of segments;
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Number the number of segments
+	</p></div></div><div class="method_details"><a name="method_toString"></a><h3>toString</h3><code class="method_synopsis">public function <strong class="method_name">toString</strong>(Void):<span class="unresolved_type_name">String</span></code><div class="method_info"><p>
+ Get a String represntation of the <code> BezierPath</code>.
+ 
+ </p><h4>Return</h4><p class="extra_info">	A String representing the <code> BezierPath</code>.
+	</p></div></div></div><div class="footer"><span>Generated by </span><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a><span> FlashDevelop edition.</span></div></body></html>

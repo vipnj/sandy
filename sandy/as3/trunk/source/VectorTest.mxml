@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="setRandomVectors()">
+	<mx:Script>
+		<![CDATA[
+			
+			import sandy.core.data.*;
+			import sandy.math.VectorMath;
+	
+			private function setRandomVectors():void
+			{
+				ax.text = Math.floor(Math.random()*10).toString();
+				ay.text = Math.floor(Math.random()*10).toString();
+				az.text = Math.floor(Math.random()*10).toString();
+				
+				bx.text = Math.floor(Math.random()*10).toString();
+				by.text = Math.floor(Math.random()*10).toString();
+				bz.text = Math.floor(Math.random()*10).toString();
+			}
+			
+			private function addVector():void
+			{
+				var v1:Vector = new Vector(Number(ax.text),Number(ay.text),Number(az.text));
+				var v2:Vector = new Vector(Number(bx.text),Number(by.text),Number(bz.text));
+				trace(v1 + ", " + v2)
+				var res:Vector = VectorMath.addVector(v1,v2);
+				cx.text = res.x.toString();
+				cy.text = res.y.toString();
+				cz.text = res.z.toString();
+			}
+			
+			private function subVector():void
+			{
+				var v1:Vector = new Vector(Number(ax.text),Number(ay.text),Number(az.text));
+				var v2:Vector = new Vector(Number(bx.text),Number(by.text),Number(bz.text));
+				trace(v1 + ", " + v2)
+				var res:Vector = VectorMath.sub(v1,v2);
+				cx.text = res.x.toString();
+				cy.text = res.y.toString();
+				cz.text = res.z.toString();
+			}
+			private function crossProduct():void
+			{
+				var v1:Vector = new Vector(Number(ax.text),Number(ay.text),Number(az.text));
+				var v2:Vector = new Vector(Number(bx.text),Number(by.text),Number(bz.text));
+				trace(v1 + ", " + v2)
+				var res:Vector = VectorMath.cross(v1,v2);
+				cx.text = res.x.toString();
+				cy.text = res.y.toString();
+				cz.text = res.z.toString();
+			}
+			private function dotProduct():void
+			{
+				var v1:Vector = new Vector(Number(ax.text),Number(ay.text),Number(az.text));
+				var v2:Vector = new Vector(Number(bx.text),Number(by.text),Number(bz.text));
+				trace(v1 + ", " + v2)
+				//var res:Vector = VectorMath.dot(v1,v2);
+				//cx.text = res.x.toString();
+				//cy.text = res.y.toString();
+				//cz.text = res.z.toString();
+			}
+		]]>
+	</mx:Script>
+	<mx:Canvas x="100" y="50">
+		<mx:VBox>
+			<mx:Button label="Random vectors" click="setRandomVectors()"/>
+			<mx:HBox>
+				<mx:TextInput id="ax" width="30" />
+				<mx:TextInput id="ay" width="30" />
+				<mx:TextInput id="az" width="30" />
+			</mx:HBox>
+			<mx:HBox>
+				<mx:TextInput id="bx" width="30" />
+				<mx:TextInput id="by" width="30" />
+				<mx:TextInput id="bz" width="30" />
+			</mx:HBox>
+			<mx:HBox>
+				<mx:Button label="Add" click="addVector()"/>
+				<mx:Button label="Sub" click="subVector()"/>
+				<mx:Button label="Cross" click="crossProduct()"/>
+				<!--mx:Button label="Dot" click="dotProduct()"/-->
+			</mx:HBox>
+			<mx:HBox>
+				<mx:TextInput id="cx" width="30"/>
+				<mx:TextInput id="cy" width="30"/>
+				<mx:TextInput id="cz" width="30"/>
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+</mx:Application>

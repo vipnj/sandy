@@ -1,0 +1,375 @@
+﻿/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+ 
+import sandy.core.data.Matrix4;
+import sandy.core.data.Vertex;
+import sandy.core.face.Polygon;
+import sandy.core.scenegraph.ATransformable;
+import sandy.core.scenegraph.ITransformable;
+import sandy.math.Matrix4Math;
+import sandy.math.VectorMath;
+import sandy.util.NumberUtil;
+import sandy.view.Frustum;
+import sandy.view.ViewPort;
+
+/**
+* Camera3D
+* @author		Thomas Pfeiffer - kiroukou
+* @version		1.0
+* @date 		12.07.2006
+**/
+class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransformable
+{
+	/**
+	 * The frustum of the camera. See {@see Frustum} class.
+	 */
+	public var frustrum:Frustum;
+		
+	/**
+	 * Create a new Camera3D.
+	 * The default camera projection is the perspective one with default parameters values.
+	 * @param nFoc The focal of the Camera3D
+	 * @param s the screen associated to the camera
+	 */
+	public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number, p_nNear:Number, p_nFar:Number  )
+	{
+		super( null );
+		_viewport = new ViewPort( p_nWidth, p_nHeight );
+		_nFov = (p_nFov)?p_nFov:45;
+		_nFar = (p_nFar)?p_nFar:3000;
+		_nNear = (p_nNear)?p_nNear:10;
+		// --
+		frustrum = new Frustum();
+		// --
+		setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
+		_displayList = new Array();
+		_aVerticesList = new Array();
+	}
+	
+//////////////////////
+///// ACCESSORS //////
+//////////////////////		
+
+	public function set viewport( pVP:ViewPort )
+	{
+		_viewport = pVP;
+		_perspectiveChanged = true;
+	}
+	
+	public function get viewport():ViewPort
+	{
+		return _viewport;
+	}
+	
+	/**
+	 * Angle of view in degrees
+	 */
+	public function set fov( pFov:Number )
+	{
+		_nFov = pFov;
+		_perspectiveChanged = true;
+	}
+	
+	public function get fov():Number
+	{
+		return _nFov;
+	}
+	
+	/**
+	 * Near plane distance for culling/clipping
+	 */
+	public function set near( pNear:Number )
+	{
+		_nNear = pNear;
+		_perspectiveChanged = true;
+	}
+	
+	public function get near():Number
+	{
+		return _nNear;
+	}
+			
+	/**
+	 * Far plane distance for culling/clipping
+	 */
+	public function set far( pFar:Number )
+	{
+		_nFar = pFar;
+		_perspectiveChanged = true;
+	}
+	
+	public function get far():Number
+	{
+		return _nFar;
+	}
+
+///////////////////////////////////////
+//// GRAPHICAL ELEMENTS MANAGMENT /////
+///////////////////////////////////////
+
+	public function pushVerticesToRender( p_aVertices:Array ):Void
+	{
+		_aVerticesList = _aVerticesList.concat( p_aVertices );
+	}
+	
+	public function project( Void ):Void
+	{
+		var l_oVertex:Vertex;
+		var l_aPoints:Array = _aVerticesList;
+		var l_nLength:Number = _aVerticesList.length;
+		var l_nCste:Number;
+		var l_nOffx:Number = viewport.w2;
+		var l_nOffy:Number = viewport.h2;
+		var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
+		//
+		mp11 = _mp.n11; mp21 = _mp.n21; mp31 = _mp.n31; mp41 = _mp.n41;
+		mp12 = _mp.n12; mp22 = _mp.n22; mp32 = _mp.n32; mp42 = _mp.n42;
+		mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
+		mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;
+		//
+		while( --l_nLength > -1 )
+		{
+			if( (l_oVertex = l_aPoints[l_nLength]).projected ) continue;
+			//
+			l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+			l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
+			l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
+			l_oVertex.projected = true;
+		}	
+	}
+	
+	public function clearDisplayList():Void
+	{
+	    var l_oDisplayElt:MovieClip = null;
+	    var i:Number;
+	    //
+		for( i=0; l_oDisplayElt = _displayList[i]; i++ )
+		{
+		   l_oDisplayElt.polygon.container.clear();
+		}
+		//
+		_displayList = [];
+		_aVerticesList = [];
+	}
+	
+	public function addToDisplayList( p_oPolygon:Polygon, p_nDepth:Number ):Void
+	{
+	    _displayList.push( {polygon: p_oPolygon, depth: p_nDepth } );
+	}
+	
+	public function renderDisplayList( Void ):Void
+	{
+	    var l_oDisplayElt:Polygon = null;
+	    var i:Number;
+	    var l_nLength:Number = _displayList.length;
+	    //
+	    _displayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+	    //
+	    for( i=0; i < l_nLength; i++ )
+		{
+			l_oDisplayElt = _displayList[i].polygon;
+			l_oDisplayElt.render();
+			l_oDisplayElt.container.swapDepths( i );
+		}
+	}
+
+	/**
+	* Compile the camera transformations by multiplicating the matrix together.
+	* Be carefull to call isModified method before to save computations. 
+	*/
+	public function render( p_oCamera:Camera3D):Void
+	{
+		;/* Nothing to do here */
+	}
+	
+	/**
+	 * Update the state of the camera transformation.
+	 */
+	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
+	{
+		super.update( p_oModelMatrix, p_bChanged );
+		updatePerspective();
+		updateTransform();
+	}
+	
+	/**
+	 * No cull is necessary for the Camera object. This method does nothing.
+	 */
+	public function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):Void
+	{
+		return;
+	}
+	
+	/**
+	* Return the projection matrix. 
+	* 
+	* @return Matrix4
+	*/
+	public function getProjectionMatrix():Matrix4
+	{
+		return _mp;
+	}
+	
+	/**
+	 * Returns the inverse of the projection matrix
+	 */
+	public function getProjectionMatrixInverse():Matrix4
+	{
+		return _mpInv;
+	}
+
+	/*
+	public function applyTransform( p_oTrans:Transform3D ):Void
+	{
+		_vUp   = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vUp  );
+		_vSide = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vSide);
+		_vOut  = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vOut);
+		_p.x = p_oTrans.matrix.n14;
+		_p.y = p_oTrans.matrix.n24;
+		_p.z = p_oTrans.matrix.n34;
+		changed = true;
+	}
+	*/
+
+	public function getTransformationMatrixInverse():Matrix4
+	{
+		return  Matrix4Math.getInverse( transform.matrix );
+	}
+	
+	public function toString():String
+	{
+		return "sandy.core.scenegraph.Camera3D";
+	}
+		
+	/**
+	* Set an orthographic projection. This projection in opposite of the perspective one, don't distort distances and pictures
+	* @param	screenWidth The screen width. Default value: the screen width
+	* @param	screenHeight The screen height. Default value: the screen height.
+	* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
+	* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+	*/
+	/*
+	public function setOrthoProjection(screenWidth:Number, screenHeight:Number, zNear:Number, zFar:Number):Void
+	{
+		var h:Number, w:Number, Q:Number;
+		// --
+		if( undefined == screenWidth ) screenWidth = _is.getSize().width;
+		if( undefined == screenHeight ) screenHeight = _is.getSize().height;
+		if( undefined == zNear ) zNear = 10;
+		if( undefined == zFar ) zFar = 10000;
+		// --
+		w = 2*zNear/screenWidth;
+		h = 2*zNear/screenHeight;
+		Q = zFar/(zFar - zNear);
+
+		delete _mp;
+		_mp = Matrix4.createZero();
+		_mp.n11 = w;
+		_mp.n22 = h;
+		_mp.n33 = Q;
+		_mp.n34 = -Q*zNear;
+		_mp.n43 = 1;
+	}
+	*/
+	
+	/**
+	* Set a projection matrix with perspective. This projection allows a more human visual representation of objects.
+	* @param	fovY The angle of view in degress. Default value: 45.
+	* @param	aspectRatio The ratio between vertical and horizontal pixels. Default value: the screeen ratio (width/height)
+	* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
+	* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+	*/
+	public function setPerspectiveProjection(fovY:Number, aspectRatio:Number, zNear:Number, zFar:Number):Void
+	{
+		var cotan:Number, Q:Number;
+		// --
+		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
+		// --
+		fovY = NumberUtil.toRadian( fovY );
+		cotan = 1 / Math.tan(fovY / 2);
+		Q = zFar/(zFar - zNear);
+		
+		_mp = null;
+		_mp = Matrix4.createZero();
+
+		_mp.n11 = cotan / aspectRatio;
+		_mp.n22 = cotan;
+		_mp.n33 = Q;
+		_mp.n34 = -Q*zNear;
+		_mp.n43 = 1;
+
+		changed = true;	
+	}
+		
+		
+	/**
+	 * Update the camera transformation
+	 */
+	public function updateTransform ( Void ):Void
+	{
+		if( changed )
+		{
+			var mt:Matrix4 = transform.matrix;
+			mt.n11 = _vSide.x; 
+			mt.n12 = _vSide.y; 
+			mt.n13 = _vSide.z; 
+			mt.n14 = - VectorMath.dot( _vSide, _p );
+			
+			mt.n21 = _vUp.x; 
+			mt.n22 = _vUp.y; 
+			mt.n23 = _vUp.z; 
+			mt.n24 = - VectorMath.dot( _vUp, _p );
+			
+			mt.n31 = _vOut.x; 
+			mt.n32 = _vOut.y; 
+			mt.n33 = _vOut.z; 
+			mt.n34 = - VectorMath.dot( _vOut, _p );
+		}
+	}
+	
+	function updatePerspective( Void ):Void
+	{
+		if( _perspectiveChanged )
+		{
+			setPerspectiveProjection(_nFov, _viewport.ratio, _nNear, _nFar );
+			_perspectiveChanged = false;
+		}
+	}
+		
+//////////////////////////
+/// PRIVATE PROPERTIES ///
+//////////////////////////
+
+	private var _mp : Matrix4; // projection Matrix4
+	private var _mpInv : Matrix4; // Inverse of the projection matrix 
+	/*
+	 * ViewPort matrix
+	 */
+	private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
+
+	/**
+	 * The viewport associated to the camera
+	 */
+	private var _viewport:ViewPort;
+	private var _displayList:Array;
+	private var _perspectiveChanged:Boolean;
+	private var _nFov:Number;
+	private var _nFar:Number;
+	private var _nNear:Number;
+
+	private var _aVerticesList:Array;
+
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.core.buffer.MatrixBuffer - Sandy 1.1 BETA</title><link href="../../../style.css" rel="stylesheet" type="text/css"/><link href="../../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.core.buffer" rel="up"/><link href="../../../sandy/core/buffer/ZBuffer.html" title="Class sandy.core.buffer.ZBuffer" rel="prev"/><link href="../../../sandy/core/data/AnimationData.html" title="Class sandy.core.data.AnimationData" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/><meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/></head><body><ul class="main_nav"><li><a href="../../../overview-summary.html" title="Overview of Sandy 1.1 BETA">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.core.buffer">Package</a></li><li><span class="nav_current">Class</span></li><li><a href="../../../index-files/index.html" title="Alpabetical index of types and members">Index</a></li></ul><h1>Class sandy.core.buffer.MatrixBuffer</h1><pre class="type_hierachy"><strong>sandy.core.buffer.MatrixBuffer</strong></pre><div class="type_description"><h2>Description</h2><p>
+ This class stores the matrix used to render correctly the objects.
+ This static class is used during the rendering, when we climb the tree hierarchy of the 3D scene.
+ 
+ </p></div><div class="method_index"><h2>Method Index</h2><a href="#method_getCurrentMatrix" title="static public function getCurrentMatrix(Void):Matrix4">getCurrentMatrix()</a>, <a href="#method_init" title="static public function init(Void):Void">init()</a>, <a href="#method_pop" title="static public function pop(Void):Matrix4">pop()</a>, <a href="#method_push" title="static public function push(m:Matrix4):Matrix4">push()</a></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="method_push"></a><h3>push</h3><code class="method_synopsis">static public function <strong class="method_name">push</strong>(m:<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a>):<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Push a <code> Matrix4</code> to the current.
+ <p>If there is no <code> Matrix4</code> already pushed,
+ nothing is done with it. In the other case, it
+ is multiplied with the current values of the pushed
+ <code> Matrix4</code> and saved.</p>
+ <p>The <a href="#getCurrentMatrix">getCurrentMatrix()</a> method returns the
+ current <code> Matrix4</code> within the pushed <code> Matrix4</code>
+ will be multiplied.</p>
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>m</code></td><td>The <code> Matrix4</code> to push
+ </td></tr></table><h4>Return</h4><p class="extra_info">	The multiplied <code> Matrix4</code>
+	</p></div></div><div class="method_details"><a name="method_getCurrentMatrix"></a><h3>getCurrentMatrix</h3><code class="method_synopsis">static public function <strong class="method_name">getCurrentMatrix</strong>(Void):<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Get the current <code> Matrix4</code> within the pushed
+ <code> Matrix4</code> will be multiplied.
+ <p>It returns <code> <span class="key">null</span></code> if no <code> Matrix4</code> has
+ been pushed.</p>
+ 
+ </p><h4>Return</h4><p class="extra_info">	The current multiplie <code> Matrix4</code> or <code> <span class="key">null</span></code>
+	</p></div></div><div class="method_details alt_row"><a name="method_pop"></a><h3>pop</h3><code class="method_synopsis">static public function <strong class="method_name">pop</strong>(Void):<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Pop a pushed <code> Matrix4</code>.
+ <p>Returns the previous <code> Matrix4</code> (before the last push).
+ If no <code> Matrix4</code> has been pushed, returns <code> <span class="key">null</span></code>.</p>
+ 
+ </p><h4>Return</h4><p class="extra_info">	The last multiplied <code> Matrix4</code> or <code> <span class="key">null</span></code>
+	</p></div></div><div class="method_details"><a name="method_init"></a><h3>init</h3><code class="method_synopsis">static public function <strong class="method_name">init</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Completely reinitialize the MatrixBuffer. Deleting all the buffered matrix, and all the public properties.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table></div></div></div><div class="footer"><span>Generated by </span><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a><span> FlashDevelop edition.</span></div></body></html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.core.World3D - Sandy 1.1 BETA</title><link href="../../style.css" rel="stylesheet" type="text/css"/><link href="../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.core" rel="up"/><link href="../../sandy/core/transform/BasicInterpolator.html" title="Class sandy.core.transform.BasicInterpolator" rel="prev"/><link href="../../sandy/core/Sprite2D.html" title="Class sandy.core.Sprite2D" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/><meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type"/></head><body><ul class="main_nav"><li><a href="../../overview-summary.html" title="Overview of Sandy 1.1 BETA">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.core">Package</a></li><li><span class="nav_current">Class</span></li><li><a href="../../index-files/index.html" title="Alpabetical index of types and members">Index</a></li></ul><h1>Class sandy.core.World3D</h1><pre class="type_hierachy"><strong>sandy.core.World3D</strong></pre><div class="type_description"><h2>Description</h2><p>
+ The 3D world for displaying the Objects.
+ <p>World3D is a singleton class, it's the central point of Sandy :
+ <br/>You can have only one World3D, which contain Groups, Cameras and Lights</p>
+
+ </p></div><div class="field_index"><h2>Field Index</h2><a href="#onInitCacheEVENT" title="static public onInitCacheEVENT:EventType">onInitCacheEVENT</a>, <a href="#onLightUpdatedEVENT" title="static public onLightUpdatedEVENT:EventType">onLightUpdatedEVENT</a>, <a href="#onRenderEVENT" title="static public onRenderEVENT:EventType">onRenderEVENT</a>, <a href="#onStartEVENT" title="static public onStartEVENT:EventType">onStartEVENT</a>, <a href="#onStopEVENT" title="static public onStopEVENT:EventType">onStopEVENT</a></div><div class="method_index"><h2>Method Index</h2><a href="#method_addCamera" title="public function addCamera(cam:Camera3D):Number">addCamera()</a>, <a href="#method_addEventListener" title="public function addEventListener(t:EventType, o):Void">addEventListener()</a>, <a href="#method_getCamera" title="public function getCamera(id:Number):Camera3D">getCamera()</a>, <a href="#method_getCameraList" title="public function getCameraList(Void):Array">getCameraList()</a>, <a href="#method_getCurrentCamera" title="public function getCurrentCamera(Void):Camera3D">getCurrentCamera()</a>, <a href="#method_getCurrentProjectionMatrix" title="public function getCurrentProjectionMatrix(Void):Matrix4">getCurrentProjectionMatrix()</a>, <a href="#method_getInstance" title="static public function getInstance():World3D">getInstance()</a>, <a href="#method_getLight" title="public function getLight(Void):Light3D">getLight()</a>, <a href="#method_getRootGroup" title="public function getRootGroup(Void):Group">getRootGroup()</a>, <a href="#method_removeEventListener" title="public function removeEventListener(e:EventType, oL):Void">removeEventListener()</a>, <a href="#method_render" title="public function render(Void):Void">render()</a>, <a href="#method_setLight" title="public function setLight(l:Light3D):Void">setLight()</a>, <a href="#method_setRootGroup" title="public function setRootGroup(objGroup:Group):Void">setRootGroup()</a>, <a href="#method_stop" title="public function stop(Void):Void">stop()</a></div><div class="field_detail_list"><h2>Field Detail</h2><a name="onRenderEVENT"></a><h3>onRenderEVENT</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">onRenderEVENT</strong>:<span class="unresolved_type_name">EventType</span></code><div class="field_info">
+ The World3D rendering Event. It's the event broadcasted every time the world is rendered
+	 </div></div><a name="onStartEVENT"></a><h3>onStartEVENT</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">onStartEVENT</strong>:<span class="unresolved_type_name">EventType</span></code><div class="field_info">
+ The World3D start Event. Broadcasted when the world start to be rendered
+	 </div></div><a name="onStopEVENT"></a><h3>onStopEVENT</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">onStopEVENT</strong>:<span class="unresolved_type_name">EventType</span></code><div class="field_info">
+ The World3D stop Event. Broadcasted when the world stop to be rendered
+	 </div></div><a name="onLightUpdatedEVENT"></a><h3>onLightUpdatedEVENT</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">onLightUpdatedEVENT</strong>:<span class="unresolved_type_name">EventType</span></code><div class="field_info">
+ The World3D onLightUpdated Event. Broadcasted when the world light is changed
+	 </div></div><a name="onInitCacheEVENT"></a><h3>onInitCacheEVENT</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">onInitCacheEVENT</strong>:<span class="unresolved_type_name">EventType</span></code><div class="field_info">
+ The World3D onLightUpdated Event. Broadcasted when the world light is changed
+	 </div></div></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="method_addEventListener"></a><h3>addEventListener</h3><code class="method_synopsis">public function <strong class="method_name">addEventListener</strong>(t:<span class="unresolved_type_name">EventType</span>, o):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Add a listener for a specific event.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>t</code></td><td>EventType The type of event we want to register
+ </td></tr><tr><td><code>o</code></td><td>The object listener
+	 </td></tr></table></div></div><div class="method_details"><a name="method_removeEventListener"></a><h3>removeEventListener</h3><code class="method_synopsis">public function <strong class="method_name">removeEventListener</strong>(e:<span class="unresolved_type_name">EventType</span>, oL):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Remove a listener for a specific event.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>e</code></td><td>EventType The type of event we want to register
+ </td></tr><tr><td><code>oL</code></td><td>The object listener
+	 </td></tr></table></div></div><div class="method_details alt_row"><a name="method_getInstance"></a><h3>getInstance</h3><code class="method_synopsis">static public function <strong class="method_name">getInstance</strong>():<a href="../../sandy/core/World3D.html" class="class_name" title="Class sandy.core.World3D">World3D</a></code><div class="method_info"><p>
+ Get the Singleton instance of World3D.
+ 
+ </p><h4>Return</h4><p class="extra_info"> World3D, the only one instance possible
+	 </p></div></div><div class="method_details"><a name="method_addCamera"></a><h3>addCamera</h3><code class="method_synopsis">public function <strong class="method_name">addCamera</strong>(cam:<a href="../../sandy/view/Camera3D.html" class="class_name" title="Class sandy.view.Camera3D">Camera3D</a>):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Set the <code> Camera3D</code> of the world.
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>cam</code></td><td>The new <a href="../../sandy/view/Camera3D.html" class="class_name" title="Class sandy.view.Camera3D">Camera3D</a>
+	 </td></tr></table></div></div><div class="method_details alt_row"><a name="method_getCameraList"></a><h3>getCameraList</h3><code class="method_synopsis">public function <strong class="method_name">getCameraList</strong>(Void):<span class="unresolved_type_name">Array</span></code><div class="method_info"><p>
+ Get the list of <code> Camera3D</code> of the world.
+ 
+ </p><h4>Return</h4><p class="extra_info">	 The <a href="../../sandy/view/Camera3D.html" class="class_name" title="Class sandy.view.Camera3D">Camera3D</a> array
+	 </p></div></div><div class="method_details"><a name="method_getCamera"></a><h3>getCamera</h3><code class="method_synopsis">public function <strong class="method_name">getCamera</strong>(id:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/view/Camera3D.html" class="class_name" title="Class sandy.view.Camera3D">Camera3D</a></code><div class="method_info"><p>
+ Get the a <code> Camera3D</code> of the world.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>id</code></td><td>Number The id of the camera you want. default is 0.
+ </td></tr></table><h4>Return</h4><p class="extra_info">	 The <a href="../../sandy/view/Camera3D.html" class="class_name" title="Class sandy.view.Camera3D">Camera3D</a>
+	 </p></div></div><div class="method_details alt_row"><a name="method_setLight"></a><h3>setLight</h3><code class="method_synopsis">public function <strong class="method_name">setLight</strong>(l:<a href="../../sandy/core/light/Light3D.html" class="class_name" title="Class sandy.core.light.Light3D">Light3D</a>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ We set the unique ligth of the 3D world.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>l</code></td><td>Light3D		The light instance
+ </td></tr></table><h4>Return</h4><p class="extra_info">	Void	nothing
+	 </p></div></div><div class="method_details"><a name="method_getLight"></a><h3>getLight</h3><code class="method_synopsis">public function <strong class="method_name">getLight</strong>(Void):<a href="../../sandy/core/light/Light3D.html" class="class_name" title="Class sandy.core.light.Light3D">Light3D</a></code><div class="method_info"><p>
+ Returns the world light reference.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td>Nothing
+ </td></tr></table><h4>Return</h4><p class="extra_info">	Light3D	The light reference
+	 </p></div></div><div class="method_details alt_row"><a name="method_setRootGroup"></a><h3>setRootGroup</h3><code class="method_synopsis">public function <strong class="method_name">setRootGroup</strong>(objGroup:<a href="../../sandy/core/group/Group.html" class="class_name" title="Class sandy.core.group.Group">Group</a>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Add a <code> Group</code> to the world.
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>objGroup</code></td><td>The group to add. It must not be a transformGroup !
+ </td></tr></table><h4>Return</h4><p class="extra_info">	Number		The identifier of the object in the list. With that you will be able to use getGroup method.
+	</p></div></div><div class="method_details"><a name="method_getRootGroup"></a><h3>getRootGroup</h3><code class="method_synopsis">public function <strong class="method_name">getRootGroup</strong>(Void):<a href="../../sandy/core/group/Group.html" class="class_name" title="Class sandy.core.group.Group">Group</a></code><div class="method_info"><p>
+ Get the root <code> Group</code> of the world.
+
+ </p><h4>Return</h4><p class="extra_info">	Group	THe root group of the World3D instance.
+	</p></div></div><div class="method_details alt_row"><a name="method_render"></a><h3>render</h3><code class="method_synopsis">public function <strong class="method_name">render</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Compute all groups, and draw them.
+ Should be call only once, or everytime after a Wordl3D.stop call.
+	</p></div></div><div class="method_details"><a name="method_stop"></a><h3>stop</h3><code class="method_synopsis">public function <strong class="method_name">stop</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Stop the rendering of the World3D.
+ You can start again th rendering by calling render method.
+	 </p></div></div><div class="method_details alt_row"><a name="method_getCurrentProjectionMatrix"></a><h3>getCurrentProjectionMatrix</h3><code class="method_synopsis">public function <strong class="method_name">getCurrentProjectionMatrix</strong>(Void):<a href="../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Allows to get the current matrix projection ( usefull since there's several cameras allowed )
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Matrix4 The current projection matrix
+	</p></div></div><div class="method_details"><a name="method_getCurrentCamera"></a><h3>getCurrentCamera</h3><code class="method_synopsis">public function <strong class="method_name">getCurrentCamera</strong>(Void):<a href="../../sandy/view/Camera3D.html" class="class_name" title="Class sandy.view.Camera3D">Camera3D</a></code><div class="method_info"><p>
+ Allows to get the current camera
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Camera3D The current camera
+	</p></div></div></div><div class="footer"><span>Generated by </span><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a><span> FlashDevelop edition.</span></div></body></html>

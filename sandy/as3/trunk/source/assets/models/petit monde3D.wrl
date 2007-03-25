@@ -1,0 +1,129 @@
+#VRML V2.0 utf8
+
+# Produced by 3D Studio MAX VRML97 exporter, Version 5, Revision 0,93
+# Date: Wed Dec 17 23:09:52 2003
+
+DEF Box01 Transform {
+translation 37.2 0 0.591
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.894 0.6
+}
+}
+geometry DEF Box01-FACES IndexedFaceSet {
+ccw TRUE
+solid TRUE
+coord DEF Box01-COORD Coordinate { point [
+-15.6 0 18.8, 15.6 0 18.8, -15.6 0 -18.8, 15.6 0 -18.8, -15.6 27.8 18.8, 
+15.6 27.8 18.8, -15.6 27.8 -18.8, 15.6 27.8 -18.8]
+}
+normal Normal { vector [
+1 0 0, -1 0 0, 0 1 0, 0 0 1, 0 -1 0, 0 0 -1, ] }
+normalPerVertex TRUE
+coordIndex [
+0, 2, 3, -1, 3, 1, 0, -1, 4, 5, 7, -1, 7, 6, 4, -1, 0, 1, 5, -1, 
+5, 4, 0, -1, 1, 3, 7, -1, 7, 5, 1, -1, 3, 2, 6, -1, 6, 7, 3, -1, 
+2, 0, 4, -1, 4, 6, 2, -1]
+normalIndex [
+4, 4, 4, -1, 4, 4, 4, -1, 2, 2, 2, -1, 2, 2, 2, -1, 3, 3, 3, 
+-1, 3, 3, 3, -1, 0, 0, 0, -1, 0, 0, 0, -1, 5, 5, 5, -1, 5, 5, 
+5, -1, 1, 1, 1, -1, 1, 1, 1, -1, ]
+}
+}
+]
+}
+DEF Box02 Transform {
+translation -22.4 0 37
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.898 0.651 0.843
+}
+}
+geometry DEF Box02-FACES IndexedFaceSet {
+ccw TRUE
+solid TRUE
+coord DEF Box02-COORD Coordinate { point [
+-16.7 0 10.8, 16.7 0 10.8, -16.7 0 -10.8, 16.7 0 -10.8, -16.7 19.9 10.8, 
+16.7 19.9 10.8, -16.7 19.9 -10.8, 16.7 19.9 -10.8]
+}
+normal Normal { vector [
+1 0 0, -1 0 0, 0 1 0, 0 0 1, 0 -1 0, 0 0 -1, ] }
+normalPerVertex TRUE
+coordIndex [
+0, 2, 3, -1, 3, 1, 0, -1, 4, 5, 7, -1, 7, 6, 4, -1, 0, 1, 5, -1, 
+5, 4, 0, -1, 1, 3, 7, -1, 7, 5, 1, -1, 3, 2, 6, -1, 6, 7, 3, -1, 
+2, 0, 4, -1, 4, 6, 2, -1]
+normalIndex [
+4, 4, 4, -1, 4, 4, 4, -1, 2, 2, 2, -1, 2, 2, 2, -1, 3, 3, 3, 
+-1, 3, 3, 3, -1, 0, 0, 0, -1, 0, 0, 0, -1, 5, 5, 5, -1, 5, 5, 
+5, -1, 1, 1, 1, -1, 1, 1, 1, -1, ]
+}
+}
+]
+}
+DEF Box03 Transform {
+translation -28.1 0 -42
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.839 0.898 0.651
+}
+}
+geometry DEF Box03-FACES IndexedFaceSet {
+ccw TRUE
+solid TRUE
+coord DEF Box03-COORD Coordinate { point [
+-14.2 0 12.2, 14.2 0 12.2, -14.2 0 -12.2, 14.2 0 -12.2, -14.2 69.3 12.2, 
+14.2 69.3 12.2, -14.2 69.3 -12.2, 14.2 69.3 -12.2]
+}
+normal Normal { vector [
+1 0 0, -1 0 0, 0 1 0, 0 0 1, 0 -1 0, 0 0 -1, ] }
+normalPerVertex TRUE
+coordIndex [
+0, 2, 3, -1, 3, 1, 0, -1, 4, 5, 7, -1, 7, 6, 4, -1, 0, 1, 5, -1, 
+5, 4, 0, -1, 1, 3, 7, -1, 7, 5, 1, -1, 3, 2, 6, -1, 6, 7, 3, -1, 
+2, 0, 4, -1, 4, 6, 2, -1]
+normalIndex [
+4, 4, 4, -1, 4, 4, 4, -1, 2, 2, 2, -1, 2, 2, 2, -1, 3, 3, 3, 
+-1, 3, 3, 3, -1, 0, 0, 0, -1, 0, 0, 0, -1, 5, 5, 5, -1, 5, 5, 
+5, -1, 1, 1, 1, -1, 1, 1, 1, -1, ]
+}
+}
+]
+}
+DEF Box04 Transform {
+translation 59.2 0 50.3
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.651 0.898 0.898
+}
+}
+geometry DEF Box04-FACES IndexedFaceSet {
+ccw TRUE
+solid TRUE
+coord DEF Box04-COORD Coordinate { point [
+-2.67 0 7.18, 2.67 0 7.18, -2.67 0 -7.18, 2.67 0 -7.18, -2.67 40.2 7.18, 
+2.67 40.2 7.18, -2.67 40.2 -7.18, 2.67 40.2 -7.18]
+}
+normal Normal { vector [
+1 0 0, -1 0 0, 0 1 0, 0 0 1, 0 -1 0, 0 0 -1, ] }
+normalPerVertex TRUE
+coordIndex [
+0, 2, 3, -1, 3, 1, 0, -1, 4, 5, 7, -1, 7, 6, 4, -1, 0, 1, 5, -1, 
+5, 4, 0, -1, 1, 3, 7, -1, 7, 5, 1, -1, 3, 2, 6, -1, 6, 7, 3, -1, 
+2, 0, 4, -1, 4, 6, 2, -1]
+normalIndex [
+4, 4, 4, -1, 4, 4, 4, -1, 2, 2, 2, -1, 2, 2, 2, -1, 3, 3, 3, 
+-1, 3, 3, 3, -1, 0, 0, 0, -1, 0, 0, 0, -1, 5, 5, 5, -1, 5, 5, 
+5, -1, 1, 1, 1, -1, 1, 1, 1, -1, ]
+}
+}
+]
+}

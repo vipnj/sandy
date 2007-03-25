@@ -406,7 +406,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	public function set pan ( nAngle:Number )
 	{
 		changed = true;
-		var l_nAngle:Number = (nAngle + 360)%360 - _nTilt;
+		var l_nAngle:Number = (nAngle + 360)%360 - _nYaw;
 		// --
 		var m:Matrix4 = Matrix4Math.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
 		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
@@ -465,7 +465,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
 		super.update( p_oModelMatrix, p_bChanged );
-		if( p_bChanged )
+		if( changed )
 		{
 			 _oModelCacheMatrix = (p_oModelMatrix) ? Matrix4Math.multiply4x3( p_oModelMatrix, transform.matrix ) : transform.matrix;
 		}

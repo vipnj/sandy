@@ -12,6 +12,7 @@ import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.ITransformable;
+import sandy.core.transform.TransformType;
 import sandy.events.MouseEvent;
 import sandy.events.SkinEvent;
 import sandy.math.Matrix4Math;
@@ -247,7 +248,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	}
 	       
 	
-	public function set geometry(p_geometry:Geometry3D):Void
+	public function set geometry(p_geometry:Geometry3D)
 	{
 		_geometry = p_geometry;
 		updateBoundingVolumes();

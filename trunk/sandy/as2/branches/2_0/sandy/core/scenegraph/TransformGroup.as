@@ -19,8 +19,7 @@ import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.ITransformable;
 import sandy.core.scenegraph.Node;
-import sandy.core.transform.ITransform3D;
-import sandy.math.Matrix4Math;
+import sandy.core.transform.TransformType;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
 
@@ -112,21 +111,21 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 	{
 		if( changed )
 		{
-			var mt:Matrix4 = transform.matrix;
-			mt.n11 = _vSide.x * _oScale.x; 
-			mt.n21 = _vSide.y; 
-			mt.n23 = _vSide.z; 
-			mt.n14 = _p.x;
+			var _mt:Matrix4 = transform.matrix;
+			_mt.n11 = _vSide.x * _oScale.x; 
+			_mt.n21 = _vSide.y; 
+			_mt.n31 = _vSide.z; 
+			_mt.n14 = _p.x;
 			
-			mt.n12 = _vUp.x; 
-			mt.n22 = _vUp.y * _oScale.y;
-			mt.n32 = _vUp.z; 
-			mt.n24 = _p.y;
+			_mt.n12 = _vUp.x; 
+			_mt.n22 = _vUp.y * _oScale.y;
+			_mt.n32 = _vUp.z; 
+			_mt.n24 = _p.y;
 			
-			mt.n13 = _vOut.x; 
-			mt.n23 = _vOut.y; 
-			mt.n33 = _vOut.z * _oScale.z;
-			mt.n34 = _p.z;
+			_mt.n13 = _vOut.x;
+			_mt.n23 = _vOut.y; 
+			_mt.n33 = _vOut.z * _oScale.z;
+			_mt.n34 = _p.z;
 		}
 	}
 		

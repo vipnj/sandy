@@ -17,6 +17,7 @@ limitations under the License.
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.util.NumberUtil;
+import sandy.math.FastMath;
 
 /**
 * Math functions for {@link Matrix4}.
@@ -28,6 +29,8 @@ import sandy.util.NumberUtil;
 **/
 class sandy.math.Matrix4Math 
 {
+	public static var USE_FAST_MATH:Boolean = false;
+	
 	/**
 	 * Compute the multiplication of 2 {@code Matrix4} but as they were 3x3 matrix.
 	 *
@@ -214,13 +217,16 @@ class sandy.math.Matrix4Math
 	public static function eulerRotation ( ax:Number, ay:Number, az:Number ) : Matrix4
 	{
 		var m:Matrix4 = Matrix4.createIdentity();
-		ax = NumberUtil.toRadian(ax) ; ay = NumberUtil.toRadian(ay); az = NumberUtil.toRadian(az);
-		var a:Number = Math.cos( ax );//_aCos[int(ax)] ;
-		var b:Number = Math.sin( ax );//_aSin[int(ax)]	;
-		var c:Number = Math.cos( ay );//_aCos[int(ay)]	;
-		var d:Number = Math.sin( ay );//_aSin[int(ay)]	;
-		var e:Number = Math.cos( az );//_aCos[int(az)]	;
-		var f:Number = Math.sin( az );//_aSin[int(az)]	;
+		ax = NumberUtil.toRadian(ax);
+		ay = NumberUtil.toRadian(ay);
+		az = NumberUtil.toRadian(az);
+		// --
+		var a:Number = ( USE_FAST_MATH == false ) ? Math.cos( ax ) : FastMath.cos(ax);
+		var b:Number = ( USE_FAST_MATH == false ) ? Math.sin( ax ) : FastMath.sin(ax);
+		var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( ay ) : FastMath.cos(ay);
+		var d:Number = ( USE_FAST_MATH == false ) ? Math.sin( ay ) : FastMath.sin(ay);
+		var e:Number = ( USE_FAST_MATH == false ) ? Math.cos( az ) : FastMath.cos(az);
+		var f:Number = ( USE_FAST_MATH == false ) ? Math.sin( az ) : FastMath.sin(az);
 		var ad:Number = a * d	;
 		var bd:Number = b * d	;
 
@@ -233,9 +239,7 @@ class sandy.math.Matrix4Math
 		m.n31 = - ad * e + b * f ;
 		m.n32 =   ad * f + b * e ;
 		m.n33 =   a  * c         ;
-		// unused because loaded as an identity matrix allready.
-		// m.n14 = m.n24 = m.n34 = m.n41= m.n42 = m.n43 = 0;
-		// m.n44 = 1;
+	
 		return m;
 	}
 	
@@ -248,8 +252,9 @@ class sandy.math.Matrix4Math
 	{
 		var m:Matrix4 = Matrix4.createIdentity();
 		angle = NumberUtil.toRadian(angle);
-		var c:Number = Math.cos(angle);//_aCos[int(angle)] ;
-		var s:Number = Math.sin(angle);//_aSin[int(angle)] ;
+		var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+		var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+
 		m.n22 =  c;
 		m.n23 =  s;
 		m.n32 = -s;
@@ -266,8 +271,9 @@ class sandy.math.Matrix4Math
 	{
 		var m:Matrix4 = Matrix4.createIdentity();
 		angle = NumberUtil.toRadian(angle);
-		var c:Number = Math.cos(angle);//_aCos[int(angle)] ;
-		var s:Number = Math.sin(angle);//_aSin[int(angle)] ;
+		var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+		var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+		// --
 		m.n11 =  c;
 		m.n13 = -s;
 		m.n31 =  s;
@@ -284,8 +290,9 @@ class sandy.math.Matrix4Math
 	{
 		var m:Matrix4 = Matrix4.createIdentity();
 		angle = NumberUtil.toRadian(angle);
-		var c:Number = Math.cos(angle);//_aCos[int(angle)] ;
-		var s:Number = Math.sin(angle);//_aSin[int(angle)] ;
+		var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+		var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+		// --
 		m.n11 =  c;
 		m.n12 =  s;
 		m.n21 = -s;
@@ -319,28 +326,28 @@ class sandy.math.Matrix4Math
 		var m:Matrix4 	= Matrix4.createIdentity();
 		angle = NumberUtil.toRadian( angle );
 		// -- modification pour verifier qu'il n'y ai pas un probleme de precision avec la camera
-		var nCos:Number	= Math.cos( angle );
-		var nSin:Number	= Math.sin( angle );
-		var scos:Number	= 1 - nCos ;
-
+		var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+		var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+		var scos:Number	= 1 - c ;
+		// --
 		var suv	:Number = u * v * scos ;
 		var svw	:Number = v * w * scos ;
 		var suw	:Number = u * w * scos ;
-		var sw	:Number = nSin * w ;
-		var sv	:Number = nSin * v ;
-		var su	:Number = nSin * u ;
+		var sw	:Number = s * w ;
+		var sv	:Number = s * v ;
+		var su	:Number = s * u ;
 		
-		m.n11  =   nCos + u * u * scos	;
+		m.n11  =   c + u * u * scos	;
 		m.n12  = - sw 	+ suv 			;
 		m.n13  =   sv 	+ suw			;
 
 		m.n21  =   sw 	+ suv 			;
-		m.n22  =   nCos + v * v * scos 	;
+		m.n22  =   c + v * v * scos 	;
 		m.n23  = - su 	+ svw			;
 
 		m.n31  = - sv	+ suw 			;
 		m.n32  =   su	+ svw 			;
-		m.n33  =   nCos	+ w * w * scos	;
+		m.n33  =   c	+ w * w * scos	;
 
 		return m;
 	}
@@ -523,31 +530,12 @@ class sandy.math.Matrix4Math
 	/////////////
 	// PRIVATE
 	/////////////	
-	private static var _aSin : Array = new Array(360);
-	private static var _aCos : Array = new Array(360);
-	private static var _bIsPrecalculed : Boolean = false;
-	private static var _bMatrixExtends : Boolean = Matrix4Math.preCalc();
-
+	
 	/**
 	 * Constructor
 	 */
 	private function Matrix4Math ()
 	{
 		//empty
-	}
-	
-	private static function preCalc() : Boolean 
-	{
-		if(_bIsPrecalculed) 
-			return true;
-		
-		_bIsPrecalculed = true;
-		
-  		for( var nAlpha:Number = 0; nAlpha < 360; nAlpha++ ) 
-  		{
-	 		_aSin[nAlpha] = Math.sin(nAlpha*Math.PI/180);
-	 		_aCos[nAlpha] = Math.cos(nAlpha*Math.PI/180);
-  		}
-		return true;
 	}
 }

@@ -19,6 +19,7 @@ import sandy.core.data.Vertex;
 import sandy.core.face.Polygon;
 import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.ITransformable;
+import sandy.core.transform.TransformType;
 import sandy.math.Matrix4Math;
 import sandy.math.VectorMath;
 import sandy.util.NumberUtil;

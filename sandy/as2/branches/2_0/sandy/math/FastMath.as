@@ -37,7 +37,7 @@ class sandy.math.FastMath
 		return true;
 	}
 
-	private function radToIndex(radians:Number):Number 
+	private static function radToIndex(radians:Number):Number 
 	{
 		return int( ((radians / TWO_PI) * PRECISION) & (PRECISION - 1) );
 	}
@@ -48,7 +48,7 @@ class sandy.math.FastMath
 	 * @param radians The value to sine.
 	 * @return The approximation of the value's sine.
 	 */
-	public function sin(radians:Number):Number 
+	public static function sin(radians:Number):Number 
 	{
 		return sinTable[ radToIndex(radians) ];
 	}
@@ -59,7 +59,7 @@ class sandy.math.FastMath
 	 * @param radians The value to cosine.
 	 * @return The approximation of the value's cosine.
 	 */
-	public function cos(radians:Number ):Number 
+	public static function cos(radians:Number ):Number 
 	{
 		return sinTable[radToIndex(HALF_PI-radians)];
 	}
@@ -70,8 +70,9 @@ class sandy.math.FastMath
 	 * @param radians The value to tan.
 	 * @return The approximation of the value's tangent.
 	 */
-	public function tan(radians:Number):Number 
+	public static function tan(radians:Number):Number 
 	{
 		return tanTable[radToIndex(radians)];
 	}
+	
 }

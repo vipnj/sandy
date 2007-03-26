@@ -3,7 +3,7 @@ import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.core.scenegraph.Node;
 import sandy.core.transform.Transform3D;
-import sandy.core.World3D;
+import sandy.core.transform.TransformType;
 import sandy.math.Matrix4Math;
 import sandy.math.VectorMath;
 
@@ -12,26 +12,8 @@ import sandy.math.VectorMath;
  */
 class sandy.core.scenegraph.ATransformable extends Node
 {
-	// Side Orientation Vector
-	private var _vSide:Vector;
-	// view Orientation Vector
-	private var _vOut:Vector;
-	// up Orientation Vector
-	private var _vUp:Vector;
-	// current tilt value
-	private var _nTilt:Number;
-	// current yaw value
-	private var _nYaw:Number;
-	// current roll value
-	private var _nRoll:Number;
-
-	private var _vRotation:Vector;	
-	private var _vLookatDown:Vector; // Private absolute down vector
-	private var _p:Vector;	
-	private var _oScale:Vector;
-	private var _transform:Transform3D;
+	public var transform:Transform3D;
 	
-		
 	public function ATransformable ( p_sName:String )
 	{
 		super( p_sName );
@@ -48,24 +30,13 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_nRoll 	= 0;
 		_nTilt 	= 0;
 		_nYaw  	= 0;
-		// 
+		// --
 		transform = new Transform3D();
 	}
     
     public function toString():String
     {
     	return "sandy.core.scenegraph.ATransformable";
-    }
-    
-    public function get transform():Transform3D
-    {
-    	return _transform;
-    }
-    
-    public function set transform( t:Transform3D ):Void
-    {
-    	_transform = t;
-		changed = true;
     }
     
 	/**
@@ -75,6 +46,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		_p.x = px;
 		changed = true;
+		transform.type = TransformType.TRANSLATION;
 	}
 	
 	public function get x():Number
@@ -89,6 +61,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		_p.y = py;
 		changed = true;
+		transform.type = TransformType.TRANSLATION;	
 	}
 	
 	public function get y():Number
@@ -103,6 +76,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		_p.z = pz;
 		changed = true;
+		transform.type = TransformType.TRANSLATION;
 	}
 	
 	public function get z():Number
@@ -134,6 +108,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		_oScale.x = p_scaleX;
 		changed = true;
+		transform.type = TransformType.SCALE;	
 	}
 				
 	public function get scaleX():Number
@@ -151,6 +126,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		_oScale.y = p_scaleY;
 		changed = true;
+		transform.type = TransformType.SCALE;	
 	}
 				
 	public function get scaleY():Number
@@ -168,6 +144,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		_oScale.z = p_scaleZ;
 		changed = true;
+		transform.type = TransformType.SCALE;	
 	}
 				
 	public function get scaleZ():Number
@@ -186,6 +163,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_p.x += _vSide.x * d;
 		_p.y += _vSide.y * d;
 		_p.z += _vSide.z * d;
+		transform.type = TransformType.TRANSLATION;	
 	}
 	
 	/**
@@ -199,6 +177,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_p.x += _vUp.x * d;
 		_p.y += _vUp.y * d;
 		_p.z += _vUp.z * d;
+		transform.type = TransformType.TRANSLATION;	
 	}
 	
 	/**
@@ -213,6 +192,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_p.x += _vOut.x * d;
 		_p.y += _vOut.y * d;
 		_p.z += _vOut.z * d;
+		transform.type = TransformType.TRANSLATION;	
 	}
  
 	/**
@@ -225,7 +205,8 @@ class sandy.core.scenegraph.ATransformable extends Node
 	{
 		changed = true;
 		_p.x += _vOut.x * d;
-		_p.z += _vOut.z * d;		
+		_p.z += _vOut.z * d;	
+		transform.type = TransformType.TRANSLATION;	
 	}
 	
 	/**
@@ -236,7 +217,8 @@ class sandy.core.scenegraph.ATransformable extends Node
 	public function moveVertically( d:Number ) : Void
 	{
 		changed = true;
-		_p.y += d;		
+		_p.y += d;	
+		transform.type = TransformType.TRANSLATION;		
 	}
 	
 	 /**
@@ -248,7 +230,8 @@ class sandy.core.scenegraph.ATransformable extends Node
 	public function moveLateraly( d:Number ) : Void
 	{
 		changed = true;
-		_p.x += d;		
+		_p.x += d;
+		transform.type = TransformType.TRANSLATION;		
 	}
 		
 	/**
@@ -264,6 +247,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_p.x += px;
 		_p.y += py;
 		_p.z += pz;	
+		transform.type = TransformType.TRANSLATION;
 	}
 	
 	
@@ -284,6 +268,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
 		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+		transform.type = TransformType.ROTATION;
 	}
  
 
@@ -326,6 +311,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
 		_vRotation.x = nAngle;
+		transform.type = TransformType.ROTATION;
 	}
 	
 	public function get rotateX():Number
@@ -349,6 +335,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		// --
 		_vRotation.y = nAngle;
 		changed = true;
+		transform.type = TransformType.ROTATION;
 	}
 	
 	public function get rotateY():Number
@@ -372,6 +359,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
 		_vRotation.z = nAngle;
+		transform.type = TransformType.ROTATION;
 	}	
 	
 	public function get rotateZ():Number
@@ -395,6 +383,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
 		_nTilt = l_nAngle;
+		transform.type = TransformType.ROTATION;
 	}
 	
 	/**
@@ -413,8 +402,31 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
 		_nYaw = l_nAngle;
+		transform.type = TransformType.ROTATION;
 	}
-	
+
+	/**
+	 * Realize a rotation around a specific axis (the axis must be normalized!) and from an pangle degrees and around a specific position.
+	 * @param pAxis A 3D Vector representing the axis of rtation. Must be normalized !!
+	 * @param ref Vector The center of rotation as a 3D point.
+	 * @param pAngle Number The angle of rotation in degrees.
+	 */
+	public function rotAxisWithReference( axis:Vector, ref:Vector, pAngle:Number ):Void
+	{
+		var angle:Number = ( pAngle + 360 ) % 360;
+		//
+		var m:Matrix4 = Matrix4Math.translation ( ref.x, ref.y, ref.z );
+		m = Matrix4Math.multiply4x3 ( m, Matrix4Math.axisRotation( axis.x, axis.y, axis.z, angle ));
+		m = Matrix4Math.multiply4x3 ( m, Matrix4Math.translation ( -ref.x, -ref.y, -ref.z ));
+		//
+		_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+		//
+		transform.type = TransformType.ROTATION;
+		changed = true;
+	}
+		
 	/**
 	 * roll - Rotation around the local Z axis of the camera frame
 	 * Range from -180 to +180 where 0 means the plane is aligned with the horizon, 
@@ -433,6 +445,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 		// --
 		_nRoll = l_nAngle;
+		transform.type = TransformType.ROTATION;
 	}	
 
 	public function get roll():Number{return _nRoll;}
@@ -454,6 +467,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_p.x = x;
 		_p.y = y;
 		_p.z = z;	
+		transform.type = TransformType.TRANSLATION;
 	}
 	
 
@@ -491,5 +505,23 @@ class sandy.core.scenegraph.ATransformable extends Node
 			default 		: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
 		}
 		return l_oPos;
-	}	
+	}
+
+	// Side Orientation Vector
+	private var _vSide:Vector;
+	// view Orientation Vector
+	private var _vOut:Vector;
+	// up Orientation Vector
+	private var _vUp:Vector;
+	// current tilt value
+	private var _nTilt:Number;
+	// current yaw value
+	private var _nYaw:Number;
+	// current roll value
+	private var _nRoll:Number;
+	private var _vRotation:Vector;	
+	private var _vLookatDown:Vector; // Private absolute down vector
+	private var _p:Vector;	
+	private var _oScale:Vector;
+
 }

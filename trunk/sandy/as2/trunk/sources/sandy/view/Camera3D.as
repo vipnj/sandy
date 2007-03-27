@@ -73,7 +73,7 @@ class sandy.view.Camera3D
 
 	
 	/**
-	* Update the sreen viewport dimensions
+	* Update the screen viewport dimensions
 	* @param	Void
 	*/
 	public function resize( p_nWidth:Number, p_nHeight:Number ):Void
@@ -488,8 +488,8 @@ class sandy.view.Camera3D
 	* Set a projection matrix with perspective. This projection allows a more human visual representation of objects.
 	* @param	fovY The angle of view in degress. Default value: 45.
 	* @param	aspectRatio The ratio between vertical and horizontal pixels. Default value: the screeen ratio (width/height)
-	* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
-	* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+	* @param	zNear The distance between the camera position and the near plane. Default value: 50.
+	* @param	zFar The distance between the camera position and the far plane. Default value: 3,000.
 	*/
 	public function setPerspectiveProjection(fovY:Number, aspectRatio:Number, zNear:Number, zFar:Number):Void
 	{

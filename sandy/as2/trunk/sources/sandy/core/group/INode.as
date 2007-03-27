@@ -103,7 +103,7 @@ interface sandy.core.group.INode
 	* @param	child Node The node you want to remove.
 	* @return Boolean True if the node has been removed from the list, false otherwise.
 	*/
-	public function removeChild( id:Number ):Boolean;
+	public function removeChildById( id:Number ):Boolean;
 
 	public function removeChildByName( pName:String ):Boolean;
 	

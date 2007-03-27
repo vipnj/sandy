@@ -23,8 +23,10 @@ import com.bourre.events.EventBroadcaster;
  * It allows all the basic operations you might want to do about trees node.
  * </p>
  * @author		Thomas Pfeiffer - kiroukou
- * @version		1.0
- * @date 		16.05.2006
+ * @author		Bruce Epstein - zeusprod
+ * @since		0.1
+ * @version		1.2
+ * @date 		27.03.2007
  **/
 class sandy.core.group.Node extends EventBroadcaster
 {
@@ -137,8 +139,8 @@ class sandy.core.group.Node extends EventBroadcaster
 	
 	/**
 	* Allows you to know if this node has been modified (true value) or not (false value). 
-	* Mainly usefull for the cache system.
-	* @return	Boolean Value specifying the statut of the node. A true value means the node has been modified, it it should be rendered again
+	* Mainly useful for the cache system.
+	* @return	Boolean Value specifying the status of the node. A true value means the node has been modified, it it should be rendered again
 	*/
 	public function isModified( Void ):Boolean
 	{
@@ -269,14 +271,16 @@ class sandy.core.group.Node extends EventBroadcaster
 	* @param	child Node The node you want to remove.
 	* @return Boolean True if the node has been removed from the list, false otherwise.
 	*/
-	public function removeChild( pId:Number ):Boolean 
+	public function removeChildById( pId:Number ):Boolean 
 	{
 		var found:Boolean = false;
-		if( pId > 0 && pId < _aChilds.length )
+		var i:Number, l:Number = _aChilds.length;
+
+		for( i = 0; i < l && !found; i++ )
 		{
-			if( _aChilds[pId]  )
+			if( _aChilds[i].getId() == pId  )
 			{
-				_aChilds.splice( pId, 1 );
+				_aChilds.splice( i, 1 );
 				setModified( true );
 				found = true;
 			}
@@ -310,13 +314,11 @@ class sandy.core.group.Node extends EventBroadcaster
 	
 	/**
 	 * Delete all the childs of this node, and also the datas it is actually storing.
-	 * Do a recurssive call to child's destroy method.
+	 * Do a recursive call to child's destroy method.
 	 */
 	public function destroy( Void ):Void 
 	{
-		// the unlink this node to his parent
-		if( hasParent() ) _parent.removeChild( this.getId() );
-		// should we kill all the childs, or just make them childs of current node parent ?
+		// should we kill all the children, or just make them children of current node parent ?
 		var l:Number = _aChilds.length;
 		while( --l > -1 )
 		{
@@ -324,7 +326,8 @@ class sandy.core.group.Node extends EventBroadcaster
 			delete _aChilds[l];	
 		}
 		delete _aChilds;
-		_parent = null;
+		// Unlink this node from its parent
+		if( hasParent() == true ) _parent.removeChildById( this._id );
 		removeAllListeners();
 	}
 
@@ -338,8 +341,8 @@ class sandy.core.group.Node extends EventBroadcaster
 		//
 		var l:Number = _aChilds.length;
 		// first we remove this node as a child of its parent
-		// we do not update rigth now, but a little bit later ;)
-		_parent.removeChild( this.getId() );
+		// we do not update right now, but a little bit later ;)
+		_parent.removeChildById( this.getId() );
 		// now we make current node children the current parent's node children
 		while( --l > -1 )
 		{

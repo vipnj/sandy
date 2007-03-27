@@ -9,10 +9,9 @@
 
 class sandy.math.FastMath
 {
-	private static var _isInitialize:Boolean = FastMath.initialize();
 	
 	/** Precission. The bigger, the more entries in lookup table so the more accurate results. */
-	public static var PRECISION:Number = 0x100000;
+	public static var PRECISION:Number = 0x10000;
 	public static var TWO_PI:Number = 2*Math.PI;
 	public static var HALF_PI:Number = Math.PI/2;
 	
@@ -22,16 +21,18 @@ class sandy.math.FastMath
 	
 	private static var RAD_SLICE:Number = TWO_PI / PRECISION;
 	
-	
+	// Shall be done at the end of the static properties declaration.
+	private static var _isInitialize:Boolean = FastMath.initialize();
+		
 	private static function initialize(Void):Boolean
 	{
 		var rad:Number = 0;
 
-		for (var i:Number = 0; i < PRECISION; i++) 
+		for (var i:Number = 0; i < FastMath.PRECISION; i++) 
 		{
-			rad = Number(i * RAD_SLICE);
-			sinTable[i] = Number(Math.sin(rad));
-			tanTable[i] = Number(Math.tan(rad));
+			rad = Number(i * FastMath.RAD_SLICE);
+			sinTable[i] = Math.sin(rad);
+			tanTable[i] = Math.tan(rad);
 		}
 		
 		return true;

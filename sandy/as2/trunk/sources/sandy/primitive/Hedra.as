@@ -18,6 +18,7 @@ import sandy.core.data.Vertex;
 import sandy.core.Object3D;
 import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
+import sandy.core.data.UVCoord;
 
 /**
 * Hedra
@@ -25,8 +26,9 @@ import sandy.primitive.Primitive3D;
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Tabin C�dric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
-* @version		1.0
-* @date 		12.01.2006 
+* @author		Bruce Epstein - zeusprod
+* @version		1.2
+* @date 		26.03.2007 
 **/
 class sandy.primitive.Hedra extends Object3D implements Primitive3D
 {
@@ -36,6 +38,7 @@ class sandy.primitive.Hedra extends Object3D implements Primitive3D
 	private var _h:Number;
 	private var _lg:Number;
 	private var _radius:Number ;
+	private var _aUv:Array = new Array();
 
 	/**
 	* This is the constructor to call when you nedd to create an Hedra primitive.
@@ -81,55 +84,55 @@ class sandy.primitive.Hedra extends Object3D implements Primitive3D
 		aPoints.push( new Vertex( 0 , h2  , 0) );
 		aPoints.push( new Vertex( 0 , -h2  , 0) );
 		
-		addUVCoordinate (0, 0.5);//0
-		addUVCoordinate (0,33, 0.5);//1
-		addUVCoordinate (0.66, 0.5);//2
-		addUVCoordinate (1, 0.5);//3
-		addUVCoordinate (1, 1);
-		addUVCoordinate (0, 0);
+		_aUv.push(new UVCoord (0, 0.5));//0
+		_aUv.push(new UVCoord (0,33, 0.5));//1
+		_aUv.push(new UVCoord (0.66, 0.5));//2
+		_aUv.push(new UVCoord (1, 0.5));//3
+		_aUv.push(new UVCoord (1, 1));//4
+		_aUv.push(new UVCoord (0, 0));//5
 
 		//Creation des faces
 		//Face avant
-		var f:TriFace3D;
+		var f:Polygon;
 		var n:Vertex;
 		
-		f = new TriFace3D(this, aPoints[0], aPoints[1], aPoints[4] );
-		f.setUVCoordinates( _aUv[0], _aUv[1], _aUv[4] );
+		f = new Polygon(this, aPoints[0], aPoints[1], aPoints[4] );
+		f.setUVCoords( _aUv[0], _aUv[1], _aUv[4] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		//Face derriere
-		f = new TriFace3D(this, aPoints[3], aPoints[4], aPoints[2] );
-		f.setUVCoordinates( _aUv[3], _aUv[4], _aUv[2] );
+		f = new Polygon(this, aPoints[3], aPoints[4], aPoints[2] );
+		f.setUVCoords( _aUv[3], _aUv[4], _aUv[2] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		
-		f = new TriFace3D(this, aPoints[1], aPoints[5], aPoints[2] );
-		f.setUVCoordinates( _aUv[1], _aUv[5], _aUv[2] );
+		f = new Polygon(this, aPoints[1], aPoints[5], aPoints[2] );
+		f.setUVCoords( _aUv[1], _aUv[5], _aUv[2] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		//Face gauche
-		f = new TriFace3D(this, aPoints[4], aPoints[3], aPoints[0] );
-		f.setUVCoordinates( _aUv[4], _aUv[3], _aUv[0] );
+		f = new Polygon(this, aPoints[4], aPoints[3], aPoints[0] );
+		f.setUVCoords( _aUv[4], _aUv[3], _aUv[0] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		//Face droite
-		f = new TriFace3D(this, aPoints[4], aPoints[1], aPoints[2] );
-		f.setUVCoordinates( _aUv[4], _aUv[1], _aUv[2] );
+		f = new Polygon(this, aPoints[4], aPoints[1], aPoints[2] );
+		f.setUVCoords( _aUv[4], _aUv[1], _aUv[2] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		
-		f = new TriFace3D(this, aPoints[0], aPoints[5], aPoints[1] );
-		f.setUVCoordinates( _aUv[0], _aUv[5], _aUv[1] );
+		f = new Polygon(this, aPoints[0], aPoints[5], aPoints[1] );
+		f.setUVCoords( _aUv[0], _aUv[5], _aUv[1] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 
-		f = new TriFace3D(this, aPoints[3], aPoints[2], aPoints[5] );
-		f.setUVCoordinates( _aUv[3], _aUv[2], _aUv[5] );
+		f = new Polygon(this, aPoints[3], aPoints[2], aPoints[5] );
+		f.setUVCoords( _aUv[3], _aUv[2], _aUv[5] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		
-		f = new TriFace3D(this, aPoints[0], aPoints[3], aPoints[5] );
-		f.setUVCoordinates( _aUv[0], _aUv[3], _aUv[5] );
+		f = new Polygon(this, aPoints[0], aPoints[3], aPoints[5] );
+		f.setUVCoords( _aUv[0], _aUv[3], _aUv[5] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 

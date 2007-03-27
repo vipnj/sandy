@@ -53,7 +53,6 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 		super.update( p_oModelMatrix, p_bChanged );
 		//
 		var l_nLength:Number = _aChilds.length;
-		//
 		while( --l_nLength > -1 )
 		{
 			_aChilds[l_nLength].update( _oModelCacheMatrix, changed );
@@ -79,12 +78,13 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 		var l_nId:Number;
 		var l_nLength:Number = _aChilds.length;
 		//
+		changed = p_bChanged || changed;
 		for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
 		{
-		    l_oNode.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
+		    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed );
 		}
 		// FIXME is that correct to call super at the end of an overrided method ?
-		super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
+		super.cull( p_oFrustum, p_oViewMatrix, changed );
 	}
 	
 	public function render( p_oCamera:Camera3D ):Void

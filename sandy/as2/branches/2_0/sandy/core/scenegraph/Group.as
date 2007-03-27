@@ -48,7 +48,7 @@ class sandy.core.scenegraph.Group extends Node
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		super.update();
+		super.update( p_oModelMatrix, p_bChanged );
 		var l_oNode:Node;
 		var l_nId:Number;
 		var l_nLength:Number = _aChilds.length;
@@ -77,14 +77,14 @@ class sandy.core.scenegraph.Group extends Node
 		var l_oNode:Node;
 		var l_nId:Number;
 		var l_nLength:Number = _aChilds.length;
+		changed = p_bChanged || changed;
 		//
 		for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
 		{
-		    l_oNode.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
-		    l_oNode.changed = false;
+		    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed || l_oNode.changed );
 		}
 		// FIXME is that correct to call super at the end of an overrding method ?
-		super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
+		super.cull( p_oFrustum, p_oViewMatrix, changed );
 	}
 	
 	public function render( p_oCamera:Camera3D ):Void

@@ -99,7 +99,7 @@ class sandy.view.ClipScreen implements IScreen
 		_sRect 	= r;
 		_w = _sRect.width;
 		_h = _sRect.height;
-		_c.updateScreen();
+		_c.resize(_w, _h);
 	}
 	
 	/**

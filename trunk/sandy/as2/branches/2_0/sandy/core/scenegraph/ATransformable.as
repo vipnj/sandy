@@ -21,9 +21,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_oScale = new Vector( 1, 1, 1 );
 		_vRotation = new Vector(0,0,0);
 		// --
-		_vOut 	= new Vector( 0, 0, 1 );
-		_vSide 	= new Vector( 1, 0, 0 );
-		_vUp 	= new Vector( 0, 1 ,0 );
+		initFrame();
 		// --
 		_vLookatDown = new Vector(0.00000000001, -1, 0);// value to avoid some colinearity problems.;
 		// --
@@ -33,6 +31,13 @@ class sandy.core.scenegraph.ATransformable extends Node
 		// --
 		transform = new Transform3D();
 	}
+    
+    public function initFrame( Void ):Void
+    {
+    	_vSide 	= new Vector( 1, 0, 0 );
+		_vUp 	= new Vector( 0, 1 ,0 );
+		_vOut 	= new Vector( 0, 0, 1 );
+    }
     
     public function toString():String
     {
@@ -481,7 +486,10 @@ class sandy.core.scenegraph.ATransformable extends Node
 		super.update( p_oModelMatrix, p_bChanged );
 		if( changed )
 		{
-			 _oModelCacheMatrix = (p_oModelMatrix) ? Matrix4Math.multiply4x3( p_oModelMatrix, transform.matrix ) : transform.matrix;
+			 if( p_oModelMatrix )
+			 	_oModelCacheMatrix = (transform.matrix) ? Matrix4Math.multiply4x3( p_oModelMatrix, transform.matrix ) : p_oModelMatrix;
+			 else
+			 	_oModelCacheMatrix = transform.matrix;
 		}
 	}
 

@@ -4,6 +4,7 @@ import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Group;
 import sandy.core.scenegraph.TransformGroup;
 import sandy.core.World3D;
+import sandy.math.FastMath;
 import sandy.math.Matrix4Math;
 import sandy.primitive.Box;
 import sandy.primitive.Sphere;
@@ -20,6 +21,7 @@ class TestCube
 	private var _world:World3D;
 	private var box:Box;
 	private var sphere:Sphere;
+	var tgRotation:TransformGroup;
 	
 	private var m_fpsTf:TextField;
 	private var m_nFps:Number;
@@ -28,7 +30,8 @@ class TestCube
 	public static function main( mc:MovieClip ):Void
 	{
 		var t:TestCube = new TestCube(mc);
-		Matrix4Math.USE_FAST_MATH = true;
+		// Does not make things faster in AS2 but does in AS3...
+		//Matrix4Math.USE_FAST_MATH = true;
 	}
 	
 	public function TestCube( p_oMc:MovieClip )
@@ -60,11 +63,10 @@ class TestCube
 	{
 		var g:Group = new Group();
 		var tgTranslation:TransformGroup = new TransformGroup("translation");
-		var tgRotation:TransformGroup = new TransformGroup("rotation");
+		tgRotation = new TransformGroup("rotation");
 		
 		tgTranslation.z = 500;
 		//tgRotation.transform = TransformUtil.rotAxisWithReference( new Vector( 0, 1, 0 ), new Vector( 0, 0, 0), 90);
-		tgRotation.rotateY = 20;
 		
 		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 		//box.enableClipping = true;
@@ -76,7 +78,7 @@ class TestCube
 		sphere = new Sphere( "mySphere", 100, 2, "quad" );
 		sphere.skin = new MixedSkin( 0x0000FF, 100 );
 		sphere.z = 200;
-		sphere.x = 100;
+		sphere.x = 200;
 		sphere.rotateAxis(1,1,1, 45);
 		
 		tgRotation.addChild( sphere );
@@ -95,7 +97,7 @@ class TestCube
 			m_nFps = 0;
 			m_nTime = getTimer();
 		}
-		
+		tgRotation.rotateY ++;
 		box.roll += 0.5;
 		//box.rotateX += 0.5;
 		//box.scaleX += 0.01;

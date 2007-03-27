@@ -201,9 +201,9 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		super.update( p_oModelMatrix, p_bChanged );
 		updatePerspective();
 		updateTransform();
+		super.update( p_oModelMatrix, p_bChanged );
 	}
 	
 	/**

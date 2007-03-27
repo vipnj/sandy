@@ -334,7 +334,6 @@ class sandy.core.scenegraph.Node
 		            ////////////////////////
 		            _oBBox.transform( _oViewCacheMatrix );
 		            culled = p_oFrustum.boxInFrustum( _oBBox );
-
 				}
 			}
 		}

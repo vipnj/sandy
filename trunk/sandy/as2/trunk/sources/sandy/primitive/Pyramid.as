@@ -14,15 +14,12 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-/*
-Note : This General Public License does not permit incorporating your program 
-       into proprietary programs.
-*/
 
 import sandy.core.data.Vertex;
 import sandy.core.Object3D;
 import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
+import sandy.core.data.UVCoord;
 
 /**
 * Pyramid
@@ -39,6 +36,7 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 	private var _h:Number;
 	private var _lg:Number;
 	private var _radius:Number ;
+	private var _aUv:Array = new Array();
 
 	/**
 	* This is the constructor to call when you nedd to create a Pyramid primitive.
@@ -67,7 +65,7 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 	*/
 	public function generate (Void) : Void
 	{
-		var f:Face;
+		var f:Polygon;
 		//Creation des points
 		_h = -_h;
 		var r2:Number = _radius/2;
@@ -85,39 +83,39 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 		aPoints.push( new Vertex(-r2,0,-l2) );
 		aPoints.push( new Vertex( 0,h2,0) );	
 
-		addUVCoordinate (0,0.5);//0
-		addUVCoordinate (0,33,0.5);//1
-		addUVCoordinate (0.66,0.5);//2
-		addUVCoordinate (1,0.5);//3
-		addUVCoordinate (1,1);
+		_aUv.push(new UVCoord (0,0.5));//0
+		_aUv.push(new UVCoord (0,33,0.5));//1
+		_aUv.push(new UVCoord (0.66,0.5));//2
+		_aUv.push(new UVCoord (1,0.5));//3
+		_aUv.push(new UVCoord (1,1));
 
 		//Creation des faces
 		//Face avant
-		f = new TriFace3D(this, aPoints[0], aPoints[1], aPoints[4] );
-		f.setUVCoordinates( _aUv[0], _aUv[1], _aUv[4] );
+		f = new Polygon(this, aPoints[0], aPoints[1], aPoints[4] );
+		f.setUVCoords( _aUv[0], _aUv[1], _aUv[4] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		//Face derriere
-		f = new TriFace3D(this, aPoints[3], aPoints[2], aPoints[0] );
-		f.setUVCoordinates( _aUv[3], _aUv[2], _aUv[0] );
+		f = new Polygon(this, aPoints[3], aPoints[2], aPoints[0] );
+		f.setUVCoords( _aUv[3], _aUv[2], _aUv[0] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
-		f = new TriFace3D(this, aPoints[0], aPoints[2], aPoints[1] );
-		f.setUVCoordinates( _aUv[0], _aUv[2], _aUv[1] );
+		f = new Polygon(this, aPoints[0], aPoints[2], aPoints[1] );
+		f.setUVCoords( _aUv[0], _aUv[2], _aUv[1] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		//Face gauche
-		f = new TriFace3D(this, aPoints[4], aPoints[3], aPoints[0] );
-		f.setUVCoordinates( _aUv[4], _aUv[3], _aUv[0] );
+		f = new Polygon(this, aPoints[4], aPoints[3], aPoints[0] );
+		f.setUVCoords( _aUv[4], _aUv[3], _aUv[0] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 		//Face droite
-		f = new TriFace3D(this, aPoints[3], aPoints[4], aPoints[2] );
-		f.setUVCoordinates( _aUv[3], _aUv[4], _aUv[2] );
+		f = new Polygon(this, aPoints[3], aPoints[4], aPoints[2] );
+		f.setUVCoords( _aUv[3], _aUv[4], _aUv[2] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
-		f = new TriFace3D(this, aPoints[4], aPoints[1], aPoints[2] );
-		f.setUVCoordinates( _aUv[4], _aUv[1], _aUv[2] );
+		f = new Polygon(this, aPoints[4], aPoints[1], aPoints[2] );
+		f.setUVCoords( _aUv[4], _aUv[1], _aUv[2] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 	}

@@ -31,8 +31,10 @@ import sandy.view.Frustum;
 /**
 * Polygon
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		12.01.2006 
+* @author		Bruce Epstein - zeusprod
+* @since		1.0
+* @version		1.2
+* @date 		27.03.2007 
 **/
 class sandy.core.face.Polygon implements IPolygon
 {
@@ -181,7 +183,7 @@ class sandy.core.face.Polygon implements IPolygon
 	public function setSkin( s:Skin ):Void
 	{
 		_s = s;
-		updateTextureMatrix();
+		updateTextureMatrix(s);
 	}
 	
 	/**

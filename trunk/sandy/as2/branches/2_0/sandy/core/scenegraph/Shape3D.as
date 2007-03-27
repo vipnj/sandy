@@ -233,7 +233,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		}
 		//
 		_needRedraw = true;
-		return true;
+		//return true; // Not allowed in setters
 	}
 	
 	/**

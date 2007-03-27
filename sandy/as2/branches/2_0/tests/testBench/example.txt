@@ -1,0 +1,14 @@
+This positions and roll/tilt values for the Camera and Box respectively
+makes the box loose its "upper" faces.
+The Report button writes a report over tese values to the trace.
+
+
+Camera:
+At: (0, 90, -25)
+roll:0.5
+tilt:0
+
+Cube:
+At: (0, 0, 200)
+roll:-0.5
+tilt:0.5

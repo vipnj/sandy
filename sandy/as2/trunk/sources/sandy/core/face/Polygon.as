@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -26,6 +26,7 @@ import sandy.skin.MovieSkin;
 import sandy.skin.Skin;
 import sandy.skin.SkinType;
 import sandy.skin.TextureSkin;
+import sandy.skin.VideoSkin;
 import sandy.view.Frustum;
 
 /**
@@ -33,8 +34,8 @@ import sandy.view.Frustum;
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.2
-* @date 		27.03.2007 
+* @version		1.2.1
+* @date 		28.03.2007 
 **/
 class sandy.core.face.Polygon implements IPolygon
 {
@@ -73,6 +74,11 @@ class sandy.core.face.Polygon implements IPolygon
 			{
 				w = MovieSkin(s).getMovie()._width;
 				h = MovieSkin(s).getMovie()._height;
+			}
+			else if (s.getType() == SkinType.VIDEO)
+			{
+				w = VideoSkin(s).texture.width;
+				h = VideoSkin(s).texture.height;
 			}
 			//
 			if( w > 0 && h > 0 )

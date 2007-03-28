@@ -124,10 +124,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	
 	public function render( p_oCamera:Camera3D ):Void
 	{	
-		var l_aPoints:Array = geometry.points;
-        var l_oMatrix:Matrix4 = _oViewCacheMatrix;
-       	var l_faces:Array = _geometry.faces;
-       	var l_oFrustum:Frustum = p_oCamera.frustrum;
 		var l_nDepth:Number;
 		var l_oFace:Polygon;
         var m11:Number,m21:Number,m31:Number,m41:Number;
@@ -136,7 +132,12 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
         var m14:Number,m24:Number,m34:Number,m44:Number;
 		var l_oVertex:Vertex;
 		var l_nLength:Number;
-        //
+		//--
+		var l_aPoints:Array = geometry.points;
+        var l_oMatrix:Matrix4 = _oViewCacheMatrix;
+       	var l_faces:Array = _geometry.faces;
+       	var l_oFrustum:Frustum = p_oCamera.frustrum;
+        // --
         m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31; m41 = l_oMatrix.n41;
 		m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32; m42 = l_oMatrix.n42;
 		m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33; m43 = l_oMatrix.n43;

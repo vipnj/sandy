@@ -482,15 +482,16 @@ class sandy.core.scenegraph.ATransformable extends Node
 	 * FIXME: Transformable nodes shall upate their transform if necessary before calling this method.
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
-	{
-		super.update( p_oModelMatrix, p_bChanged );
-		if( changed )
+	{	
+		if( p_bChanged || changed )
 		{
 			 if( p_oModelMatrix )
 			 	_oModelCacheMatrix = (transform.matrix) ? Matrix4Math.multiply4x3( p_oModelMatrix, transform.matrix ) : p_oModelMatrix;
 			 else
 			 	_oModelCacheMatrix = transform.matrix;
 		}
+		//
+		super.update( _oModelCacheMatrix, p_bChanged );
 	}
 
 

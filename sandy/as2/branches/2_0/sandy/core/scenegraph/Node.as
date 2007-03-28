@@ -297,6 +297,12 @@ class sandy.core.scenegraph.Node
 	{
 		/* Shall be overriden */
 		changed = changed || p_bChanged;
+		//
+		var l_nLength:Number = _aChilds.length;
+		while( --l_nLength > -1 )
+		{
+			_aChilds[l_nLength].update( _oModelCacheMatrix, changed );
+		}
 	}
 
 	

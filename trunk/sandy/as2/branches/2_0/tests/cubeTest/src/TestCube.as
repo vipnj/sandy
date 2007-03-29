@@ -67,10 +67,10 @@ class TestCube
 		
 		tgTranslation.z = 500;
 		//tgRotation.transform = TransformUtil.rotAxisWithReference( new Vector( 0, 1, 0 ), new Vector( 0, 0, 0), 90);
-		
+		tgRotation.rotateY = 300;
 		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 		//box.enableClipping = true;
-		box.skin = new MixedSkin( 0xFF00FF, 100 );
+		box.skin = new MixedSkin( 0xFF00FF, 50 );
 		box.rotateX = 45;
 		box.rotateZ = 45;
 		tgRotation.addChild( box );
@@ -79,7 +79,7 @@ class TestCube
 		sphere.skin = new MixedSkin( 0x0000FF, 100 );
 		sphere.z = 200;
 		sphere.x = 200;
-		sphere.rotateAxis(1,1,1, 45);
+		sphere.rotateAxis(0, 0, 1, 270);
 		
 		tgRotation.addChild( sphere );
 		//
@@ -97,7 +97,7 @@ class TestCube
 			m_nFps = 0;
 			m_nTime = getTimer();
 		}
-		tgRotation.rotateY ++;
+		//tgRotation.rotateY ++;
 		box.roll += 0.5;
 		//box.rotateX += 0.5;
 		//box.scaleX += 0.01;

@@ -33,7 +33,7 @@ class sandy.core.transform.Transform3D
 	 */
 	public function Transform3D ( Void )
 	{
-		matrix = Matrix4.createIdentity();
+		matrix = null;//Matrix4.createIdentity();
 		type = TransformType.NONE;
 	}
 					
@@ -43,7 +43,7 @@ class sandy.core.transform.Transform3D
 	*/
 	public function destroy( Void ):Void
 	{
-		delete matrix;
+		if( matrix) delete matrix;
 	}
 
 	public var matrix:Matrix4;

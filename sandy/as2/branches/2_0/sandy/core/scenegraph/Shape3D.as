@@ -12,10 +12,9 @@ import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.ITransformable;
-import sandy.core.transform.TransformType;
 import sandy.events.MouseEvent;
 import sandy.events.SkinEvent;
-import sandy.math.Matrix4Math;
+import sandy.math.VectorMath;
 import sandy.skin.SimpleLineSkin;
 import sandy.skin.Skin;
 import sandy.view.CullingState;
@@ -66,21 +65,23 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	{
 		if( changed )
 		{
-			var mt:Matrix4 = transform.matrix;
+			var mt:Matrix4 = m_tmpMt;
 			mt.n11 = _vSide.x * _oScale.x; 
 			mt.n21 = _vSide.y; 
 			mt.n31 = _vSide.z; 
-			mt.n14 = _p.x;
+			mt.n14 = VectorMath.dot( _vSide, _p );
 			
 			mt.n12 = _vUp.x; 
 			mt.n22 = _vUp.y * _oScale.y;
 			mt.n32 = _vUp.z; 
-			mt.n24 = _p.y;
+			mt.n24 = VectorMath.dot( _vUp, _p );
 			
 			mt.n13 = _vOut.x;
 			mt.n23 = _vOut.y; 
 			mt.n33 = _vOut.z * _oScale.z;
-			mt.n34 = _p.z;
+			mt.n34 = VectorMath.dot( _vOut, _p );
+			
+			transform.matrix = mt;
 		}
 	}
 	

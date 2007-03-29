@@ -29,6 +29,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_nTilt 	= 0;
 		_nYaw  	= 0;
 		// --
+		m_tmpMt = Matrix4.createIdentity();
 		transform = new Transform3D();
 	}
     
@@ -532,5 +533,5 @@ class sandy.core.scenegraph.ATransformable extends Node
 	private var _vLookatDown:Vector; // Private absolute down vector
 	private var _p:Vector;	
 	private var _oScale:Vector;
-
+	private var m_tmpMt:Matrix4; // temporary transform matrix used at updateTransform
 }

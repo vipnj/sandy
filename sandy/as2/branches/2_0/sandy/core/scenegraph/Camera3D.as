@@ -323,7 +323,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	{
 		if( changed )
 		{
-			var mt:Matrix4 = transform.matrix;
+			var mt:Matrix4 = m_tmpMt;
 			mt.n11 = _vSide.x; 
 			mt.n12 = _vSide.y; 
 			mt.n13 = _vSide.z; 
@@ -338,6 +338,8 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 			mt.n32 = _vOut.y; 
 			mt.n33 = _vOut.z; 
 			mt.n34 = - VectorMath.dot( _vOut, _p );
+			
+			transform.matrix = mt;
 		}
 	}
 	

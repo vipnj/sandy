@@ -42,7 +42,7 @@ import sandy.core.data.Matrix4;
 * @author	Nicolas Coevoet - [ NikO ]
 * @author	Bruce Epstein - zeusprod
 * @version	1.2
-* @date 	21.03.2007
+* @date 	30.03.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -485,6 +485,15 @@ class sandy.core.Object3D extends Leaf
 		aFaces.push( f );
 		// --
 		setModified( true );
+	}
+	
+	/**
+	 * Return the array containing the faces of the object
+	 * @return Array The array of faces instances
+	 */
+	public function getFaces ():Array
+	{
+		return aFaces;
 	}
 
 	/**

@@ -32,21 +32,25 @@ import flash.geom.Point;
 * MovieSkin
 * Allow you to texture a 3D Object with a movieClip wich contains animation, picture, or video.
 * @author		Thomas Pfeiffer - kiroukou
+* @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.0
-* @date 		22.04.2006 
+* @version		1.2.1
+* @date 		30.03.2007 
 **/
 class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
 	/**
 	* Create a new MovieSkin.
 	* @param url URL to load
+	* @param b	Boolean	if true (the default in Sandy 1.2) we DISABLE the automatic update of the texture property.
 	*/
 	public function MovieSkin( url:String, b:Boolean )
 	{
 		super();
 		
 		_url = url;
+		b = (undefined == b) ? true: b;
+
 		// we try to attach it from the library
 		_mc = World3D.getInstance().getContainer().attachMovie(url, "Skin_"+_ID_, -10000-_ID_);
 		if( _mc == undefined )
@@ -73,8 +77,12 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		_bSmooth = false;
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
-		//
-		if( b ) World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
+		// Update the movie clip periodically if dontAnimate is false
+		if (b) {
+			_mc.stop();
+		} else {			
+             World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
+		}
 	}
 	
 	public function attach( mc:MovieClip ):Void
@@ -130,7 +138,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	
 	/**
 	* Returns the MovieClip used to texture objects with.
-	* Usefull for example when you need to apply a function to the movieClip, such as stop(), gotoAndPlay(), etc..
+	* Useful for example when you need to apply a function to the movieClip, such as stop(), gotoAndPlay(), etc..
 	* @param	Void
 	* @return	MovieClip The movieclip which is used to texture objects
 	*/
@@ -221,7 +229,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_tmp.dispose();
 			delete _tmp;
 		}
-		_texture = BitmapUtil.movieToBitmap( _mc );
+		_texture = BitmapUtil.movieToBitmap( _mc);
 	}
 	
 	private function __concat( m1, m2 ):Object

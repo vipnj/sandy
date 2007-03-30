@@ -256,6 +256,17 @@ class sandy.core.face.Polygon implements IPolygon
 	}
 
 	/**
+	* Returns the ID of the current face. This ID is an unique number.
+	* @param	Void
+	* @return	Number The ID of the face.
+	*/
+	public function getId(Void):Number
+	{
+		return _id;
+	}
+	
+	
+	/**
 	* Enable or not the events onPress, onRollOver and onRollOut with this face.
 	* @param b Boolean True to enable the events, false otherwise.
 	*/

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -39,8 +39,10 @@ import sandy.view.Camera3D;
 * <br/>You can have only one World3D, which contain Groups, Cameras and Lights</p>
 *
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		16.05.2006
+* @author		Bruce Epstein - zeusprod
+* @since		1.0
+* @version		1.2
+* @date 		29.03.2007
 * @see			sandy.core.Object3D
 * 
 **/
@@ -69,7 +71,7 @@ class sandy.core.World3D
 	 * <p>You can have only one World3D</p>
 	 * 
 	 */
-	private function World3D ()
+	private function World3D (mc:MovieClip)
 	{
 		_eRender 	= new BasicEvent( World3D.onRenderEVENT );
 		_eStart 	= new BasicEvent( World3D.onStartEVENT );
@@ -78,13 +80,29 @@ class sandy.core.World3D
 		// default light
 		_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 		_isRunning = false;
-		setContainer( _root );
+		// Put the world in the _root if no other clip is specified as its parent
+		if (mc == undefined) {
+			mc = _root;
+		}
+		setContainer( mc );
+	}
+
+	/**
+	 * Removes the container clip and recreates it. 
+     * This is a Kludge in order to clean up screen when resetting the world - unsupported and likely buggy
+	 */
+	public function resetContainer( mc:MovieClip ):Void
+	{
+		// Kludge to delete and restart the world container
+		_container.scene.removeMovieClip();
+		setContainer (mc);
 	}
 	
 	public function setContainer( mc:MovieClip ):Void
 	{
 		_container = mc;
 		_container.createEmptyMovieClip("scene", 0);
+		//trace("container.scene " + _container.scene);
 		_oEB.broadcastEvent( new BasicEvent( World3D.onContainerCreatedEVENT ) ); 
 	}
 	
@@ -129,9 +147,28 @@ class sandy.core.World3D
 	 * 
 	 * @return World3D, the only one instance possible
 	 */
-	public static function getInstance( Void ) : World3D
+	public static function getInstance( mc:MovieClip ) : World3D
 	{
-		if (_inst == undefined) _inst = new World3D();
+		if (_inst == undefined) _inst = new World3D(mc);
+		return _inst;
+	}
+
+
+	/**
+	 * Returns a version string ("1.2"), useful for conditional code
+	 */	
+	public static function getVersion( Void ) : String
+	{
+		return _version;
+	}
+
+	/**
+	 * Kills the single instance, so it can be recreated - unsupported and likely buggy
+	 */
+	public static function killInstance( Void ) : World3D
+	{
+		// This needs to be fixed. We need to clean up other stuff here
+		_inst = undefined;
 		return _inst;
 	}
 	
@@ -146,12 +183,39 @@ class sandy.core.World3D
 	}
 	
 	/**
-	 * Get the {@code Camera3D} of the world.
+	 * Set the {@code Camera3D} of the world. Deprecated. Maintained for backward-
+	 *  compatibility with Sandy 1.1, even though it just sets the only camera.
+	 * @param	cam	The new {@link Camera3D}
+	 */	
+	public function addCamera ( pCam:Camera3D ):Void
+	{
+		setCamera(pCam);
+	}
+	
+
+	/**
+	 * Get the list of {@code Camera3D} of the world. Deprecated. Maintained for backward-
+	 *  compatibility with Sandy 1.1, even though it just returns the only camera.
+	 *
 	 * 
+	 * @return	 The {@link Camera3D} array
+	 */	
+	public function getCameraList ( Void ):Array/*Camera3D*/
+	{
+		return new Array(getCamera());
+	}	
+	
+	/**
+	 * Get the {@code Camera3D} of the world.
+	 *  @param id Number The id of the camera you want. Ignored. Always assumes 0.
 	 * @return	 The {@link Camera3D}
 	 */	
-	public function getCamera ( Void ):Camera3D
+	public function getCamera ( id:Number ):Camera3D
 	{
+		// Ignores the id and always returns the one and only camera
+		if (id != undefined && id != 0) {
+			trace ("Camera IDs other than zero are not supported.");
+		}
 		return _oCamera;
 	}	
 	
@@ -249,11 +313,21 @@ class sandy.core.World3D
 		return _mProj;
 	}
 
+	/**
+	* Allows to get the current camera. Deprecated. Always returns first and only camera.
+	* @param	Void
+	* @return Camera3D The current camera
+	*/
+	public function getCurrentCamera( Void ):Camera3D
+	{
+		return getCamera();
+	}
+
 	////////////////////
 	//// PRIVATE
 	////////////////////
 	/**
-	 * Call the recurssive rendering of all the children of this branchGroup.
+	 * Call the recursive rendering of all the children of this branchGroup.
 	 * This is the most important method in all the engine, because the mojority of the computations are done here.
 	 * This method is making the points transformations and 2D projections.
 	 */
@@ -417,7 +491,7 @@ class sandy.core.World3D
 	private var _oRoot:Group;
 	private var _aGroups:Array;//_aGroups : The Array of {@link Group}
 	private var _aCams:Array/*Camera3D*/;	
-	private static var _inst:World3D;//_inst : The only one World3D permit
+	private static var _inst:World3D;//_inst : The only one World3D permitted
 	private var _oEB:EventBroadcaster;//_oEB : The EventBroadcaster instance which manage the event system of world3D.
 	private var _light : Light3D; //the unique light instance of the world
 	private var _eRender:BasicEvent;
@@ -429,4 +503,5 @@ class sandy.core.World3D
 	private var _aCache:Array;
 
 	private var _container : MovieClip;
+	private static var _version:String = "1.2";
 }

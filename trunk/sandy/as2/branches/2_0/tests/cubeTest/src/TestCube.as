@@ -53,6 +53,9 @@ class TestCube
 	{
 		_world.root = _createScene();
 		_world.camera = new Camera3D(500, 500);
+		_world.camera.z = -200;
+		_world.camera.x = 200;
+		_world.camera.lookAt( 0, 0, 500 );
 		// --
 		_world.root.addChild( _world.camera );
 		_world.container = _mc;
@@ -67,7 +70,7 @@ class TestCube
 		
 		tgTranslation.z = 500;
 		//tgRotation.transform = TransformUtil.rotAxisWithReference( new Vector( 0, 1, 0 ), new Vector( 0, 0, 0), 90);
-		tgRotation.rotateY = 300;
+		tgRotation.rotateY = 240;
 		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 		//box.enableClipping = true;
 		box.skin = new MixedSkin( 0xFF00FF, 50 );

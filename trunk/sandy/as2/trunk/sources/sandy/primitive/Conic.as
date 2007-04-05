@@ -20,6 +20,7 @@ import sandy.core.face.Polygon;
 import sandy.core.Object3D;
 import sandy.primitive.Primitive3D;
 import sandy.core.data.UVCoord;
+import sandy.util.NumberUtil;
 
 /**
 * Conic - Creates a conic section (a slice of a cone)
@@ -55,7 +56,7 @@ class sandy.primitive.Conic extends Object3D implements Primitive3D
 	* @param radiusBottom Number The radius of the top face of the conic section. 
 	*   Set radiusBottom to a negative number (the opposite sign of radiusTop) to create an hourglass.
 	* @param height	Number The height of the conic section
-	* @param quality Number The number of faces around the side of the conic section.
+	* @param quality Number The number of faces around the side of the conic section (max 200, which is a lot).
 	* @param mode String represent the two available modes to generates the faces.
 	* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 	* @param noBottom Boolean If true, the bottom of the conic section is not rendered (defaults to false
@@ -83,8 +84,8 @@ class sandy.primitive.Conic extends Object3D implements Primitive3D
 		}
 		_noSides = (undefined == noSides) ? false :  noSides ;
 		_separateFaces = (undefined == separateFaces) ? false :  separateFaces ;
-		_quality = (undefined == quality) ? 6 : quality ;
-		_height = (undefined == height) ? 6 : height ;
+		_quality = (undefined == quality) ? 6 : NumberUtil.constrain(quality, 1, 200);
+		_height = (undefined == height) ? 6 : height;
 		_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
 		generate();
 	}

@@ -57,7 +57,7 @@ class sandy.core.face.Polygon implements IPolygon
 	}
 	
 	/**
-	 * FIXME, the matrix i available only for front skin, the same thing shall be applied for back skins!
+	 * FIXME, the matrix is available only for front skin, the same thing shall be applied for back skins!
 	 **/
 	public function updateTextureMatrix( s:Skin ):Void
 	{
@@ -116,7 +116,7 @@ class sandy.core.face.Polygon implements IPolygon
 		_aUV[0] = pUv1;
 		_aUV[1] = pUv2;
 		_aUV[2] = pUv3;
-		updateTextureMatrix();
+		updateTextureMatrix(_s);
 	}
 		
 	/**

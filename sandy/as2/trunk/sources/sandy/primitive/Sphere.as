@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -52,7 +52,7 @@ class sandy.primitive.Sphere extends Object3D implements Primitive3D
 		super();
 		_radius =(undefined == radius) ?  5 :  radius  ;
 		if (undefined == quality) quality = 1 ;
-		quality = (quality > 5) ? 5 : quality;
+		quality = (quality > 10) ? 10 : quality;
 		quality = (quality <=0) ? 1 : quality;
 		_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
 		_quality = 4+2*quality ;

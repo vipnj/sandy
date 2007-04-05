@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -35,7 +35,7 @@ import flash.geom.Point;
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
 * @version		1.2.1
-* @date 		30.03.2007 
+* @date 		5.04.2007 
 **/
 class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
@@ -46,24 +46,32 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	*/
 	public function MovieSkin( url:String, b:Boolean )
 	{
+		// New bitmap will be set later using BitmapUtil.movieToBitmap()
 		super();
 		
 		_url = url;
-		b = (undefined == b) ? true: b;
+		_dontAnimate = (undefined == b) ? true: b;
 
-		// we try to attach it from the library
+		// we try to attach it from the library (i.e., assume it is a symbol)
 		_mc = World3D.getInstance().getContainer().attachMovie(url, "Skin_"+_ID_, -10000-_ID_);
+		
+		// If attaching _mc from the library failed, it isn't a symbol, so assume it is an
+		// external URL.
 		if( _mc == undefined )
 		{
+			// Create a clip to hold it
 			_mc = World3D.getInstance().getContainer().createEmptyMovieClip("Skin_"+_ID_, -10000-_ID_);
 			_mcl = new MovieClipLoader();
 			_mcl.addListener(this);
+			// Load the external URL in the clip.
+			// The MovieClipLoader class will invoke onLoadInit() when the external swf loads.
 			_mcl.loadClip( url, _mc);
 			_loaded = true;
 			_initialized = false;
 		}
 		else
 		{
+			// Otherwise, assume the clip is already initialized.
 			_loaded = false;
 			_initialized = true;
 			_animated = _mc._totalframes > 1;
@@ -78,7 +86,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
 		// Update the movie clip periodically if dontAnimate is false
-		if (b) {
+		if (_dontAnimate) {
 			_mc.stop();
 		} else {			
              World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
@@ -230,6 +238,8 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			delete _tmp;
 		}
 		_texture = BitmapUtil.movieToBitmap( _mc);
+		
+
 	}
 	
 	private function __concat( m1, m2 ):Object
@@ -283,13 +293,16 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	
 	private function onLoadInit  (target:MovieClip):Void 
 	{ 
+	
 		if( _initialized == false )
 		{
 			_h = target._height;
 			_w = target._width;
 			updateTexture();
 			_mc._visible = false;
-			_mc.stop();
+			if (_dontAnimate) {
+				_mc.stop();
+			} 	
 			_initialized = true;
 			_animated = target._totalframes > 1;
 			broadcastEvent(_eOnUpdate);
@@ -317,4 +330,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	private var _mcl:MovieClipLoader;
 
 	private var _m : Matrix;
+    private var _dontAnimate:Boolean;
+
+
 }

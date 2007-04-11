@@ -51,7 +51,7 @@ class sandy.util.BitmapUtil
 	{
 		scaley = (undefined == scaley) ? scalex : scaley;
 		var tex:BitmapData = new BitmapData( scalex * b.width, scaley * b.height);
-		tex.draw( b, new Matrix( scalex, 0, scaley, 0 ) );
+		tex.draw( b, new Matrix( scalex, 0, 0, scaley ) );
 		return tex;
 	}
 }

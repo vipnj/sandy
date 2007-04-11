@@ -40,7 +40,7 @@ class sandy.skin.VideoSkin extends TextureSkin
 	*/
 	public function VideoSkin( video:Video )
 	{
-		super( new BitmapData( video._width, video._height ) );
+		super( new BitmapData( video.width, video.height ) );
 		_video = video;
 		// TODO: Think again on which choice is clever, choosing the World3D framerate to update the texture
 		// or to use the texture movieClip framerate as timer to update the bitmap.

@@ -305,6 +305,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			} 	
 			_initialized = true;
 			_animated = target._totalframes > 1;
+			_eOnUpdate.needsTextureUpdate = true;			
 			broadcastEvent(_eOnUpdate);
 		}
 	}

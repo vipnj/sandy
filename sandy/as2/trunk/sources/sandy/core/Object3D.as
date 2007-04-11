@@ -41,8 +41,9 @@ import sandy.core.data.Matrix4;
 * @author	Tabin Cédric - thecaptain
 * @author	Nicolas Coevoet - [ NikO ]
 * @author	Bruce Epstein - zeusprod
+* @author	Martin Wood-Mitrovski
 * @version	1.2
-* @date 	30.03.2007
+* @date 	11.04.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -211,7 +212,8 @@ class sandy.core.Object3D extends Leaf
 	{
 		var centerX:Number = 0;
 		var centerY:Number = 0;
-		for (var i = 0; i < aPoints.length; i++) {
+		var i:Number = 0;
+		for (i = 0; i < aPoints.length; i++) {
 			centerX += aPoints[i].sx;
 			centerY += aPoints[i].sy;
 		}
@@ -249,13 +251,9 @@ class sandy.core.Object3D extends Leaf
 		// Now we register to the update event
 		_s = pS;
 		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
-		//
-		var l:Number = aFaces.length;
-		while( --l > -1 )
-		{
-			aFaces[l].updateTextureMatrix( _s );
-		}
-		//
+
+		__updateTextureMatrices();
+
 		_needRedraw = true;
 		return true;
 	}
@@ -671,6 +669,32 @@ class sandy.core.Object3D extends Leaf
 	}
 
 	/**
+	* called when the skin of an object change.
+	* We want this object to notify that it has changed to redrawn, so we change its modified property.
+	* @param	e
+	*/ 
+	private function __onSkinUpdated( e:SkinEvent ):Void
+	{
+		_needRedraw = true;
+		if(e.needsTextureUpdate)
+		{
+			__updateTextureMatrices();
+		}		
+	}
+	
+	/**
+	 * If the skin / texture has changed update the matrices for each face
+	 */
+	private function __updateTextureMatrices()
+	{
+		var l:Number = aFaces.length;
+		while( --l > -1 )
+		{
+			aFaces[l].updateTextureMatrix( _s );
+		}
+	}
+	
+	/**
 	* -------------------------------------------------------
 	* 			PRIVATE VAR
 	* -------------------------------------------------------
@@ -697,14 +721,4 @@ class sandy.core.Object3D extends Leaf
 	private var _oOnRollOut:ObjectEvent;
 	private var _oEB:EventBroadcaster;	
 	private var _bPolyClipped:Boolean;
-	
-	/**
-	* called when the skin of an object change.
-	* We want this object to notify that it has changed to redrawn, so we change its modified property.
-	* @param	e
-	*/ 
-	private function __onSkinUpdated( e:SkinEvent ):Void
-	{
-		_needRedraw = true;
-	}
 }

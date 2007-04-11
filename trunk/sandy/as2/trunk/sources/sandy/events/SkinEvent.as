@@ -18,12 +18,16 @@ import com.bourre.events.EventType;
 import sandy.skin.SkinType;
 /**
  * @author 		Thomas Pfeiffer - kiroukou
- * @version		1.0
- * @date 		23.06.2006
+ * @author		Martin Wood-Mitrovski
+ * @version		1.1
+ * @date 		11.04.2007
  */
 class sandy.events.SkinEvent extends BasicEvent 
 {
 	public static var onUpdateEVENT:EventType = new EventType('onUpdateEVENT');
+	
+	// Flag to indicate that the texture matrices need updating
+	public var needsTextureUpdate:Boolean;
 	
 	public function SkinEvent(e : EventType, oT, type:SkinType ) 
 	{

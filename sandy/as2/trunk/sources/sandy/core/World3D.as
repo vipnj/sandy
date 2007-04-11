@@ -75,6 +75,9 @@ class sandy.core.World3D
 	{
 		_eRender 	= new BasicEvent( World3D.onRenderEVENT );
 		_eStart 	= new BasicEvent( World3D.onStartEVENT );
+
+		_renderDelegate = new Delegate( this, __onEnterFrame );
+
 		// init the event broadcaster
 		_oEB = new EventBroadcaster( this );
 		// default light
@@ -276,7 +279,7 @@ class sandy.core.World3D
 			// we broadcast the start message
 			_oEB.broadcastEvent( _eStart );
 			// we start the real time rendering
-			FPSBeacon.getInstance().addFrameListener( new Delegate( this, __onEnterFrame ) );
+			FPSBeacon.getInstance().addFrameListener( _renderDelegate );
 			FPSBeacon.getInstance().start();
 		}
 	}
@@ -288,7 +291,7 @@ class sandy.core.World3D
 	public function stop( Void ):Void
 	{
 		FPSBeacon.getInstance().stop();
-		FPSBeacon.getInstance().removeFrameListener( new Delegate( this, __onEnterFrame ) );
+		FPSBeacon.getInstance().removeFrameListener( _renderDelegate );
 		_isRunning = false;
 	}
 	
@@ -501,7 +504,8 @@ class sandy.core.World3D
 	private var _aObjects:Array;
 	private var _aMatrix:Array;
 	private var _aCache:Array;
-
+	private var _renderDelegate:Delegate;
+	
 	private var _container : MovieClip;
 	private static var _version:String = "1.2";
 }

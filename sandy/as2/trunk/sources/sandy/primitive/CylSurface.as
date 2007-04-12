@@ -24,14 +24,15 @@ import sandy.util.NumberUtil;
 /**
 * CylSurface
 * A cylindrically curved surface 
-* @author		Bertil Gralvik - Petit
+* @author		Bertil Gralvik 	- Petit
+* @author		Bruce Epstein	- zeusprod
 * Devleoped from the ideas in Plane3D by
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin Cédric - thecaptain
+* @author		Tabin Cédric 	- thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
 * @since		1.2.1
-* @version		0.5
-* @date 		09.03.2007 
+* @version		0.6
+* @date 		12.04.2007 
 **/
 
 class sandy.primitive.CylSurface extends Object3D implements Primitive3D
@@ -163,6 +164,23 @@ class sandy.primitive.CylSurface extends Object3D implements Primitive3D
 			}
 		}
 	}
+	
+	/**
+	* getSize() returns the radius, height, and angle as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the radius, y is the height, and z is the angle
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (_radius, _height, _angle);
+	}
+	
+	 public function getPrimitiveName (Void):String {
+		 return "CylSurface";
+	 }
+	 
+	 public function toString (Void):String {
+		 return "sandy.primitive." + getPrimitiveName();
+	 }
+	 
 	// Test method to draw all cells on a separate MovieClip
 	function drawCell(p1:Vertex,p2:Vertex,p3:Vertex,p4:Vertex){
 		var mc:MovieClip = testCanvas;

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -27,8 +27,10 @@ import sandy.skin.SimpleLineSkin;
 * <p>Line3D, or how to create a simple line in Sandy</p>
 * 
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		26.06.2006 
+* @author		Bruce Epstein 	- zesuprod
+* @since		1.0
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.primitive.Line3D extends Object3D implements Primitive3D
 {
@@ -45,6 +47,7 @@ class sandy.primitive.Line3D extends Object3D implements Primitive3D
 	public function Line3D ( deb:Vector, fin:Vector )
 	{
 		super ();
+		
 		if( arguments.length < 2 )
 		{
 			trace('Line3D::Number of arguments to low');
@@ -97,8 +100,30 @@ class sandy.primitive.Line3D extends Object3D implements Primitive3D
 		return false;	
 	}
 	
-	public function toString(Void):String
-	{
-		return "sandy.primitive.Line3D";
+	/**
+	* getPrimitiveName() returns the string "Line3D"
+	*/	
+	 public function getPrimitiveName (Void):String {
+		 return "Line3D";
+	 }
+	 
+	 public function toString (Void):String {
+		 return "sandy.primitive." + getPrimitiveName();
+	 }
+
+	public function getVertexList(Void):Array
+	{  
+		return aPoints;
 	}
+	
+	
+	/**
+	* getSize() returns the number of vertices in a Line3D element.
+	* Returns vector where x, y, and z are all equal to the number of vertices in the line
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (aPoints.length, aPoints.length, aPoints.length);
+	}
+	
+
 }

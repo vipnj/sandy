@@ -1,3 +1,5 @@
+﻿import sandy.core.data.Vector;
+
 /*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
@@ -22,9 +24,10 @@ limitations under the License.
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Tabin Cédric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
+* @author		Bruce Epstein 	- zeusprod
 * @since		0.1
-* @version		0.2
-* @date 		12.01.2006 
+* @version		1.2.1
+* @date 		11.04.2007
 **/
 interface sandy.primitive.Primitive3D
 {
@@ -44,4 +47,7 @@ interface sandy.primitive.Primitive3D
 	*    and give to you the possibility to choose n points per faces</p> 
 	*/
 	public function generate( Void ):Void ;
+	public function getPrimitiveName (Void):String;
+	public function toString (Void):String;
+	public function getSize (Void):Vector;
 }

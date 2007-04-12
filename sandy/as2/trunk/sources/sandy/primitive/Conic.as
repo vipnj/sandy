@@ -24,13 +24,13 @@ import sandy.util.NumberUtil;
 
 /**
 * Conic - Creates a conic section (a slice of a cone)
-* @author		Bruce Epstein - zeusprod - adapted from Cylinder class and added ability to hide faces.
 * @author		Thomas Pfeiffer - kiroukou - 
 * @author		Tabin Cédric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
+* @author		Bruce Epstein - zeusprod - adapted from Cylinder.as; added ability to hide faces.
 * @since		1.2
-* @version		1.2
-* @date 		19.03.2007 
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.primitive.Conic extends Object3D implements Primitive3D
 {
@@ -298,6 +298,19 @@ class sandy.primitive.Conic extends Object3D implements Primitive3D
 			aNormals.push( f.createNormale() );
 		}
 	}
+	
+	 public function getPrimitiveName (Void):String {
+		 return "Conic";
+	 }
+
+	/**
+	* getSize() returns the height and radii as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the top radius, y is the bottom radius, and z is the height, and 
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (_radiusTop, _radiusBottom, _height);
+	}
+	 
 	
 	/*
 	 * Mode with 3 or 4 points per face

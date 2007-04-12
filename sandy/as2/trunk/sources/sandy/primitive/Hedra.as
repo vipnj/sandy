@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,22 +13,23 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
 import sandy.core.data.Vertex;
+import sandy.core.data.UVCoord;
+import sandy.core.data.Vector;
 import sandy.core.Object3D;
 import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
-import sandy.core.data.UVCoord;
+
 
 /**
 * Hedra
 *
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin C�dric - thecaptain
+* @author		Tabin Cédric 	- thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
-* @author		Bruce Epstein - zeusprod
-* @version		1.2
-* @date 		26.03.2007 
+* @author		Bruce Epstein 	- zeusprod
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.primitive.Hedra extends Object3D implements Primitive3D
 {
@@ -135,6 +136,32 @@ class sandy.primitive.Hedra extends Object3D implements Primitive3D
 		f.setUVCoords( _aUv[0], _aUv[3], _aUv[5] );
 		aNormals.push ( f.createNormale () );
 		addFace( f );
-
 	}
+	
+	
+	/**
+	* getSize() returns the length, height, and radius as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the length, y is the height, and z is the radius
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (_lg, _h, _radius);
+	}
+	
+	
+	/**
+	* getPrimitiveName() returns the string "Hedra"
+	*/	
+	 public function getPrimitiveName (Void):String {
+		 return "Hedra";
+	 }
+	 
+	 public function toString (Void):String {
+		 return "sandy.primitive." + getPrimitiveName();
+	 }
+	 
+	 public function getNumSurfaces (Void):Number {
+		return  _numSurfaces;
+	 }
+	 
+	 private var _numSurfaces:Number = 8;  // Eight surfaces per hedra. Differs from polygons/faces.
 }

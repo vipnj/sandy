@@ -75,7 +75,7 @@ class TestCube
 		tgTranslation.z = 500;
 
 		box = new Box( "myBox", 50, 50, 50, "quad" );
-		box.enableBackFaceCulling = false;
+		//box.enableBackFaceCulling = false;
 		//box.enableClipping = true;
 		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 0 );
 		l_oMaterial.lineAttributes = new LineAttributes(2, 0xFF, 100 );
@@ -85,7 +85,7 @@ class TestCube
 		tgTranslation.addChild( box );
 		
 		box2 = new Box( "myBox2", 100, 50, 100 );
-		box2.enableBackFaceCulling = false;
+		//box2.enableBackFaceCulling = false;
 		box2.appearance = l_oAppearance;
 		box2.z = 100;
 		box2.x = 0;

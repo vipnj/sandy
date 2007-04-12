@@ -111,8 +111,9 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		// If no normal has been given, we create it ourself.
 		if( normal == null )
 		{
-			normal = Vertex.createFromVector( createNormal() );
-			m_oGeometry.setFaceNormal( m_oGeometry.aFacesNormals.length, normal.x, normal.y, normal.z );
+			var l_oNormal:Vector = createNormal();
+			m_oGeometry.setFaceNormal( m_oGeometry.aFacesNormals.length, l_oNormal.x, l_oNormal.y, l_oNormal.z );
+			normal = Vertex( m_oGeometry.aFacesNormals[ m_oGeometry.aFacesNormals.length-1 ] );
 		}
 	}
 		

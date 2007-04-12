@@ -158,10 +158,9 @@ class sandy.core.World3D
 			root.render( camera, null, false );
 			// --
 			camera.project();
-        	}
 			// -- clear the polygon's container and the projection vertices list
-            camera.iRenderer.clear();
             camera.iRenderer.render();
+		}
 	} // end method
 
 	

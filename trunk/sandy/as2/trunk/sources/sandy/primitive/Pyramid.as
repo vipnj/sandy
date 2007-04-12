@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,19 +14,20 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-
-import sandy.core.data.Vertex;
 import sandy.core.Object3D;
 import sandy.core.face.Polygon;
 import sandy.primitive.Primitive3D;
+import sandy.core.data.Vertex;
 import sandy.core.data.UVCoord;
+import sandy.core.data.Vector;
 
 /**
 * Pyramid
 *
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		12.01.2006 
+* @author		Bruce Epstein 	- zeusprod
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 {
@@ -119,4 +120,29 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 		aNormals.push ( f.createNormale () );
 		addFace( f );
 	}
+	
+	/**
+	* getSize() returns the length, height, and radius as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the length, y is the height, and z is the radius
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (_lg, _h, _radius);
+	}
+	
+	/**
+	* getPrimitiveName() returns the string "Pyramid"
+	*/	
+	 public function getPrimitiveName (Void):String {
+		 return "Pyramid";
+	 }
+	 
+	 public function toString (Void):String {
+		 return "sandy.primitive." + getPrimitiveName();
+	 }
+	 
+	  public function getNumSurfaces (Void):Number {
+		return  _numSurfaces;
+	 }
+	 
+	 private var _numSurfaces:Number = 5;  // Five surfaces per pyramid. Differs from polygons/faces.
 }

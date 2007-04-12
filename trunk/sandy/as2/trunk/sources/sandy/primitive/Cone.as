@@ -20,8 +20,8 @@ import sandy.primitive.Primitive3D;
 * Cone
 * @author		Bruce Epstein - zeusprod - derived from Conic class
 * @since		1.2
-* @version		1.2
-* @date 		19.03.2007 
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.primitive.Cone extends Conic implements Primitive3D
 {
@@ -49,4 +49,9 @@ class sandy.primitive.Cone extends Conic implements Primitive3D
 		super(1, radius, height, quality, "tri", false, noBottom, noSides, separateFaces);
 		_radius = _radiusBottom;  // Inherited from Conic
 	}
+	
+	 public function getPrimitiveName (Void):String {
+		 return "Cone";
+	 }
+	 
 }

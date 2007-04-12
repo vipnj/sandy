@@ -23,8 +23,8 @@ import sandy.primitive.Primitive3D;
 * @author		Tabin Cédric - thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
 * @since		0.1
-* @version		1.2.1
-* @date 		21.03.2007 
+* @version		1.2.2
+* @date 		12.4.2007 
 **/
 class sandy.primitive.Cylinder extends Conic implements Primitive3D
 {
@@ -56,4 +56,9 @@ class sandy.primitive.Cylinder extends Conic implements Primitive3D
 		super(radius, radius, height, quality, mode, noTop, noBottom, noSides, separateFaces);
 		_radius = _radiusBottom;  // Inherited from Conic
 	}
+	
+	 public function getPrimitiveName (Void):String {
+		 return "Cylinder";
+	 }
+	 
 }

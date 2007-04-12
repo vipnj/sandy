@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -26,11 +26,12 @@ import sandy.primitive.Primitive3D;
 * VPlane
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin C�dric - thecaptain
+* @author		Tabin Cédric 	- thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
+* @author		Bruce Epstein 	- zeusprod
 * @since		0.1
-* @version		0.2
-* @date 		12.01.2006 
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 
 class sandy.primitive.Plane3D extends Object3D implements Primitive3D
@@ -51,7 +52,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	* <p>This method will create a complete object with vertex, normales, texture coords and the faces.
 	*    So it allows to have a custom 3D object easily </p>
 	* <p>{@code h} represents the height of the Plane, {@code lg} represent its length and {@code q} the quality, so the number of parts the surface will be sliced on. The plane will be located at z coordinate set to 0</p>
-	* @param 	w 	Number
+	* @param 	h 	Number
 	* @param 	lg 	Number
 	* @param 	q 	Number Between 1 and 10
 	* @param 	mode String represent the two available modes to generates the faces.
@@ -146,5 +147,21 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 		} while( (i += pasH) < (h2-1) );
 		// Can't understand why I must compute -1 with 3 in quality to have the correct value!
 	}
+	
+	/**
+	* getSize() returns the length and height as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the length, y is the height, and z is always 0.
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (_lg, _h, 0);
+	}
+	
+	 public function getPrimitiveName (Void):String {
+		 return "Plane3D";
+	 }
+	 
+	 public function toString (Void):String {
+		 return "sandy.primitive." + getPrimitiveName();
+	 }
 }
 

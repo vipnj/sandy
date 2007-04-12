@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,13 +13,14 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
 import sandy.core.data.Vertex;
 import sandy.core.data.UVCoord;
+import sandy.core.data.Vector;
 import sandy.core.Object3D;
 import sandy.primitive.Primitive3D;
 import sandy.core.face.IPolygon;
 import sandy.core.face.Polygon;
+
 
 /**
 * Box
@@ -27,8 +28,9 @@ import sandy.core.face.Polygon;
 * <p>Box is a primitiv Object3D, to easy build a Cube/Box.</p>
 * 
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		12.07.2006 
+* @author		Bruce Epstein 	- zeusprod
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.primitive.Box extends Object3D implements Primitive3D
 {
@@ -203,6 +205,27 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 	}
 	
 	/**
+	* getSize() returns the length, height, and radius as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the length, y is the height, and z is the radius
+	*/	
+	public function getSize (Void):Vector {
+		return new Vector (_lg, _h, _radius);
+	}
+	 
+	 public function getNumSurfaces (Void):Number {
+		return  _numSurfaces;
+	 }
+	 
+	 public function getPrimitiveName (Void):String {
+		 return "Box";
+	 }
+	 
+	 public function toString (Void):String {
+		 return "sandy.primitive." + getPrimitiveName();
+	 }
+	 
+	 
+	 /**
 	* height of the Box
 	*/ 
 	private var _h	: Number;
@@ -213,14 +236,16 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 	private var _lg : Number;
 
 	/**
-	* wide of the Box
+	* width of the Box
 	*/ 
 	private var _radius : Number ;
 	
 	private var _q:Number;
 	
+	private var _numSurfaces:Number = 6;  // Six surfaces per cube. Differs from polygons/faces.
 	/*
 	 * Mode with 3 or 4 points per face
 	 */
 	 private var _mode : String;
+	 
 }

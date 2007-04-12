@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -38,7 +38,7 @@ class sandy.skin.SkinType
 	public static function get SIMPLE_COLOR():SkinType { return __simple_color; }
 	private static var __simple_color:SkinType = new SkinType( 0 );
 	/**
-	* Constant value representing the SMixedSkin
+	* Constant value representing the MixedSkin
 	*/
 	public static function get MIXED():SkinType { return __mixed; }
 	private static var __mixed:SkinType = new SkinType( 1 );
@@ -48,7 +48,7 @@ class sandy.skin.SkinType
 	public static function get SIMPLE_LINE():SkinType { return __simple_line; }
 	private static var __simple_line:SkinType = new SkinType( 2 );
 	/**
-	* Constant value representing the SimpleLineSkin
+	* Constant value representing the TextureSkin
 	*/
 	public static function get TEXTURE():SkinType { return __texture; }
 	private static var __texture:SkinType = new SkinType( 3 );
@@ -61,12 +61,12 @@ class sandy.skin.SkinType
 	* Constant value representing the MovieSkin
 	*/
 	public static function get MOVIE():SkinType { return __movie; }
-	private static var __movie:SkinType = new SkinType( 5);
+	private static var __movie:SkinType = new SkinType( 5 );
 	/**
 	* Constant value representing the VideoSkin
 	*/
 	public static function get VIDEO():SkinType { return __video; }
-	private static var __video:SkinType = new SkinType( 6);
+	private static var __video:SkinType = new SkinType( 6 );
 	
 	//---------//
 	//Variables//

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -32,8 +32,10 @@ import sandy.util.NumberUtil;
 * TextureSkin
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		12.01.2006 
+* @author		Bruce Epstein	- zeusprod
+* @since		1.0
+* @version		1.2.1
+* @date 		12.04.2007 
 **/
 class sandy.skin.TextureSkin extends BasicSkin implements Skin
 {
@@ -42,13 +44,15 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 	* Create a new TextureSkin.
 	* 
 	* @param t : The actionScriptLink of the bitmap;
+	* @param bSmooth : Boolean; if true perform smoothing (performance-intensive).
+	* @param alpha: Number; Transparency from 0 (invisible) to 100 (opaque)
 	*/
-	public function TextureSkin( t:BitmapData )
+	public function TextureSkin( t:BitmapData, bSmooth:Boolean, alpha:Number )
 	{
 		super();
 		_m = new Matrix();
 		texture = t;
-		_bSmooth = false;
+		_bSmooth = (bSmooth == undefined) ? false : bSmooth;
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
 	}
@@ -74,6 +78,12 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 		broadcastEvent( _eOnUpdate );
 	}
 	
+	public function set alpha( newVal:Number )
+	{
+		setTransparency (newVal);
+		broadcastEvent( _eOnUpdate );
+	}
+	
 	/////////////
 	// GETTERS //
 	/////////////	
@@ -87,21 +97,25 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 		return _bSmooth;
 	}
 	
+	public function get alpha():Number
+	{
+		return _alpha;
+	}
+	
 	/**
 	 * Change the transparency of the texture.
 	 * A value is expected to set the transparency. This value represents the percentage of transparency.
 	 * @param pValue An offset to change the transparency. A value between 0 and 100. 
-	 * If the given value isn't i this interval, it will be clamped.
+	 * If the given value isn't in this interval, it will be clamped.
 	 */
 	public function setTransparency( pValue:Number ):Void
 	{
-		pValue = 0.01 * NumberUtil.constrain( pValue, 0, 100 );
+		_alpha = NumberUtil.constrain( pValue, 0, 100 );
 		if( _cmf ) delete _cmf;
-		var matrix:Array = [
-						 	1, 0, 0, 0, 0,
+		var matrix:Array = [1, 0, 0, 0, 0,
 				 			0, 1, 0, 0, 0, 
 				 			0, 0, 1, 0, 0, 
-				 			0, 0, 0, pValue, 0];
+				 			0, 0, 0, (0.01 * _alpha), 0];
  
 		_cmf = new ColorMatrixFilter( matrix );
 		texture.applyFilter( texture, texture.rectangle, _p, _cmf );
@@ -228,6 +242,7 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 	private var _cmf:ColorMatrixFilter;
 	private var _texture:BitmapData;
 	private var _bSmooth:Boolean;
+	private var _alpha:Number;
 	private var _m:Matrix;
 }
 

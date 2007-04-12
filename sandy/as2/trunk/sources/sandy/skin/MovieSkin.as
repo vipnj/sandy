@@ -35,28 +35,29 @@ import flash.geom.Point;
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
 * @version		1.2.1
-* @date 		5.04.2007 
+* @date 		12.04.2007 
 **/
 class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
 	/**
 	* Create a new MovieSkin.
-	* @param url URL to load
-	* @param b	Boolean	if true (the default in Sandy 1.2) we DISABLE the automatic update of the texture property.
+	* @param url : URL to load
+	* @param bDontAnimate : Boolean; if true (the default in Sandy 1.2) we DISABLE the automatic update of the texture property.
+	* @param bSmooth :	Boolean; if true perform smoothing (performance-intensive).
 	*/
-	public function MovieSkin( url:String, b:Boolean )
+	public function MovieSkin( url:String, bDontAnimate:Boolean, bSmooth:Boolean )
 	{
 		// New bitmap will be set later using BitmapUtil.movieToBitmap()
 		super();
 		
 		_url = url;
-		_dontAnimate = (undefined == b) ? true: b;
-
-		// we try to attach it from the library (i.e., assume it is a symbol)
+		_animate = (bDontAnimate == undefined) ? false : !bDontAnimate;
+	
+		// Try to attach the "url" name from the library (i.e., assume it is an internal symbol)
 		_mc = World3D.getInstance().getContainer().attachMovie(url, "Skin_"+_ID_, -10000-_ID_);
 		
-		// If attaching _mc from the library failed, it isn't a symbol, so assume it is an
-		// external URL.
+		// If attaching the "url" from the library failed, it isn't a symbol,
+		// so assume it is an external URL and try to load it.
 		if( _mc == undefined )
 		{
 			// Create a clip to hold it
@@ -75,6 +76,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_loaded = false;
 			_initialized = true;
 			_animated = _mc._totalframes > 1;
+			setAnimateUpdate(_animate && _animated);
 			_h = _mc._height;
 			_w = _mc._width;
 			updateTexture();
@@ -82,17 +84,28 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		}
 		//
 		_m = new Matrix();
-		_bSmooth = false;
+		_bSmooth = (bSmooth == undefined) ? false : bSmooth;
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
-		// Update the movie clip periodically if dontAnimate is false
-		if (_dontAnimate) {
-			_mc.stop();
-		} else {			
-             World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
-		}
 	}
 	
+	public function setAnimateUpdate( animate:Boolean ):Void {
+		_animate = animate;
+		if (_animate) {
+			_mc.play();
+			if (isAnimated()) {
+				// If the clip should be animated, update the movie clip periodically 
+            	World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, updateTexture );
+			} else {
+				//trace ("There's no sense updating a movie with only a single frame");
+			}
+		} else {
+			// Otherwise, stop the clip and don't bother updating it.
+			_mc.stop();
+			World3D.getInstance().removeEventListener( World3D.onRenderEVENT, this );
+		}
+	}
+		
 	public function attach( mc:MovieClip ):Void
 	{
 		if( _loaded == true ) 
@@ -117,6 +130,7 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 				mc.attachMovie( _url, "toto", 0 );
 			}
 		}
+		setAnimateUpdate(_animate && _animated);
 	}
  
 	public function isAnimated( Void ):Boolean
@@ -124,15 +138,40 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		return _animated;
 	}
 	
+	public function getAnimate( Void ):Boolean
+	{
+		return _animate;
+	}
+	
+	
 	public function isInitialized( Void ):Boolean
 	{
 		return _initialized;
 	}
 	
+	// Getter for smooth property. Setter isn't supported.
 	public function get smooth():Boolean
 	{
 		return _bSmooth;
 	}
+	
+	// Getter for url property. Setter isn't supported.
+	public function get url():String
+	{
+		return _url;
+	}
+	
+	public function get dontAnimate():Boolean
+	{
+		return !_animate;
+	}
+	
+	public function set dontAnimate( inBool:Boolean ):Void
+	{
+		_animate = !inBool;
+		setAnimateUpdate(_animate);
+	}
+	
 		
 	/**
 	 * getType, returns the type of the skin
@@ -237,6 +276,8 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			delete _tmp;
 		}
 		_texture = BitmapUtil.movieToBitmap( _mc);
+		
+
 	}
 	
 	private function __concat( m1, m2 ):Object
@@ -290,32 +331,40 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	
 	private function onLoadInit  (target:MovieClip):Void 
 	{ 
-	
 		if( _initialized == false )
 		{
 			_h = target._height;
 			_w = target._width;
 			updateTexture();
 			_mc._visible = false;
-			if (_dontAnimate) {
-				_mc.stop();
-			} 	
 			_initialized = true;
 			_animated = target._totalframes > 1;
-			_eOnUpdate.needsTextureUpdate = true;			
+			// _eOnUpdate.needsTextureUpdate = true;
+			setAnimateUpdate(_animate && _animated);
 			broadcastEvent(_eOnUpdate);
 		}
 	}
 	
-	private function onLoadError  (target:MovieClip, code:String):Void 
+	private function onLoadError (target:MovieClip, code:String):Void 
 	{ 
-		trace("MovieSkin::erreur"); 
-	} 
+		switch (code) {
+			case "URLNotFound":
+      			trace("MovieSkin error URLNotFound: Unable to connect to URL: " + target._url);
+      			break;
+			case "LoadNeverCompleted":
+				trace("MovieSkin error LoadNeverCompleted: Unable to complete download: " + target);
+				break;
+			default:
+				trace ("MovieSkin error: " + code);
+				break;
+   		}
+	}
 		
 	// --
 	private var _url:String;
 	private var _mc:MovieClip;
-	private var _animated:Boolean;
+	private var _animated:Boolean;  // If true, clip has more than one frame
+	private var _animate:Boolean;  // If true, update the clip periodically
 	private var _h:Number;
 	private var _w:Number;
 	private var _texture:BitmapData;
@@ -328,7 +377,4 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	private var _mcl:MovieClipLoader;
 
 	private var _m : Matrix;
-    private var _dontAnimate:Boolean;
-
-
 }

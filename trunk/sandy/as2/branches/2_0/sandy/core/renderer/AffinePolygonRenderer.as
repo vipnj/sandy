@@ -38,6 +38,8 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		{
 		   l_oDisplayElt.polygon.container.clear();
 		}
+		//
+		init();
 	}
 		
 	public function render():Void 

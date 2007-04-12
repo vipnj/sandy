@@ -97,7 +97,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		{
 			vertices[i] = Vertex( m_oGeometry.aVertex[ p_aVertexID[i] ] );
 		}
-		cvertices = vertices.concat();
 		// --
 		aUVCoord = new Array( l = p_aUVCoordsID.length );
 		for( i=0; i<l; i++ )

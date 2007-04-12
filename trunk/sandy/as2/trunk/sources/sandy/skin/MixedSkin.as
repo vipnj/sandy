@@ -137,19 +137,16 @@ class sandy.skin.MixedSkin extends BasicSkin implements Skin
 		var col:Number = _colorBkg;
 		if( _useLight )
 		{
-			var l:Light3D 	= World3D.getInstance().getLight();
-			var vn:Vector 	= face.createNormale();
-			var vl:Vector 	= l.getDirectionVector();
-			var lp:Number	= l.getPower()/100;
+			var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
+									   World3D.getInstance().getAmbientLight();
 			// --
 			var r:Number = ( col >> 16 )& 0xFF;
 			var g:Number = ( col >> 8 ) & 0xFF;
 			var b:Number = ( col ) 		& 0xFF;
 			// --
-			var dot:Number =  - ( VectorMath.dot( vl, vn ) );
-			r = NumberUtil.constrain( r*(dot+lp), 0, 255 );
-			g = NumberUtil.constrain( g*(dot+lp), 0, 255 );
-			b = NumberUtil.constrain( b*(dot+lp), 0, 255 );
+			r = NumberUtil.constrain( r*(lightStrength), 0, 255 );
+			g = NumberUtil.constrain( g*(lightStrength), 0, 255 );
+			b = NumberUtil.constrain( b*(lightStrength), 0, 255 );
 			// --
 			col =  r << 16 | g << 8 |  b;
 		}

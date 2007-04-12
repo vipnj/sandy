@@ -16,6 +16,7 @@ limitations under the License.
 
 import sandy.core.data.Vector;
 import sandy.util.NumberUtil;
+import sandy.math.VectorMath;
 import com.bourre.events.EventBroadcaster;
 import com.bourre.events.IEvent;
 import com.bourre.events.EventType;
@@ -49,6 +50,7 @@ class sandy.core.light.Light3D
 	public function Light3D ( d:Vector, pow:Number )
 	{
 		_dir = d;
+		VectorMath.normalize(_dir);
 		setPower( pow );
 		_event = new BasicEvent( Light3D.onLightUpdatedEVENT );
 		_oEB = new EventBroadcaster( this );
@@ -62,6 +64,7 @@ class sandy.core.light.Light3D
 	public function setPower( n:Number )
 	{
 		_power =  NumberUtil.constrain( n, 0, Light3D.MAX_POWER );
+		_nPower = _power / MAX_POWER;
 		broadcastEvent( _event );
 	}
 	
@@ -72,6 +75,14 @@ class sandy.core.light.Light3D
 	public function getPower( Void ):Number
 	{
 		return _power;
+	}
+	
+	/**
+	 * Returns the power of the light normalized to the range 0 -> 1
+	 * @return Number a number between 0 and 1	 */
+	public function getNormalizedPower():Number
+	{
+		return _nPower;
 	}
 	
 	public function getDirectionVector( Void ):Vector
@@ -89,13 +100,27 @@ class sandy.core.light.Light3D
 	public function setDirection( x:Number, y:Number, z:Number ):Void
 	{
 		_dir.x = x; _dir.y = y; _dir.z = z;
+		VectorMath.normalize(_dir);
 		broadcastEvent( _event );
 	}
 	
 	public function setDirectionVector( pDir:Vector ):Void
 	{
 		_dir = pDir;
+		VectorMath.normalize(_dir);		
 		broadcastEvent( _event );
+	}
+	
+	/**
+	 * Calculate the strength of this light based on the supplied normal
+	 * @return Number	the strength between 0 and 1	 */
+	public function calculate( normal:Vector ):Number
+	{
+		var DP:Number = VectorMath.dot( _dir, normal);
+		// if DP is less than 0 then the face is facing away from the light
+		// so set it to zero
+		if(DP < 0) DP = 0;
+		return _nPower * DP;
 	}
 	
 	public function destroy( Void ):Void
@@ -183,6 +208,7 @@ class sandy.core.light.Light3D
 	// Direction of the light. It is 3D vector. Please refer to the Light tutorial to learn more about Sandy's lights.
 	private var _dir:Vector;	
 	private var _power : Number;
+	private var _nPower : Number
 	private var _event:BasicEvent;
 	
 }

@@ -82,6 +82,7 @@ class sandy.core.World3D
 		_oEB = new EventBroadcaster( this );
 		// default light
 		_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
+		_ambientLight = 0.3;
 		_isRunning = false;
 		// Put the world in the _root if no other clip is specified as its parent
 		if (mc == undefined) {
@@ -243,6 +244,23 @@ class sandy.core.World3D
 	public function getLight ( Void ):Light3D
 	{
 		return _light;
+	}
+	
+	/**
+	 * Specify the lowest light level in the world
+	 * @param	a	the light level	 */
+	public function setAmbientLight( a:Number ):Void
+	{
+		_ambientLight = a;
+		// TODO : send an event for the update?
+	}
+	
+	/**
+	 * Get the lowest light level setting
+	 * @return	Number	light level	 */
+	public function getAmbientLight( Void ):Number
+	{
+		return _ambientLight;
 	}
 	
 	/**
@@ -497,6 +515,7 @@ class sandy.core.World3D
 	private static var _inst:World3D;//_inst : The only one World3D permitted
 	private var _oEB:EventBroadcaster;//_oEB : The EventBroadcaster instance which manage the event system of world3D.
 	private var _light : Light3D; //the unique light instance of the world
+	private var _ambientLight: Number // the base light level
 	private var _eRender:BasicEvent;
 	private var _eStart:BasicEvent;
 	private var _isRunning:Boolean;

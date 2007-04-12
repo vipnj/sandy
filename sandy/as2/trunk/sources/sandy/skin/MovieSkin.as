@@ -186,11 +186,10 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		{
 			//TODO copy only the little part which is needed is the bitmap if possible.
 			_tmp = _texture.clone();
-			var l:Light3D 	= World3D.getInstance().getLight();
-			var lp:Number	= 0.01 * l.getPower();
-			var dot:Number 	= lp - ( VectorMath.dot( l.getDirectionVector(), f.createNormale() ) );
+			var lightStrength:Number = World3D.getInstance().getLight().calculate(f.createNormale()) + 
+									   World3D.getInstance().getAmbientLight();
 			// -- update the color transform matrix
-			_cmf.matrix = __getBrightnessTransform( dot );
+			_cmf.matrix = __getBrightnessTransform( lightStrength );
 			// TODO: Optimize here with a different way to produce the light effect
 			// and in aplying the filter only to the considered part of the texture!
 			_tmp.applyFilter( _tmp , _tmp.rectangle, _p,  _cmf );
@@ -238,8 +237,6 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			delete _tmp;
 		}
 		_texture = BitmapUtil.movieToBitmap( _mc);
-		
-
 	}
 	
 	private function __concat( m1, m2 ):Object

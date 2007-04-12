@@ -13,7 +13,7 @@ import sandy.math.VectorMath;
 class sandy.core.scenegraph.ATransformable extends Node
 {
 	public var transform:Transform3D;
-	
+
 	public function ATransformable ( p_sName:String )
 	{
 		super( p_sName );
@@ -335,9 +335,9 @@ class sandy.core.scenegraph.ATransformable extends Node
 		var l_nAngle:Number = (nAngle + 360)%360 - _vRotation.y;
 		// --
 		var m:Matrix4 = Matrix4Math.rotationY ( l_nAngle );
-		_vUp   = Matrix4Math.vectorMult3x3( m, this._vUp  );
-		_vSide = Matrix4Math.vectorMult3x3( m, this._vSide);
-		_vOut  = Matrix4Math.vectorMult3x3( m, this._vOut );
+		_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
 		_vRotation.y = nAngle;
 		changed = true;
@@ -483,7 +483,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	 * FIXME: Transformable nodes shall upate their transform if necessary before calling this method.
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
-	{	
+	{
 		if( p_bChanged || changed )
 		{
 			 if( p_oModelMatrix )

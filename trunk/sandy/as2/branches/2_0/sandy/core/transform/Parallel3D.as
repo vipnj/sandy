@@ -122,10 +122,8 @@ class sandy.core.transform.Parallel3D implements Interpolator3D
 			 	iInt = _aInterpolator[i];
 			 	if( iInt.isPaused() )
 			 	{
-			 		Logger.LOG(i+" en pause a la frame : "+_frame+" de durée:"+iInt.getDuration() );
 			 		if( _way == 1 || ( _way == -1 && _frame == iInt.getDuration() ) )
 			 		{
-			 			Logger.LOG("On reveille l'interpolateur a la frame : "+_frame);
 			 			iInt.resume();
 			 		}
 			 	}

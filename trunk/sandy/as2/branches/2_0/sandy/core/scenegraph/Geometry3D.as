@@ -16,6 +16,8 @@ limitations under the License.
 
 import sandy.core.data.Vertex;
 import sandy.core.face.Polygon;
+import sandy.core.data.AnimationData;
+import sandy.core.data.UVCoord;
 
 
 /**
@@ -38,228 +40,157 @@ import sandy.core.face.Polygon;
 * 
 * 
 * 	@author		Mirek Mencel
-* 	@version	1.0
-* 	@date		16.02.2007
+* 	@author		Thomas PFEIFFER
+* 	@version	2.0
+* 	@date		07.04.2007
 */
+
 class sandy.core.scenegraph.Geometry3D
-{
-	
+{	
 // ______
 // PUBLIC________________________________________________________	
 	
-	/** Array of vertices */
-	public var points:Array;
-	
+	/** Array of vertex */
+	public var aVertex:Array;
 	/** Array of faces composed from vertices */
-	public var faces:Array;
-	
+	public var aFacesVertexID:Array;
+	public var aFacesUVCoordsID:Array;
 	/** Normals */
-	public var normals:Array;
-	
+	public var aFacesNormals:Array;
+	public var aVertexNormals:Array;
 	/** UV Coords for faces */
-	public var uv:Array;
-	
-	
-	
-// _______
-// PRIVATE_______________________________________________________
-	
-	/** 
-	* 	NOTE: 	Not in use curentlly, as we do transformation on old vectors
-	* 			rather than recalculating all vectors once arain
-	* 			See updateNormals(p_matrix: Matrix)
-	* 
-	* 	Array of faces we're using to re-calculating normal vectors */
-	private var uniqueDirections:Array;
-	
+	public var aUVCoords:Array;	
 	
 // ___________
 // CONSTRUCTOR___________________________________________________
 	
 	/**
-	* 	Creates new 3D geometry.
-	* 
-	* @param	p_points
-	* @param	p_isStatic 	If true computation of normals is faster 
-	* 						for objects having many faces pointing in the same direction
-	*/
+	 * 	Creates new 3D geometry.
+	 * 
+	 */
 	public function Geometry3D(p_points:Array)
 	{
-		points = p_points || new Array();
-		faces = new Array();
-		normals = new Array();
-		uniqueDirections = new Array();
-		uv = new Array();
+		init();
 	}
 	
-	
-	/**
-	* 	Add new point formed from passed coordinates.
-	* 
-	* @param	p_x
-	* @param	p_y
-	* @param	p_z
-	*/
-	public function addPointByCoords(p_x:Number, p_y:Number, p_z:Number):Number
+	public function init():Void
 	{
-		return points.push(new Vertex(p_x, p_y, p_z)) - 1;
+		aVertex = new Array();
+		aFacesVertexID = new Array();
+		aFacesNormals = new Array();
+		aFacesUVCoordsID = new Array();
+		aVertexNormals = new Array();
+		aUVCoords = new Array();
 	}
 	
-	
 	/**
-	* 	Adds array of Vertices.
-	* 
-	* @param	p_points
-	*/
-	public function addPoints():Number
+	 * 	Add new point formed from passed coordinates at the specified index of the vertex list.
+	 * 
+	 * @param	p_x
+	 * @param	p_y
+	 * @param	p_z
+	 */
+	public function setVertex( p_nVertexID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
 	{
-		var rest:Array = (arguments[0] instanceof Array)? arguments[0]: arguments;
+		if( aVertex[p_nVertexID] )
+			return false;
+		else
+		{ aVertex[p_nVertexID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
+	}
 		
-		if (rest && rest.length > 0) 
-			points.concat(rest);
-			
-		return points.length - 1;
-	}
-	
-	
+
 	/**
-	* 	Add new point defined as Vertex
-	* 
-	* @param	p_vertex
-	*/
-	public function addPoint(p_vertex:Vertex):Number
-	{	
-		return points.push(p_vertex) - 1;
-	}
-	
-	
-	/**
-	* 	Creates new face from points being pointed by passed indexes (of points array)
-	* 	NOTE: Most probably this method could have better name (but I'm tired...
-	* 
-	* @param	...rest
-	* @return
-	*/
-	public function createFaceByIds():Number
+	 * 	Add new point formed from passed coordinates at the specified index of the face normal list.
+	 * 
+	 * @param	p_x
+	 * @param	p_y
+	 * @param	p_z
+	 */
+	public function setFaceNormal( p_nNormalID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
 	{
-		var rest:Array = (arguments[0] instanceof Array)? arguments[0]: arguments;
+		if( aFacesNormals[p_nNormalID] )
+			return false;
+		else
+		{ aFacesNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
+	}
 		
-		var l_vertices:Array = [];
-		var l_fn:Number = rest.length;
-		for(var i:Number = 0; 	i<l_fn && 
-							rest[i] < points.length && 
-							rest[i] >= 0; i++)
+	/**
+	 * 	Add new point formed from passed coordinates at the specified index of the vertex normal list.
+	 * 
+	 * @param	p_x
+	 * @param	p_y
+	 * @param	p_z
+	 */
+	public function setVertexNormal( p_nNormalID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
+	{
+		if( aVertexNormals[p_nNormalID] )
+			return false;
+		else
+		{ aVertexNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
+	}
+	
+	/**
+	 * set the face vertex ID's from the 
+	 * @param	...rest an array of data containing the ID's of the vertex list representing the face
+	 * @return true is the face has been created, false if the faces already exist
+	 */
+	public function setFaceVertexIds( p_nFaceID:Number /* Arguments */ ):Boolean
+	{
+		if( aFacesVertexID[p_nFaceID] )
 		{
-			l_vertices.push(points[rest[i]]);
+			return false;
 		}
-		
-		if (l_vertices.length != rest.length)
+		else
 		{
-			trace("#Error [Geometry3D] createFace() One of passed points id's doesn't exist in this geometry!");
-			return -1;
+			var rest:Array = (arguments[1] instanceof Array)? arguments[1]: arguments.splice(1);
+			aFacesVertexID[p_nFaceID] = rest;
 		}
-		
-		return createFace(l_vertices);
-		
 	}
-	
 	
 	/**
-	* 	Creates face from passed vertices or array of vertices.
-	* 
-	* @param	...rest:Array	If first element is an array all others are ommited.
-	* @return
-	*/
-	public function createFace():Number
+	 * set the face vertex ID's from the 
+	 * @param	...rest an array of data containing the ID's of the vertex list representing the face
+	 * @return true is the face has been created, false if the faces already exist
+	 */
+	public function setFaceUVCoordsIds( p_nFaceID:Number /* Arguments */ ):Boolean
 	{
-		var rest:Array = (arguments[0] instanceof Array)? arguments[0]: arguments;
-		
-		// 	Check if such points already exist in points[] array and
-		//	create them if not
-		var l:Number = rest.length;
-		var l_id:Number;
-		var i:Number;
-		for ( i = 0; i<l; i++)
+		if( aFacesUVCoordsID[p_nFaceID] )
 		{
-			l_id = getPointId(rest[i]);
-			
-			if (l_id<0)
-			{
-				// Add new point as it doesn't t exist in points array
-				l_id = addPoint(rest[i]) - 1;
-			}
+			return false;
 		}
-		
-		var l_face:Polygon = new Polygon(this, rest);
-		var l_faceID:Number = faces.push(l_face)-1;
-		
-		// 1)	Create normal
-		var l_normal:Vertex = Vertex.createFromVector( l_face.createNormale() );
-		l = normals.length;
-		
-		// 2)	Check if such normal already exists
-		for(i = 0; 	i<l && !normals[i].equals(l_normal); i++);
-		
-		// 3)	If yes: push into uniqueDirections array
-		if( i == l )
+		else
 		{
-			// 	Save an ID if this face as it's facing in
-			// 	new, not-known yet, direction and will be 
-			//	reused for updateing normals :-)
-			uniqueDirections.push(l_faceID);
-			
-			// 	Save normal and it's index
-			i = normals.push(l_normal)-1;
+			var rest:Array = (arguments[1] instanceof Array)? arguments[1]: arguments.splice(1);
+			aFacesUVCoordsID[p_nFaceID] = rest;
 		}
-					
-		// 4)	Set proper normal's index for new face
-		l_face.setNormalId(i);
+	}
 		
-		// 5)	Set uv mapping id if exists (was setted before the face was created)
-		if (uv[i])
-			l_face.setUVCoordsId(i);
-			
-			
-		return l_faceID;
-	}
 	
-	public function addFace(p_face:Polygon):Number
-	{
-		return -1; // TODO
-	}
 	
-	public function addFaces(p_faces:Array):Number
-	{
-		return -1; // TODO
-	}
-	
-	private function getPointId(p_point:Vertex):Number
+	public function getVertexId( p_point:Vertex ):Number
 	{
 		var j:Number = 0;
-		for(j=0; 	j<points.length && !(points[j] == p_point); j++);
+		for(j=0; 	j<aVertex.length && !(aVertex[j] == p_point); 	j++);
 		
-		return j == points.length ? -1: j;
+		return j == aVertex.length ? -1: j;
 	}
 	
 	/**
-	* 	Adds UV coordinates for single face.
-	* 
-	* @param	...rest	Array of UV coordinates (3 UVCoords for triangles).
-	*/
-	public function addUVCoords():Void
+	 * Adds UV coordinates for single face.
+	 * 
+	 * @param	...rest	Array of UV coordinates (3 UVCoords for triangles).
+	 */
+	public function setUVCoords( p_nID:Number, p_UValue:Number, p_nVValue:Number ):Boolean
 	{
-		var rest:Array = (arguments[0] instanceof Array)? arguments[0]: arguments;
-		
-		if (!rest || rest.length<3)
+		if ( aUVCoords[p_nID] )
 		{
-			trace("#Warrning [Geometry3D] addUVCoords() Passed number of coordinates is lower then 3!");
-			return;
+			return false;
 		}
-		
-		var i:Number = uv.push(rest)-1;
-		
-		if (faces[i])
-			faces[i].setUVCoordsId(i);
+		else
+		{
+			aUVCoords[p_nID] = new UVCoord( p_UValue, p_nVValue );
+			return true;
+		}
 	}
 	
 	/**
@@ -276,34 +207,45 @@ class sandy.core.scenegraph.Geometry3D
 		var l_result:Geometry3D = new Geometry3D();
 		var i:Number = 0;
 		// Points
-		var l:Number = points.length;
+		var l:Number = aVertex.length;
 		for (i = 0; i<l; i++)
 		{
-			l_result.addPoint(points[i].clone());
+			l_result.aVertex[i] = Vertex( aVertex[i] ).clone();
 		}
 		
 		// Faces
-		l = faces.length;
+		l = aFacesVertexID.length;
 		for (i = 0; i<l; i++)
 		{
-			l_result.createFaceByIds(faces[i].vertices);
+			l_result.aFacesVertexID[i] = Array(aFacesVertexID[i]).concat();
 		}
 		
 		// Normals
-		l = normals.length;
+		l = aFacesNormals.length;
 		for (i = 0; i<l; i++)
 		{
-			l_result.normals.push( normals[i].clone() );
-			l_result.uniqueDirections.push( uniqueDirections[i] );
+			l_result.aFacesNormals[i] = Vertex( aFacesNormals[i] ).clone();
 		}
 		
-		// UVs
-		l = uv.length;
-		var l_uvs:Array;
+		// Normals
+		l = aVertexNormals.length;
 		for (i = 0; i<l; i++)
 		{
-			l_uvs = uv[i];
-			l_result.addUVCoords( l_uvs[0].clone(), l_uvs[1].clone(), l_uvs[2].clone()  );
+			l_result.aVertexNormals[i] = Vertex( aVertexNormals[i] ).clone();
+		}
+		
+		// UVs face
+		l = aFacesUVCoordsID.length;
+		for (i = 0; i<l; i++)
+		{
+			l_result.aFacesUVCoordsID[i] = aFacesUVCoordsID[i].concat();
+		}
+		
+		// UVs coords
+		l = aUVCoords.length;
+		for (i = 0; i<l; i++)
+		{
+			l_result.aUVCoords[i] = UVCoord( aUVCoords[i] ).clone();
 		}
 		
 		
@@ -312,10 +254,11 @@ class sandy.core.scenegraph.Geometry3D
 	
 	public function toString():String
 	{
-		return "[Geometry: " + 	faces.length + " faces, " + 
-								points.length + " points, " + 
-								normals.length + " normals, " +
-								uv.length + " uv coords]";
+		return "[Geometry: " + 	aFacesVertexID.length + " faces, " + 
+								aVertex.length + " points, " + 
+								aFacesNormals.length + " normals, " +
+	
+								aUVCoords.length + " uv coords]";
 	}
 	
 	/*public function debug():void

@@ -23,17 +23,19 @@ import flash.geom.*;
 class sandy.util.BitmapUtil
 {
 	/**
-	* Convert a movieClip to a bitmapData. Take care of the movieclip position.
-	* The simple BitmapData.draw method doesn't take care of the negative part of the movieclip during the draw. 
-	* This method does.
-	* @param	mc The movieClip to convert to a Bitmap
-	* @return BitmapData
-	*/
+	 * Convert a movieClip to a bitmapData. Take care of the movieclip position.
+	 * The simple BitmapData.draw method doesn't take care of the negative part of the movieclip during the draw. 
+	 * This method does.
+	 * @param	mc The movieClip to convert to a Bitmap
+	 * @return BitmapData
+	 */
 	public static function movieToBitmap( mc:MovieClip, pTransparent:Boolean, pColor:Number ):BitmapData
 	{
 		var bmp:BitmapData;
 		pTransparent 	= (pTransparent == undefined) ? true : pTransparent;
+		// --
 		if( pTransparent == true && pColor == undefined ) pColor = 0x00FF00CC; // a random color, needed tby the bitmapData constructor to apply transparency
+		// --
 		if( pColor )
 		{
 			bmp = new BitmapData( mc._width, mc._height, pTransparent, pColor );
@@ -43,7 +45,7 @@ class sandy.util.BitmapUtil
 			bmp = new BitmapData( mc._width, mc._height, pTransparent );
 		}
 		bmp.draw( mc );
-		//
+		// --
 		return bmp;
 	}
 	
@@ -51,7 +53,30 @@ class sandy.util.BitmapUtil
 	{
 		scaley = (undefined == scaley) ? scalex : scaley;
 		var tex:BitmapData = new BitmapData( scalex * b.width, scaley * b.height);
-		tex.draw( b, new Matrix( scalex, 0, scaley, 0 ) );
+		tex.draw( b, new Matrix( scalex, 0, 0, scaley ) );
 		return tex;
+	}
+	
+	public static function concatBitmapMatrix( m1:Object, m2:Object ):Object
+	{	
+		var r = {};
+		// --
+		r.a = m1.a * m2.a;
+		r.d = m1.d * m2.d;
+		r.b = r.c = 0;
+		r.ty = m1.ty * m2.d + m2.ty;
+		r.tx = m1.tx * m2.a + m2.tx;
+		// --
+		if( m1.b != 0 || m1.c !=0 || m2.b != 0 || m2.c != 0 )
+		{
+			r.a  += m1.b * m2.c;
+			r.d  += m1.c * m2.b;
+			r.b  += m1.a * m2.b + m1.b * m2.d;
+			r.c  += m1.c * m2.a + m1.d * m2.c;
+			r.tx += m1.ty * m2.c;
+			r.ty += m1.tx * m2.b;
+		}
+		// --
+		return r;
 	}
 }

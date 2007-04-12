@@ -42,8 +42,8 @@ import sandy.core.data.Matrix4;
 * @author	Nicolas Coevoet - [ NikO ]
 * @author	Bruce Epstein - zeusprod
 * @author	Martin Wood-Mitrovski
-* @version	1.2
-* @date 	11.04.2007
+* @version	1.2.1
+* @date 	12.04.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -252,7 +252,7 @@ class sandy.core.Object3D extends Leaf
 		_s = pS;
 		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 
-		__updateTextureMatrices();
+		__updateTextureMatrices(_s);
 
 		_needRedraw = true;
 		return true;
@@ -274,11 +274,7 @@ class sandy.core.Object3D extends Leaf
 		_sb = pSb;
 		_sb.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		//
-		var l:Number = aFaces.length;
-		while( --l > -1 )
-		{
-			aFaces[l].updateTextureMatrix( _sb );
-		}
+		__updateTextureMatrices(_sb);
 		//
 		_needRedraw = true;
 		return true;
@@ -473,7 +469,7 @@ class sandy.core.Object3D extends Leaf
 	}
 	
 	/**
-	 * Add a face to the objet, set the object skins to faces, and notify that there is a modification
+	 * Add a face to the object, set the object skins to faces, and notify that there is a modification
 	 */
 	public function addFace( f:IPolygon ):Void
 	{
@@ -676,21 +672,19 @@ class sandy.core.Object3D extends Leaf
 	private function __onSkinUpdated( e:SkinEvent ):Void
 	{
 		_needRedraw = true;
-		if(e.needsTextureUpdate)
-		{
-			__updateTextureMatrices();
-		}		
+		__updateTextureMatrices(e.getTarget());		
 	}
 	
 	/**
 	 * If the skin / texture has changed update the matrices for each face
-	 */
-	private function __updateTextureMatrices()
+	 * @param	s: Skin - the updated skin
+	*/
+	private function __updateTextureMatrices(s:Skin):Void
 	{
 		var l:Number = aFaces.length;
 		while( --l > -1 )
 		{
-			aFaces[l].updateTextureMatrix( _s );
+			aFaces[l].updateTextureMatrix( s );
 		}
 	}
 	

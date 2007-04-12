@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -62,6 +62,28 @@ class sandy.core.data.Vector
 		return "{" + NumberUtil.roundTo(x, .01) + ", " + 
 					 NumberUtil.roundTo(y, .01) + ", " + 
 					 NumberUtil.roundTo(z, .01) + "}";
+	}
+	
+	// Used for XML output
+	public function serialize(roundTo:Number):String
+	{
+		if (roundTo == undefined) {
+			roundTo = .01
+		}
+		//returns x,y,x
+		return  (NumberUtil.roundTo(x, .01) + "," + 
+				 NumberUtil.roundTo(y, .01) + "," + 
+				 NumberUtil.roundTo(z, .01));
+	}
+	
+	// Used for XML output
+	public static function deserialize(convertFrom:String):Vector
+	{
+		var tmp:Array = convertFrom.split(",");
+		if (tmp.length != 3) {
+			trace ("Unexpected length of string to deserialize into a vector " + convertFrom);
+		}
+		return  new Vector (tmp[0], tmp[1], tmp[2]);
 	}
 }
 

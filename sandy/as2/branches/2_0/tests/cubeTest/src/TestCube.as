@@ -1,16 +1,17 @@
 import com.bourre.commands.Delegate;
+import com.bourre.visual.FPSLoggerUI;
 
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Group;
 import sandy.core.scenegraph.TransformGroup;
 import sandy.core.World3D;
-import sandy.math.FastMath;
-import sandy.math.Matrix4Math;
+import sandy.materials.Appearance;
+import sandy.materials.ColorMaterial;
+import sandy.materials.Material;
 import sandy.primitive.Box;
-import sandy.primitive.Sphere;
-import sandy.skin.MixedSkin;
 
 import tests.cubeTest.src.TestCube;
+import sandy.materials.LineAttributes;
 
 /**
  * @author thomaspfeiffer
@@ -20,28 +21,31 @@ class TestCube
 	private var _mc:MovieClip;
 	private var _world:World3D;
 	private var box:Box;
-	private var sphere:Sphere;
+	private var box2:Box;
 	var tgRotation:TransformGroup;
-	
-	private var m_fpsTf:TextField;
-	private var m_nFps:Number;
-	private var m_nTime:Number;
+	private var m_tfPolygonCount:TextField;
+	private var m_tfVertexCount:TextField;
 	
 	public static function main( mc:MovieClip ):Void
 	{
+		//Logger.getInstance().addLogListener( LuminicTracer.getInstance() );
+		// --
 		var t:TestCube = new TestCube(mc);
-		// Does not make things faster in AS2 but does in AS3...
+		// -- Does not make things faster in AS2 but does in AS3...
+		
 		//Matrix4Math.USE_FAST_MATH = true;
 	}
 	
 	public function TestCube( p_oMc:MovieClip )
 	{
 		_mc = p_oMc;
-		m_fpsTf = _mc.createTextField("fps", -1, 0, 20, 40, 15 );
-		m_fpsTf.border = true;
-		//
-		m_nTime = getTimer();
-		m_nFps = 0;
+		m_tfPolygonCount = _mc.createTextField("polygonCount", -1, 400, 20, 70, 20 );
+		m_tfPolygonCount.border = true;
+		
+		m_tfVertexCount = _mc.createTextField("vertexCount", -2, 400, 40, 70, 20 );
+		m_tfVertexCount.border = true;
+		
+		var fpsUI:FPSLoggerUI = new FPSLoggerUI( _mc, -3 );
 		//
 		_world = World3D.getInstance();
 		// FIRST THING TO INITIALIZE
@@ -52,10 +56,10 @@ class TestCube
 	private function _init( Void ):Void
 	{
 		_world.root = _createScene();
-		_world.camera = new Camera3D(500, 500);
-		_world.camera.z = -200;
-		_world.camera.x = 200;
-		_world.camera.lookAt( 0, 0, 500 );
+		_world.camera = new Camera3D( 500, 500 );
+		//_world.camera.z = -200;
+		//_world.camera.x = 200;
+		//_world.camera.lookAt( 0, 0, 500 );
 		// --
 		_world.root.addChild( _world.camera );
 		_world.container = _mc;
@@ -69,22 +73,24 @@ class TestCube
 		tgRotation = new TransformGroup("rotation");
 		
 		tgTranslation.z = 500;
-		//tgRotation.transform = TransformUtil.rotAxisWithReference( new Vector( 0, 1, 0 ), new Vector( 0, 0, 0), 90);
-		tgRotation.rotateY = 240;
-		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
+
+		box = new Box( "myBox", 50, 50, 50, "quad" );
+		box.enableBackFaceCulling = false;
 		//box.enableClipping = true;
-		box.skin = new MixedSkin( 0xFF00FF, 50 );
-		box.rotateX = 45;
+		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 0 );
+		l_oMaterial.lineAttributes = new LineAttributes(2, 0xFF, 100 );
+		var l_oAppearance:Appearance = new Appearance( l_oMaterial, l_oMaterial ); 
+		box.appearance = l_oAppearance;
 		box.rotateZ = 45;
-		tgRotation.addChild( box );
+		tgTranslation.addChild( box );
 		
-		sphere = new Sphere( "mySphere", 100, 2, "quad" );
-		sphere.skin = new MixedSkin( 0x0000FF, 100 );
-		sphere.z = 200;
-		sphere.x = 200;
-		sphere.rotateAxis(0, 0, 1, 270);
-		
-		tgRotation.addChild( sphere );
+		box2 = new Box( "myBox2", 100, 50, 100 );
+		box2.enableBackFaceCulling = false;
+		box2.appearance = l_oAppearance;
+		box2.z = 100;
+		box2.x = 0;
+
+		tgRotation.addChild( box2 );
 		//
 		tgTranslation.addChild( tgRotation );
 		g.addChild( tgTranslation );
@@ -93,22 +99,17 @@ class TestCube
 	
 	private function _onRender( Void ):Void
 	{
-		m_nFps++;
-		if( (getTimer() - m_nTime) > 1000 )
-		{
-			m_fpsTf.text = m_nFps+" fps";
-			m_nFps = 0;
-			m_nTime = getTimer();
-		}
-		//tgRotation.rotateY ++;
-		box.roll += 0.5;
-		//box.rotateX += 0.5;
+		m_tfVertexCount.text = _world.camera['_aVerticesList'].length+" vertices";
+		m_tfPolygonCount.text = _world.camera.iRenderer.getDisplayListLength()+" polygons";
+		// --
+		tgRotation.rotateY ++;
+		//box.pan += 0.5;
+		box.rotateX += 0.5;
+		//box2.tilt += 0.1;
 		//box.scaleX += 0.01;
 		//_world.camera.z += 2;
 		//_world.camera.x -= 1;
 		//_world.camera.y += 0.1;
-		//sphere.pan += 0.2;
-		
 		//_world.camera.lookAt( 0, 0, 500 );
 		_world.render();
 	}

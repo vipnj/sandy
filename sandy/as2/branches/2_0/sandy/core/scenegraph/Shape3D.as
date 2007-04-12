@@ -13,47 +13,66 @@ import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.ITransformable;
 import sandy.events.MouseEvent;
-import sandy.events.SkinEvent;
+import sandy.materials.Appearance;
 import sandy.math.VectorMath;
-import sandy.skin.SimpleLineSkin;
-import sandy.skin.Skin;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
+import com.bourre.log.Logger;
 
 class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransformable
 { 
-// _______
-// STATICS_______________________________________________________
-
-	// Default skin for every Shape3D object.
-	public static var DEFAULT_SKIN:Skin = new SimpleLineSkin(); 	
+	public var aPolygons:Array;
 	
-    public function Shape3D( p_sName:String, p_geometry:Geometry3D )
+	// Default skin for every Shape3D object.	
+    public function Shape3D( p_sName:String, p_geometry:Geometry3D, p_oAppearance:Appearance )
     {
         super( p_sName );
-        geometry = (p_geometry == null) ? new Geometry3D() : p_geometry ;
-        _needRedraw = false;
-        _oEB = new EventBroadcaster( this );
+        geometry = p_geometry;
+        m_oEB = new EventBroadcaster( this );
         //
-        _backFaceCulling = true;
-		_enableForcedDepth = false;
-		_enableClipping = false;
-		_bClipped = false;
-		_forcedDepth = 0;
-		_bEv = false;
+        m_bBackFaceCulling = true;
+		m_bEnableForcedDepth = false;
+		m_bEnableClipping = false;
+		m_bClipped = false;
+		m_nForcedDepth = 0;
+		m_bEv = false;
 		// --
-		skin = DEFAULT_SKIN;
+		appearance = p_oAppearance;
 		// -- 
 		updateBoundingVolumes();
     }
     
-            
-    public  function updateBoundingVolumes( Void ):Void
+    private function __destroy():Void
     {
-        if( geometry )
+    	if( aPolygons.length > 0 )
+    	{
+    		var i:Number, l:Number;
+    		for( i=0; i<l; i++ )
+	    	{
+	    		Polygon( aPolygons[i] ).destroy();
+	    	}
+    	}
+    }
+    
+    private function __generate( p_oGeometry:Geometry3D ):Void
+    {
+    	var i:Number, l:Number;
+    	//
+    	aPolygons = new Array( l = p_oGeometry.aFacesVertexID.length );
+    	//
+    	for( i=0; i<l; i++ )
+    	{
+    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+    	}
+    }
+
+            
+    public function updateBoundingVolumes( Void ):Void
+    {
+        if( m_oGeometry )
         {
-            _oBSphere = BSphere.create( geometry.points );
-            _oBBox = BBox.create( geometry.points );
+            _oBSphere 	= BSphere.create( m_oGeometry.aVertex );
+            _oBBox 		= BBox.create( m_oGeometry.aVertex );
         }
     }
  
@@ -66,20 +85,20 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		if( changed )
 		{
 			var mt:Matrix4 = m_tmpMt;
-			mt.n11 = _vSide.x * _oScale.x; 
-			mt.n21 = _vSide.y; 
-			mt.n31 = _vSide.z; 
-			mt.n14 = VectorMath.dot( _vSide, _p );
-			
+			mt.n11 = _vSide.x; 
 			mt.n12 = _vUp.x; 
-			mt.n22 = _vUp.y * _oScale.y;
-			mt.n32 = _vUp.z; 
-			mt.n24 = VectorMath.dot( _vUp, _p );
+			mt.n13 = _vOut.x; 
+			mt.n14 = VectorMath.dot( _vSide, _p);
 			
-			mt.n13 = _vOut.x;
+			mt.n21 = _vSide.y; 
+			mt.n22 = _vUp.y; 
 			mt.n23 = _vOut.y; 
-			mt.n33 = _vOut.z * _oScale.z;
-			mt.n34 = VectorMath.dot( _vOut, _p );
+			mt.n24 = VectorMath.dot( _vUp, _p);
+			
+			mt.n31 = _vSide.z; 
+			mt.n32 = _vUp.z; 
+			mt.n33 = _vOut.z; 
+			mt.n34 = VectorMath.dot( _vOut, _p);
 			
 			transform.matrix = mt;
 		}
@@ -93,9 +112,9 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		// Shall be called first
+		// -- Shall be called first
 		updateTransform();
-		// we call the super update mthod
+		// -- we call the super update mthod
 		super.update( p_oModelMatrix, p_bChanged );
 	}
 	  
@@ -111,16 +130,17 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	public function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
 		super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
-		// We update the clipped property if necessary and requested by the user.
+		// -- We update the clipped property if necessary and requested by the user.
 		if( culled == CullingState.INTERSECT )
 		{
-			if( _enableClipping ) 
+			if( m_bEnableClipping ) 
 			{
-				_bClipped = true;
+				m_bClipped = true;
 				return;
 			}
 		}
-		_bClipped = false;
+		// --
+		m_bClipped = false;
 	}
 	
 	public function render( p_oCamera:Camera3D ):Void
@@ -134,9 +154,10 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		var l_oVertex:Vertex;
 		var l_nLength:Number;
 		//--
-		var l_aPoints:Array = geometry.points;
+		var l_aPoints:Array = m_oGeometry.aVertex;
         var l_oMatrix:Matrix4 = _oViewCacheMatrix;
-       	var l_faces:Array = _geometry.faces;
+       	// --
+       	var l_faces:Array = aPolygons;
        	var l_oFrustum:Frustum = p_oCamera.frustrum;
         // --
         m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31; m41 = l_oMatrix.n41;
@@ -145,9 +166,9 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
 		
 		// If necessary we transform the normals vectors
-		if( _backFaceCulling )
+		if( m_bBackFaceCulling )
 		{
-		    var l_aNormals:Array = geometry.normals;
+		    var l_aNormals:Array = m_oGeometry.aFacesNormals;
 		    l_nLength = l_aNormals.length;
 		    // Now we can transform the objet vertices into the camera coordinates	
 			while( --l_nLength > -1 )
@@ -174,62 +195,50 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		///////// FRUSTUM CLIPPING AND FACES TESTS //////////
 		/////////////////////////////////////////////////////
 
-		// Il the polygons will be clipped, we shall allocate a new array container the clipped vertex.
-		if( _bClipped ) l_aPoints = [];
-		//
+		// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
+		if( m_bClipped ) l_aPoints = [];
+		// --
 		l_nLength = l_faces.length;
 		while( --l_nLength > -1 )
-		{	
+		{
 		    l_oFace = l_faces[l_nLength];
-		   	//
-		    if ( l_oFace.isVisible() || !_backFaceCulling) 
+		   	// --
+		    if ( l_oFace.visible || !m_bBackFaceCulling) 
 			{
-				l_oFace.isClipped = false;
-				if( _bClipped )
+				l_oFace.bClipped = false;
+				// --  a necessary copy
+				l_oFace.cvertices = l_oFace.vertices.slice();
+				if( m_bClipped )
 				{
 				    l_oFace.clip( l_oFrustum );
-				    if( l_oFace.clipped != null ) 
-			            l_aPoints = l_aPoints.concat( l_oFace.clipped );
+				    if( l_oFace.bClipped != null ) 
+			            l_aPoints = l_aPoints.concat( l_oFace.bClipped );
 			    }
-				l_nDepth 	= (_enableForcedDepth) ? _forcedDepth : l_oFace.getZAverage();
-				if( l_nDepth )	p_oCamera.addToDisplayList( l_oFace, l_nDepth );
+			    // --
+				l_nDepth 	= (m_bEnableForcedDepth) ? m_nForcedDepth : l_oFace.getZAverage();
+				if( l_nDepth )	p_oCamera.iRenderer.addToDisplayList( l_oFace, l_nDepth );
 			}
 		}
-		
+		// -- We push the vertex to project onto the viewport.
 		p_oCamera.pushVerticesToRender( l_aPoints );
 	}
 
-	/**
-	* Set a Skin to the Object3D.
-	* <p>This method will set the the new Skin to all his faces.
-	* Warning : If no backface skin has benn applied, the skin will be applied to the back side of faces too!
-	* </p>
-	* @param	s	The new Skin to apply to faces
-	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
-	* @return	Boolean True to apply the skin to the non default faces skins , false otherwise (default).
-	*/
-	public function set skin( pS:Skin )
+
+	public function set appearance( p_oApp:Appearance )
 	{
-		if (_s)
-		{
-			_s.removeEventListener( SkinEvent.UPDATE, __onSkinUpdated );
-		}
 		// Now we register to the update event
-		_s = pS;
-		_s.addEventListener( SkinEvent.UPDATE, __onSkinUpdated );
+		m_oAppearance = p_oApp;
 		//
-		if( geometry )
+		if( m_oGeometry )
 		{
-			var l_faces:Array = geometry.faces;
+			var l_faces:Array = aPolygons;
 			var l:Number = l_faces.length;
 			while( --l > -1 )
 			{
-				l_faces[int(l)].setSkin( _s );
+				l_faces[int(l)].appearance = m_oAppearance;
 				l_faces[int(l)].updateTextureMatrix();
 			}
 		}
-		//
-		_needRedraw = true;
 		//return true; // Not allowed in setters
 	}
 	
@@ -239,33 +248,36 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	* @param	void
 	* @return 	Skin the skin object
 	*/
-	public function get skin():Skin 
+	public function get appearance():Appearance 
 	{
-		return _s;
+		return m_oAppearance;
 	}
 	       
 	
-	public function set geometry(p_geometry:Geometry3D)
+	public function set geometry( p_geometry:Geometry3D )
 	{
-		_geometry = p_geometry;
+		// TODO shall we clone the geometry?
+		m_oGeometry = p_geometry;
 		updateBoundingVolumes();
 		// update the skin
-		skin = _s ;
+		//skin = _s ;
+		__destroy();
+		__generate( m_oGeometry );
 	}
 	
 	public function get geometry():Geometry3D
 	{
-		return _geometry;
+		return m_oGeometry;
 	}
 	
 	public function set enableClipping( b:Boolean )
 	{
-		_enableClipping = b;
+		m_bEnableClipping = b;
 	}
 
 	public function get enableClipping():Boolean
 	{
-		return _enableClipping;
+		return m_bEnableClipping;
 	}
 		
 	/**
@@ -275,9 +287,9 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function	set enableForcedDepth( b:Boolean )
 	{
-		if( b != _enableForcedDepth )
+		if( b != m_bEnableForcedDepth )
 		{
-			_enableForcedDepth = b;
+			m_bEnableForcedDepth = b;
 			changed = true;
 		}
 	}
@@ -287,7 +299,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function	get enableForcedDepth():Boolean
 	{
-		return _enableForcedDepth;
+		return m_bEnableForcedDepth;
 	}
 	
 	/**
@@ -297,7 +309,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function set forcedDepth( pDepth:Number )
 	{
-		_forcedDepth = pDepth;
+		m_nForcedDepth = pDepth;
 		changed = true;
 	}
 	
@@ -307,7 +319,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function get forcedDepth():Number
 	{
-		return _forcedDepth;
+		return m_nForcedDepth;
 	}
 
 
@@ -318,16 +330,15 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function set enableBackFaceCulling( b:Boolean )
 	{
-		if( b != _backFaceCulling )
+		if( b != m_bBackFaceCulling )
 		{
-			_backFaceCulling = b;
-			_needRedraw = true;	
+			m_bBackFaceCulling = b;
 			changed = true;
 		}
 	}
 	public function get enableBackFaceCulling():Boolean
 	{
-		return _backFaceCulling;
+		return m_bBackFaceCulling;
 	}
 		
 					
@@ -337,7 +348,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	*/
 	public function toString ():String
 	{
-		return "sandy.core.scenegraph.Shape3D" + " " +  geometry.toString();
+		return "sandy.core.scenegraph.Shape3D" + " " +  m_oGeometry.toString();
 	}	
 
 	/**
@@ -351,12 +362,12 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	*/
 	public function set enableEvents( b:Boolean )
 	{
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = aPolygons;
 		var l:Number = l_faces.length;
 		// -- 
 		if( b )
 		{
-			if( !_bEv )
+			if( !m_bEv )
 			{
 				
     			while( --l > -1 )
@@ -369,7 +380,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     			}
 			}
 		}
-		else if( !b && _bEv )
+		else if( !b && m_bEv )
 		{
 			while( --l > -1 )
     		{
@@ -380,7 +391,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 				l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, this,_onRollOut);
     		}
 		}
-		_bEv = b;
+		m_bEv = b;
 	}
 
 	/**
@@ -393,35 +404,30 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	public function swapCulling():Void
 	{
 		
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = aPolygons;
 		var l:Number = l_faces.length;
 		
 		for( var i:Number = 0;i < l; i++ )
 		{
 			l_faces[int(i)].swapCulling();
 		}
-		_needRedraw = true;	
 		changed = true;
 	}
 	
 				
 	public function destroy():Void
 	{
-		// 	Fix it - it should be more like 
+		// 	FIXME Fix it - it should be more like 
 		//	geometry.destroy();
-		
 		// --
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = aPolygons;
 		var l:Number = l_faces.length;
 		while( --l > -1 )
 		{
 			l_faces[int(l)].destroy();
 			l_faces[int(l)] = null;
 		}
-		//aFaces = null;
 		// --
-		_s.removeEventListener( SkinEvent.UPDATE, __onSkinUpdated );
-		
 		super.destroy();
 	}
 
@@ -445,7 +451,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function addEventListener(t:String, oL) : Void
 	{
-		_oEB.addEventListener.apply( _oEB, arguments );
+		m_oEB.addEventListener.apply( m_oEB, arguments );
 	}
 	
 	/**
@@ -463,7 +469,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function removeEventListener(t:String, oL) : Void
 	{
-		_oEB.removeEventListener( t, oL );
+		m_oEB.removeEventListener( t, oL );
 	}
 	
 
@@ -480,7 +486,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	 */
 	public function dispatchEvent(o:Object) : Void
 	{
-		_oEB.dispatchEvent.apply( _oEB, arguments );
+		m_oEB.dispatchEvent.apply( m_oEB, arguments );
 	}
 	
 	//////////////////////
@@ -500,28 +506,18 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	{
 		dispatchEvent(e);
 	}
-	/**
-	* called when the skin of an object change.
-	* We want this object to notify that it has changed to redrawn, so we change its modified property.
-	* @param	e
-	*/ 
-	private function __onSkinUpdated( e:BasicEvent ):Void
-	{
-		_needRedraw = true;
-	}	
-	
+
 // ______________
 // [PRIVATE] DATA________________________________________________				
-	private var _s:Skin ; // The Skin of this Object3D		
-    private var _needRedraw:Boolean; //Say if the object needs to be drawn again or not. Happens when the skin is updated!
-	private var _bEv:Boolean; // The event system state (enable or not)
-	private var _backFaceCulling:Boolean;
-	private var _enableClipping:Boolean;
-	private var _bClipped:Boolean;
-	private var _enableForcedDepth:Boolean;
-	private var _forcedDepth:Number;
-	private var _oEB:EventBroadcaster;
+	private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
+    private var m_bEv:Boolean; // The event system state (enable or not)
+	private var m_bBackFaceCulling:Boolean;
+	private var m_bEnableClipping:Boolean;
+	private var m_bClipped:Boolean;
+	private var m_bEnableForcedDepth:Boolean;
+	private var m_nForcedDepth:Number;
+	private var m_oEB:EventBroadcaster;
 	/** Geometry of this object */
-	private var _geometry:Geometry3D;
+	private var m_oGeometry:Geometry3D;
 	
 }

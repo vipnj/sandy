@@ -16,7 +16,7 @@ limitations under the License.
 
 import sandy.core.data.UVCoord;
 import sandy.core.data.Vertex;
-import sandy.core.face.IPolygon;
+import sandy.core.face.Polygon;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.Shape3D;
 import sandy.primitive.Primitive3D;
@@ -103,94 +103,100 @@ class sandy.primitive.Box extends Shape3D implements Primitive3D
 		var r2 : Number = _radius / 2;
 		var l2 : Number = _lg / 2;
 
-		var p0 : Vertex = new Vertex (-r2,-h2,l2);
-		l_geometry.addPoint(p0);
-		var p1 : Vertex = new Vertex (r2,-h2,l2);
-		l_geometry.addPoint(p1);
-		var p2 : Vertex = new Vertex (r2,h2,l2);
-		l_geometry.addPoint(p2);
-		var p3 : Vertex = new Vertex (-r2,h2,l2);
-		l_geometry.addPoint(p3);
-		var p4 : Vertex = new Vertex (-r2,-h2,-l2);
-		l_geometry.addPoint(p4);
-		var p5 : Vertex = new Vertex (r2,-h2,-l2);
-		l_geometry.addPoint(p5);
-		var p6 : Vertex = new Vertex (r2,h2,-l2);
-		l_geometry.addPoint(p6);
-		var p7 : Vertex = new Vertex (-r2,h2,-l2);
-		l_geometry.addPoint(p7);
+		//var p0 : Vertex = new Vertex (-r2,-h2,l2);
+		l_geometry.setVertex( 0, -r2, -h2, l2 );
+		//var p1 : Vertex = new Vertex (r2,-h2,l2);
+		l_geometry.setVertex( 1, r2, -h2, l2 );
+		//var p2 : Vertex = new Vertex (r2,h2,l2);
+		l_geometry.setVertex( 2, r2, h2, l2 );
+		// var p3 : Vertex = new Vertex (-r2,h2,l2);
+		l_geometry.setVertex( 3, -r2, h2, l2 );
+		//var p4 : Vertex = new Vertex (-r2,-h2,-l2);
+		l_geometry.setVertex( 4, -r2, -h2, -l2 );
+		//var p5 : Vertex = new Vertex (r2,-h2,-l2);
+		l_geometry.setVertex( 5, r2, -h2, -l2 );
+		//var p6 : Vertex = new Vertex (r2,h2,-l2);
+		l_geometry.setVertex( 6, r2, h2, -l2 );
+		//var p7 : Vertex = new Vertex (-r2,h2,-l2);
+		l_geometry.setVertex( 7, -r2, h2, -l2 );
 		
-		// -- we setup texture coordinates
-		var uv0:UVCoord = new UVCoord (0, 0);
-		var uv1:UVCoord = new UVCoord (1, 0);
-		var uv2:UVCoord = new UVCoord (0, 1);
-		var uv3:UVCoord = new UVCoord (1, 1);
-		
+		// -- we setup texture coordinates		
+		l_geometry.setUVCoords( 0, 0, 0 );
+		l_geometry.setUVCoords( 1, 1, 0 );
+		l_geometry.setUVCoords( 2, 0, 1 );
+		l_geometry.setUVCoords( 3, 1, 1 );
 		// -- Faces creation
 		
 		//Front Face
 		__tesselate(l_geometry,
-					p0, p1, p2, p3,
-					uv0, uv1, uv3, uv2,
+					0, 1, 2, 3,
+					0, 1, 3, 2,
 					_q - 1 );
 		
 		//Behind Face
 		__tesselate(l_geometry,
-					p4, p7, p6, p5,
-					uv1, uv3, uv2, uv0,
+					4, 7, 6, 5,
+					1, 3, 2, 0,
 					_q - 1 );
 		//Top Face
 		__tesselate(l_geometry,
-					p2, p6, p7, p3,
-					uv1, uv3, uv2, uv0,
+					2, 6, 7, 3,
+					1, 3, 2, 0,
 					_q - 1 );
 		//Bottom Face
 		__tesselate(l_geometry,
-					p0, p4, p5, p1,
-					uv2, uv3, uv1, uv0,
+					0, 4, 5, 1,
+					2, 3, 1, 0,
 					_q - 1 );
 		//Left Face
 		__tesselate(l_geometry,
-					p0, p3, p7, p4,
-					uv1, uv3, uv2, uv0,
+					0, 3, 7, 4,
+					1, 3, 2, 0,
 					_q - 1 );
 		//Right Face
 		__tesselate(l_geometry,
-					p1, p5, p6, p2,
-					uv0, uv1, uv3, uv2,
+					1, 5, 6, 2,
+					0, 1, 3, 2,
 					_q - 1 );
 					
 		return l_geometry;
 	}
 	
 	private function __tesselate( 	p_geometry:Geometry3D,
-									p0:Vertex, p1:Vertex, p2:Vertex, p3:Vertex,
-									uv0:UVCoord, uv1:UVCoord, uv2:UVCoord, uv3:UVCoord,
+									p0:Number, p1:Number, p2:Number, p3:Number,
+									uv0:Number, uv1:Number, uv2:Number, uv3:Number,
 									level:Number):Void
 	{
 		var l_geometry:Geometry3D = p_geometry;
 		
-		var f:IPolygon;
+		var f:Polygon;
 		if(level == 0 ) // End of recurssion
 		{
 			// -- We have the same normal for 2 faces, be careful to don't add extra normal
 			if( _mode == 'tri' )
 			{
 				//Front Face
-				l_geometry.createFace( p0, p1, p3 );
-				l_geometry.addUVCoords( uv0, uv1, uv3 );
+				//l_geometry.createFace( p0, p1, p3 );
+				l_geometry.setFaceVertexIds( l_geometry.aFacesVertexID.length, p0, p1, p3 );
+				//l_geometry.addUVCoords( uv0, uv1, uv3 );
+				l_geometry.setFaceUVCoordsIds( l_geometry.aFacesVertexID.length, uv0, uv1, uv3 );
 				
-				l_geometry.createFace( p2, p3, p1 );
-				l_geometry.addUVCoords( uv2, uv3, uv1 );
+				//l_geometry.createFace( p2, p3, p1 );
+				l_geometry.setFaceVertexIds( l_geometry.aFacesVertexID.length, p2, p3, p1 );
+				//l_geometry.addUVCoords( uv2, uv3, uv1 );
+				l_geometry.setFaceUVCoordsIds( l_geometry.aFacesVertexID.length, uv2, uv3, uv1 );
 				
 			}
 			else if( _mode == 'quad' )
 			{
 				//Front Face
-				l_geometry.createFace( p0, p1, p2, p3 );
-				l_geometry.addUVCoords( uv0, uv1, uv2 );
+				l_geometry.setFaceVertexIds( l_geometry.aFacesVertexID.length, p0, p1, p2, p3 );
+				l_geometry.setFaceUVCoordsIds( l_geometry.aFacesVertexID.length, uv0, uv1, uv2 );
+				//l_geometry.createFace( p0, p1, p2, p3 );
+				//l_geometry.addUVCoords( uv0, uv1, uv2 );
 			}
 		}
+		/* FIXME TO FINISH LATER
 		else
 		{
 			//milieu de p0, p1;
@@ -242,5 +248,6 @@ class sandy.primitive.Box extends Shape3D implements Primitive3D
 						level - 1 );
 			
 		}
+		*/
 	}
 }

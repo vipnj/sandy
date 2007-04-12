@@ -17,18 +17,17 @@ import com.bourre.events.EventBroadcaster;
 
 import flash.geom.Matrix;
 
+import sandy.core.data.UVCoord;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
-import sandy.core.face.IPolygon;
 import sandy.core.scenegraph.Geometry3D;
+import sandy.core.scenegraph.Shape3D;
 import sandy.core.World3D;
 import sandy.events.MouseEvent;
+import sandy.materials.Appearance;
 import sandy.math.VectorMath;
-import sandy.skin.MovieSkin;
-import sandy.skin.Skin;
-import sandy.skin.SkinType;
-import sandy.skin.TextureSkin;
 import sandy.view.Frustum;
+import com.bourre.log.Logger;
 
 
 /**
@@ -38,132 +37,105 @@ import sandy.view.Frustum;
 * @version		1.0
 * @date 		12.01.2006 
 **/
-class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon 
+class sandy.core.face.Polygon extends EventBroadcaster
 {
 // _______
 // STATICS_______________________________________________________	
 	private static var _ID_:Number = 0;
-	
 // ______
 // PUBLIC________________________________________________________		
+	public var owner:Shape3D;
 	public var depth:Number;
 	public var container:MovieClip;
+	public var cvertices:Array;
 	public var vertices:Array;
-	public var clipped:Array;
-	public var isClipped:Boolean;
-// _______// PRIVATE_______________________________________________________			
-
+	public var bClipped:Boolean;
+	public var normal:Vertex;
+	public var aUVCoord:Array;
+	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
+	public var backfaceCulling:Number;
+// _______
+// PRIVATE_______________________________________________________			
 	/** Reference to its owner geometry */
-	private var geometry:Geometry3D;
-	
-	/** Front & Backface Skin */
-	private var skin:Skin;
-	private var backSkin:Skin;
-	
-	/** ID of normal vector stored in geometry object */
-	private var normalId:Number;
-	
-	/** ID of uv coordinates in geometry object */
-	private var uvId:Number;
-	
+	private var m_oGeometry:Geometry3D;
+	private var m_oAppearance:Appearance;
+	/** array of ID of uv coordinates in geometry object */
+	private var m_aUVCoords:Array;
 	/** Boolean representing the state of the event activation */
 	private var mouseEvents:Boolean;
-	
 	/** Unique face id */
 	private var id:Number;
-	
-	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
-	private var backfaceCulling:Number;
-	
 	/** Matrix speeding up texturing */
 	private var textureMatrix:Matrix;
 	
-	public function Polygon(p_geometry:Geometry3D)
+	public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number )
 	{
 		id = Polygon._ID_ ++;
-		var rest:Array = arguments.splice(1,1);
-		// Check if user passed an array 
-		// and if true, use it as a list of vertices
-		rest = (rest[0] instanceof Array) ? rest[0]: rest;
-		geometry = p_geometry;
+		// --
+		owner = p_oOwner;
+		m_oGeometry = p_geometry;
+		// --
 		backfaceCulling = 1;
-		vertices = rest || [];
-		clipped = [];
 		depth = 0;
-		isClipped = false;
+		// --
+		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
 		container = World3D.getInstance().container.createEmptyMovieClip( id.toString(), id );
-	}
-	
-	public function getClippedVertices(Void):Array
-	{
-		return (isClipped) ? clipped : vertices;
-	}
-	
-	public function getVertices(Void):Array
-	{
-		return vertices;
-	}
-	
-	/** 
-	 * Render the face into container with given Skin.
-	 * @param	{@code mc}	A {@code MovieClip}.
-	 */
-	public function render(Void): Void
-	{
-		var l_points:Array = getClippedVertices();
-		var l_skin:Skin;
-		//
-		if( backfaceCulling == 1 )	l_skin = skin;
-		else						l_skin = backSkin;
-		// -- start rendering with passed skin
-		l_skin.begin( this, container) ;
-		container.moveTo(	l_points[0].sx, 
-							l_points[0].sy );
-		//
-		var l:Number = l_points.length;
-		while( --l > -1 )
-		{
-			container.lineTo( 	l_points[(l)].sx, 
-								l_points[(l)].sy);
-		}
-		//
-		l_skin.end( this, container );
+		bClipped = false;
 	}
 	
 	/**
-	* 	Creates texture matrix according to UV coordintes speeding up rendering
-	* 
-	* @param	p_skin
-	* @param	p_object
-	*/
-	public function updateTextureMatrix(Void):Matrix
-	{	
-		if( vertices.length < 3 || !skin) return null;
+	 * Calling this method make the polygon gets its vertice and normals by reference instead of accessing them by their ID.
+	 * This method shall be called once the geometry created.
+	 */
+	private function __update( p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number ):Void
+	{
+		var i:Number, l:Number;
+		// --
+		vertices = new Array( l = p_aVertexID.length );
+		for( i=0; i<l; i++ )
+		{
+			vertices[i] = Vertex( m_oGeometry.aVertex[ p_aVertexID[i] ] );
+		}
+		cvertices = vertices.concat();
+		// --
+		aUVCoord = new Array( l = p_aUVCoordsID.length );
+		for( i=0; i<l; i++ )
+		{
+			aUVCoord[i] = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
+		}
+		// TODO update the texture matrix? or just when the appearance is applied.
+		// Second choice because we need the picture dimensions
+		// --
+		normal = Vertex( m_oGeometry.aFacesNormals[ p_nFaceNormalID ] );
+		// If no normal has been given, we create it ourself.
+		if( normal == null )
+		{
+			normal = Vertex.createFromVector( createNormal() );
+			m_oGeometry.setFaceNormal( m_oGeometry.aFacesNormals.length, normal.x, normal.y, normal.z );
+		}
+	}
 		
+	/**
+	 * 	Creates texture matrix according to UV coordintes speeding up rendering
+	 * 
+	 * @param	p_skin
+	 * @param	p_object
+	 */
+	public function updateTextureMatrix( Void ):Matrix
+	{	
 		var w:Number = 0, h:Number = 0;
-            
-		if (skin.getType() == SkinType.TEXTURE)
-		{
-			w = TextureSkin(skin).texture.width;
-			h = TextureSkin(skin).texture.height;
-		}
-		else if (skin.getType() == SkinType.MOVIE)
-		{
-			w = MovieSkin(skin).getMovie().width;
-			h = MovieSkin(skin).getMovie().height;
-		}
-		//
+		// --
 		if( w > 0 && h > 0 )
 		{		
-			var l_uv:Array = getUVCoords();
+			var l_uv:Array = m_aUVCoords;
 			var u0: Number = l_uv[0].u;
 			var v0: Number = l_uv[0].v;
 			var u1: Number = l_uv[1].u;
 			var v1: Number = l_uv[1].v;
 			var u2: Number = l_uv[2].u;
 			var v2: Number = l_uv[2].v;
-			// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
+			// -- Fix perpendicular projections. This will certainly solve the freeze problem tho. From Papervision3D implementation.
 			if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 			{
 				u0 -= (u0 > 0.05)? 0.05 : -0.05;
@@ -174,11 +146,11 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 				u2 -= (u2 > 0.05)? 0.04 : -0.04;
 				v2 -= (v2 > 0.06)? 0.06 : -0.06;
 			}
-			
+			// --
 			textureMatrix = new Matrix( (u1 - u0), h*(v1 - v0)/w, w*(u2 - u0)/h, (v2 - v0), u0*w, v0*h );
 			textureMatrix.invert();
 		}
-		
+		// --
 		return textureMatrix;
 	}
 	
@@ -188,86 +160,42 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 	 * <p>Useful for z-sorting.</p>
 	 * @return	A Number as depth average.
 	 */
-	public function getZAverage(Void):Number
+	public function getZAverage( Void ):Number
 	{
-		// We normalize the sum and return it
-		var a:Array = getClippedVertices();
-		var l:Number   = a.length;
-		if( a == null || l <= 0 ) 
-		    return 0;
-		var l_nLength:Number = l;
+		// -- We normalize the sum and return it
+		var a:Array = cvertices;
+		var l:Number= a.length;
 		var d:Number = 0;
-		//
+		// --
 		while( --l > -1 )
 		{
 			d += a[(l)].wz;
 		}
-		//
-		depth = d / l_nLength;
+		// --
+		depth = d / a.length;
 		return depth;
 	}
-	
-	/**
-	 * Returns the min depth of its vertex.
-	 * @param Void	
-	 * @return number the minimum depth of it's vertex
-	 */
-	public function getMinDepth (Void):Number
-	{
-		var a:Array = getClippedVertices();
-		var l:Number   = a.length;
-		if( a == null || l <= 0 ) 
-		    return 0;
-		var min:Number = a[0].wz;
-		while( --l > 0 )
-		{
-			min = Math.min( min, a[(l)].wz );
-		}
-		return min;
-	}
 
-	/**
-	 * Returns the max depth of its vertex.
-	 * @param Void	
-	 * @return number the maximum depth of it's vertex
-	 */
-	public function getMaxDepth (Void):Number
-	{
-		var a:Array = getClippedVertices();
-		var l:Number   = a.length;
-		if( a == null || l <= 0 ) 
-		    return 0;
-		var max:Number = a[0].wz;
-		while( --l > 0 )
-		{
-			max = Math.max( max, a[(l)].wz );
-		}
-		return max;
-	}
 	
 	/**
-	* Get a String represntation of the {@code NFace3D}. 
-	* @return	A String representing the {@code NFace3D}.
-	*/
-	public function toString(Void): String
+	 * Get a String representation of the {@code NFace3D}. 
+	 * @return	A String representing the {@code NFace3D}.
+	 */
+	public function toString( Void ):String
 	{
-		return "sandy.core.face.Polygon" + " [Points: " + vertices.length + ", Clipped: " + clipped.length + "]";
+		return "sandy.core.face.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
 	}
 
 	public function clip( frustum:Frustum ):Void
 	{
-		// TODO:	Not that nice solution I believe, as vertices are IDs
-		//			and clipped array contains references but it works fine
-		clipped = getClippedVertices().slice();
-		//
-		frustum.clipFrustum( clipped );
-		isClipped = true;
+		frustum.clipFrustum( cvertices );
+		bClipped = true;
 	}
 
 	/**
-	* Enable or not the events onPress, onRollOver and onRollOut with this face.
-	* @param b Boolean True to enable the events, false otherwise.
-	*/
+	 * Enable or not the events onPress, onRollOver and onRollOut with this face.
+	 * @param b Boolean True to enable the events, false otherwise.
+	 */
 	public function enableEvents( b:Boolean ):Void
 	{
         if( b && !mouseEvents )
@@ -288,27 +216,22 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 	}
 
 	/**
-	 * isvisible 
+	 * visible 
 	 * <p>Say if the face is visible or not</p>
 	 * @param Void
 	 * @return a Boolean, true if visible, false otherwise
 	 */	
-	public function isVisible(Void): Boolean
+	public function get visible(): Boolean
 	{
 		// all normals are refreshed every loop. Face is visible is normal face to the camera
-		return ( backfaceCulling * getNormal().wz ) < 0;
-	}
-	
-	public function getNormal(Void):Vertex
-	{
-		return geometry.normals[normalId];
+		return ( backfaceCulling * normal.wz ) < 0;
 	}
 
 	/**
 	 * Create the normal vector of the face.
 	 * @return	The resulting {@code Vertex} corresponding to the normal.
 	 */	
-	public function createNormale(Void):Vector
+	public function createNormal( Void ):Vector
 	{
 		if( vertices.length > 2 )
 		{
@@ -329,47 +252,21 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 		}
 	}
 	
-	public function setSkin(p_skin:Skin):Void
+	public function set appearance(p_oApp:Appearance):Void
 	{
-		trace("Polygon::setSkin : "+p_skin);
-		skin = p_skin;
+		m_oAppearance = p_oApp;
 	}
 	
-	public function setBackSkin(p_skin:Skin):Void
+	public function get appearance():Appearance
 	{
-		backSkin = p_skin;
-		//updateTextureMatrix(Void);
+		return m_oAppearance;
 	}
 	
-	public function getSkin(Void):Skin
-	{
-		return skin;
-	}
-	
-	public function getBackSkin(Void):Skin
-	{
-		return backSkin;
-	}
-	
-	public function getTextureMatrix(Void):Matrix
-	{
-		return textureMatrix;
-	}
-
 	/**
-	 * Set the id of normal vector stored in geometry object.
-	 * @param	Vertex
+	 * This method change the value of the "normal" clipping side.
+	 * Also swap the font and back skins
+	 * @param	Void
 	 */
-	public function setNormalId( p_id:Number ):Void
-	{
-		normalId = p_id;
-	}
-	
-	/**
-	* This method change the value of the "normal" clipping side.
-	* Also swap the font and back skins
-	* @param	Void
-	*/
 	public function swapCulling(Void):Void
 	{
 		// -- swap backface culling 
@@ -381,25 +278,16 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 	 */
 	public function destroy(Void):Void
 	{
-		clipped = null;
+		cvertices = null;
 		vertices = null;
 	}
 	
-	public function getUVCoords(Void):Array
-	{
-		return geometry.uv[uvId];
-	}
-	
-	public function setUVCoordsId( p_uv:Number ):Void
-	{
-		uvId = p_uv;
-		updateTextureMatrix();
-	}
-	
 
-/************************/
-/***** EVENTS ***********/
-/************************/
+	/*
+	 ***********************
+	 * EVENTS 
+	 ***********************
+	*/
 	
 	private function _onPress(e:MouseEvent):Void
 	{

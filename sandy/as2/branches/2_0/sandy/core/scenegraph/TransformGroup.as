@@ -106,27 +106,27 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 		if( changed )
 		{
 			var mt:Matrix4 = m_tmpMt;
-			mt.n11 = _vSide.x * _oScale.x; 
-			mt.n21 = _vSide.y; 
-			mt.n31 = _vSide.z; 
-			mt.n14 = VectorMath.dot( _vSide, _p );
-			
+			mt.n11 = _vSide.x; 
 			mt.n12 = _vUp.x; 
-			mt.n22 = _vUp.y * _oScale.y;
-			mt.n32 = _vUp.z; 
-			mt.n24 = VectorMath.dot( _vUp, _p );
+			mt.n13 = _vOut.x; 
+			mt.n14 = VectorMath.dot( _vSide, _p);//.x;
 			
-			mt.n13 = _vOut.x;
+			mt.n21 = _vSide.y; 
+			mt.n22 = _vUp.y; 
 			mt.n23 = _vOut.y; 
-			mt.n33 = _vOut.z * _oScale.z;
-			mt.n34 = VectorMath.dot( _vOut, _p );
+			mt.n24 = VectorMath.dot( _vUp, _p);//.y;
+			
+			mt.n31 = _vSide.z; 
+			mt.n32 = _vUp.z; 
+			mt.n33 = _vOut.z; 
+			mt.n34 = VectorMath.dot( _vOut, _p);//.z;
 			
 			transform.matrix = mt;
 		}
 	}
 		
 	/**
-	* Get a String represntation of the {@code TransformGroup}.
+	* Get a String representation of the {@code TransformGroup}.
 	* 
 	* @return	A String representing the {@code TransformGroup}.
 	*/ 

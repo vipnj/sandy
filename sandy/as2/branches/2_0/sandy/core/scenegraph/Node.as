@@ -301,7 +301,7 @@ class sandy.core.scenegraph.Node
 		var l_nLength:Number = _aChilds.length;
 		while( --l_nLength > -1 )
 		{
-			_aChilds[l_nLength].update( _oModelCacheMatrix, changed );
+			_aChilds[l_nLength].update( p_oModelMatrix, changed );
 		}
 	}
 
@@ -323,7 +323,7 @@ class sandy.core.scenegraph.Node
 		}
 		else
 		{
-			if( p_bChanged )
+			if( p_bChanged || changed )
 			{
 				_oViewCacheMatrix = (_oModelCacheMatrix) ? Matrix4Math.multiply4x3( p_oViewMatrix, _oModelCacheMatrix ) : p_oViewMatrix;
 			

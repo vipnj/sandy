@@ -45,10 +45,12 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		// -- sorting with the simple painter algorithm
 		m_aPolygon.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		// --
+		var i:Number;
 		var l_nLength:Number = m_aPolygon.length;
-		while( --l_nLength > -1 )
+		for(i=0; i < l_nLength; i++) 
 		{
-			var l_oP:Polygon = Polygon( m_aPolygon[l_nLength].polygon );
+			var l_oP:Polygon = Polygon( m_aPolygon[i].polygon );
+			l_oP.container.swapDepths(i);
 			renderPolygon( l_oP, l_oP.appearance, l_oP.container );
 		}
 	}

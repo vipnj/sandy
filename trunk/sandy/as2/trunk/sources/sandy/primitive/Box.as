@@ -1,4 +1,4 @@
-﻿/*
+/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,14 +13,14 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
+
 import sandy.core.data.Vertex;
 import sandy.core.data.UVCoord;
-import sandy.core.data.Vector;
 import sandy.core.Object3D;
 import sandy.primitive.Primitive3D;
 import sandy.core.face.IPolygon;
 import sandy.core.face.Polygon;
-
+import sandy.skin.Skin;
 
 /**
 * Box
@@ -28,9 +28,8 @@ import sandy.core.face.Polygon;
 * <p>Box is a primitiv Object3D, to easy build a Cube/Box.</p>
 * 
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Bruce Epstein 	- zeusprod
-* @version		1.2.1
-* @date 		12.04.2007 
+* @version		1.0
+* @date 		12.07.2006 
 **/
 class sandy.primitive.Box extends Object3D implements Primitive3D
 {
@@ -106,32 +105,35 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 		// -- Faces creation
 
 		//Front Face
-		__tesselate(p0, p1, p2, p3,
-					uv0, uv1, uv3, uv2,
-					_q - 1 );
-		
-		//Behind Face
 		__tesselate(p4, p7, p6, p5,
-					uv1, uv3, uv2, uv0,
-					_q - 1 );
-		//Top Face
-		__tesselate(p2, p6, p7, p3,
-					uv1, uv3, uv2, uv0,
-					_q - 1 );
-		//Bottom Face
-		__tesselate(p0, p4, p5, p1,
-					uv2, uv3, uv1, uv0,
-					_q - 1 );
-		//Left Face
-		__tesselate(p0, p3, p7, p4,
-					uv1, uv3, uv2, uv0,
-					_q - 1 );
-		//Right Face
-		__tesselate(p1, p5, p6, p2,
-					uv0, uv1, uv3, uv2,
+					uv0, uv2, uv3, uv1,
 					_q - 1 );
 
-	}
+		//Right Face
+		__tesselate(p1, p5, p6, p2,
+					uv1, uv0, uv2, uv3,
+					_q - 1 );
+					
+		//Back Face
+		__tesselate(p0, p1, p2, p3,
+					uv1, uv0, uv2, uv3,
+					_q - 1 );
+
+		//Left Face
+		__tesselate(p0, p3, p7, p4,
+					uv0, uv2, uv3, uv1,
+					_q - 1 );
+					
+		//Bottom Face
+		__tesselate(p2, p6, p7, p3,
+					uv3, uv1, uv0, uv2,
+					_q - 1 );
+					
+		//Top Face
+		__tesselate(p0, p4, p5, p1,
+					uv0, uv2, uv3, uv1,
+					_q - 1 );	
+	}	
 	
 	private function __tesselate( 	p0:Vertex, p1:Vertex, p2:Vertex, p3:Vertex,
 									uv0:UVCoord, uv1:UVCoord, uv2:UVCoord, uv3:UVCoord,
@@ -205,27 +207,24 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 	}
 	
 	/**
-	* getSize() returns the length, height, and radius as a Vector (useful for storing an object's attributes).
-	* Returns vector where x is the length, y is the height, and z is the radius
-	*/	
-	public function getSize (Void):Vector {
-		return new Vector (_lg, _h, _radius);
+	 * Set skins per side. 
+	 * @param skins	Array of 6 skins to be applied in this order : front, right, back, left, bottom, top	 */
+	public function setSkins(skins:Array)
+	{
+		var l:Number = aFaces.length;
+		var facesPerSide:Number = l / 6;
+		
+		for(var n=0;n<l;n++)
+		{
+			var skinIndex:Number = Math.floor(n / facesPerSide);
+			var skin:Skin = skins[skinIndex];
+			aFaces[n].setSkin(skin);
+		}
+		
+		_needRedraw = true;
 	}
-	 
-	 public function getNumSurfaces (Void):Number {
-		return  _numSurfaces;
-	 }
-	 
-	 public function getPrimitiveName (Void):String {
-		 return "Box";
-	 }
-	 
-	 public function toString (Void):String {
-		 return "sandy.primitive." + getPrimitiveName();
-	 }
-	 
-	 
-	 /**
+	
+	/**
 	* height of the Box
 	*/ 
 	private var _h	: Number;
@@ -236,16 +235,14 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 	private var _lg : Number;
 
 	/**
-	* width of the Box
+	* wide of the Box
 	*/ 
 	private var _radius : Number ;
 	
 	private var _q:Number;
 	
-	private var _numSurfaces:Number = 6;  // Six surfaces per cube. Differs from polygons/faces.
 	/*
 	 * Mode with 3 or 4 points per face
 	 */
 	 private var _mode : String;
-	 
 }

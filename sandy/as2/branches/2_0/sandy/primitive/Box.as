@@ -28,7 +28,7 @@ import sandy.primitive.Primitive3D;
 * 
 * @author		Thomas Pfeiffer - kiroukou
 * @version		1.0
-* @date 		12.07.2006 
+* @date 		12.07.2006
 **/
 class sandy.primitive.Box extends Shape3D implements Primitive3D
 {

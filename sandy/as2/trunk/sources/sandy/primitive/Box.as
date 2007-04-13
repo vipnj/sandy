@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import sandy.core.data.Vertex;
+import sandy.core.data.Vector;
 import sandy.core.data.UVCoord;
 import sandy.core.Object3D;
 import sandy.primitive.Primitive3D;
@@ -262,6 +263,8 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 	* wide of the Box
 	*/ 
 	private var _radius : Number ;
+	
+	private var _numSurfaces:Number = 6;  // Six surfaces per cube. Differs from polygons/faces.
 	
 	private var _q:Number;
 	

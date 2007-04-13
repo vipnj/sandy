@@ -223,7 +223,31 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 		
 		_needRedraw = true;
 	}
-	
+
+	/**
+	* getSize() returns the length, height, and radius as a Vector (useful for storing an object's attributes).
+	* Returns vector where x is the length, y is the height, and z is the radius
+	*/	
+	public function getSize (Void):Vector 
+	{
+		return new Vector (_lg, _h, _radius);
+	}
+	 
+	public function getNumSurfaces (Void):Number 
+	{
+		return  _numSurfaces;
+	}
+	 
+	public function getPrimitiveName (Void):String 
+	{
+		return "Box";
+	}
+	 
+	public function toString (Void):String 
+	{
+		return "sandy.primitive." + getPrimitiveName();
+	}
+	 	
 	/**
 	* height of the Box
 	*/ 

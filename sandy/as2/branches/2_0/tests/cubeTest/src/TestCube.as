@@ -32,7 +32,6 @@ class TestCube
 		// --
 		var t:TestCube = new TestCube(mc);
 		// -- Does not make things faster in AS2 but does in AS3...
-		
 		//Matrix4Math.USE_FAST_MATH = true;
 	}
 	
@@ -68,32 +67,31 @@ class TestCube
 	
 	private function _createScene( Void ):Group
 	{
+		// -- variables declaration
 		var g:Group = new Group();
 		var tgTranslation:TransformGroup = new TransformGroup("translation");
 		tgRotation = new TransformGroup("rotation");
-		
+		// -- transformations
 		tgTranslation.z = 500;
-
-		box = new Box( "myBox", 50, 50, 50, "quad" );
-		//box.enableBackFaceCulling = false;
-		//box.enableClipping = true;
-		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 0 );
-		l_oMaterial.lineAttributes = new LineAttributes(2, 0xFF, 100 );
+		// -- creation of the materials and apperance
+		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 100 );
+		l_oMaterial.lineAttributes = new LineAttributes( 2, 0xFF, 100 );
 		var l_oAppearance:Appearance = new Appearance( l_oMaterial, l_oMaterial ); 
+		// -- creation of objects
+		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 		box.appearance = l_oAppearance;
 		box.rotateZ = 45;
-		tgTranslation.addChild( box );
 		
-		box2 = new Box( "myBox2", 100, 50, 100 );
-		//box2.enableBackFaceCulling = false;
+		box2 = new Box( "myBox2", 100, 50, 100, "tri", 2 );
 		box2.appearance = l_oAppearance;
 		box2.z = 100;
 		box2.x = 0;
-
+		// -- Tree creation
+		tgTranslation.addChild( box );
 		tgRotation.addChild( box2 );
-		//
 		tgTranslation.addChild( tgRotation );
 		g.addChild( tgTranslation );
+		// --
 		return g;
 	}
 	

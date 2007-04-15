@@ -97,7 +97,14 @@ class sandy.core.scenegraph.Geometry3D
 		else
 		{ aVertex[p_nVertexID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
 	}
-		
+	
+	/**
+	 * Returns the next vertex id you can give for setVertex
+	 */
+	public function getNextVertexID(Void):Number
+	{
+		return aVertex.length || 0;
+	}	
 
 	/**
 	 * 	Add new point formed from passed coordinates at the specified index of the face normal list.

@@ -147,10 +147,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	{	
 		var l_nDepth:Number;
 		var l_oFace:Polygon;
-        var m11:Number,m21:Number,m31:Number,m41:Number;
-        var m12:Number,m22:Number,m32:Number,m42:Number;
-        var m13:Number,m23:Number,m33:Number,m43:Number;
-        var m14:Number,m24:Number,m34:Number,m44:Number;
 		var l_oVertex:Vertex;
 		var l_nLength:Number;
 		//--
@@ -160,11 +156,15 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
        	var l_faces:Array = aPolygons;
        	var l_oFrustum:Frustum = p_oCamera.frustrum;
         // --
+        var m11:Number,m21:Number,m31:Number,m41:Number;
+        var m12:Number,m22:Number,m32:Number,m42:Number;
+        var m13:Number,m23:Number,m33:Number,m43:Number;
+        var m14:Number,m24:Number,m34:Number,m44:Number;
         m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31; m41 = l_oMatrix.n41;
 		m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32; m42 = l_oMatrix.n42;
 		m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33; m43 = l_oMatrix.n43;
 		m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
-		
+		// --
 		// If necessary we transform the normals vectors
 		if( m_bBackFaceCulling )
 		{
@@ -205,14 +205,13 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		   	// --
 		    if ( l_oFace.visible || !m_bBackFaceCulling) 
 			{
-				l_oFace.bClipped = false;
 				// --  a necessary copy
-				l_oFace.cvertices = l_oFace.vertices.slice();
+				l_oFace.cvertices = l_oFace.vertices.concat();
 				if( m_bClipped )
 				{
-				    l_oFace.clip( l_oFrustum );
-				    if( l_oFace.bClipped != null ) 
-			            l_aPoints = l_aPoints.concat( l_oFace.bClipped );
+					l_oFrustum.clipFrustum( l_oFace.cvertices );
+				    if( l_oFace.cvertices.length ) 
+			            l_aPoints = l_aPoints.concat( l_oFace.cvertices );
 			    }
 			    // --
 				l_nDepth 	= (m_bEnableForcedDepth) ? m_nForcedDepth : l_oFace.getZAverage();
@@ -239,7 +238,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 				l_faces[int(l)].updateTextureMatrix();
 			}
 		}
-		//return true; // Not allowed in setters
 	}
 	
 	/**

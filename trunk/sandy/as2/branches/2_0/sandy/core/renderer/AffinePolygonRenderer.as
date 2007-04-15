@@ -33,12 +33,12 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 	{
 	    var l_oDisplayElt:MovieClip = null;
 	    var i:Number;
-	    //
+	    // --
 		for( i=0; l_oDisplayElt = m_aPolygon[i]; i++ )
 		{
 		   l_oDisplayElt.polygon.container.clear();
 		}
-		//
+		// --
 		init();
 	}
 		
@@ -48,10 +48,9 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		m_aPolygon.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		// --
 		var i:Number;
-		var l_nLength:Number = m_aPolygon.length;
-		for(i=0; i < l_nLength; i++) 
+		var l_oP:Polygon;
+		for( i=0; l_oP = Polygon( m_aPolygon[i].polygon ); i++ ) 
 		{
-			var l_oP:Polygon = Polygon( m_aPolygon[i].polygon );
 			l_oP.container.swapDepths(i);
 			renderPolygon( l_oP, l_oP.appearance, l_oP.container );
 		}
@@ -59,7 +58,7 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 
 	function renderPolygon( p_oPolygon:Polygon, p_oAppearance:Appearance, p_mcContainer:MovieClip ) : Void
 	{
-		var l_points:Array = p_oPolygon.vertices;
+		var l_points:Array = p_oPolygon.cvertices;
 		var l:Number;
 		// -- We apply the filters on the container. TODO check if this shall be done first or later
 		p_mcContainer.filters = p_oAppearance.filters;
@@ -67,30 +66,24 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		if( p_oAppearance.texture )
 		{
 			p_mcContainer.beginBitmapFill( p_oAppearance.texture, p_oAppearance.material.matrix, p_oAppearance.material.repeat, p_oAppearance.material.smooth );
-			p_mcContainer.moveTo(	l_points[0].sx, 
-									l_points[0].sy );
+			// --
+			if( p_oAppearance.lineAttributes )
+				p_mcContainer.lineStyle( p_oAppearance.lineThickness, p_oAppearance.lineColor, p_oAppearance.lineAlpha );
+			// --
+			p_mcContainer.moveTo( l_points[0].sx, l_points[0].sy );
 			// --
 			l = l_points.length;
 			while( --l > 0 )
 			{
-				p_mcContainer.lineTo( 	l_points[(l)].sx, 
-										l_points[(l)].sy);
+				p_mcContainer.lineTo( l_points[(l)].sx, l_points[(l)].sy);
 			}
+			// --
 			p_mcContainer.endFill();
 		}
-		// -- we draw the edges
+		// -- we draw the last edge
 		if( p_oAppearance.lineAttributes )
 		{
-			p_mcContainer.lineStyle( p_oAppearance.lineThickness, p_oAppearance.lineColor, p_oAppearance.lineAlpha );
-			p_mcContainer.moveTo(	l_points[0].sx, 
-									l_points[0].sy );
-			//
-			l = l_points.length;
-			while( --l > -1 )
-			{
-				p_mcContainer.lineTo( 	l_points[(l)].sx, 
-										l_points[(l)].sy);
-			};
+			p_mcContainer.lineTo( l_points[0].sx, l_points[0].sy );
 		}
 	}
 	

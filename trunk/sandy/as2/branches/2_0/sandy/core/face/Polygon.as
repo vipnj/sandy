@@ -49,7 +49,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public var container:MovieClip;
 	public var cvertices:Array;
 	public var vertices:Array;
-	public var bClipped:Boolean;
 	public var normal:Vertex;
 	public var aUVCoord:Array;
 	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
@@ -81,7 +80,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
 		container = World3D.getInstance().container.createEmptyMovieClip( id.toString(), id );
-		bClipped = false;
 	}
 	
 	/**
@@ -184,12 +182,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public function toString( Void ):String
 	{
 		return "sandy.core.face.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
-	}
-
-	public function clip( frustum:Frustum ):Void
-	{
-		frustum.clipFrustum( cvertices );
-		bClipped = true;
 	}
 
 	/**

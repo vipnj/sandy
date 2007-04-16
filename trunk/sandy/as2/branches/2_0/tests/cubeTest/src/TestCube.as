@@ -1,17 +1,25 @@
 import com.bourre.commands.Delegate;
+import com.bourre.data.libs.GraphicLib;
+import com.bourre.data.libs.GraphicLibLocator;
+import com.bourre.log.Logger;
+import com.bourre.utils.LuminicTracer;
 import com.bourre.visual.FPSLoggerUI;
+
+import flash.display.BitmapData;
 
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Group;
 import sandy.core.scenegraph.TransformGroup;
 import sandy.core.World3D;
 import sandy.materials.Appearance;
+import sandy.materials.BitmapMaterial;
 import sandy.materials.ColorMaterial;
+import sandy.materials.LineAttributes;
 import sandy.materials.Material;
 import sandy.primitive.Box;
+import sandy.util.BitmapUtil;
 
 import tests.cubeTest.src.TestCube;
-import sandy.materials.LineAttributes;
 
 /**
  * @author thomaspfeiffer
@@ -28,7 +36,7 @@ class TestCube
 	
 	public static function main( mc:MovieClip ):Void
 	{
-		//Logger.getInstance().addLogListener( LuminicTracer.getInstance() );
+		Logger.getInstance().addLogListener( LuminicTracer.getInstance() );
 		// --
 		var t:TestCube = new TestCube(mc);
 		// -- Does not make things faster in AS2 but does in AS3...
@@ -54,6 +62,15 @@ class TestCube
 	
 	private function _init( Void ):Void
 	{
+		var gl:GraphicLib = new GraphicLib( _mc.createEmptyMovieClip("texture",0), 0, false );
+		gl.setName( "TEXTURE" );
+		gl.addEventListener( GraphicLib.onLoadInitEVENT, this, _onReady);
+		gl.load( "texture.jpg" );
+		gl.execute();
+	}
+	
+	private function _onReady( Void ):Void
+	{
 		_world.root = _createScene();
 		_world.camera = new Camera3D( 500, 500 );
 		//_world.camera.z = -200;
@@ -74,12 +91,16 @@ class TestCube
 		// -- transformations
 		tgTranslation.z = 500;
 		// -- creation of the materials and apperance
+		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
+		var l_oTextureMaterial:Material = new BitmapMaterial( b );
+		var l_oTextureAppearance:Appearance = new Appearance( l_oTextureMaterial, l_oTextureMaterial ); 
+		//
 		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 100 );
 		l_oMaterial.lineAttributes = new LineAttributes( 2, 0xFF, 100 );
 		var l_oAppearance:Appearance = new Appearance( l_oMaterial, l_oMaterial ); 
 		// -- creation of objects
 		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
-		box.appearance = l_oAppearance;
+		box.appearance = l_oTextureAppearance;
 		box.rotateZ = 45;
 		
 		box2 = new Box( "myBox2", 100, 50, 100, "tri", 2 );
@@ -98,7 +119,7 @@ class TestCube
 	private function _onRender( Void ):Void
 	{
 		m_tfVertexCount.text = _world.camera['_aVerticesList'].length+" vertices";
-		m_tfPolygonCount.text = _world.camera.iRenderer.getDisplayListLength()+" polygons";
+		m_tfPolygonCount.text = _world.camera.renderer.getDisplayListLength()+" polygons";
 		// --
 		tgRotation.rotateY ++;
 		//box.pan += 0.5;

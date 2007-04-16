@@ -113,44 +113,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 			normal = Vertex( m_oGeometry.aFacesNormals[ m_oGeometry.aFacesNormals.length-1 ] );
 		}
 	}
-		
-	/**
-	 * 	Creates texture matrix according to UV coordintes speeding up rendering
-	 * 
-	 * @param	p_skin
-	 * @param	p_object
-	 */
-	public function updateTextureMatrix( Void ):Matrix
-	{	
-		var w:Number = 0, h:Number = 0;
-		// --
-		if( w > 0 && h > 0 )
-		{		
-			var l_uv:Array = m_aUVCoords;
-			var u0: Number = l_uv[0].u;
-			var v0: Number = l_uv[0].v;
-			var u1: Number = l_uv[1].u;
-			var v1: Number = l_uv[1].v;
-			var u2: Number = l_uv[2].u;
-			var v2: Number = l_uv[2].v;
-			// -- Fix perpendicular projections. This will certainly solve the freeze problem tho. From Papervision3D implementation.
-			if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
-			{
-				u0 -= (u0 > 0.05)? 0.05 : -0.05;
-				v0 -= (v0 > 0.07)? 0.07 : -0.07;
-			}		
-			if( u2 == u1 && v2 == v1 )
-			{
-				u2 -= (u2 > 0.05)? 0.04 : -0.04;
-				v2 -= (v2 > 0.06)? 0.06 : -0.06;
-			}
-			// --
-			textureMatrix = new Matrix( (u1 - u0), h*(v1 - v0)/w, w*(u2 - u0)/h, (v2 - v0), u0*w, v0*h );
-			textureMatrix.invert();
-		}
-		// --
-		return textureMatrix;
-	}
 	
 	
 	/**
@@ -247,6 +209,9 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public function set appearance(p_oApp:Appearance):Void
 	{
 		m_oAppearance = p_oApp;
+		// --
+		p_oApp.frontMaterial.init( this );
+		p_oApp.backMaterial.init( this );
 	}
 	
 	public function get appearance():Appearance

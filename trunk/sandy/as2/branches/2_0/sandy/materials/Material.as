@@ -17,6 +17,7 @@ limitations under the License.
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 
+import sandy.core.face.Polygon;
 import sandy.materials.LineAttributes;
 import sandy.materials.MaterialType;
 
@@ -34,6 +35,21 @@ class sandy.materials.Material
 
 	public function get id():Number
 	{return _id;}
+	
+	
+	public function init( f:Polygon ):Void
+	{
+		;
+	}
+	
+	/**
+	 * Start the rendering of the Skin
+	 * @param f	The face which is being rendered
+	 */
+	public function prepare( f:Polygon ):Void
+	{
+		;
+	}
 	
 	/**
 	* Returns the type of SKin you are using.
@@ -94,14 +110,15 @@ class sandy.materials.Material
 	/////////////	
 	public function get texture():BitmapData
 	{ return m_oTexture; }
+
 	
 	public function get repeat():Boolean
 	{return m_bRepeat;}
 	
-	public function get matrix():Matrix
+	public function get matrix():Object
 	{return m_oMatrix;}
 	
-	public function set matrix( p_oMat:Matrix )
+	public function set matrix( p_oMat:Object )
 	{ m_oMatrix = p_oMat; m_bModified = true; }
 	
 	public function get smooth():Boolean
@@ -134,7 +151,7 @@ class sandy.materials.Material
 	private var m_bModified:Boolean;
 	private var m_bRepeat:Boolean;
 	private var m_bSmooth:Boolean;
-	private var m_oMatrix:Matrix;
+	private var m_oMatrix:Object;
 	private var _filters:Array;
 	private var _useLight : Boolean;
 	private var _id:Number;

@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import com.bourre.data.collections.Map;
+import com.bourre.log.Logger;
 
 import flash.display.BitmapData;
 import flash.filters.ColorMatrixFilter;
@@ -90,6 +91,7 @@ class sandy.materials.BitmapMaterial extends Material
 	{
 		var m:Matrix = null;
 		// --
+		//Logger.LOG("BitmapMaterial::init "+m_nHeight+" "+m_nWidth);
 		if( m_nWidth > 0 && m_nHeight > 0 )
 		{		
 			var l_aUV:Array = f.aUVCoord;
@@ -113,6 +115,7 @@ class sandy.materials.BitmapMaterial extends Material
 			// --
 			m = new Matrix( (u1 - u0), m_nHeight*(v1 - v0)/m_nWidth, m_nWidth*(u2 - u0)/m_nHeight, (v2 - v0), u0*m_nWidth, v0*m_nHeight );
 			m.invert();
+			//Logger.LOG("Polygon matrix : "+f+" "+m);
 		}
 		// --
 		m_oPolygonMatrixMap.put( f, m );
@@ -125,7 +128,8 @@ class sandy.materials.BitmapMaterial extends Material
 	public function prepare( f:Polygon ):Void
 	{
 		var a:Array = f.vertices;
-		var m:Matrix = m_oPolygonMatrixMap.get( f );
+		var m:Object = m_oPolygonMatrixMap.get( f );
+		//Logger.LOG("BitmapMaterial::prepare , old matrix : "+m);
 		// --
 		var x0: Number = a[0].sx;
 		var y0: Number = a[0].sy;
@@ -134,15 +138,16 @@ class sandy.materials.BitmapMaterial extends Material
 		var x2: Number = a[2].sx;
 		var y2: Number = a[2].sy;
 		// --
-		var sMat = 	{ 	a:( x1 - x0 ) / _w, 
-						b:( y1 - y0 ) / _w, 
-						c:( x2 - x0 ) / _h, 
-						d:( y2 - y0 ) / _h, 
+		var sMat = 	{ 	a:( x1 - x0 ) / m_nWidth, 
+						b:( y1 - y0 ) / m_nWidth, 
+						c:( x2 - x0 ) / m_nHeight, 
+						d:( y2 - y0 ) /m_nHeight, 
 						tx: x0, 
 						ty: y0 
 					};
 		// --
 		matrix = BitmapUtil.concatBitmapMatrix( m, sMat );
+		//Logger.LOG("BitmapMaterial::prepare , new matrix : "+(sMat)+" result :: "+(matrix));
 	}
 	
 	/**

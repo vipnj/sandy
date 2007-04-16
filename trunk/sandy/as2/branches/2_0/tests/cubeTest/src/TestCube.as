@@ -92,19 +92,18 @@ class TestCube
 		tgTranslation.z = 500;
 		// -- creation of the materials and apperance
 		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
-		var l_oTextureMaterial:Material = new BitmapMaterial( b );
-		var l_oTextureAppearance:Appearance = new Appearance( l_oTextureMaterial, l_oTextureMaterial ); 
+		var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( b ) ); 
 		//
 		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 100 );
 		l_oMaterial.lineAttributes = new LineAttributes( 2, 0xFF, 100 );
-		var l_oAppearance:Appearance = new Appearance( l_oMaterial, l_oMaterial ); 
+		var l_oAppearance:Appearance = new Appearance( l_oMaterial ); 
 		// -- creation of objects
 		box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 		box.appearance = l_oTextureAppearance;
 		box.rotateZ = 45;
 		
 		box2 = new Box( "myBox2", 100, 50, 100, "tri", 2 );
-		box2.appearance = l_oAppearance;
+		box2.appearance = l_oTextureAppearance;
 		box2.z = 100;
 		box2.x = 0;
 		// -- Tree creation

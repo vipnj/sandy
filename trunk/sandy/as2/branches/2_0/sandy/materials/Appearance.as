@@ -13,7 +13,7 @@ class sandy.materials.Appearance
 	public function Appearance( p_oFront:Material, p_oBack:Material )
 	{
 		m_oFrontMaterial = 	(p_oFront) 	? p_oFront	:	new ColorMaterial();
-		m_oBackMaterial  = 	(p_oBack) 	? p_oBack	:	null;
+		m_oBackMaterial  = 	(p_oBack) 	? p_oBack	:	p_oFront;
 	}
 	
 	public function get texture():BitmapData

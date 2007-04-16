@@ -215,7 +215,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 			    }
 			    // --
 				l_nDepth 	= (m_bEnableForcedDepth) ? m_nForcedDepth : l_oFace.getZAverage();
-				if( l_nDepth )	p_oCamera.iRenderer.addToDisplayList( l_oFace, l_nDepth );
+				if( l_nDepth )	p_oCamera.renderer.addToDisplayList( l_oFace, l_nDepth );
 			}
 		}
 		// -- We push the vertex to project onto the viewport.

@@ -14,17 +14,16 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import com.bourre.data.collections.Map;
+
 import flash.display.BitmapData;
 import flash.filters.ColorMatrixFilter;
 import flash.geom.Matrix;
 import flash.geom.Point;
 
 import sandy.core.face.Polygon;
-import sandy.core.light.Light3D;
-import sandy.core.World3D;
-import sandy.materials.BasicMaterial;
+import sandy.materials.Material;
 import sandy.materials.MaterialType;
-import sandy.math.VectorMath;
 import sandy.util.BitmapUtil;
 import sandy.util.NumberUtil;
 
@@ -36,20 +35,25 @@ import sandy.util.NumberUtil;
  * @date 		06.04.2007 
  **/
 
-class sandy.materials.BitmapMaterial extends BasicMaterial
+class sandy.materials.BitmapMaterial extends Material
 {
 
+	private var m_oPolygonMatrixMap:Map;
+	
 	/**
 	* Create a new TextureSkin.
 	* 
-	* @param t : The actionScriptLink of the bitmap;
+	* @param t : The bitmapdata
 	*/
 	public function BitmapMaterial( t:BitmapData )
 	{
 		super();
+		// --
 		texture = t;
+		// --
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
+		m_oPolygonMatrixMap = new Map();
 	}
 	
 
@@ -62,10 +66,9 @@ class sandy.materials.BitmapMaterial extends BasicMaterial
 	 */
 	public function setTransparency( pValue:Number ):Void
 	{
-		pValue = 0.01 * NumberUtil.constrain( pValue, 0, 100 );
+		pValue = NumberUtil.constrain( pValue/100, 0, 1 );
 		if( _cmf ) delete _cmf;
-		var matrix:Array = [
-						 	1, 0, 0, 0, 0,
+		var matrix:Array = [1, 0, 0, 0, 0,
 				 			0, 1, 0, 0, 0, 
 				 			0, 0, 1, 0, 0, 
 				 			0, 0, 0, pValue, 0];
@@ -82,15 +85,47 @@ class sandy.materials.BitmapMaterial extends BasicMaterial
 	 public function get type ():MaterialType
 	 { return MaterialType.TEXTURE; }
 	
+	
+	public function init( f:Polygon ):Void
+	{
+		var m:Matrix = null;
+		// --
+		if( m_nWidth > 0 && m_nHeight > 0 )
+		{		
+			var l_aUV:Array = f.aUVCoord;
+			var u0: Number = l_aUV[0].u;
+			var v0: Number = l_aUV[0].v;
+			var u1: Number = l_aUV[1].u;
+			var v1: Number = l_aUV[1].v;
+			var u2: Number = l_aUV[2].u;
+			var v2: Number = l_aUV[2].v;
+			// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
+			if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
+			{
+				u0 -= (u0 > 0.05)? 0.05 : -0.05;
+				v0 -= (v0 > 0.07)? 0.07 : -0.07;
+			}	
+			if( u2 == u1 && v2 == v1 )
+			{
+				u2 -= (u2 > 0.05)? 0.04 : -0.04;
+				v2 -= (v2 > 0.06)? 0.06 : -0.06;
+			}
+			// --
+			m = new Matrix( (u1 - u0), m_nHeight*(v1 - v0)/m_nWidth, m_nWidth*(u2 - u0)/m_nHeight, (v2 - v0), u0*m_nWidth, v0*m_nHeight );
+			m.invert();
+		}
+		// --
+		m_oPolygonMatrixMap.put( f, m );
+	}
+	
 	/**
 	 * Start the rendering of the Skin
 	 * @param f	The face which is being rendered
-	 * @param mc The mc where the face will be build.
 	 */
-	public function begin( f:Polygon, mc:MovieClip ):Void
+	public function prepare( f:Polygon ):Void
 	{
-		var a:Array = f.getVertices();
-		var m:Matrix = f.getTextureMatrix();
+		var a:Array = f.vertices;
+		var m:Matrix = m_oPolygonMatrixMap.get( f );
 		// --
 		var x0: Number = a[0].sx;
 		var y0: Number = a[0].sy;
@@ -107,31 +142,7 @@ class sandy.materials.BitmapMaterial extends BasicMaterial
 						ty: y0 
 					};
 		// --
-		var rMat = BitmapUtil.concatBitmapMatrix( m, sMat );
-		// -- 
-		if( _useLight == true )
-		{
-			//TODO copy only the little part which is needed is the bitmap if possible.
-			_tmp = _texture.clone();
-			var l:Light3D 	= World3D.getInstance().light;
-			var lp:Number	= 0.01 * l.getPower();
-			var dot:Number 	= lp - ( VectorMath.dot( l.getDirectionVector(), f.createNormale() ) );
-			// -- update the color transform matrix
-			_cmf.matrix = __getBrightnessTransform( dot );
-			// TODO: Optimize here with a different way to produce the light effect
-			// and in aplying the filter only to the considered part of the texture!
-			_tmp.applyFilter( _tmp , _tmp.rectangle, _p,  _cmf );
-			mc.filters = _filters;
-			mc.beginBitmapFill( _tmp, rMat, false, _bSmooth );
-			_tmp.dispose();
-			delete _tmp;
-		}
-		else
-		{
-			// -- 
-			mc.filters = _filters;
-			mc.beginBitmapFill( texture, rMat, false, _bSmooth );
-		}
+		matrix = BitmapUtil.concatBitmapMatrix( m, sMat );
 	}
 	
 	/**
@@ -141,7 +152,7 @@ class sandy.materials.BitmapMaterial extends BasicMaterial
 	 */
 	private function __getBrightnessTransform( scale:Number ) : Array
 	{
-		var s = scale;
+		var s:Number = scale;
 		var o:Number = 0;
 		//
 		return new Array 

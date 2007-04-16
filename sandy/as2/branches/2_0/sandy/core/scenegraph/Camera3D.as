@@ -39,7 +39,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 * The frustum of the camera. See {@see Frustum} class.
 	 */
 	public var frustrum:Frustum;
-	public var iRenderer:IRenderer;
+	public var renderer:IRenderer;
 	/**
 	 * Create a new Camera3D.
 	 * The default camera projection is the perspective one with default parameters values.
@@ -55,7 +55,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		_nNear = (p_nNear)?p_nNear:10;
 		// --
 		frustrum = new Frustum();
-		iRenderer = new AffinePolygonRenderer();
+		renderer = new AffinePolygonRenderer();
 		// --
 		setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
 		_displayList = new Array();

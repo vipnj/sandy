@@ -66,6 +66,16 @@ class sandy.materials.Appearance
 		if( m_oFrontMaterial == null ) m_oFrontMaterial = p_oMat;
 	}
 	
+	public function get frontMaterial():Material
+	{
+		return m_oFrontMaterial;
+	}
+	
+	public function get backMaterial():Material
+	{
+		return m_oBackMaterial;
+	}
+	
 	public function toString():String
 	{
 		return "sandy.materials.Appearance";

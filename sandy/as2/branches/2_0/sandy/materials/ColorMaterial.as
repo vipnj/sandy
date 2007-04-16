@@ -18,6 +18,7 @@ class sandy.materials.ColorMaterial extends Material
 		m_bRepeat = true;
 		// -- Creation of the texture
 		m_oTexture = new BitmapData( 1, 1, Boolean(m_nAlpha<100), m_nAlpha << 24 | m_nColor );
+		m_nWidth = m_nHeight = 1;
 	}
 	
 	public function get alpha():Number

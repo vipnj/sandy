@@ -151,7 +151,7 @@ class sandy.core.World3D
 		{
 			_oEB.broadcastEvent( _eOnRender );
 			// -- clear the polygon's container and the projection vertices list
-            camera.iRenderer.clear();
+            camera.renderer.clear();
 			// --
 			root.update( null, false );
 			root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
@@ -159,7 +159,7 @@ class sandy.core.World3D
 			// --
 			camera.project();
 			// -- clear the polygon's container and the projection vertices list
-            camera.iRenderer.render();
+            camera.renderer.render();
 		}
 	} // end method
 

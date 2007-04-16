@@ -60,6 +60,8 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 	{
 		var l_points:Array = p_oPolygon.cvertices;
 		var l:Number;
+		// --
+		p_oAppearance.material.prepare( p_oPolygon );
 		// -- We apply the filters on the container. TODO check if this shall be done first or later
 		p_mcContainer.filters = p_oAppearance.filters;
 		// -- start rendering with passed skin

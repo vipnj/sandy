@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -18,11 +18,15 @@ limitations under the License.
 * Matrix with 4 lines & 4 columns.
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin C�dric - thecaptain
+* @author		Tabin Cédric 	- thecaptain
 * @author		Nicolas Coevoet - [ NikO ]
-* @version		1.0
-* @date 		28.03.2006
+* @author		Bruce Epstein	- zeusprod
+* @version		1.2.1
+* @date 		16.04.2007
 */
+
+import sandy.util.NumberUtil;
+
 class sandy.core.data.Matrix4 
 {
 	/**
@@ -195,6 +199,12 @@ class sandy.core.data.Matrix4
 			n21 = arguments[4] ; n22 = arguments[5] ; n23 = arguments[6] ; n24 = arguments[7] ;
 			n31 = arguments[8] ; n32 = arguments[9] ; n33 = arguments[10]; n34 = arguments[11];
 			n41 = arguments[12]; n42 = arguments[13]; n43 = arguments[14]; n44 = arguments[15];
+		} else if(arguments.length === 1 || arguments[0].length == 16) {
+			var argArray:Array = arguments[0];
+			n11 = argArray[0] ; n12 = argArray[1] ; n13 = argArray[2] ; n14 = argArray[3] ;
+			n21 = argArray[4] ; n22 = argArray[5] ; n23 = argArray[6] ; n24 = argArray[7] ;
+			n31 = argArray[8] ; n32 = argArray[9] ; n33 = argArray[10]; n34 = argArray[11];
+			n41 = argArray[12]; n42 = argArray[13]; n43 = argArray[14]; n44 = argArray[15];
 		}
 		else
 		{
@@ -252,5 +262,45 @@ class sandy.core.data.Matrix4
 		s += n31+"\t"+n32+"\t"+n33+"\t"+n34+"\n";
 		s += n41+"\t"+n42+"\t"+n43+"\t"+n44+"\n";
 		return s;
+	}
+	
+	/**
+	 * Get a string representation of the {@code Matrix4} in a format useful for XML output
+	 *
+	 * @return	A serialized String representing the {@code Matrix4}.
+	 */
+	public function serialize(d:Number):String
+	{
+		if (d == undefined) {
+			d = .000001
+		}
+		var round:Function = NumberUtil.roundTo;
+		var s:String =  new String("");
+		s += round(n11, d) + "," + round(n12, d) + "," + round(n13, d) + "," + round(n14, d) + ",";
+		s += round(n21, d) + "," + round(n22, d) + "," + round(n23, d) + "," + round(n24, d) + ",";
+		s += round(n31, d) + "," + round(n32, d) + "," + round(n33, d) + "," + round(n34, d) + ",";
+		s += round(n41, d) + "," + round(n42, d) + "," + round(n43, d) + "," + round(n44, d);
+		return s;
+	}
+	
+	/**
+	 * Convert a string representation in a {@code Matrix4}; useful for XML input
+	 *
+	 * @return	A {@code Matrix4} equivalent to the input string
+	 */
+	public static function deserialize(convertFrom:String):Matrix4
+	{
+		//trace ("Matrix4.Deserialize convertFrom " + convertFrom);
+				
+		var tmp:Array = convertFrom.split(",");
+		if (tmp.length != 16) {
+			trace ("Unexpected length of string to deserialize into a matrix4 " + convertFrom);
+		}
+		for (var i:Number = 0; i < tmp.length; i++) {
+			tmp[i] = Number(tmp[i]);
+		}
+		var temp2:Matrix4 = new Matrix4 (tmp);
+		//trace ("temp2 in Matrix4.deserialize is " + temp2);
+		return temp2;
 	}
 }

@@ -1,4 +1,4 @@
-import com.bourre.log.PixlibStringifier;
+﻿import com.bourre.log.PixlibStringifier;
 /*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
@@ -22,9 +22,14 @@ limitations under the License.
 *
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Mirek Mencel
-* @version		0.3
-* @date 		28.03.2006
+* @author		Tabin Cédric - thecaptain
+* @author		Nicolas Coevoet - [ NikO ]
+* @author		Bruce Epstein - zeusprod - truncated toString output to 2 decimals
+* @since		0.1
+* @version		2.0.1
+* @date 		12.04.2007
 */
+import sandy.util.NumberUtil;
 class sandy.core.data.Vector
 {
 	public var x:Number;
@@ -64,13 +69,44 @@ class sandy.core.data.Vector
 	* 
 	* @return	A String representing the {@code Vector}.
 	*/ 	
-	public function toString():String
+	public function toString(decPlaces:Number):String
 	{
-		return "sandy.core.data.Vector" + "("+x+","+y+","+z+ ")\n"+PixlibStringifier.stringify( this );;
+		//return "sandy.core.data.Vector" + "("+x+","+y+","+z+ ")\n"+PixlibStringifier.stringify( this );;
+
+		if (decPlaces == undefined) {
+			decPlaces = 0.01;
+		}
+		// Round display to two decimals places
+		// Returns "{x, y, z}"
+		return "{" + NumberUtil.roundTo(x, decPlaces) + ", " + 
+					 NumberUtil.roundTo(y, decPlaces) + ", " + 
+					 NumberUtil.roundTo(z, decPlaces) + "}";
 	}
 	
 	public function equals(p_vector:Vector):Boolean
 	{
 		return (p_vector.x == x && p_vector.y == y && p_vector.z == z);
+	}
+
+	// Useful for XML output
+	public function serialize(decPlaces:Number):String
+	{
+		if (decPlaces == undefined) {
+			decPlaces = .01
+		}
+		//returns x,y,x
+		return  (NumberUtil.roundTo(x, decPlaces) + "," + 
+				 NumberUtil.roundTo(y, decPlaces) + "," + 
+				 NumberUtil.roundTo(z, decPlaces));
+	}
+	
+	// Useful for XML output
+	public static function deserialize(convertFrom:String):Vector
+	{
+		var tmp:Array = convertFrom.split(",");
+		if (tmp.length != 3) {
+			trace ("Unexpected length of string to deserialize into a vector " + convertFrom);
+		}
+		return  new Vector (tmp[0], tmp[1], tmp[2]);
 	}
 }

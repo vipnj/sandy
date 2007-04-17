@@ -15,7 +15,7 @@ class sandy.materials.ColorMaterial extends Material
 		m_nColor = p_nColor;
 		m_nAlpha = p_nAlpha;
 		// -- OVERRIDE
-		m_bRepeat = true;
+		repeat = true;
 		// -- Creation of the texture
 		texture = new BitmapData( 1, 1, Boolean(m_nAlpha<100), m_nAlpha << 24 | m_nColor );
 	}

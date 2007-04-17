@@ -52,8 +52,8 @@ class sandy.materials.BitmapMaterial extends Material
 		// --
 		texture = t;
 		// --
-		_p = new Point(0, 0);
-		_cmf = new ColorMatrixFilter();
+		m_oPoint = new Point(0, 0);
+		m_oCmf = new ColorMatrixFilter();
 		m_oPolygonMatrixMap = new Map();
 	}
 	
@@ -68,14 +68,14 @@ class sandy.materials.BitmapMaterial extends Material
 	public function setTransparency( pValue:Number ):Void
 	{
 		pValue = NumberUtil.constrain( pValue/100, 0, 1 );
-		if( _cmf ) delete _cmf;
+		if( m_oCmf ) delete m_oCmf;
 		var matrix:Array = [1, 0, 0, 0, 0,
 				 			0, 1, 0, 0, 0, 
 				 			0, 0, 1, 0, 0, 
 				 			0, 0, 0, pValue, 0];
  
-		_cmf = new ColorMatrixFilter( matrix );
-		texture.applyFilter( texture, texture.rectangle, _p, _cmf );
+		m_oCmf = new ColorMatrixFilter( matrix );
+		texture.applyFilter( texture, texture.rectangle, m_oPoint, m_oCmf );
 	}
 	
 	/**
@@ -128,8 +128,7 @@ class sandy.materials.BitmapMaterial extends Material
 	public function prepare( f:Polygon ):Void
 	{
 		var a:Array = f.vertices;
-		var m:Object = m_oPolygonMatrixMap.get( f );
-		//Logger.LOG("BitmapMaterial::prepare , old matrix : "+m);
+		var m:Matrix = m_oPolygonMatrixMap.get( f );
 		// --
 		var x0: Number = a[0].sx;
 		var y0: Number = a[0].sy;
@@ -141,13 +140,14 @@ class sandy.materials.BitmapMaterial extends Material
 		var sMat = 	{ 	a:( x1 - x0 ) / m_nWidth, 
 						b:( y1 - y0 ) / m_nWidth, 
 						c:( x2 - x0 ) / m_nHeight, 
-						d:( y2 - y0 ) /m_nHeight, 
+						d:( y2 - y0 ) / m_nHeight, 
 						tx: x0, 
 						ty: y0 
 					};
 		// --
-		matrix = BitmapUtil.concatBitmapMatrix( m, sMat );
-		//Logger.LOG("BitmapMaterial::prepare , new matrix : "+(sMat)+" result :: "+(matrix));
+		//matrix = BitmapUtil.concatBitmapMatrix( m, sMat );
+		matrix = m.clone();
+		matrix.concat( sMat );
 	}
 	
 	/**
@@ -175,12 +175,8 @@ class sandy.materials.BitmapMaterial extends Material
 		return 'sandy.materials.BitmapMaterial' ;
 	}
 
-	
-	private var _w:Number;
-	private var _h:Number;
-
-	private var _p:Point;
-	private var _cmf:ColorMatrixFilter;
+	private var m_oPoint:Point;
+	private var m_oCmf:ColorMatrixFilter;
 	private var _texture:BitmapData;
 
 }

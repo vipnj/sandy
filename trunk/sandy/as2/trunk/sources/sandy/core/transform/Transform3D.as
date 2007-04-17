@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -29,14 +29,15 @@ import sandy.math.VectorMath;
 * This class helps you to create some transformations to apply to a transformGroup. This way you will be able
 * to transform a whole group of objects, to create the effect you want.
 * @author		Thomas Pfeiffer - kiroukou
+* @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.0
-* @date 		20.05.2006
+* @version		1.2.1
+* @date 		16.04.2007
 */
 class sandy.core.transform.Transform3D extends EventBroadcaster implements ITransform3D 
 {
 	/**
-	 * The World3D rendering Event. It's the event broadcasted every time the world is rendered
+	 * The onUpdate Event. It's the event broadcast when the transform changes
 	 */
 	public static var onUpdateEVENT:EventType = new EventType( 'onUpdate' );
 	
@@ -87,7 +88,7 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	}
 			
 	/**
-	* Realize the euler rotation matrix thnaks to the three angles in arguments as a degree angle.
+	* Realize the euler rotation matrix thanks to the three angles in arguments as a degree angle.
 	* @param	px	Number Angle of rotation in degree around the X axis
 	* @param	py 	Number Angle of rotation in degree around the Y axis 
 	* @param	pz  Number Angle of rotation in degree around the Z axis
@@ -103,15 +104,30 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 		__dispatch();
 	}
 
+	// 
+	/**
+	* Set the rotation based on a euler rotation matrix.
+	*  Useful for restoring the rotation based on the Matrix4 value retrieved by getMatrix();
+	* @param	eulerMatrix  Matrix4 - existing matrix containing rotation matrix to restore.
+	*/
+	public function eulerRotation(eulerMatrix:Matrix4 ):Void
+	{
+		if (!(eulerMatrix instanceof Matrix4)) {
+			trace ("Error: eulerMatrix passed to Transform3D.eulerRotation is not a Matrix4 object");
+		}
+		_m = eulerMatrix;
+		_type = TransformType.ROTATION;;
+		__dispatch();
+	}
 	
 	/**
 	* Realize the euler rotation matrix thanks to angles defined in the vector argument
-	* @param	v Vector The vector containig the eurlers angles
+	* @param	v Vector The vector containing the eulers angles
 	*/
 	public function rotVector( v:Vector ):Void
 	{
 		rot( v.x, v.y, v.z );
-		__dispatch();
+		__dispatch(); // seems redundant, since rot() function also dispatches...
 	}
 		
 	/**

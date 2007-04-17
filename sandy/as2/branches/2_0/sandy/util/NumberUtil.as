@@ -113,6 +113,21 @@ class sandy.util.NumberUtil
 	 	return Math.max( Math.min( n, max ) , min );
 	 }
 	 
-	 
+	/**
+	 * Round a number to specified accuracy
+	 * @param n Number The number to round
+	 * @param roundToInterval Number The accuracy to which to round
+     *    (i.e., set roundInterval to 0.01 to round 2 to decimal places)
+	 * @return Number The rounded number
+	 */
+	 public static function roundTo (n:Number, roundToInterval:Number):Number 
+	 {
+		if (roundToInterval == undefined) 
+		{
+			roundToInterval = 1;
+		}
+		return Math.round(n/roundToInterval) * roundToInterval;
+	}
+	 	 
 	private static var _fABS:Function = Math.abs;	
 }

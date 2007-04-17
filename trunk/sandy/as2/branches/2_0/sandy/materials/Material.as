@@ -140,7 +140,16 @@ class sandy.materials.Material
 		m_bSmooth = false;
 		m_oMatrix = null;
 		m_nWidth = m_nHeight = 0;
+		needNormals = false;
 	}
+	
+	/**
+	 * Property that has to be updated when the material needs to have the normals vector in order to compute the correct effect.
+	 * For example, with ligthening enabled, this property must be set to true to render correctly the light effect.
+	 * 
+	 * THe variable is READ ONLY unless you perfectly know what you are doing.
+	 */
+	public var needNormals:Boolean;
 	
 	//////////////////
 	// PROPERTIES

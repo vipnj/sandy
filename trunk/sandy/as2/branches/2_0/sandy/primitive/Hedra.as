@@ -14,8 +14,6 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.primitive
-{
 
 	import sandy.core.data.Vertex;
 	import sandy.core.Object3D;
@@ -28,12 +26,10 @@ package sandy.primitive
 	* Hedra
 	*
 	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin Cédric - thecaptain
-	* @author		Nicolas Coevoet - [ NikO ]
-	* @version		1.0
-	* @date 		12.01.2006 
+	* @version		2.0
+	* @date 		20.04.2007 
 	**/
-	class Hedra extends Object3D implements Primitive3D
+	class sandy.primitive.Hedra extends Shape3D implements Primitive3D
 	{
 		//////////////////
 		///PRIVATE VARS///
@@ -51,13 +47,13 @@ package sandy.primitive
 		* @param 	lg	Number
 		* @param 	rad Number
 		*/	
-		public function Hedra (h : Number = 6, lg : Number = 6, rad : Number = 100 )
+		public function Hedra ( p_nH : Number, p_nLg : Number, p_nRad : Number )
 		{
 			super ();
-			_radius = 100;
-			_h = h ;
-			_lg = lg ;
-			generate ();
+			_radius = (p_nRad)?p_nRad:100;
+			_h = (p_nH)?p_nH:6 ;
+			_lg = (p_nLg)?p_nLg:6;
+			geometry = generate ();
 		}
 		
 		/**
@@ -67,8 +63,9 @@ package sandy.primitive
 		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
 		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
 		*/ 
-		public function generate (Void) : Void
+		public function generate ():Geometry3D
 		{
+			var l_oGeometry3D = new Geometry3D();
 			//Creation des points
 			_h = -_h;
 			var r2:Number = _radius / 2;
@@ -137,7 +134,9 @@ package sandy.primitive
 			f.setUVCoordinates( _aUv[0], _aUv[3], _aUv[5] );
 			aNormals.push ( f.createNormale () );
 			addFace( f );
+			
+			
+			return l_oGeometry3D;
 
 		}
 	}
-}

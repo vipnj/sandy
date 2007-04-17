@@ -3,6 +3,9 @@ import sandy.core.renderer.IRenderer;
 import sandy.materials.Appearance;
 import com.bourre.log.LogChannel;
 import com.bourre.log.Logger;
+import flash.display.BitmapData;
+import flash.geom.Matrix;
+
 
 /**
  * @author thomaspfeiffer
@@ -67,7 +70,7 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		// -- start rendering with passed skin
 		if( p_oAppearance.texture )
 		{
-			p_mcContainer.beginBitmapFill( p_oAppearance.texture, p_oAppearance.material.matrix, p_oAppearance.material.repeat, p_oAppearance.material.smooth );
+			p_mcContainer.beginBitmapFill( BitmapData(p_oAppearance.texture), Matrix(p_oAppearance.material.matrix), Boolean(p_oAppearance.material.repeat), Boolean(p_oAppearance.material.smooth) );
 			// --
 			if( p_oAppearance.lineAttributes )
 				p_mcContainer.lineStyle( p_oAppearance.lineThickness, p_oAppearance.lineColor, p_oAppearance.lineAlpha );

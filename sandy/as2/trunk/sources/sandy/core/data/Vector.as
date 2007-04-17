@@ -25,8 +25,8 @@ limitations under the License.
 * @author		Nicolas Coevoet - [ NikO ]
 * @author		Bruce Epstein - zeusprod - truncated toString output to 2 decimals
 * @since		0.1
-* @version		1.2
-* @date 		21.03.2007
+* @version		1.2.1
+* @date 		17.04.2007
 */
 import sandy.util.NumberUtil;
 class sandy.core.data.Vector
@@ -55,35 +55,41 @@ class sandy.core.data.Vector
 	* 
 	* @return	A String representing the {@code Vector}.
 	*/ 	
-	public function toString(Void):String
+	public function toString(d:Number):String
 	{
+		if (d == undefined) {
+			d = .01
+		}
 		//return "Vector4 : "+x+","+y+","+z;
 		// Round display to two decimals places
-		return "{" + NumberUtil.roundTo(x, .01) + ", " + 
-					 NumberUtil.roundTo(y, .01) + ", " + 
-					 NumberUtil.roundTo(z, .01) + "}";
+		return "{" + NumberUtil.roundTo(x, d) + ", " + 
+					 NumberUtil.roundTo(y, d) + ", " + 
+					 NumberUtil.roundTo(z, d) + "}";
 	}
 	
-	// Used for XML output
-	public function serialize(roundTo:Number):String
+	// Useful for XML output
+	public function serialize(d:Number):String
 	{
-		if (roundTo == undefined) {
-			roundTo = .01
+		if (d == undefined) {
+			d = .01
 		}
 		//returns x,y,x
-		return  (NumberUtil.roundTo(x, .01) + "," + 
-				 NumberUtil.roundTo(y, .01) + "," + 
-				 NumberUtil.roundTo(z, .01));
+		return  (NumberUtil.roundTo(x, d) + "," + 
+				 NumberUtil.roundTo(y, d) + "," + 
+				 NumberUtil.roundTo(z, d));
 	}
 	
-	// Used for XML output
+	// Useful for XML input
 	public static function deserialize(convertFrom:String):Vector
 	{
 		var tmp:Array = convertFrom.split(",");
 		if (tmp.length != 3) {
 			trace ("Unexpected length of string to deserialize into a vector " + convertFrom);
 		}
-		return  new Vector (tmp[0], tmp[1], tmp[2]);
+		for (var i:Number = 0; i < tmp.length; i++) {
+			tmp[i] = Number(tmp[i]);
+		}
+		return new Vector (tmp[0], tmp[1], tmp[2]);
 	}
 }
 

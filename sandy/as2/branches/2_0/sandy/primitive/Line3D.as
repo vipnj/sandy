@@ -14,25 +14,22 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.primitive {
-
-	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
-	import sandy.core.Object3D;
-	import sandy.core.face.Edge3D;
-	import sandy.primitive.Primitive3D;
-	import sandy.skin.SimpleLineSkin;
-	import sandy.core.face.Polygon;
+import sandy.core.data.Vector;
+import sandy.core.data.Vertex;
+import sandy.primitive.Primitive3D;
+import sandy.core.face.Polygon;
+import sandy.core.scenegraph.Shape3D;
+import sandy.core.scenegraph.Geometry3D;
 
 	/**
 	* Line3D
 	* <p>Line3D, or how to create a simple line in Sandy</p>
 	* 
 	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		26.06.2006 
+	* @version		2.0
+	* @date 		20.04.2007 
 	**/
-	public class Line3D extends Object3D implements Primitive3D
+	class sandy.primitive.Line3D extends Shape3D implements Primitive3D
 	{
 		/**
 		* Constructor
@@ -53,11 +50,8 @@ package sandy.primitive {
 			}
 			else
 			{
-				for( var i:int = 0; i < arguments.length; i++ )
-				{
-					aPoints.push ( new Vertex( arguments[int(i)].x, arguments[int(i)].y, arguments[int(i)].z ) );
-				}
-				generate ();
+				geometry = generate ( arguments );
+				enableBackFaceCulling = false;
 			}
 		}
 		
@@ -66,44 +60,29 @@ package sandy.primitive {
 		* 
 		* <p>Generate all is needed to construct the Line3D : </p>
 		*/
-		public function generate () : void
+		public function generate () : Geometry3D
 		{
-			// initialisation
-			_aFaces = [];
-			var l:int = aPoints.length;
-			for( var i:int = 0; i < l-1; i++ )
+			var l_oGeometry:Geometry3D = new Geometry3D();
+			var l_aPoints:Array = arguments[0];
+			// --
+			var i:Number;
+			var l:Number = l_aPoints.length;
+			// --
+			for( i = 0; i < l; i++ )
 			{
-				addFace( new Polygon( this, aPoints[int(i)], aPoints[int(i+1)] ) );
+				l_oGeometry.setVertex( i, l_aPoints[int(i)].x, l_aPoints[int(i)].y, l_aPoints[int(i)].z );
 			}
+			// -- initialisation
+			for( i = 0; i < l-1; i++ )
+			{
+				l_oGeometry.setFaceVertexIds( i, i, i+1 );
+			}
+			// --
+			return l_oGeometry;
 		}
-		
-		/**
-		* Set a Skin to the Line3D.
-		* <p>This method will set the a new skin to the line, but the skin must be a SimpleLineSkin instance.</p>
-		* @param	SimpleLineSkin s	The new SimpleLineSkin skin
-		* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
-		* @return	Boolean True to apply the skin to the non default faces skins , false otherwise (default).
-		*/
-		public function setSkin( s:SimpleLineSkin, bOverWrite:Boolean = false):Boolean
-		{
-			bOverWrite = bOverWrite;
-			super.setSkin( s, bOverWrite );
-			return true;
-		}
-		
-		/**
-		 * The setBackSkin is disabled for this object since it does not have a particular depth.
-		 */
-		public function setBackSkin( s:SimpleLineSkin, bOverWrite:Boolean):Boolean
-		{
-			return false;	
-		}
-		
+				
 		public function toString():String
 		{
 			return "sandy.primitive.Line3D";
-		}
-
-		
+		}		
 	}
-}

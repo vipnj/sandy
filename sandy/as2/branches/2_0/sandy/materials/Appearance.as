@@ -16,6 +16,9 @@ class sandy.materials.Appearance
 		m_oBackMaterial  = 	(p_oBack) 	? p_oBack	:	p_oFront;
 	}
 	
+	public function get needNormals():Boolean
+	{ return m_oBackMaterial.needNormals && m_oFrontMaterial.needNormals; }
+		
 	public function get texture():BitmapData
 	{
 		return (oRef.backfaceCulling == 1) ? BitmapData(m_oFrontMaterial.texture) : BitmapData(m_oBackMaterial.texture);

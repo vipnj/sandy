@@ -7,6 +7,7 @@ import com.bourre.visual.FPSLoggerUI;
 
 import flash.display.BitmapData;
 
+import sandy.core.data.Vector;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Group;
 import sandy.core.scenegraph.TransformGroup;
@@ -17,6 +18,7 @@ import sandy.materials.ColorMaterial;
 import sandy.materials.LineAttributes;
 import sandy.materials.Material;
 import sandy.primitive.Box;
+import sandy.primitive.Line3D;
 import sandy.util.BitmapUtil;
 
 import tests.cubeTest.src.TestCube;
@@ -106,9 +108,13 @@ class TestCube
 		box2.appearance = l_oTextureAppearance;
 		box2.z = 100;
 		box2.x = 0;
+		
+		var line:Line3D = new Line3D( new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
+		line.appearance = l_oAppearance;
 		// -- Tree creation
 		tgTranslation.addChild( box );
 		tgRotation.addChild( box2 );
+		tgRotation.addChild( line );
 		tgTranslation.addChild( tgRotation );
 		g.addChild( tgTranslation );
 		// --

@@ -166,7 +166,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
 		// --
 		// If necessary we transform the normals vectors
-		if( m_bBackFaceCulling )
+		if( m_bBackFaceCulling || m_oAppearance.needNormals )
 		{
 		    var l_aNormals:Array = m_oGeometry.aFacesNormals;
 		    l_nLength = l_aNormals.length;

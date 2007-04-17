@@ -15,11 +15,9 @@ limitations under the License.
 */
 
 
-	import sandy.core.data.Vertex;
-	import sandy.core.Object3D;
-	import sandy.core.face.TriFace3D;
-	import sandy.core.face.Face;
-	import sandy.primitive.Primitive3D;
+import sandy.core.scenegraph.Geometry3D;
+import sandy.core.scenegraph.Shape3D;
+import sandy.primitive.Primitive3D;
 
 	
 	/**
@@ -47,9 +45,9 @@ limitations under the License.
 		* @param 	lg	Number
 		* @param 	rad Number
 		*/	
-		public function Hedra ( p_nH : Number, p_nLg : Number, p_nRad : Number )
+		public function Hedra ( p_sName:String, p_nH : Number, p_nLg : Number, p_nRad : Number )
 		{
-			super ();
+			super (p_sName);
 			_radius = (p_nRad)?p_nRad:100;
 			_h = (p_nH)?p_nH:6 ;
 			_lg = (p_nLg)?p_nLg:6;
@@ -65,7 +63,7 @@ limitations under the License.
 		*/ 
 		public function generate ():Geometry3D
 		{
-			var l_oGeometry3D = new Geometry3D();
+			var l_oGeometry3D:Geometry3D = new Geometry3D();
 			//Creation des points
 			_h = -_h;
 			var r2:Number = _radius / 2;
@@ -76,64 +74,46 @@ limitations under the License.
 			 \ 4&5 \
 			  0-----1
 			*/
-			aPoints.push( new Vertex(-r2 , 0  , l2) );
-			aPoints.push( new Vertex( r2 , 0  , l2) );
-			aPoints.push( new Vertex( r2 , 0  , -l2) );
-			aPoints.push( new Vertex(-r2 , 0  , -l2) );
-			aPoints.push( new Vertex( 0 , h2  , 0) );
-			aPoints.push( new Vertex( 0 , -h2  , 0) );
+			l_oGeometry3D.setVertex(0, -r2 , 0  , l2 );
+			l_oGeometry3D.setVertex(1,r2 , 0  , l2 );
+			l_oGeometry3D.setVertex(2, r2 , 0  , -l2 );
+			l_oGeometry3D.setVertex(3,-r2 , 0  , -l2 );
+			l_oGeometry3D.setVertex(4, 0 , h2  , 0 );
+			l_oGeometry3D.setVertex(5, 0 , -h2  , 0 );
 			
-			addUVCoordinate (0, 0.5);//0
-			addUVCoordinate (0,33, 0.5);//1
-			addUVCoordinate (0.66, 0.5);//2
-			addUVCoordinate (1, 0.5);//3
-			addUVCoordinate (1, 1);
-			addUVCoordinate (0, 0);
+			l_oGeometry3D.setUVCoords(0, 0, 0.5);//0
+			l_oGeometry3D.setUVCoords(1, 0.33, 0.5);//1
+			l_oGeometry3D.setUVCoords(2, 0.66, 0.5);//2
+			l_oGeometry3D.setUVCoords(3, 1, 0.5);//3
+			l_oGeometry3D.setUVCoords(4, 1, 1);
+			l_oGeometry3D.setUVCoords(5, 0, 0);
 
 			//Creation des faces
 			//Face avant
-			var f:TriFace3D;
-			var n:Vertex;
-			
-			f = new TriFace3D(this, aPoints[0], aPoints[1], aPoints[4] );
-			f.setUVCoordinates( _aUv[0], _aUv[1], _aUv[4] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 0, 0, 1, 4 );
+			l_oGeometry3D.setFaceUVCoordsIds(0, 0, 1, 4 );
+	
 			//Face derriere
-			f = new TriFace3D(this, aPoints[3], aPoints[4], aPoints[2] );
-			f.setUVCoordinates( _aUv[3], _aUv[4], _aUv[2] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 1, 3, 4, 2 );
+			l_oGeometry3D.setFaceUVCoordsIds( 1, 3, 4, 2 );
 			
-			f = new TriFace3D(this, aPoints[1], aPoints[5], aPoints[2] );
-			f.setUVCoordinates( _aUv[1], _aUv[5], _aUv[2] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 2, 1, 5, 2 );
+			l_oGeometry3D.setFaceUVCoordsIds( 2, 1, 5, 2 );
 			//Face gauche
-			f = new TriFace3D(this, aPoints[4], aPoints[3], aPoints[0] );
-			f.setUVCoordinates( _aUv[4], _aUv[3], _aUv[0] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 3, 4, 3, 0 );
+			l_oGeometry3D.setFaceUVCoordsIds( 3, 4, 3, 0 );
 			//Face droite
-			f = new TriFace3D(this, aPoints[4], aPoints[1], aPoints[2] );
-			f.setUVCoordinates( _aUv[4], _aUv[1], _aUv[2] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 4, 4, 1, 2 );
+			l_oGeometry3D.setFaceUVCoordsIds( 4, 4, 1, 2 );
 			
-			f = new TriFace3D(this, aPoints[0], aPoints[5], aPoints[1] );
-			f.setUVCoordinates( _aUv[0], _aUv[5], _aUv[1] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
-
-			f = new TriFace3D(this, aPoints[3], aPoints[2], aPoints[5] );
-			f.setUVCoordinates( _aUv[3], _aUv[2], _aUv[5] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 5, 0, 5, 1 );
+			l_oGeometry3D.setFaceUVCoordsIds( 5, 0, 5, 1 );
 			
-			f = new TriFace3D(this, aPoints[0], aPoints[3], aPoints[5] );
-			f.setUVCoordinates( _aUv[0], _aUv[3], _aUv[5] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_oGeometry3D.setFaceVertexIds( 6, 3, 2, 5 );
+			l_oGeometry3D.setFaceUVCoordsIds( 6, 3, 2, 5 );
+			
+			l_oGeometry3D.setFaceVertexIds( 7, 0, 3, 5 );
+			l_oGeometry3D.setFaceUVCoordsIds( 7, 0, 3, 5 );
 			
 			
 			return l_oGeometry3D;

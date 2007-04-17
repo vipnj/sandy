@@ -18,6 +18,8 @@ import sandy.materials.ColorMaterial;
 import sandy.materials.LineAttributes;
 import sandy.materials.Material;
 import sandy.primitive.Box;
+import sandy.primitive.Cylinder;
+import sandy.primitive.Hedra;
 import sandy.primitive.Line3D;
 import sandy.util.BitmapUtil;
 
@@ -31,7 +33,7 @@ class TestCube
 	private var _mc:MovieClip;
 	private var _world:World3D;
 	private var box:Box;
-	private var box2:Box;
+	private var hedra:Hedra;
 	var tgRotation:TransformGroup;
 	private var m_tfPolygonCount:TextField;
 	private var m_tfVertexCount:TextField;
@@ -104,17 +106,23 @@ class TestCube
 		box.appearance = l_oTextureAppearance;
 		box.rotateZ = 45;
 		
-		box2 = new Box( "myBox2", 100, 50, 100, "tri", 2 );
-		box2.appearance = l_oTextureAppearance;
-		box2.z = 100;
-		box2.x = 0;
+		hedra = new Hedra( "myHedra", 50, 50, 100 );
+		hedra.appearance = l_oTextureAppearance;
+		hedra.z = 100;
+		hedra.x = 0;
 		
-		var line:Line3D = new Line3D( new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
+		var l_oCylinder:Cylinder = new Cylinder("myCylinder", 50, 50, 3, 3, 20 );
+		//l_oCylinder.enableBackFaceCulling = false;
+		l_oCylinder.z = -150;
+		l_oCylinder.appearance = l_oAppearance;
+		// --
+		var line:Line3D = new Line3D( "myLine", new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
 		line.appearance = l_oAppearance;
 		// -- Tree creation
 		tgTranslation.addChild( box );
-		tgRotation.addChild( box2 );
+		tgRotation.addChild( hedra );
 		tgRotation.addChild( line );
+		tgRotation.addChild( l_oCylinder );
 		tgTranslation.addChild( tgRotation );
 		g.addChild( tgTranslation );
 		// --

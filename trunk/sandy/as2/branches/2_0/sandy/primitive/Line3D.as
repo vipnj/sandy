@@ -41,16 +41,16 @@ import sandy.core.scenegraph.Geometry3D;
 		*
 		* @param As many parameters as needed points can be passed. However a minimum of 2 vector instance must be given.
 		*/
-		public function Line3D ( deb:Vector, fin:Vector )
+		public function Line3D ( p_sName:String, deb:Vector, fin:Vector )
 		{
-			super ();
+			super ( p_sName );
 			if( arguments.length < 2 )
 			{
 				trace('Line3D::Number of arguments to low');
 			}
 			else
 			{
-				geometry = generate ( arguments );
+				geometry = generate ( arguments.splice(1) );
 				enableBackFaceCulling = false;
 			}
 		}

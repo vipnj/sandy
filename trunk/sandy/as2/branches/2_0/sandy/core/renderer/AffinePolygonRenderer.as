@@ -37,12 +37,10 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 	    var l_oDisplayElt:MovieClip = null;
 	    var i:Number;
 	    // --
-		for( i=0; l_oDisplayElt = m_aPolygon[i]; i++ )
+		for( i=0; l_oDisplayElt = m_aPolygonCopy[i]; i++ )
 		{
 		   l_oDisplayElt.polygon.container.clear();
 		}
-		// --
-		init();
 	}
 		
 	public function render():Void 
@@ -57,6 +55,8 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 			l_oP.container.swapDepths(i);
 			renderPolygon( l_oP, l_oP.appearance, l_oP.container );
 		}
+		// -- copy
+		m_aPolygonCopy = m_aPolygon.concat();
 	}
 
 	function renderPolygon( p_oPolygon:Polygon, p_oAppearance:Appearance, p_mcContainer:MovieClip ) : Void
@@ -70,7 +70,7 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		// -- start rendering with passed skin
 		if( p_oAppearance.texture )
 		{
-			p_mcContainer.beginBitmapFill( BitmapData(p_oAppearance.texture), Matrix(p_oAppearance.material.matrix), Boolean(p_oAppearance.material.repeat), Boolean(p_oAppearance.material.smooth) );
+			p_mcContainer.beginBitmapFill( BitmapData(p_oAppearance.texture), p_oAppearance.material.matrix, Boolean(p_oAppearance.material.repeat), Boolean(p_oAppearance.material.smooth) );
 			// --
 			if( p_oAppearance.lineAttributes )
 				p_mcContainer.lineStyle( p_oAppearance.lineThickness, p_oAppearance.lineColor, p_oAppearance.lineAlpha );
@@ -93,4 +93,5 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 	}
 	
 	private var m_aPolygon:Array;
+	private var m_aPolygonCopy:Array;
 }

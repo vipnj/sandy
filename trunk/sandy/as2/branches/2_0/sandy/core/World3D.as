@@ -126,17 +126,6 @@ class sandy.core.World3D
 	{
 		return _light;
 	}
-	
-	/**
-	* Allows to get the current matrix projection ( usefull since there's several cameras allowed )
-	* @param	Void
-	* @return Matrix4 The current projection matrix
-	*/
-	public function getCurrentProjectionMatrix():Matrix4
-	{
-		if( camera ) return camera.getProjectionMatrix();
-		else return null;
-	}
 
 	/**
 	 * Call the recurssive rendering of all the children of this branchGroup.
@@ -150,8 +139,8 @@ class sandy.core.World3D
 		if( root && camera && _container )
 		{
 			_oEB.broadcastEvent( _eOnRender );
-			// -- clear the polygon's container and the projection vertices list
-            camera.renderer.clear();
+			// -- init
+            camera.renderer.init();
 			// --
 			root.update( null, false );
 			root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
@@ -159,6 +148,7 @@ class sandy.core.World3D
 			// --
 			camera.project();
 			// -- clear the polygon's container and the projection vertices list
+            camera.renderer.clear();
             camera.renderer.render();
 		}
 	} // end method

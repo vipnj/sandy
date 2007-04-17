@@ -112,13 +112,10 @@ class sandy.materials.Material
 	{ return m_oTexture; }
 
 	
-	public function get repeat():Boolean
-	{return m_bRepeat;}
-	
-	public function get matrix():Object
+	public function get matrix():Matrix
 	{return m_oMatrix;}
 	
-	public function set matrix( p_oMat:Object )
+	public function set matrix( p_oMat:Matrix )
 	{ m_oMatrix = p_oMat; m_bModified = true; }
 	
 	public function get smooth():Boolean
@@ -136,7 +133,7 @@ class sandy.materials.Material
 		_id = _ID_++;
 		lineAttributes = null;
 		m_bModified = true;
-		m_bRepeat = true;
+		repeat = true;
 		m_bSmooth = false;
 		m_oMatrix = null;
 		m_nWidth = m_nHeight = 0;
@@ -151,6 +148,8 @@ class sandy.materials.Material
 	 */
 	public var needNormals:Boolean;
 	
+	public var repeat:Boolean;
+	
 	//////////////////
 	// PROPERTIES
 	//////////////////	
@@ -158,9 +157,8 @@ class sandy.materials.Material
 	private var m_nWidth:Number;
 	private var m_nHeight:Number;
 	private var m_bModified:Boolean;
-	private var m_bRepeat:Boolean;
 	private var m_bSmooth:Boolean;
-	private var m_oMatrix:Object;
+	private var m_oMatrix:Matrix;
 	private var _filters:Array;
 	private var _useLight : Boolean;
 	private var _id:Number;

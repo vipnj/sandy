@@ -90,12 +90,12 @@ class sandy.core.scenegraph.Geometry3D
 	 * @param	p_y
 	 * @param	p_z
 	 */
-	public function setVertex( p_nVertexID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
+	public function setVertex( p_nVertexID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Number
 	{
 		if( aVertex[p_nVertexID] )
-			return false;
+			return -1;
 		else
-		{ aVertex[p_nVertexID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
+		{ aVertex[p_nVertexID] = new Vertex(p_nX, p_nY, p_nZ); return p_nVertexID; }
 	}
 	
 	/**
@@ -113,12 +113,20 @@ class sandy.core.scenegraph.Geometry3D
 	 * @param	p_y
 	 * @param	p_z
 	 */
-	public function setFaceNormal( p_nNormalID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
+	public function setFaceNormal( p_nNormalID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Number
 	{
 		if( aFacesNormals[p_nNormalID] )
-			return false;
+			return -1;
 		else
-		{ aFacesNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
+		{ aFacesNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return p_nNormalID; }
+	}
+
+	/**
+	 * Returns the next vertex id you can give for setVertex
+	 */
+	public function getNextFaceNormalID(Void):Number
+	{
+		return aFacesNormals.length || 0;
 	}
 		
 	/**
@@ -128,12 +136,20 @@ class sandy.core.scenegraph.Geometry3D
 	 * @param	p_y
 	 * @param	p_z
 	 */
-	public function setVertexNormal( p_nNormalID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
+	public function setVertexNormal( p_nNormalID:Number, p_nX:Number, p_nY:Number, p_nZ:Number ):Number
 	{
 		if( aVertexNormals[p_nNormalID] )
-			return false;
+			return -1;
 		else
-		{ aVertexNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return true; }
+		{ aVertexNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return p_nNormalID; }
+	}
+	
+	/**
+	 * Returns the next vertex id you can give for setVertex
+	 */
+	public function getNextVertexNormalID(Void):Number
+	{
+		return aVertexNormals.length || 0;
 	}
 	
 	/**
@@ -141,17 +157,26 @@ class sandy.core.scenegraph.Geometry3D
 	 * @param	...rest an array of data containing the ID's of the vertex list representing the face
 	 * @return true is the face has been created, false if the faces already exist
 	 */
-	public function setFaceVertexIds( p_nFaceID:Number /* Arguments */ ):Boolean
+	public function setFaceVertexIds( p_nFaceID:Number /* Arguments */ ):Number
 	{
 		if( aFacesVertexID[p_nFaceID] )
 		{
-			return false;
+			return -1;
 		}
 		else
 		{
 			var rest:Array = (arguments[1] instanceof Array)? arguments[1]: arguments.splice(1);
 			aFacesVertexID[p_nFaceID] = rest;
+			return p_nFaceID;
 		}
+	}
+
+	/**
+	 * Returns the next vertex id you can give for setVertex
+	 */
+	public function getNextFaceID(Void):Number
+	{
+		return aFacesVertexID.length || 0;
 	}
 	
 	/**
@@ -159,20 +184,28 @@ class sandy.core.scenegraph.Geometry3D
 	 * @param	...rest an array of data containing the ID's of the vertex list representing the face
 	 * @return true is the face has been created, false if the faces already exist
 	 */
-	public function setFaceUVCoordsIds( p_nFaceID:Number /* Arguments */ ):Boolean
+	public function setFaceUVCoordsIds( p_nFaceID:Number /* Arguments */ ):Number
 	{
 		if( aFacesUVCoordsID[p_nFaceID] )
 		{
-			return false;
+			return -1;
 		}
 		else
 		{
 			var rest:Array = (arguments[1] instanceof Array)? arguments[1]: arguments.splice(1);
 			aFacesUVCoordsID[p_nFaceID] = rest;
+			return p_nFaceID;
 		}
 	}
 		
-	
+	/**
+	 * Returns the next vertex id you can give for setVertex
+	 */
+	public function getNextFaceUVCoordID(Void):Number
+	{
+		return aFacesUVCoordsID.length || 0;
+	}
+		
 	
 	public function getVertexId( p_point:Vertex ):Number
 	{
@@ -187,17 +220,25 @@ class sandy.core.scenegraph.Geometry3D
 	 * 
 	 * @param	...rest	Array of UV coordinates (3 UVCoords for triangles).
 	 */
-	public function setUVCoords( p_nID:Number, p_UValue:Number, p_nVValue:Number ):Boolean
+	public function setUVCoords( p_nID:Number, p_UValue:Number, p_nVValue:Number ):Number
 	{
 		if ( aUVCoords[p_nID] )
 		{
-			return false;
+			return -1;
 		}
 		else
 		{
 			aUVCoords[p_nID] = new UVCoord( p_UValue, p_nVValue );
-			return true;
+			return p_nID;
 		}
+	}
+
+	/**
+	 * Returns the next vertex id you can give for setVertex
+	 */
+	public function getNextUVCoordID(Void):Number
+	{
+		return aUVCoords.length || 0;
 	}
 	
 	/**

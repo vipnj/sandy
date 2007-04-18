@@ -110,16 +110,15 @@ class sandy.primitive.Cylinder extends Shape3D implements Primitive3D
 			var fZ:Number = height*(j/(iVer+0))-height/2;
 			var fRds:Number = topRadius+(radius-topRadius)*(1-j/(iVer));
 			var aRow:Array = new Array();
-			var oVtx:Vertex;
+			var oVtx:Number;
 			// --
-			for ( i = 0; i < (iHor+1); i++ ) 
+			for ( i = 0; i < (iHor); i++ ) 
 			{ // horizontal
 				var fRad2:Number = Number(2*i/iHor);
 				var fX:Number = fRds*Math.sin(fRad2*Math.PI);
 				var fY:Number = fRds*Math.cos(fRad2*Math.PI);
-		
-				oVtx = new Vertex(fY,-fZ,fX);
-				l_oGeometry3D.setVertex( l_oGeometry3D.getNextVertexID(), oVtx.x, oVtx.y, oVtx.z );
+				// --
+				oVtx = l_oGeometry3D.setVertex( l_oGeometry3D.getNextVertexID(), fY, fZ, fX );//fY, -fZ, fX );
 				aRow.push(oVtx);
 			}
 			aVtc.push(aRow);
@@ -141,11 +140,12 @@ class sandy.primitive.Cylinder extends Shape3D implements Primitive3D
 				{
 					// select vertices
 					var bEnd:Boolean = i==(iHorNum-0);
-					aP4 = (iVerNum*j)+(bEnd?0:i);
-					aP1 = (iVerNum*j)+(i==0?iHorNum:i)-1;
-					aP2 = (iVerNum*(j-1))+(i==0?iHorNum:i)-1;
-					aP3 = (iVerNum*(j-1))+(bEnd?0:i);
-					// uv
+					// --					
+					aP1 = aVtc[j][bEnd?0:i];
+					aP2 = aVtc[j][(i==0?iHorNum:i)-1];
+					aP3 = aVtc[j-1][(i==0?iHorNum:i)-1];
+					aP4 = aVtc[j-1][bEnd?0:i];
+					// -- uv
 					var fJ0:Number = j		/ iVerNum;
 					var fJ1:Number = (j-1)	/ iVerNum;
 					var fI0:Number = (i+1)	/ iHorNum;
@@ -156,11 +156,11 @@ class sandy.primitive.Cylinder extends Shape3D implements Primitive3D
 					aP2uv = l_oGeometry3D.setUVCoords(l_oGeometry3D.getNextUVCoordID(), fI1, 1-fJ0);
 					aP3uv = l_oGeometry3D.setUVCoords(l_oGeometry3D.getNextUVCoordID(), fI1, 1-fJ1);
 					// 2 faces
-					nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP3, aP2 );
-					l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP3uv, aP2uv );
+					nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP2, aP3 );
+					l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP2uv, aP3uv );
 					
-					nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP4, aP3 );
-					l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP4uv, aP3uv );
+					nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP3, aP4 );
+					l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP3uv, aP4uv );
 				}
 			}
 			if (j==0||j==(iVerNum-1)) 
@@ -169,9 +169,10 @@ class sandy.primitive.Cylinder extends Shape3D implements Primitive3D
 				{
 					// uv
 					var iI:Number = Math.floor(i/2);
-					aP1 = (iVerNum*j)+iI;
-					aP2 = (i%2==0)? ((iVerNum*j)+(iHorNum-2-iI)) : ((iVerNum*j)+(iI+1));
-					aP3 = (i%2==0)? ((iVerNum*j)+(iHorNum-1-iI)) : ((iVerNum*j)+(iHorNum-2-iI));
+					aP1 = aVtc[j][iI];
+					aP2 = (i%2==0)? (aVtc[j][iHorNum-2-iI]) : (aVtc[j][iI+1]);
+					aP3 = (i%2==0)? (aVtc[j][iHorNum-1-iI]) : (aVtc[j][iHorNum-2-iI]);
+
 					// --
 					l_oP1 = l_oGeometry3D.aVertex[aP1];
 					l_oP2 = l_oGeometry3D.aVertex[aP2];
@@ -185,13 +186,13 @@ class sandy.primitive.Cylinder extends Shape3D implements Primitive3D
 					// face
 					if (j==0)
 					{ 	
-						nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP2, aP3 );
-						l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP2uv, aP3uv );
+						nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP3, aP2 );
+						l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP3uv, aP2uv );
 					}
 					else
 					{
-						nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP3, aP2 );
-						l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP3uv, aP2uv );
+						nF = l_oGeometry3D.setFaceVertexIds( l_oGeometry3D.getNextFaceID(), aP1, aP2, aP3 );
+						l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP2uv, aP3uv );
 					}
 					//if (j==0)	aFace.push( new Face3D(new Array(aP1,aP3,aP2), this.material, new Array(aP1uv,aP3uv,aP2uv)) );
 					//else		aFace.push( new Face3D(new Array(aP1,aP2,aP3), this.material, new Array(aP1uv,aP2uv,aP3uv)) );

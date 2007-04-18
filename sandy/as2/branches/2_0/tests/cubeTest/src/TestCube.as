@@ -18,9 +18,12 @@ import sandy.materials.ColorMaterial;
 import sandy.materials.LineAttributes;
 import sandy.materials.Material;
 import sandy.primitive.Box;
+import sandy.primitive.Cone;
 import sandy.primitive.Cylinder;
 import sandy.primitive.Hedra;
 import sandy.primitive.Line3D;
+import sandy.primitive.Sphere;
+import sandy.primitive.Torus;
 import sandy.util.BitmapUtil;
 
 import tests.cubeTest.src.TestCube;
@@ -108,13 +111,33 @@ class TestCube
 		
 		hedra = new Hedra( "myHedra", 50, 50, 100 );
 		hedra.appearance = l_oTextureAppearance;
-		hedra.z = 100;
-		hedra.x = 0;
+		hedra.y = 50;
+		hedra.x = 20;
 		
-		var l_oCylinder:Cylinder = new Cylinder("myCylinder", 50, 50, 3, 3, 20 );
+		var l_oCylinder:Cylinder = new Cylinder("myCylinder", 50, 50, 6, 1, 50 );
 		//l_oCylinder.enableBackFaceCulling = false;
+		l_oCylinder.rotateX = 45;
 		l_oCylinder.z = -150;
-		l_oCylinder.appearance = l_oAppearance;
+		l_oCylinder.appearance = l_oTextureAppearance;
+		
+		var l_oTorus:Torus = new Torus("myTorus", 70, 40, 6, 6 );
+		//l_oCylinder.enableBackFaceCulling = false;
+		l_oTorus.x = -150;
+		l_oTorus.rotateX = 90;
+		l_oTorus.appearance = l_oTextureAppearance;	
+
+		var l_oSphere:Sphere = new Sphere("mySphere", 60, 6, 4 );
+		//l_oCylinder.enableBackFaceCulling = false;
+		l_oSphere.z = 150;
+		l_oSphere.appearance = l_oTextureAppearance;	
+		
+		var l_oCone:Cone = new Cone("myCone", 60, 40, 8, 1 );
+		//l_oCylinder.enableBackFaceCulling = false;
+		l_oCone.y = -50;
+		l_oCone.x = -30;
+		l_oCone.appearance = l_oTextureAppearance;	
+		
+				
 		// --
 		var line:Line3D = new Line3D( "myLine", new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
 		line.appearance = l_oAppearance;
@@ -123,6 +146,9 @@ class TestCube
 		tgRotation.addChild( hedra );
 		tgRotation.addChild( line );
 		tgRotation.addChild( l_oCylinder );
+		tgRotation.addChild( l_oTorus );
+		tgRotation.addChild( l_oSphere );
+		tgRotation.addChild( l_oCone );
 		tgTranslation.addChild( tgRotation );
 		g.addChild( tgTranslation );
 		// --

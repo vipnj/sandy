@@ -1,10 +1,8 @@
+import flash.display.BitmapData;
+
 import sandy.core.face.Polygon;
 import sandy.core.renderer.IRenderer;
-import sandy.materials.Appearance;
-import com.bourre.log.LogChannel;
-import com.bourre.log.Logger;
-import flash.display.BitmapData;
-import flash.geom.Matrix;
+import sandy.materials.Material;
 
 
 /**
@@ -53,27 +51,27 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 		for( i=0; l_oP = Polygon( m_aPolygon[i].polygon ); i++ ) 
 		{
 			l_oP.container.swapDepths(i);
-			renderPolygon( l_oP, l_oP.appearance, l_oP.container );
+			renderPolygon( l_oP, l_oP.appearance.material, l_oP.container );
 		}
 		// -- copy
 		m_aPolygonCopy = m_aPolygon.concat();
 	}
 
-	function renderPolygon( p_oPolygon:Polygon, p_oAppearance:Appearance, p_mcContainer:MovieClip ) : Void
+	function renderPolygon( p_oPolygon:Polygon, p_oMaterial:Material, p_mcContainer:MovieClip ) : Void
 	{
 		var l_points:Array = p_oPolygon.cvertices;
 		var l:Number;
 		// --
-		p_oAppearance.material.prepare( p_oPolygon );
+		p_oMaterial.prepare( p_oPolygon );
 		// -- We apply the filters on the container. TODO check if this shall be done first or later
-		p_mcContainer.filters = p_oAppearance.filters;
+		p_mcContainer.filters = p_oMaterial.filters;
 		// -- start rendering with passed skin
-		if( p_oAppearance.texture )
+		if( p_oMaterial.texture )
 		{
-			p_mcContainer.beginBitmapFill( BitmapData(p_oAppearance.texture), p_oAppearance.material.matrix, Boolean(p_oAppearance.material.repeat), Boolean(p_oAppearance.material.smooth) );
+			p_mcContainer.beginBitmapFill( BitmapData(p_oMaterial.texture), p_oMaterial.matrix, Boolean(p_oMaterial.repeat), Boolean(p_oMaterial.smooth) );
 			// --
-			if( p_oAppearance.lineAttributes )
-				p_mcContainer.lineStyle( p_oAppearance.lineThickness, p_oAppearance.lineColor, p_oAppearance.lineAlpha );
+			if( p_oMaterial.lineAttributes )
+				p_mcContainer.lineStyle( p_oMaterial.lineAttributes.thickness, p_oMaterial.lineAttributes.color, p_oMaterial.lineAttributes.alpha );
 			// --
 			p_mcContainer.moveTo( l_points[0].sx, l_points[0].sy );
 			// --
@@ -86,7 +84,7 @@ class sandy.core.renderer.AffinePolygonRenderer implements IRenderer
 			p_mcContainer.endFill();
 		}
 		// -- we draw the last edge
-		if( p_oAppearance.lineAttributes )
+		if( p_oMaterial.lineAttributes )
 		{
 			p_mcContainer.lineTo( l_points[0].sx, l_points[0].sy );
 		}

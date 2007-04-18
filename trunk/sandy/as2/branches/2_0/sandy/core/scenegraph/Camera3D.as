@@ -147,12 +147,13 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		//
 		while( --l_nLength > -1 )
 		{
-			if( (l_oVertex = l_aPoints[l_nLength]).projected ) continue;
+			l_oVertex = l_aPoints[l_nLength];
+			//if( l_oVertex.projected ) continue;
 			//
 			l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 			l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 			l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
-			l_oVertex.projected = true;
+			//l_oVertex.projected = true;
 		}	
 	}
 

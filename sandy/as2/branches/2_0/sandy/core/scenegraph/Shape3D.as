@@ -188,7 +188,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 			l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 			l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 			l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
-			l_oVertex.projected = false;
+			//l_oVertex.projected = false;
 		}
 		
 		/////////////////////////////////////////////////////
@@ -205,13 +205,21 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		   	// --
 		    if ( l_oFace.visible || !m_bBackFaceCulling) 
 			{
-				// --  a necessary copy
-				l_oFace.cvertices = l_oFace.vertices.concat();
 				if( m_bClipped )
 				{
+					// -- We proceed to a real copy of the original vertices array.
+					l_oFace.cvertices = l_oFace.vertices.concat();
+					var l_nPLength:Number = l_oFace.cvertices.length;
+					while( --l_nPLength>-1) l_oFace.cvertices[l_nPLength] = l_oFace.cvertices[l_nPLength].clone();
+					// -- 
 					l_oFrustum.clipFrustum( l_oFace.cvertices );
+					// -- If there's some vertices, we push them into the vertices to render
 				    if( l_oFace.cvertices.length ) 
 			            l_aPoints = l_aPoints.concat( l_oFace.cvertices );
+			    }
+			    else
+			    {
+			    	l_oFace.cvertices = l_oFace.vertices;//.concat();
 			    }
 			    // --
 				l_nDepth 	= (m_bEnableForcedDepth) ? m_nForcedDepth : l_oFace.getZAverage();

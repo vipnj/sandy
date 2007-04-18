@@ -1,7 +1,8 @@
-import com.bourre.commands.Delegate;
 import com.bourre.data.libs.GraphicLib;
 import com.bourre.data.libs.GraphicLibLocator;
 import com.bourre.log.Logger;
+import com.bourre.transitions.IFrameListener;
+import com.bourre.transitions.MSBeacon;
 import com.bourre.utils.LuminicTracer;
 import com.bourre.visual.FPSLoggerUI;
 
@@ -17,6 +18,7 @@ import sandy.materials.BitmapMaterial;
 import sandy.materials.ColorMaterial;
 import sandy.materials.LineAttributes;
 import sandy.materials.Material;
+import sandy.math.Matrix4Math;
 import sandy.primitive.Box;
 import sandy.primitive.Cone;
 import sandy.primitive.Cylinder;
@@ -27,11 +29,12 @@ import sandy.primitive.Torus;
 import sandy.util.BitmapUtil;
 
 import tests.cubeTest.src.TestCube;
+import com.bourre.transitions.FPSBeacon;
 
 /**
  * @author thomaspfeiffer
  */
-class TestCube 
+class TestCube implements IFrameListener
 {
 	private var _mc:MovieClip;
 	private var _world:World3D;
@@ -46,8 +49,8 @@ class TestCube
 		Logger.getInstance().addLogListener( LuminicTracer.getInstance() );
 		// --
 		var t:TestCube = new TestCube(mc);
-		// -- Does not make things faster in AS2 but does in AS3...
-		//Matrix4Math.USE_FAST_MATH = true;
+		// -- Does not make things a lot faster in AS2 but does in AS3...
+		Matrix4Math.USE_FAST_MATH = true;
 	}
 	
 	public function TestCube( p_oMc:MovieClip )
@@ -74,6 +77,10 @@ class TestCube
 		gl.addEventListener( GraphicLib.onLoadInitEVENT, this, _onReady);
 		gl.load( "texture.jpg" );
 		gl.execute();
+		// -- we register to a pulsing event that simple
+		//MSBeacon.getInstance().setFPS( 120 );
+		MSBeacon.getInstance().addFrameListener( this );
+		//FPSBeacon.getInstance().addFrameListener( this );
 	}
 	
 	private function _onReady( Void ):Void
@@ -86,7 +93,6 @@ class TestCube
 		// --
 		_world.root.addChild( _world.camera );
 		_world.container = _mc;
-		_mc.onEnterFrame = Delegate.create( this, _onRender );
 	}
 	
 	private function _createScene( Void ):Group
@@ -155,7 +161,8 @@ class TestCube
 		return g;
 	}
 	
-	private function _onRender( Void ):Void
+
+	public function onEnterFrame() : Void 
 	{
 		m_tfVertexCount.text = _world.camera['_aVerticesList'].length+" vertices";
 		m_tfPolygonCount.text = _world.camera.renderer.getDisplayListLength()+" polygons";
@@ -171,4 +178,5 @@ class TestCube
 		//_world.camera.lookAt( 0, 0, 500 );
 		_world.render();
 	}
+
 }

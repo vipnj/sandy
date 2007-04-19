@@ -1,0 +1,126 @@
+<?xml version="1.0"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.util.Ease</title><script src="../../quicknav.js" type="text/javascript"></script><script><!--
+document.quicknavBasePath="../../index-files";
+//--></script><link href="../../style.css" title="JavaDoc" rel="stylesheet" type="text/css"/><link href="../../unnatural.css" title="Unnatural" rel="alternate stylesheet" type="text/css"/><link href="../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.util" rel="up"/><link href="../../sandy/util/NumberUtil.html" title="Class sandy.util.NumberUtil" rel="prev"/><link href="../../sandy/util/BitmapUtil.html" title="Class sandy.util.BitmapUtil" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/></head><body><h1>Class sandy.util.Ease</h1><div class="type_hierachy"><ul><li><strong>sandy.util.Ease</strong></li></ul></div><div class="type_description"><h2>Description</h2><p>
+ The Ease class is used to create functions that add an easing to a number value or percentage.
+ Functions created take one numeric parameter t (0-1) and returns an eased version of that value.
+ There are two kinds of Ease methods that are used to define Ease instances.  The first are ease
+ method methods, those which affect the actual ease behavior (ease 'method').  These include methods
+ like sin and circular. The others define the ease type.  These are Ease methods that start with 'easing'
+ and determine whether or not an ease eases in or out or a combination of either. These methods
+ include easingIn and easingInToBackOut.
+ 
+ </p></div><div class="type_indexes"><div class="field_index"><h2>Field Index</h2><a href="#method" title="public method:Function">method</a>, <a href="#type" title="public type:Function">type</a>, <a href="#version" title="static public version:String">version</a></div><div class="method_index"><h2>Method Index</h2><div><code>new <a href="#Ease" title="public function Ease(Void)">Ease()</a></code></div><a href="#bounce" title="public function bounce(b:Number, r:Number, e:Object):Ease">bounce()</a>, <a href="#call" title="public function call(t:Number):Number">call()</a>, <a href="#circular" title="public function circular(Void):Ease">circular()</a>, <a href="#compound" title="static public function compound():Function">compound()</a>, <a href="#create" title="public function create(f:Object):Function">create()</a>, <a href="#cubicBezier" title="public function cubicBezier(c1:Number, c2:Number):Ease">cubicBezier()</a>, <a href="#easingIn" title="public function easingIn(a:Number):Ease">easingIn()</a>, <a href="#easingInToBackIn" title="public function easingInToBackIn(a:Number, c:Number):Ease">easingInToBackIn()</a>, <a href="#easingInToBackOut" title="public function easingInToBackOut(a:Number, c:Number):Ease">easingInToBackOut()</a>, <a href="#easingInToIn" title="public function easingInToIn(a:Number, c:Number):Ease">easingInToIn()</a>, <a href="#easingInToOut" title="public function easingInToOut(a:Number, c:Number):Ease">easingInToOut()</a>, <a href="#easingOut" title="public function easingOut(a:Number):Ease">easingOut()</a>, <a href="#easingOutToBackIn" title="public function easingOutToBackIn(a:Number, c:Number):Ease">easingOutToBackIn()</a>, <a href="#easingOutToBackOut" title="public function easingOutToBackOut(a:Number, c:Number):Ease">easingOutToBackOut()</a>, <a href="#easingOutToIn" title="public function easingOutToIn(a:Number, c:Number):Ease">easingOutToIn()</a>, <a href="#easingOutToOut" title="public function easingOutToOut(a:Number, c:Number):Ease">easingOutToOut()</a>, <a href="#elastic" title="public function elastic(b:Number, r:Number, e:Object):Ease">elastic()</a>, <a href="#exponential" title="public function exponential(p:Number):Ease">exponential()</a>, <a href="#exponentialAnticipate" title="public function exponentialAnticipate(p:Number, a:Number):Ease">exponentialAnticipate()</a>, <a href="#linear" title="public function linear(Void):Ease">linear()</a>, <a href="#quadraticBezier" title="public function quadraticBezier(c:Number):Ease">quadraticBezier()</a>, <a href="#sin" title="public function sin(Void):Ease">sin()</a>, <a href="#sinAnticipate" title="public function sinAnticipate(a:Number):Ease">sinAnticipate()</a></div></div><div class="type_details"><div class="constructor_detail_list"><h2>Constructor Detail</h2><div class="method_details"><a name="Ease"></a><h3>Ease</h3><code class="method_synopsis">public function <strong class="method_name">Ease</strong>(Void)</code><div class="method_info"><p>
+ Constructor: Creates an Ease instance.
+	 </p></div></div></div><div class="field_detail_list"><h2>Field Detail</h2><a name="version"></a><h3>version</h3><div class="field_details"><code class="field_synopsis">static public <strong class="field_name">version</strong>:<span class="unresolved_type_name">String</span></code></div><a name="method"></a><h3>method</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">method</strong>:<span class="unresolved_type_name">Function</span></code><div class="field_info"> Easing method. </div></div><a name="type"></a><h3>type</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">type</strong>:<span class="unresolved_type_name">Function</span></code><div class="field_info"> Ease type (in or out) </div></div></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="compound"></a><h3>compound</h3><code class="method_synopsis">static public function <strong class="method_name">compound</strong>():<span class="unresolved_type_name">Function</span></code><div class="method_info"><p>
+ Compounds multiple ease functions to be called in sequential
+ order as one function
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> A new easing function which will call each function passed in,
+ evenly distributed, in sequential order.
+	 </p></div></div><div class="method_details"><a name="create"></a><h3>create</h3><code class="method_synopsis">public function <strong class="method_name">create</strong>(f:<span class="unresolved_type_name">Object</span>):<span class="unresolved_type_name">Function</span></code><div class="method_info"><p>
+ Creates a function reflective of the easing applied to the Ease instance.
+ The function accepts one parameter, t:Number, and returns the eased version
+ of its value when called.  This function mimics the call() method of Ease.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>f</code></td><td>An additional function the returned function can wrap
+ </td></tr></table><h4>Return</h4><p class="extra_info"> A function which applies a tween to a number passed into it when called.
+	 </p></div></div><div class="method_details alt_row"><a name="call"></a><h3>call</h3><code class="method_synopsis">public function <strong class="method_name">call</strong>(t:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Applies Easing as defined by the Ease instance to the value passed.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>t</code></td><td>A value 0-1 which is to have easing applied to it
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The eased version of the number passed.
+	 </p></div></div><div class="method_details"><a name="easingIn"></a><h3>easingIn</h3><code class="method_synopsis">public function <strong class="method_name">easingIn</strong>(a:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to ease in by a specified amount
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="easingOut"></a><h3>easingOut</h3><code class="method_synopsis">public function <strong class="method_name">easingOut</strong>(a:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to ease out by a specified amount
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="easingInToIn"></a><h3>easingInToIn</h3><code class="method_synopsis">public function <strong class="method_name">easingInToIn</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two easing in eases in succession
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="easingInToOut"></a><h3>easingInToOut</h3><code class="method_synopsis">public function <strong class="method_name">easingInToOut</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two eases in succession, the first easing in, the second easing out
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="easingOutToOut"></a><h3>easingOutToOut</h3><code class="method_synopsis">public function <strong class="method_name">easingOutToOut</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two easing out eases in succession
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="easingOutToIn"></a><h3>easingOutToIn</h3><code class="method_synopsis">public function <strong class="method_name">easingOutToIn</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two eases in succession, the first easing out, the second easing in
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="easingInToBackIn"></a><h3>easingInToBackIn</h3><code class="method_synopsis">public function <strong class="method_name">easingInToBackIn</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two eases in succession, the first easing all the way in,
+ the second easing in back to the the ease start
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="easingInToBackOut"></a><h3>easingInToBackOut</h3><code class="method_synopsis">public function <strong class="method_name">easingInToBackOut</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two eases in succession, the first easing all the way in,
+ the second easing out back to the the ease start
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="easingOutToBackOut"></a><h3>easingOutToBackOut</h3><code class="method_synopsis">public function <strong class="method_name">easingOutToBackOut</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two eases in succession, the first easing all the way out,
+ the second easing out back to the the ease start
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="easingOutToBackIn"></a><h3>easingOutToBackIn</h3><code class="method_synopsis">public function <strong class="method_name">easingOutToBackIn</strong>(a:<span class="unresolved_type_name">Number</span>, c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply two eases in succession, the first easing all the way out,
+ the second easing out in to the the ease start
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>Amount of easing applied to the ease
+ </td></tr><tr><td><code>c</code></td><td>The point at which the first ease changes to the next in percent)
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="linear"></a><h3>linear</h3><code class="method_synopsis">public function <strong class="method_name">linear</strong>(Void):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply linear easing (no easing)
+ </p><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="exponential"></a><h3>exponential</h3><code class="method_synopsis">public function <strong class="method_name">exponential</strong>(p:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply exponential easing
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>p</code></td><td>The exponential power of the easing; the higher the greater the ease
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="exponentialAnticipate"></a><h3>exponentialAnticipate</h3><code class="method_synopsis">public function <strong class="method_name">exponentialAnticipate</strong>(p:<span class="unresolved_type_name">Number</span>, a:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply exponential easing with anticipation (backing up before going forward)
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>p</code></td><td>The exponential power of the easing; the higher the greater the ease
+ </td></tr><tr><td><code>a</code></td><td>(Optional) The anticipation percent factor. The greater, the more the anticipation. Default: .5.
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="sin"></a><h3>sin</h3><code class="method_synopsis">public function <strong class="method_name">sin</strong>(Void):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply easing based on the sine curve
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="sinAnticipate"></a><h3>sinAnticipate</h3><code class="method_synopsis">public function <strong class="method_name">sinAnticipate</strong>(a:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply easing based on the sine curve with anticipation
+ (backing up before going forward)
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>a</code></td><td>(Optional) The anticipation percent factor. The greater, the more the anticipation. Default: .5.
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="circular"></a><h3>circular</h3><code class="method_synopsis">public function <strong class="method_name">circular</strong>(Void):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply circular easing 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="quadraticBezier"></a><h3>quadraticBezier</h3><code class="method_synopsis">public function <strong class="method_name">quadraticBezier</strong>(c:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply easing based on a quadratic bezier curve
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>c</code></td><td>(Optional) Control point placement along 0-1. Default .5.
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="cubicBezier"></a><h3>cubicBezier</h3><code class="method_synopsis">public function <strong class="method_name">cubicBezier</strong>(c1:<span class="unresolved_type_name">Number</span>, c2:<span class="unresolved_type_name">Number</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply easing based on a quadratic bezier curve
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>c1</code></td><td>(Optional) First ontrol point placement along 0-1. Default .25.
+ </td></tr><tr><td><code>c2</code></td><td>(Optional) Second ontrol point placement along 0-1. Default .75.
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details"><a name="bounce"></a><h3>bounce</h3><code class="method_synopsis">public function <strong class="method_name">bounce</strong>(b:<span class="unresolved_type_name">Number</span>, r:<span class="unresolved_type_name">Number</span>, e:<span class="unresolved_type_name">Object</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply a bouncing effect
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>b</code></td><td>(Optional) The number of bounces. Default 1.
+ </td></tr><tr><td><code>r</code></td><td>(Optional) The reduction applied to sequential bounces 0-1. Default 1.
+ </td></tr><tr><td><code>e</code></td><td>(Optional) An Ease instance or ease function to be used for the bounces Default (exponential).
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div><div class="method_details alt_row"><a name="elastic"></a><h3>elastic</h3><code class="method_synopsis">public function <strong class="method_name">elastic</strong>(b:<span class="unresolved_type_name">Number</span>, r:<span class="unresolved_type_name">Number</span>, e:<span class="unresolved_type_name">Object</span>):<a href="../../sandy/util/Ease.html" class="class_name" title="Class sandy.util.Ease">Ease</a></code><div class="method_info"><p>
+ Modifies the Ease to apply an elastic effect
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>b</code></td><td>(Optional) The number of bounces. Default 1.
+ </td></tr><tr><td><code>r</code></td><td>(Optional) The reduction applied to sequential bounces 0-1. Default 1.
+ </td></tr><tr><td><code>e</code></td><td>(Optional) An Ease instance or ease function to be used for the bounces Default (exponential).
+ </td></tr></table><h4>Return</h4><p class="extra_info"> The current Ease instance
+	 </p></div></div></div></div><ul class="main_nav" id="main_nav"><li><a href="../../overview-summary.html" title="Overview of API" class="button">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.util" class="button">Package</a></li><li><span class="button nav_current">Class</span></li><li><a href="../../index-files/index.html" title="Alpabetical index of types and members" class="button">Index</a></li></ul><div class="footer"><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a></div></body></html>

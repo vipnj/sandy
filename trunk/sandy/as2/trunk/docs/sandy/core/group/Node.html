@@ -1,0 +1,70 @@
+<?xml version="1.0"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.core.group.Node</title><script src="../../../quicknav.js" type="text/javascript"></script><script><!--
+document.quicknavBasePath="../../../index-files";
+//--></script><link href="../../../style.css" title="JavaDoc" rel="stylesheet" type="text/css"/><link href="../../../unnatural.css" title="Unnatural" rel="alternate stylesheet" type="text/css"/><link href="../../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.core.group" rel="up"/><link href="../../../sandy/core/group/TransformGroup.html" title="Class sandy.core.group.TransformGroup" rel="prev"/><link href="../../../sandy/core/group/Leaf.html" title="Class sandy.core.group.Leaf" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/></head><body><h1>Class sandy.core.group.Node</h1><div class="type_hierachy"><ul><li><strong>sandy.core.group.Node</strong></li></ul></div><div class="type_description"><h2>Description</h2><p>
+ ABSTRACT CLASS
+ <p>
+ This class is the basis of all the group and Leaf one.
+ It allows all the basic operations you might want to do about trees node.
+ </p>
+ </p></div><div class="type_indexes"><div class="field_index"><h2>Field Index</h2><a href="#name" title="public name:String">name</a></div><div class="method_index"><h2>Method Index</h2><a href="#addChild" title="public function addChild(child:Node):Void">addChild()</a>, <a href="#destroy" title="public function destroy(Void):Void">destroy()</a>, <a href="#getChild" title="public function getChild(index:Number):Node">getChild()</a>, <a href="#getChildByName" title="public function getChildByName(pName:String):Node">getChildByName()</a>, <a href="#getChildFromId" title="public function getChildFromId(id:Number):Node">getChildFromId()</a>, <a href="#getChildList" title="public function getChildList(Void):Array">getChildList()</a>, <a href="#getId" title="public function getId(Void):Number">getId()</a>, <a href="#getParent" title="public function getParent(Void):Node">getParent()</a>, <a href="#hasParent" title="public function hasParent(Void):Boolean">hasParent()</a>, <a href="#isModified" title="public function isModified(Void):Boolean">isModified()</a>, <a href="#isParent" title="public function isParent(n:Node):Boolean">isParent()</a>, <a href="#remove" title="public function remove(Void):Void">remove()</a>, <a href="#removeChildById" title="public function removeChildById(pId:Number):Boolean">removeChildById()</a>, <a href="#removeChildByName" title="public function removeChildByName(pName:String):Boolean">removeChildByName()</a>, <a href="#setModified" title="public function setModified(b:Boolean):Void">setModified()</a>, <a href="#setParent" title="public function setParent(n:Node):Boolean">setParent()</a></div></div><div class="type_details"><div class="field_detail_list"><h2>Field Detail</h2><a name="name"></a><h3>name</h3><div class="field_details"><code class="field_synopsis">public <strong class="field_name">name</strong>:<span class="unresolved_type_name">String</span></code></div></div><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="getId"></a><h3>getId</h3><code class="method_synopsis">public function <strong class="method_name">getId</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Retuns the unique ID Number that represents the node.
+ This value is very usefull to retrieve a specific Node.
+ This method is FINAL, IT MUST NOT BE OVERLOADED.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info">	Number the node ID.
+	</p></div></div><div class="method_details"><a name="isParent"></a><h3>isParent</h3><code class="method_synopsis">public function <strong class="method_name">isParent</strong>(n:<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Say is the node is the parent of the current node.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>n</code></td><td>The Node you are going to test the patternity
+ </td></tr></table><h4>Return</h4><p class="extra_info"> Boolean  True is the node in argument if the father of the current one, false otherwise.
+	</p></div></div><div class="method_details alt_row"><a name="isModified"></a><h3>isModified</h3><code class="method_synopsis">public function <strong class="method_name">isModified</strong>(Void):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Allows you to know if this node has been modified (true value) or not (false value). 
+ Mainly useful for the cache system.
+ </p><h4>Return</h4><p class="extra_info">	Boolean Value specifying the status of the node. A true value means the node has been modified, it it should be rendered again
+	</p></div></div><div class="method_details"><a name="setModified"></a><h3>setModified</h3><code class="method_synopsis">public function <strong class="method_name">setModified</strong>(b:<span class="unresolved_type_name">Boolean</span>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Allows you to set the modified property of the node.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>b</code></td><td>Boolean true means the node is modified, and false the opposite.
+	</td></tr></table></div></div><div class="method_details alt_row"><a name="setParent"></a><h3>setParent</h3><code class="method_synopsis">public function <strong class="method_name">setParent</strong>(n:<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Set the parent of a node
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info">	Boolean false is nothing has been done, true if the operation succeded
+	</p></div></div><div class="method_details"><a name="getParent"></a><h3>getParent</h3><code class="method_synopsis">public function <strong class="method_name">getParent</strong>(Void):<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a></code><div class="method_info"><p>
+ Returns the parent node reference
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Node The parent node reference, which is null if no parents (for exemple for a root object).
+	</p></div></div><div class="method_details alt_row"><a name="hasParent"></a><h3>hasParent</h3><code class="method_synopsis">public function <strong class="method_name">hasParent</strong>(Void):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Allows the user to know if the current node have a parent or not.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Boolean. True is the node has a parent, False otherwise
+	</p></div></div><div class="method_details"><a name="addChild"></a><h3>addChild</h3><code class="method_synopsis">public function <strong class="method_name">addChild</strong>(child:<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Add a new child to this group. a basicGroup can have several childs, and when you add a child to a group, 
+ the child is automatically conencted to it's parent thanks to its parent property.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>child</code></td><td></td></tr></table></div></div><div class="method_details alt_row"><a name="getChildList"></a><h3>getChildList</h3><code class="method_synopsis">public function <strong class="method_name">getChildList</strong>(Void):<span class="unresolved_type_name">Array</span></code><div class="method_info"><p>
+ Returns all the childs of the current group in an array
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Array The array containing all the childs node of this group
+	 </p></div></div><div class="method_details"><a name="getChild"></a><h3>getChild</h3><code class="method_synopsis">public function <strong class="method_name">getChild</strong>(index:<span class="unresolved_type_name">Number</span>):<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a></code><div class="method_info"><p>
+ Returns the child node at the specific index.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>index</code></td><td>Number The ID of the child you want to get
+ </td></tr></table><h4>Return</h4><p class="extra_info"> 	Node The desired Node
+	</p></div></div><div class="method_details alt_row"><a name="getChildFromId"></a><h3>getChildFromId</h3><code class="method_synopsis">public function <strong class="method_name">getChildFromId</strong>(id:<span class="unresolved_type_name">Number</span>):<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a></code><div class="method_info"><p>
+ Returns the child node with the specified ID
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> 	Node The desired Node or null is no child with this ID has been found
+	</p></div></div><div class="method_details"><a name="getChildByName"></a><h3>getChildByName</h3><code class="method_synopsis">public function <strong class="method_name">getChildByName</strong>(pName:<span class="unresolved_type_name">String</span>):<a href="../../../sandy/core/group/Node.html" class="class_name" title="Class sandy.core.group.Node">Node</a></code><div class="method_info"><p>
+ Returns the child node with the specified name
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> 	Node The desired Node or null is no child with this name has been found
+	</p></div></div><div class="method_details alt_row"><a name="removeChildById"></a><h3>removeChildById</h3><code class="method_synopsis">public function <strong class="method_name">removeChildById</strong>(pId:<span class="unresolved_type_name">Number</span>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
+ All the children of the node you want to remove are lost. The link between them and the rest of the tree is broken.
+ They will not be rendered anymore!
+ But the object itself and his children are still in memory! If you want to free them completely, use child.destroy();
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> Boolean True if the node has been removed from the list, false otherwise.
+	</p></div></div><div class="method_details"><a name="removeChildByName"></a><h3>removeChildByName</h3><code class="method_synopsis">public function <strong class="method_name">removeChildByName</strong>(pName:<span class="unresolved_type_name">String</span>):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
+ All the children of the node you want to remove are lost. The link between them and the rest of the tree is broken.
+ They will not be rendered anymore!
+ But the object itself and his children are still in memory! If you want to free them completely, use child.destroy();
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> Boolean True if the node has been removed from the list, false otherwise.
+	</p></div></div><div class="method_details alt_row"><a name="destroy"></a><h3>destroy</h3><code class="method_synopsis">public function <strong class="method_name">destroy</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Delete all the childs of this node, and also the datas it is actually storing.
+ Do a recursive call to child's destroy method.
+	 </p></div></div><div class="method_details"><a name="remove"></a><h3>remove</h3><code class="method_synopsis">public function <strong class="method_name">remove</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Remove the current node on the tree.
+ It makes current node children the children of the current parent node.
+ The interest of this paramater is that it allows you to update the World3D only once during your destroy/remove call!
+	 </p></div></div></div></div><ul class="main_nav" id="main_nav"><li><a href="../../../overview-summary.html" title="Overview of API" class="button">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.core.group" class="button">Package</a></li><li><span class="button nav_current">Class</span></li><li><a href="../../../index-files/index.html" title="Alpabetical index of types and members" class="button">Index</a></li></ul><div class="footer"><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a></div></body></html>

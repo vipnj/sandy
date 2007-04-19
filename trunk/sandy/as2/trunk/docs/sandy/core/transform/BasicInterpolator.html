@@ -1,0 +1,90 @@
+<?xml version="1.0"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>sandy.core.transform.BasicInterpolator</title><script src="../../../quicknav.js" type="text/javascript"></script><script><!--
+document.quicknavBasePath="../../../index-files";
+//--></script><link href="../../../style.css" title="JavaDoc" rel="stylesheet" type="text/css"/><link href="../../../unnatural.css" title="Unnatural" rel="alternate stylesheet" type="text/css"/><link href="../../../overview-summary.html" title="Overview" rel="top"/><link href="package-summary.html" title="Package sandy.core.transform" rel="up"/><link href="../../../sandy/core/transform/Interpolator3D.html" title="Interface sandy.core.transform.Interpolator3D" rel="prev"/><link href="../../../sandy/core/Sprite3D.html" title="Class sandy.core.Sprite3D" rel="next"/><meta name="generator" content="http://www.badgers-in-foil.co.uk/projects/as2api/"/></head><body><h1>Class sandy.core.transform.BasicInterpolator</h1><div class="type_hierachy"><ul><li><strong>sandy.core.transform.BasicInterpolator</strong></li></ul></div><div class="type_description"><h2>Description</h2><p>
+ </p></div><div class="type_indexes"><div class="method_index"><h2>Method Index</h2><a href="#addEventListener" title="public function addEventListener(t:String, oL):Void">addEventListener()</a>, <a href="#broadcastEvent" title="public function broadcastEvent(e:IEvent):Void">broadcastEvent()</a>, <a href="#destroy" title="public function destroy(Void):Void">destroy()</a>, <a href="#dispatchEvent" title="public function dispatchEvent(o:Object):Void">dispatchEvent()</a>, <a href="#getDuration" title="public function getDuration(Void):Number">getDuration()</a>, <a href="#getDurationElapsed" title="public function getDurationElapsed(Void):Number">getDurationElapsed()</a>, <a href="#getDurationRemaining" title="public function getDurationRemaining(Void):Number">getDurationRemaining()</a>, <a href="#getFrame" title="public function getFrame(Void):Number">getFrame()</a>, <a href="#getMatrix" title="public function getMatrix(Void):Matrix4">getMatrix()</a>, <a href="#getPercent" title="public function getPercent(Void):Number">getPercent()</a>, <a href="#getProgress" title="public function getProgress(Void):Number">getProgress()</a>, <a href="#getType" title="public function getType(Void):TransformType">getType()</a>, <a href="#isFinished" title="public function isFinished(Void):Boolean">isFinished()</a>, <a href="#isModified" title="public function isModified(Void):Boolean">isModified()</a>, <a href="#isPaused" title="public function isPaused(Void):Boolean">isPaused()</a>, <a href="#pause" title="public function pause(Void):Void">pause()</a>, <a href="#redo" title="public function redo(Void):Void">redo()</a>, <a href="#removeEventListener" title="public function removeEventListener(t:String, oL):Void">removeEventListener()</a>, <a href="#resume" title="public function resume(Void):Void">resume()</a>, <a href="#setDuration" title="public function setDuration(t:Number):Void">setDuration()</a>, <a href="#setModified" title="public function setModified(b:Boolean):Void">setModified()</a>, <a href="#yoyo" title="public function yoyo(Void):Void">yoyo()</a></div></div><div class="type_details"><div class="method_detail_list"><h2>Method Detail</h2><div class="method_details alt_row"><a name="pause"></a><h3>pause</h3><code class="method_synopsis">public function <strong class="method_name">pause</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Make a pause in the Interpolation. You can continue the motion later with resume method.
+ Broadcast an InterpolationEvent.
+	 </p></div></div><div class="method_details"><a name="resume"></a><h3>resume</h3><code class="method_synopsis">public function <strong class="method_name">resume</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Resume the motion after it was paused. Broadcast an InterpolationEvent.
+	 </p></div></div><div class="method_details alt_row"><a name="redo"></a><h3>redo</h3><code class="method_synopsis">public function <strong class="method_name">redo</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ redo
+ <p>Make the interpolation starting again</p>
+	</p></div></div><div class="method_details"><a name="yoyo"></a><h3>yoyo</h3><code class="method_synopsis">public function <strong class="method_name">yoyo</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ yoyo
+ <p>Make the interpolation going in the inversed way</p>
+	</p></div></div><div class="method_details alt_row"><a name="getFrame"></a><h3>getFrame</h3><code class="method_synopsis">public function <strong class="method_name">getFrame</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"></div></div><div class="method_details"><a name="getPercent"></a><h3>getPercent</h3><code class="method_synopsis">public function <strong class="method_name">getPercent</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Returns the percent of the interpolator. 0 is the beginning, and 100 is the end.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> a Number between [0-100] corresponding on the percentage of the interpolation progress.
+	</p></div></div><div class="method_details alt_row"><a name="getProgress"></a><h3>getProgress</h3><code class="method_synopsis">public function <strong class="method_name">getProgress</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"><p>
+ Returns the progress of the interpolator. 0 is the beginning, and 1 is the end.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> a Number between [0-1] corresponding on the interpolation progress.
+	</p></div></div><div class="method_details"><a name="getType"></a><h3>getType</h3><code class="method_synopsis">public function <strong class="method_name">getType</strong>(Void):<a href="../../../sandy/core/transform/TransformType.html" class="class_name" title="Class sandy.core.transform.TransformType">TransformType</a></code><div class="method_info"><p>
+ Returns the type of the interpolation. 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> TransformType the type of the interpolation
+	</p></div></div><div class="method_details alt_row"><a name="setDuration"></a><h3>setDuration</h3><code class="method_synopsis">public function <strong class="method_name">setDuration</strong>(t:<span class="unresolved_type_name">Number</span>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ set the interpolation duration in number of frames. Could be lower than 5!
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""></table><h4>Return</h4><p class="extra_info"> Void
+	 </p></div></div><div class="method_details"><a name="getDuration"></a><h3>getDuration</h3><code class="method_synopsis">public function <strong class="method_name">getDuration</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"></div></div><div class="method_details alt_row"><a name="getDurationElapsed"></a><h3>getDurationElapsed</h3><code class="method_synopsis">public function <strong class="method_name">getDurationElapsed</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"></div></div><div class="method_details"><a name="getDurationRemaining"></a><h3>getDurationRemaining</h3><code class="method_synopsis">public function <strong class="method_name">getDurationRemaining</strong>(Void):<span class="unresolved_type_name">Number</span></code><div class="method_info"></div></div><div class="method_details alt_row"><a name="destroy"></a><h3>destroy</h3><code class="method_synopsis">public function <strong class="method_name">destroy</strong>(Void):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Destroy the transformation instance and remove all its listeners.
+ Shall be implemented in the derivated classes.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table></div></div><div class="method_details"><a name="addEventListener"></a><h3>addEventListener</h3><code class="method_synopsis">public function <strong class="method_name">addEventListener</strong>(t:<span class="unresolved_type_name">String</span>, oL):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Adds passed-in <code> oL</code> listener for receiving passed-in <code> t</code> event type.
+ 
+ <p>Take a look at example below to see all possible method call.
+ 
+ <p>Example
+ <code>
+   var oEB : IEventDispatcher = new EventBroadcaster(this);
+   oEB.addEventListener( myClass.onSometingEVENT, myFirstObject);
+   oEB.addEventListener( myClass.onSometingElseEVENT, this, __onSomethingElse);
+   oEB.addEventListener( myClass.onSometingElseEVENT, this, Delegate.create(this, __onSomething) );
+ </code>
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>t</code></td><td>Name of the Event.
+ </td></tr><tr><td><code>oL</code></td><td>Listener object.
+	 </td></tr></table></div></div><div class="method_details alt_row"><a name="removeEventListener"></a><h3>removeEventListener</h3><code class="method_synopsis">public function <strong class="method_name">removeEventListener</strong>(t:<span class="unresolved_type_name">String</span>, oL):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Removes passed-in <code> oL</code> listener that suscribed for passed-in <code> t</code> event.
+ 
+ <p>Example
+ <code>
+   var oEB : IEventDispatcher = new EventBroadcaster(this);
+   oEB.removeEventListener( myClass.onSometingEVENT, myFirstObject);
+   oEB.removeEventListener( myClass.onSometingElseEVENT, this);
+ </code>
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>t</code></td><td>Name of the Event.
+ </td></tr><tr><td><code>oL</code></td><td>Listener object.
+	 </td></tr></table></div></div><div class="method_details"><a name="dispatchEvent"></a><h3>dispatchEvent</h3><code class="method_synopsis">public function <strong class="method_name">dispatchEvent</strong>(o:<span class="unresolved_type_name">Object</span>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Wrapper for Macromedia <code> EventDispatcher</code> polymorphism.
+ 
+ <p>Example
+ <code>
+   var oEB : IEventDispatcher = new EventBroadcaster(this);
+   oEB.dispatchEvent( {type:'onSomething', target:this, param:12} );
+ </code>
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>o</code></td><td>Event object.
+	 </td></tr></table></div></div><div class="method_details alt_row"><a name="broadcastEvent"></a><h3>broadcastEvent</h3><code class="method_synopsis">public function <strong class="method_name">broadcastEvent</strong>(e:<span class="unresolved_type_name">IEvent</span>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Broadcasts event to suscribed listeners.
+ 
+ <p>Example using full Pixlib API
+ <code>
+   var oEB : IEventDispatcher = new EventBroadcaster(this);
+   var e : IEvent = new BasicEvent( myClass.onSomeThing, this);
+   
+   oEB.addEventListener( myClass.onSomeThing, this);
+   oEB.broadcastEvent( e );
+ </code>
+ 
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>e</code></td><td>an <span class="unresolved_type_name">IEvent</span> instance
+	 </td></tr></table></div></div><div class="method_details"><a name="getMatrix"></a><h3>getMatrix</h3><code class="method_synopsis">public function <strong class="method_name">getMatrix</strong>(Void):<a href="../../../sandy/core/data/Matrix4.html" class="class_name" title="Class sandy.core.data.Matrix4">Matrix4</a></code><div class="method_info"><p>
+ Returns the associated matrix.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Matrix4 The matrix of the transform3D associated to the interpolator.
+	</p></div></div><div class="method_details alt_row"><a name="isModified"></a><h3>isModified</h3><code class="method_synopsis">public function <strong class="method_name">isModified</strong>(Void):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"><p>
+ Allows you to know if the transformation has been modified.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>Void</code></td><td></td></tr></table><h4>Return</h4><p class="extra_info"> Boolean True if the transformation has been modified, false otherwise.
+	</p></div></div><div class="method_details"><a name="setModified"></a><h3>setModified</h3><code class="method_synopsis">public function <strong class="method_name">setModified</strong>(b:<span class="unresolved_type_name">Boolean</span>):<span class="void_name">Void</span></code><div class="method_info"><p>
+ Set the transformation as modified or not. Very usefull for the cache transformation system.
+ </p><h4>Parameters</h4><table class="arguments extra_info" summary=""><tr><td><code>b</code></td><td>Boolean True value means the transformation has been modified, and false the opposite.
+	</td></tr></table></div></div><div class="method_details alt_row"><a name="isFinished"></a><h3>isFinished</h3><code class="method_synopsis">public function <strong class="method_name">isFinished</strong>(Void):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"></div></div><div class="method_details"><a name="isPaused"></a><h3>isPaused</h3><code class="method_synopsis">public function <strong class="method_name">isPaused</strong>(Void):<span class="unresolved_type_name">Boolean</span></code><div class="method_info"></div></div></div></div><ul class="main_nav" id="main_nav"><li><a href="../../../overview-summary.html" title="Overview of API" class="button">Overview</a></li><li><a href="package-summary.html" title="Overview of package sandy.core.transform" class="button">Package</a></li><li><span class="button nav_current">Class</span></li><li><a href="../../../index-files/index.html" title="Alpabetical index of types and members" class="button">Index</a></li></ul><div class="footer"><a href="http://www.badgers-in-foil.co.uk/projects/as2api/" title="ActionScript 2 API Documentation Generator">as2api</a></div></body></html>

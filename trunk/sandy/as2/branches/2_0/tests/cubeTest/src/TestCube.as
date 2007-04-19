@@ -29,7 +29,6 @@ import sandy.primitive.Torus;
 import sandy.util.BitmapUtil;
 
 import tests.cubeTest.src.TestCube;
-import com.bourre.transitions.FPSBeacon;
 
 /**
  * @author thomaspfeiffer
@@ -41,8 +40,6 @@ class TestCube implements IFrameListener
 	private var box:Box;
 	private var hedra:Hedra;
 	var tgRotation:TransformGroup;
-	private var m_tfPolygonCount:TextField;
-	private var m_tfVertexCount:TextField;
 	
 	public static function main( mc:MovieClip ):Void
 	{
@@ -56,11 +53,6 @@ class TestCube implements IFrameListener
 	public function TestCube( p_oMc:MovieClip )
 	{
 		_mc = p_oMc;
-		m_tfPolygonCount = _mc.createTextField("polygonCount", -1, 400, 20, 70, 20 );
-		m_tfPolygonCount.border = true;
-		
-		m_tfVertexCount = _mc.createTextField("vertexCount", -2, 400, 40, 70, 20 );
-		m_tfVertexCount.border = true;
 		
 		var fpsUI:FPSLoggerUI = new FPSLoggerUI( _mc, -3 );
 		//
@@ -164,9 +156,6 @@ class TestCube implements IFrameListener
 
 	public function onEnterFrame() : Void 
 	{
-		m_tfVertexCount.text = _world.camera['_aVerticesList'].length+" vertices";
-		m_tfPolygonCount.text = _world.camera.renderer.getDisplayListLength()+" polygons";
-		// --
 		tgRotation.rotateY ++;
 		//box.pan += 0.5;
 		box.rotateX += 0.5;

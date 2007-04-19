@@ -30,8 +30,9 @@ import sandy.view.Viewport;
 * Camera3D
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
-* @version		1.2.1
-* @date 		22.03.2007
+* @since		1.0
+* @version		1.2.2
+* @date 		18.04.2007
 **/
 class sandy.view.Camera3D 
 {
@@ -45,8 +46,8 @@ class sandy.view.Camera3D
 	/**
 	 * Create a new Camera3D.
 	 * The default camera projection is the perspective one with default parameters values.
-	 * @param nFoc The focal of the Camera3D
-	 * @param s the screen associated to the camera
+	 * @param w Number The width of the screen
+	 * @param h Number The height of the screen
 	 */
 	public function Camera3D( p_nWidth:Number, p_nHeight:Number )
 	{
@@ -321,6 +322,12 @@ class sandy.view.Camera3D
 		return _nYaw;
 	}
 	
+	
+	public function getFov( Void ):Number
+	{
+		return _nFovY;
+	}
+	
 	/**
 	* Set the position of the camera. Basically apply a translation.
 	* @param x x position of the camera
@@ -502,6 +509,7 @@ class sandy.view.Camera3D
 		// --
 		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
 		
+		_nFovY = fovY;
 		fovY = NumberUtil.toRadian( fovY );
 		cotan = 1 / Math.tan(fovY / 2);
 		Q = zFar/(zFar - zNear);
@@ -592,7 +600,7 @@ class sandy.view.Camera3D
 	/**
 	 * Nodal Distance of camera ( and not Focal ;) )
 	 */
-	private var _nFocal : Number;
+	private var _nFocal : Number; // Not used?
 	
 	/**
 	 * current tilt value
@@ -619,4 +627,7 @@ class sandy.view.Camera3D
 	* The interpolator
 	*/
 	private var _oInt:Interpolator3D;
+	
+	// The field-of-view
+	private var _nFovY;
 }

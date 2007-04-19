@@ -139,17 +139,15 @@ class sandy.core.World3D
 		if( root && camera && _container )
 		{
 			_oEB.broadcastEvent( _eOnRender );
-			// -- init
-            camera.renderer.init();
 			// --
 			root.update( null, false );
 			root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
-			root.render( camera, null, false );
+			root.render( camera );
 			// --
 			camera.project();
 			// -- clear the polygon's container and the projection vertices list
-            camera.renderer.clear();
-            camera.renderer.render();
+            camera.clearDisplayList();
+            camera.renderDisplayList();
 		}
 	} // end method
 

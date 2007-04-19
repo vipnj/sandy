@@ -28,6 +28,7 @@ import sandy.materials.Appearance;
 import sandy.math.VectorMath;
 import sandy.view.Frustum;
 import com.bourre.log.Logger;
+import sandy.core.face.PolygonType;
 
 
 /**
@@ -55,6 +56,7 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public var backfaceCulling:Number;
 // _______
 // PRIVATE_______________________________________________________			
+
 	/** Reference to its owner geometry */
 	private var m_oGeometry:Geometry3D;
 	private var m_oAppearance:Appearance;
@@ -64,8 +66,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	private var mouseEvents:Boolean;
 	/** Unique face id */
 	private var id:Number;
-	/** Matrix speeding up texturing */
-	private var textureMatrix:Matrix;
 	
 	public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number )
 	{
@@ -80,6 +80,34 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
 		container = World3D.getInstance().container.createEmptyMovieClip( id.toString(), id );
+	}
+
+
+	/**
+	 * visible 
+	 * <p>Say if the face is visible or not</p>
+	 * @param Void
+	 * @return a Boolean, true if visible, false otherwise
+	 */	
+	public function get visible(): Boolean
+	{
+		// all normals are refreshed every loop. Face is visible is normal face to the camera
+		return ( backfaceCulling ) * ( normal.wz ) <= 0;
+	}
+	
+	public function clip( p_oFrustum:Frustum ):Void
+	{
+		cvertices = vertices.concat();
+		var l_nPLength:Number = cvertices.length;
+		while( --l_nPLength>-1) cvertices[l_nPLength] = vertices[l_nPLength].clone2();
+		// -- 
+		p_oFrustum.clipFrustum( cvertices );
+	}
+	
+	public function render():Void
+	{
+		if( visible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
+		else			m_oAppearance.backMaterial.renderPolygon( this );
 	}
 	
 	/**
@@ -114,6 +142,7 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		}
 	}
 	
+
 	
 	/**
 	 * Return the depth average of the face.
@@ -167,18 +196,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 			container.removeEventListener(MouseEvent.ROLL_OUT, this, _onRollOut);
     	}
     	mouseEvents = b;
-	}
-
-	/**
-	 * visible 
-	 * <p>Say if the face is visible or not</p>
-	 * @param Void
-	 * @return a Boolean, true if visible, false otherwise
-	 */	
-	public function get visible(): Boolean
-	{
-		// all normals are refreshed every loop. Face is visible is normal face to the camera
-		return ( backfaceCulling * normal.wz ) < 0;
 	}
 
 	/**

@@ -309,6 +309,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	public function set rotateX ( nAngle:Number )
 	{
 		changed = true;
+		/*
 		var l_nAngle:Number = (nAngle + 360)%360 - _vRotation.x;
 		// --
 		var m:Matrix4 = Matrix4Math.rotationX( l_nAngle );
@@ -316,6 +317,8 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
+		 * 
+		 */
 		_vRotation.x = nAngle;
 		transform.type = TransformType.ROTATION;
 	}
@@ -332,6 +335,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	 */
 	public function set rotateY ( nAngle:Number )
 	{
+		/*
 		var l_nAngle:Number = (nAngle + 360)%360 - _vRotation.y;
 		// --
 		var m:Matrix4 = Matrix4Math.rotationY ( l_nAngle );
@@ -339,6 +343,8 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
+		 * 
+		 */
 		_vRotation.y = nAngle;
 		changed = true;
 		transform.type = TransformType.ROTATION;
@@ -357,6 +363,7 @@ class sandy.core.scenegraph.ATransformable extends Node
 	public function set rotateZ ( nAngle:Number )
 	{
 		changed = true;
+		/*
 		var l_nAngle:Number = (nAngle + 360)%360 - _vRotation.z;
 		// --
 		var m:Matrix4 = Matrix4Math.rotationZ ( l_nAngle );
@@ -364,6 +371,8 @@ class sandy.core.scenegraph.ATransformable extends Node
 		_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 		_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 		// --
+		 * 
+		 */
 		_vRotation.z = nAngle;
 		transform.type = TransformType.ROTATION;
 	}	

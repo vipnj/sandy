@@ -91,7 +91,12 @@ class sandy.core.data.Vertex extends Vector
 	    l_oV.wz = wz;    l_oV.sz = sz;
 	    return l_oV;
 	}
-	
+
+	public function clone2():Vertex
+	{
+	    return new Vertex( wx, wy, wz );
+	}
+		
 	static public function createFromVector( p_v:Vector ):Vertex
 	{
 	    return new Vertex( p_v.x, p_v.y, p_v.z );

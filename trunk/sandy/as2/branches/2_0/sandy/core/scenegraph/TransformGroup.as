@@ -19,7 +19,7 @@ import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.ITransformable;
 import sandy.core.scenegraph.Node;
-import sandy.math.VectorMath;
+import sandy.math.Matrix4Math;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
 
@@ -105,23 +105,29 @@ class sandy.core.scenegraph.TransformGroup  extends ATransformable implements IT
 	{
 		if( changed )
 		{
+			/*
 			var mt:Matrix4 = m_tmpMt;
 			mt.n11 = _vSide.x; 
 			mt.n12 = _vUp.x; 
 			mt.n13 = _vOut.x; 
-			mt.n14 = VectorMath.dot( _vSide, _p);//.x;
+			mt.n14 = _p.x;//VectorMath.dot( _vSide, _p);
 			
 			mt.n21 = _vSide.y; 
 			mt.n22 = _vUp.y; 
 			mt.n23 = _vOut.y; 
-			mt.n24 = VectorMath.dot( _vUp, _p);//.y;
+			mt.n24 = _p.y;//VectorMath.dot( _vUp, _p);
 			
 			mt.n31 = _vSide.z; 
 			mt.n32 = _vUp.z; 
 			mt.n33 = _vOut.z; 
-			mt.n34 = VectorMath.dot( _vOut, _p);//.z;
+			mt.n34 = _p.z;//VectorMath.dot( _vOut, _p);
 			
 			transform.matrix = mt;
+			*/
+			transform.matrix = Matrix4Math.eulerRotation( _vRotation.x, _vRotation.y, _vRotation.z );
+			transform.matrix.n14 = _p.x;
+			transform.matrix.n24 = _p.y;
+			transform.matrix.n34 = _p.z;
 		}
 	}
 		

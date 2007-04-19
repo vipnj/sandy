@@ -1,6 +1,5 @@
 
     
-import com.bourre.events.BasicEvent;
 import com.bourre.events.EventBroadcaster;
 
 import sandy.bounds.BBox;
@@ -14,10 +13,9 @@ import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.ITransformable;
 import sandy.events.MouseEvent;
 import sandy.materials.Appearance;
-import sandy.math.VectorMath;
+import sandy.math.Matrix4Math;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
-import com.bourre.log.Logger;
 
 class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransformable
 { 
@@ -84,6 +82,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	{
 		if( changed )
 		{
+			/*
 			var mt:Matrix4 = m_tmpMt;
 			mt.n11 = _vSide.x; 
 			mt.n12 = _vUp.x; 
@@ -101,6 +100,11 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 			mt.n34 = _p.z;//VectorMath.dot( _vOut, _p);
 			
 			transform.matrix = mt;
+			*/
+			transform.matrix = Matrix4Math.eulerRotation( _vRotation.x, _vRotation.y, _vRotation.z );
+			transform.matrix.n14 = _p.x;
+			transform.matrix.n24 = _p.y;
+			transform.matrix.n34 = _p.z;
 		}
 	}
 	
@@ -148,9 +152,9 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		var l_nDepth:Number;
 		var l_oFace:Polygon;
 		var l_oVertex:Vertex;
+		var l_oNormal:Vertex;
 		var l_nLength:Number;
 		//--
-		var l_aPoints:Array = m_oGeometry.aVertex;
         var l_oMatrix:Matrix4 = _oViewCacheMatrix;
        	// --
        	var l_faces:Array = aPolygons;
@@ -168,20 +172,21 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		// If necessary we transform the normals vectors
 		if( m_bBackFaceCulling || m_oAppearance.needNormals )
 		{
+			// Now we can transform the objet vertices into the camera coordinates	
 		    var l_aNormals:Array = m_oGeometry.aFacesNormals;
 		    l_nLength = l_aNormals.length;
-		    // Now we can transform the objet vertices into the camera coordinates	
 			while( --l_nLength > -1 )
 			{
-				l_oVertex = l_aNormals[l_nLength];
-				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+				l_oNormal = l_aNormals[l_nLength];
+				l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
+				l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
+				l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
 			}
 		}
 		
-		l_nLength = l_aPoints.length;
 		// Now we can transform the objet vertices into the camera coordinates	
+		var l_aPoints:Array = m_oGeometry.aVertex;
+		l_nLength = l_aPoints.length;
 		while( --l_nLength > -1 )
 		{
 			l_oVertex = l_aPoints[l_nLength];
@@ -208,22 +213,24 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 				if( m_bClipped )
 				{
 					// -- We proceed to a real copy of the original vertices array.
-					l_oFace.cvertices = l_oFace.vertices.concat();
-					var l_nPLength:Number = l_oFace.cvertices.length;
-					while( --l_nPLength>-1) l_oFace.cvertices[l_nPLength] = l_oFace.cvertices[l_nPLength].clone();
-					// -- 
-					l_oFrustum.clipFrustum( l_oFace.cvertices );
+					l_oFace.clip( l_oFrustum );
 					// -- If there's some vertices, we push them into the vertices to render
 				    if( l_oFace.cvertices.length ) 
 			            l_aPoints = l_aPoints.concat( l_oFace.cvertices );
 			    }
 			    else
 			    {
-			    	l_oFace.cvertices = l_oFace.vertices;//.concat();
+					// --
+			    	l_oFace.cvertices = l_oFace.vertices;
 			    }
 			    // --
-				l_nDepth 	= (m_bEnableForcedDepth) ? m_nForcedDepth : l_oFace.getZAverage();
-				if( l_nDepth )	p_oCamera.renderer.addToDisplayList( l_oFace, l_nDepth );
+				l_nDepth = l_oFace.getZAverage();
+				// -- if the object is set at a specific depth we cange it, but add a small value that makes the sorting more accurate
+				if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth + l_nDepth/1000;
+				// we set the polygon to this depth (multiplied by 1000 to avoid the problem of 2 polygons at the same depth
+				l_oFace.container.swapDepths( 1000000000 - int(1000*l_nDepth) );
+				// --
+				if( l_nDepth )	p_oCamera.addToDisplayList( l_oFace );
 			}
 		}
 		// -- We push the vertex to project onto the viewport.
@@ -243,17 +250,11 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 			while( --l > -1 )
 			{
 				l_faces[int(l)].appearance = m_oAppearance;
-				l_faces[int(l)].updateTextureMatrix();
 			}
 		}
 	}
 	
-	/**
-	* Returns the skin instance used by this object.
-	* Be carefull, if your object faces have some skins some specific skins, this method is not able to give you this information.
-	* @param	void
-	* @return 	Skin the skin object
-	*/
+
 	public function get appearance():Appearance 
 	{
 		return m_oAppearance;
@@ -265,8 +266,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		// TODO shall we clone the geometry?
 		m_oGeometry = p_geometry;
 		updateBoundingVolumes();
-		// update the skin
-		//skin = _s ;
+		// --
 		__destroy();
 		__generate( m_oGeometry );
 	}

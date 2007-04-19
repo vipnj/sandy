@@ -24,7 +24,7 @@ import sandy.materials.MaterialType;
 /**
  * ABSTRACT CLASS
  * <p>
- * This class is the basis of all the skins. It is abstract so that mean you can't instanciate this class.
+ * This class is the basis of all the skins. It is abstract so that mean you can't instanciate this class directly.
  * </p>
  * @author		Thomas Pfeiffer - kiroukou
  * @version		2.0
@@ -36,27 +36,24 @@ class sandy.materials.Material
 	public function get id():Number
 	{return _id;}
 	
-	
+
+	function renderPolygon( p_oPolygon:Polygon ):Void
+	{
+		;
+	}
+		
 	public function init( f:Polygon ):Void
 	{
 		;
 	}
+
 	
 	/**
-	 * Start the rendering of the Skin
-	 * @param f	The face which is being rendered
+	 * Returns the type of SKin you are using.
+	 * For the BasicSkin class, this value is set to NONE
+	 * @param	Void
+	 * @return SkinType The type constant which represents your skin.
 	 */
-	public function prepare( f:Polygon ):Void
-	{
-		;
-	}
-	
-	/**
-	* Returns the type of SKin you are using.
-	* For the BasicSkin class, this value is set to NONE
-	* @param	Void
-	* @return SkinType The type constant which represents your skin.
-	*/
 	public function get type():MaterialType
 	{ return MaterialType.NONE; }
 	
@@ -75,18 +72,18 @@ class sandy.materials.Material
 	}
 	
 	/**
-	* Set the value of the array of filters you want to apply to the object faces.
-	* Warning : This is only available since Flash8.
-	* @param	a Array the array containing the filters you want to apply, or an empty array if you want to clear the filters.
-	*/
+	 * Set the value of the array of filters you want to apply to the object faces.
+	 * Warning : This is only available since Flash8.
+	 * @param	a Array the array containing the filters you want to apply, or an empty array if you want to clear the filters.
+	 */
 	public function set filters( a:Array )
 	{ _filters = a; m_bModified = true;	}
 	
 	/**
-	* Get the array of filters you are applying to the object faces.
-	* Warning : This is only available since Flash8.
-	* @return	Array the array containing the filters you are using, or an empty array if you don't apply anything
-	*/
+	 * Get the array of filters you are applying to the object faces.
+	 * Warning : This is only available since Flash8.
+	 * @return	Array the array containing the filters you are using, or an empty array if you don't apply anything
+	 */
 	public function get filters():Array
 	{ return _filters; }
 	
@@ -94,34 +91,7 @@ class sandy.materials.Material
 	{
 		return (m_bModified && ((lineAttributes) ? lineAttributes.modified : true));
 	}
-	
-	/////////////
-	// SETTERS //
-	/////////////	
-	public function set texture( p_oBitmap:BitmapData )
-	{
-		m_oTexture = p_oBitmap;
-		m_nWidth = p_oBitmap.width;
-		m_nHeight = p_oBitmap.height;
-	}
-	
-	/////////////
-	// GETTERS //
-	/////////////	
-	public function get texture():BitmapData
-	{ return m_oTexture; }
 
-	
-	public function get matrix():Matrix
-	{return m_oMatrix;}
-	
-	public function set matrix( p_oMat:Matrix )
-	{ m_oMatrix = p_oMat; m_bModified = true; }
-	
-	public function get smooth():Boolean
-	{ return m_bSmooth; }
-	public function set smooth( p_bValue:Boolean )
-	{ m_bSmooth = p_bValue; m_bModified = true; }
 	
 	//////////////////
 	// PRIVATE
@@ -133,10 +103,6 @@ class sandy.materials.Material
 		_id = _ID_++;
 		lineAttributes = null;
 		m_bModified = true;
-		repeat = true;
-		m_bSmooth = false;
-		m_oMatrix = null;
-		m_nWidth = m_nHeight = 0;
 		needNormals = false;
 	}
 	
@@ -153,12 +119,7 @@ class sandy.materials.Material
 	//////////////////
 	// PROPERTIES
 	//////////////////	
-	private var m_oTexture:BitmapData;
-	private var m_nWidth:Number;
-	private var m_nHeight:Number;
 	private var m_bModified:Boolean;
-	private var m_bSmooth:Boolean;
-	private var m_oMatrix:Matrix;
 	private var _filters:Array;
 	private var _useLight : Boolean;
 	private var _id:Number;

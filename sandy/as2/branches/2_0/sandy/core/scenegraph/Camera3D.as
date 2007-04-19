@@ -17,7 +17,6 @@ limitations under the License.
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vertex;
 import sandy.core.face.Polygon;
-import sandy.core.renderer.IRenderer;
 import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.ITransformable;
 import sandy.math.Matrix4Math;
@@ -25,7 +24,6 @@ import sandy.math.VectorMath;
 import sandy.util.NumberUtil;
 import sandy.view.Frustum;
 import sandy.view.ViewPort;
-import sandy.core.renderer.AffinePolygonRenderer;
 
 /**
 * Camera3D
@@ -39,7 +37,6 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 * The frustum of the camera. See {@see Frustum} class.
 	 */
 	public var frustrum:Frustum;
-	public var renderer:IRenderer;
 	/**
 	 * Create a new Camera3D.
 	 * The default camera projection is the perspective one with default parameters values.
@@ -55,10 +52,9 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		_nNear = (p_nNear)?p_nNear:10;
 		// --
 		frustrum = new Frustum();
-		renderer = new AffinePolygonRenderer();
 		// --
 		setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
-		_displayList = new Array();
+		m_aDisplayList = new Array();
 		_aVerticesList = new Array();
 		// It's a non visible node
 		visible = false;
@@ -130,6 +126,37 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		_aVerticesList = _aVerticesList.concat( p_aVertices );
 	}
 	
+	public function clearDisplayList( Void ):Void
+	{
+	    var l_oDisplayElt:Polygon;
+	    var i:Number;
+	    // --
+		for( i=0; l_oDisplayElt = m_aDisplayListCopy[i]; i++ )
+		{
+		   l_oDisplayElt.container.clear();
+		}
+
+	}
+	
+	public function renderDisplayList( Void ):Void
+	{
+	    var l_oDisplayElt:Polygon = null;
+	    var i:Number;
+	    // --
+		for( i=0; l_oDisplayElt = m_aDisplayList[i]; i++ )
+		{
+		   l_oDisplayElt.render();
+		}
+		// --
+		m_aDisplayListCopy = m_aDisplayList.concat();
+		m_aDisplayList = [];
+	}
+		
+	public function addToDisplayList( p_oPolygon:Polygon ):Void
+	{
+		m_aDisplayList.push( p_oPolygon );
+	}
+	
 	public function project( Void ):Void
 	{
 		var l_oVertex:Vertex;
@@ -148,13 +175,13 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		while( --l_nLength > -1 )
 		{
 			l_oVertex = l_aPoints[l_nLength];
-			//if( l_oVertex.projected ) continue;
-			//
+
 			l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 			l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 			l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
-			//l_oVertex.projected = true;
-		}	
+		}
+		// --
+		_aVerticesList = [];	
 	}
 
 	/**
@@ -275,7 +302,6 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		cotan = 1 / Math.tan(fovY / 2);
 		Q = zFar/(zFar - zNear);
 		
-		_mp = null;
 		_mp = Matrix4.createZero();
 
 		_mp.n11 = cotan / aspectRatio;
@@ -339,7 +365,8 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 * The viewport associated to the camera
 	 */
 	private var _viewport:ViewPort;
-	private var _displayList:Array;
+	private var m_aDisplayList:Array;
+	private var m_aDisplayListCopy:Array;
 	private var _perspectiveChanged:Boolean;
 	private var _nFov:Number;
 	private var _nFar:Number;

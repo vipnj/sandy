@@ -325,21 +325,27 @@ class sandy.core.scenegraph.Node
 		{
 			if( p_bChanged || changed )
 			{
-				_oViewCacheMatrix = (_oModelCacheMatrix) ? Matrix4Math.multiply4x3( p_oViewMatrix, _oModelCacheMatrix ) : p_oViewMatrix;
-			
-				/////////////////////////
-		        //// BOUNDING SPHERE ////
-		        /////////////////////////
-		       _oBSphere.transform( _oViewCacheMatrix );
-		        culled = p_oFrustum.sphereInFrustum( _oBSphere );
-				//
-				if( culled == Frustum.INTERSECT )
+				if(p_oViewMatrix)
+					_oViewCacheMatrix = (_oModelCacheMatrix) ? Matrix4Math.multiply4x3( p_oViewMatrix, _oModelCacheMatrix ) : p_oViewMatrix;
+				else
+					_oViewCacheMatrix = _oModelCacheMatrix;
+				
+				if( _oViewCacheMatrix )
 				{
-		            ////////////////////////
-		            ////  BOUNDING BOX  ////
-		            ////////////////////////
-		            _oBBox.transform( _oViewCacheMatrix );
-		            culled = p_oFrustum.boxInFrustum( _oBBox );
+					/////////////////////////
+			        //// BOUNDING SPHERE ////
+			        /////////////////////////
+			        _oBSphere.transform( _oViewCacheMatrix );
+			        culled = p_oFrustum.sphereInFrustum( _oBSphere );
+					//
+					if( culled == Frustum.INTERSECT )
+					{
+			            ////////////////////////
+			            ////  BOUNDING BOX  ////
+			            ////////////////////////
+			            _oBBox.transform( _oViewCacheMatrix );
+			            culled = p_oFrustum.boxInFrustum( _oBBox );
+					}
 				}
 			}
 		}

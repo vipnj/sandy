@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import com.bourre.data.collections.Map;
-import com.bourre.log.Logger;
 
 import flash.display.BitmapData;
 import flash.filters.ColorMatrixFilter;
@@ -25,7 +24,6 @@ import flash.geom.Point;
 import sandy.core.face.Polygon;
 import sandy.materials.Material;
 import sandy.materials.MaterialType;
-import sandy.util.BitmapUtil;
 import sandy.util.NumberUtil;
 
 /**
@@ -38,26 +36,87 @@ import sandy.util.NumberUtil;
 
 class sandy.materials.BitmapMaterial extends Material
 {
+	// --
+	public var matrix:Matrix;
+	// --
+	public var smooth:Boolean;
 
-	private var m_oPolygonMatrixMap:Map;
-	
 	/**
-	* Create a new TextureSkin.
-	* 
-	* @param t : The bitmapdata
-	*/
+	 * Create a new BitmapMaterial.
+	 * @param t : The bitmapdata
+	 */
 	public function BitmapMaterial( t:BitmapData )
 	{
 		super();
 		// --
 		texture = t;
+		smooth = false;
 		// --
 		m_oPoint = new Point(0, 0);
 		m_oCmf = new ColorMatrixFilter();
 		m_oPolygonMatrixMap = new Map();
 	}
-	
 
+	function renderPolygon( p_oPolygon:Polygon ):Void 
+	{
+		// -- we prepare the texture
+		prepare( p_oPolygon );
+		// --
+		var mc:MovieClip = p_oPolygon.container;
+		var l_points:Array = p_oPolygon.cvertices;
+		// --
+		mc.beginBitmapFill( m_oTexture, matrix, false, smooth );
+		// --
+		if( lineAttributes )
+			mc.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+		// --
+		mc.moveTo( l_points[0].sx, l_points[0].sy );
+		// --
+		switch( l_points.length )
+		{
+			case 2 :
+				mc.lineTo( l_points[1].sx, l_points[1].sy );
+				break;
+			case 3 :
+				mc.lineTo( l_points[1].sx, l_points[1].sy );
+				mc.lineTo( l_points[2].sx, l_points[2].sy );
+				break;
+			case 4 :
+				mc.lineTo( l_points[1].sx, l_points[1].sy );
+				mc.lineTo( l_points[2].sx, l_points[2].sy );
+				mc.lineTo( l_points[3].sx, l_points[3].sy );
+				break;
+			default :
+				var l:Number = l_points.length;
+				while( --l > 0 )
+				{
+					mc.lineTo( l_points[(l)].sx, l_points[(l)].sy);
+				}
+				break;
+		}
+		
+		// -- we draw the last edge
+		if( lineAttributes )
+		{
+			mc.lineTo( l_points[0].sx, l_points[0].sy );
+		}
+		
+		// --
+		mc.endFill();
+	}
+		
+	public function get texture():BitmapData
+	{
+		return m_oTexture;
+	}
+	
+	public function set texture( p_oTexture:BitmapData )
+	{
+		m_oTexture = p_oTexture;
+		m_nHeight = m_oTexture.height;
+		m_nWidth = m_oTexture.width;
+		// FIXME do the init for all the registered polygons
+	}
 
 	/**
 	 * Change the transparency of the texture.
@@ -125,7 +184,7 @@ class sandy.materials.BitmapMaterial extends Material
 	 * Start the rendering of the Skin
 	 * @param f	The face which is being rendered
 	 */
-	public function prepare( f:Polygon ):Void
+	private function prepare( f:Polygon ):Void
 	{
 		var a:Array = f.vertices;
 		var m:Matrix = m_oPolygonMatrixMap.get( f );
@@ -145,7 +204,6 @@ class sandy.materials.BitmapMaterial extends Material
 						ty: y0 
 					};
 		// --
-		//matrix = BitmapUtil.concatBitmapMatrix( m, sMat );
 		matrix = m.clone();
 		matrix.concat( sMat );
 	}
@@ -174,10 +232,16 @@ class sandy.materials.BitmapMaterial extends Material
 	{
 		return 'sandy.materials.BitmapMaterial' ;
 	}
-
+	
+	
+	private var m_oTexture:BitmapData;
+	private var m_nHeight:Number;
+	private var m_nWidth:Number;
+	private var m_oPolygonMatrixMap:Map;
 	private var m_oPoint:Point;
 	private var m_oCmf:ColorMatrixFilter;
 	private var _texture:BitmapData;
+
 
 }
 

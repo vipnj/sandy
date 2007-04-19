@@ -43,16 +43,17 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 	/**
 	* Create a new TextureSkin.
 	* 
-	* @param t : The actionScriptLink of the bitmap;
+	* @param t : BitmapData object, such as the actionScript Link of the bitmap;
 	* @param bSmooth : Boolean; if true perform smoothing (performance-intensive).
-	* @param alpha: Number; Transparency from 0 (invisible) to 100 (opaque)
+	* @param a: Number; Transparency from 0 (invisible) to 100 (opaque)
 	*/
-	public function TextureSkin( t:BitmapData, bSmooth:Boolean, alpha:Number )
+	public function TextureSkin( t:BitmapData, bSmooth:Boolean, a:Number )
 	{
 		super();
 		_m = new Matrix();
 		texture = t;
 		_bSmooth = (bSmooth == undefined) ? false : bSmooth;
+		alpha = (a == undefined) ? 100 : a;
 		_p = new Point(0, 0);
 		_cmf = new ColorMatrixFilter();
 	}

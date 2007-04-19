@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -27,9 +27,10 @@ import sandy.skin.TextureSkin;
 * VideoSkin
 * Allow you to texture a 3D Object with a movieClip wich contains animation, picture, or video.
 * @author		Thomas Pfeiffer - kiroukou
+* @author		Bruce Epstein 	- zeusprod
 * @since		1.0
-* @version		1.0
-* @date 		22.04.2006 
+* @version		1.2.1
+* @date 		19.04.2007 
 **/
 class sandy.skin.VideoSkin extends TextureSkin
 {
@@ -37,10 +38,12 @@ class sandy.skin.VideoSkin extends TextureSkin
 	* Create a new VideoSkin.
 	* 
 	* @param video Video a video object instance
+	* @param bSmooth : Boolean; if true perform smoothing (performance-intensive).
+	* @param a: Number; Transparency from 0 (invisible) to 100 (opaque)
 	*/
-	public function VideoSkin( video:Video )
+	public function VideoSkin( video:Video, bSmooth:Boolean, a:Number )
 	{
-		super( new BitmapData( video.width, video.height ) );
+		super( new BitmapData( video._width, video._height ),  bSmooth, a);
 		_video = video;
 		// TODO: Think again on which choice is clever, choosing the World3D framerate to update the texture
 		// or to use the texture movieClip framerate as timer to update the bitmap.
@@ -66,7 +69,7 @@ class sandy.skin.VideoSkin extends TextureSkin
 	private function __updateTexture():Void
 	{
 		texture.draw( _video );
-		// le broadcast ne se fait pas tout seul? car pas de set texture() de r�aliser?
+		// le broadcast ne se fait pas tout seul? car pas de set texture() de réaliser?
 		broadcastEvent( _eOnUpdate );
 	}
 	

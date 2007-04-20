@@ -137,8 +137,8 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		if( normal == null )
 		{
 			var l_oNormal:Vector = createNormal();
-			m_oGeometry.setFaceNormal( m_oGeometry.aFacesNormals.length, l_oNormal.x, l_oNormal.y, l_oNormal.z );
-			normal = Vertex( m_oGeometry.aFacesNormals[ m_oGeometry.aFacesNormals.length-1 ] );
+			var l_nID:Number = m_oGeometry.setFaceNormal( m_oGeometry.getNextFaceNormalID(), l_oNormal.x, l_oNormal.y, l_oNormal.z );
+			normal = Vertex( m_oGeometry.aFacesNormals[ l_nID ] );
 		}
 	}
 	

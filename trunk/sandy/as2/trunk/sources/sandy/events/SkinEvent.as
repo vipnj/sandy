@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -19,12 +19,15 @@ import sandy.skin.SkinType;
 /**
  * @author 		Thomas Pfeiffer - kiroukou
  * @author		Martin Wood-Mitrovski
- * @version		1.1
- * @date 		11.04.2007
+ * @author		Bruce Epstein - zeusprod
+ * @since		1.1
+ * @version		1.2.1
+ * @date 		20.04.2007
  */
 class sandy.events.SkinEvent extends BasicEvent 
 {
 	public static var onUpdateEVENT:EventType = new EventType('onUpdateEVENT');
+	public static var onInitEVENT:EventType = new EventType('onInitEVENT');
 	
 	// Flag to indicate that the texture matrices need updating
 	public var needsTextureUpdate:Boolean;

@@ -42,8 +42,9 @@ import sandy.core.data.Matrix4;
 * @author	Nicolas Coevoet - [ NikO ]
 * @author	Bruce Epstein - zeusprod
 * @author	Martin Wood-Mitrovski
-* @version	1.2.1
-* @date 	12.04.2007
+* @since 	1.0
+* @version	1.2.2
+* @date 	20.04.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -251,6 +252,7 @@ class sandy.core.Object3D extends Leaf
 		// Now we register to the update event
 		_s = pS;
 		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
+		_s.addEventListener( SkinEvent.onInitEVENT,   this, __onSkinInited );
 
 		__updateTextureMatrices(_s);
 
@@ -273,6 +275,7 @@ class sandy.core.Object3D extends Leaf
 		// Now we register to the update event
 		_sb = pSb;
 		_sb.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
+		_sb.addEventListener( SkinEvent.onInitEVENT,   this, __onSkinInited );
 		//
 		__updateTextureMatrices(_sb);
 		//
@@ -665,11 +668,23 @@ class sandy.core.Object3D extends Leaf
 	}
 
 	/**
-	* called when the skin of an object change.
+	* called when the skin of an object changes.
 	* We want this object to notify that it has changed to redrawn, so we change its modified property.
 	* @param	e
 	*/ 
 	private function __onSkinUpdated( e:SkinEvent ):Void
+	{
+		_needRedraw = true;	
+	}
+	
+
+	/**
+	* called when the skin of an object is initialized.
+	* We use this to update the object's texture matrix after asynchronously loading
+	*  an external SWF or JPG MovieSkin.
+	* @param	e
+	*/ 
+	private function __onSkinInited( e:SkinEvent ):Void
 	{
 		_needRedraw = true;
 		__updateTextureMatrices(e.getTarget());		

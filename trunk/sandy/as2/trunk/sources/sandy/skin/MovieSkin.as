@@ -34,8 +34,8 @@ import flash.geom.Point;
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.2.1
-* @date 		12.04.2007 
+* @version		1.2.2
+* @date 		20.04.2007 
 **/
 class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
@@ -341,7 +341,8 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_animated = target._totalframes > 1;
 			// _eOnUpdate.needsTextureUpdate = true;
 			setAnimateUpdate(_animate && _animated);
-			broadcastEvent(_eOnUpdate);
+			//broadcastEvent(_eOnUpdate);
+			broadcastEvent(_eOnInit);
 		}
 	}
 	

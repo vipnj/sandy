@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -29,9 +29,10 @@ import sandy.core.light.Light3D;
  * This class is the basis of all the skins. It is abstract so that mean you can't instanciate this class.
  * </p>
  * @author		Thomas Pfeiffer - kiroukou
+* @author		Bruce Epstein - zeusprod
  * @since		1.0
- * @version		1.0
- * @date 		23.06.2006
+ * @version		1.2.1
+ * @date 		20.04.2007
  **/
 class sandy.skin.BasicSkin extends EventBroadcaster
 {
@@ -40,6 +41,10 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	 *  The Transformation end Event. Broadcasted when the Interpolation is finished
 	 */
 	public static var onUpdateEVENT:EventType = SkinEvent.onUpdateEVENT;
+	/**
+	 *  The skin initialized Event. Broadcast when the skin is first loaded (triggers texture matrix recalc)
+	 */
+	public static var onInitEVENT:EventType = SkinEvent.onInitEVENT;
 	
 
 	/**
@@ -95,6 +100,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	{
 		super( this );
 		_eOnUpdate 	= new SkinEvent( SkinEvent.onUpdateEVENT, this, getType() );
+		_eOnInit 	= new SkinEvent( SkinEvent.onInitEVENT, this, getType() );
 		_filters 	= [];
 		_useLight 	= false;
 		_id = _ID_++;
@@ -117,6 +123,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	private var _filters:Array;
 	private var _useLight : Boolean;
 	private var _eOnUpdate:SkinEvent;
+	private var _eOnInit:SkinEvent;
 	private var _id:Number;
 	private static var _ID_:Number = 0;
 }

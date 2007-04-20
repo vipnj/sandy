@@ -228,7 +228,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 				// -- if the object is set at a specific depth we cange it, but add a small value that makes the sorting more accurate
 				if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth + l_nDepth/1000;
 				// we set the polygon to this depth (multiplied by 1000 to avoid the problem of 2 polygons at the same depth
-				l_oFace.container.swapDepths( 1000000000 - int(1000*l_nDepth) );
+				l_oFace.container.swapDepths( 10000000 - int(1000*l_nDepth) );
 				// --
 				if( l_nDepth )	p_oCamera.addToDisplayList( l_oFace );
 			}

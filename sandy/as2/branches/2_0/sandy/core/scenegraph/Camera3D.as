@@ -55,7 +55,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		// --
 		setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
 		m_aDisplayList = new Array();
-		_aVerticesList = new Array();
+		m_aVerticesList = new Array();
 		// It's a non visible node
 		visible = false;
 	}
@@ -123,7 +123,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 
 	public function pushVerticesToRender( p_aVertices:Array ):Void
 	{
-		_aVerticesList = _aVerticesList.concat( p_aVertices );
+		m_aVerticesList = m_aVerticesList.concat( p_aVertices );
 	}
 	
 	public function clearDisplayList( Void ):Void
@@ -160,8 +160,8 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	public function project( Void ):Void
 	{
 		var l_oVertex:Vertex;
-		var l_aPoints:Array = _aVerticesList;
-		var l_nLength:Number = _aVerticesList.length;
+		var l_aPoints:Array = m_aVerticesList;
+		var l_nLength:Number = m_aVerticesList.length;
 		var l_nCste:Number;
 		var l_nOffx:Number = viewport.w2;
 		var l_nOffy:Number = viewport.h2;
@@ -181,7 +181,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 			l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
 		}
 		// --
-		_aVerticesList = [];	
+		m_aVerticesList = [];	
 	}
 
 	/**
@@ -198,7 +198,6 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		_aVerticesList = [];
 		// --
 		updatePerspective();
 		updateTransform();
@@ -371,6 +370,6 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	private var _nFov:Number;
 	private var _nFar:Number;
 	private var _nNear:Number;
-	private var _aVerticesList:Array;
+	private var m_aVerticesList:Array;
 
 }

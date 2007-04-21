@@ -35,8 +35,9 @@ class sandy.core.light.Light3D
 	 */
 	public static var onLightUpdatedEVENT:EventType = new EventType( 'onLightUpdated' );
 	
-	/*
+	/**
 	* Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
+	* But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1 
 	*/
 	public static var MAX_POWER:Number = 150;
 

@@ -22,6 +22,7 @@ import sandy.math.VectorMath;
 import sandy.skin.Skin;
 import sandy.skin.SkinType;
 import sandy.util.NumberUtil;
+import sandy.util.ColorUtil;
 import sandy.skin.BasicSkin;
 
 /**
@@ -135,23 +136,23 @@ class sandy.skin.MixedSkin extends BasicSkin implements Skin
 		mc.filters = _filters;
 		// -- 
 		var col:Number = _colorBkg;
+		
 		if( _useLight )
 		{
-			var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
-									   World3D.getInstance().getAmbientLight();
-			// --
-			var r:Number = ( col >> 16 )& 0xFF;
-			var g:Number = ( col >> 8 ) & 0xFF;
-			var b:Number = ( col ) 		& 0xFF;
-			// --
-			r = NumberUtil.constrain( r*(lightStrength), 0, 255 );
-			g = NumberUtil.constrain( g*(lightStrength), 0, 255 );
-			b = NumberUtil.constrain( b*(lightStrength), 0, 255 );
-			// --
-			col =  r << 16 | g << 8 |  b;
+			if(World3D.GO_BRIGHT)
+			{
+				var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
+										   World3D.getInstance().getAmbientLight();
+				col = ColorUtil.calculateLitColour(col, lightStrength);
+			}
+			else
+			{
+				col = computeColor1(col, face);
+			}
 		}
 		mc.lineStyle( _thickness, _colorLine, _alphaLine );
 		mc.beginFill( col , _alphaBkg );
+		
 	}
 	
 	/**
@@ -162,8 +163,25 @@ class sandy.skin.MixedSkin extends BasicSkin implements Skin
 	public function end( f:IPolygon, mc:MovieClip ):Void
 	{
 		mc.endFill();
+		mc.lineStyle(0,0,0);
 	}
-	
+
+	private function computeColor1( col:Number,face:IPolygon ):Number
+	{
+		var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
+								   World3D.getInstance().getAmbientLight();
+		// --
+		var r:Number = ( col >> 16 )& 0xFF;
+		var g:Number = ( col >> 8 ) & 0xFF;
+		var b:Number = ( col ) 		& 0xFF;
+		// --
+		r = NumberUtil.constrain( r*lightStrength, 0, 255 );
+		g = NumberUtil.constrain( g*lightStrength, 0, 255 );
+		b = NumberUtil.constrain( b*lightStrength, 0, 255 );
+		// --
+		return (r << 16 | g << 8 |  b);
+	}
+		
 	public function toString( Void ):String
 	{
 		return 'sandy.skin.MixedSkin' ;

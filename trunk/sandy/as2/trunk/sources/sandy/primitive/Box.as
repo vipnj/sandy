@@ -221,7 +221,6 @@ class sandy.primitive.Box extends Object3D implements Primitive3D
 			var skin:Skin = skins[skinIndex];
 			aFaces[n].setSkin(skin);
 		}
-		
 		_needRedraw = true;
 	}
 

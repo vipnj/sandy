@@ -300,18 +300,35 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		return r;
 	}
 	
-	private function __getBrightnessTransform( scale:Number ) : Array
+	/**
+	 * Creates a brightness transformation matrix according to the supplied brightness level.
+	 * If the World3D.GO_BRIGHT flag is set then the rgb offsets are used (5th column)
+	 * If the flag is not set then the rgb scaling components are used instead.	 */
+	private function __getBrightnessTransform( brightness:Number ) : Array
 	{
-		var s = scale;
-		var o:Number = 0;
-		//
-		return new Array 
-		(
-			s	, 0.0	, 0.0	, 0.0	, o,
-			0.0	, s		, 0.0	, 0.0	, o,
-			0.0	, 0.0	, s		, 0.0	, o,
-			0.0	, 0.0	, 0.0	, 1.0	, o
-		);
+		if(World3D.GO_BRIGHT)
+		{
+			var o:Number = (brightness * 512) - 256;
+			return new Array 
+			(
+				1	, 0.0	, 0.0	, 0.0	, o,
+				0.0	, 1		, 0.0	, 0.0	, o,
+				0.0	, 0.0	, 1		, 0.0	, o,
+				0.0	, 0.0	, 0.0	, 1.0	, 1
+			);
+		}
+		else
+		{
+			var s:Number = brightness;
+			return new Array 
+			(
+				s	, 0.0	, 0.0	, 0.0	, 0,
+				0.0	, s		, 0.0	, 0.0	, 0,
+				0.0	, 0.0	, s		, 0.0	, 0,
+				0.0	, 0.0	, 0.0	, 1.0	, 0
+			);
+						
+		}
 	}
 	
 	private function onLoadStart  (target:MovieClip):Void 
@@ -339,7 +356,6 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_mc._visible = false;
 			_initialized = true;
 			_animated = target._totalframes > 1;
-			// _eOnUpdate.needsTextureUpdate = true;
 			setAnimateUpdate(_animate && _animated);
 			//broadcastEvent(_eOnUpdate);
 			broadcastEvent(_eOnInit);

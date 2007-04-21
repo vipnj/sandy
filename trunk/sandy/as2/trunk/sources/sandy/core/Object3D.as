@@ -277,7 +277,7 @@ class sandy.core.Object3D extends Leaf
 		_sb.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		_sb.addEventListener( SkinEvent.onInitEVENT,   this, __onSkinInited );
 		//
-		__updateTextureMatrices(_sb);
+		__updateTextureMatrices( _sb );
 		//
 		_needRedraw = true;
 		return true;

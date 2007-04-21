@@ -65,10 +65,12 @@ class sandy.skin.PrelitTextureSkin extends TextureSkin implements Skin
 	public function updateTextures( t:BitmapData ):Void
 	{
 		texture = t;
+		var offsetMax = World3D.GO_BRIGHT ? 512 : 256;
+		
 		for(var n=0;n<_textureCount;n++)
 		{
 			_tmp = t.clone();
-			var off:Number = (n * (255 / _textureCount)) - 255;
+			var off:Number = (n * (offsetMax / (_textureCount-1))) - 256;
 			_tmp.colorTransform(_tmp.rectangle, new ColorTransform(1, 1, 1, 1, off, off, off, 0));
 			
 			_prelit[n] = _tmp;

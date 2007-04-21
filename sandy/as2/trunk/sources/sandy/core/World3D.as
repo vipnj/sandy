@@ -66,6 +66,11 @@ class sandy.core.World3D
 	public static var onContainerCreatedEVENT:EventType = new EventType( 'onContainerCreated' );
 	
 	/**
+	 * Flag to control lighting model. If true then lit objects have full range from black to white.
+	 * If its false (the default) they just range from black to their normal appearance.	 */ 
+	public static var GO_BRIGHT:Boolean = false;
+	
+	/**
 	 * Private Constructor.
 	 * 
 	 * <p>You can have only one World3D</p>

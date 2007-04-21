@@ -182,23 +182,31 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 		}
 	}
 	
-	/**
-	 * 
-	 * @param
-	 * @return
-	 */
-	private function __getBrightnessTransform( scale:Number ) : Array
+	private function __getBrightnessTransform( brightness:Number ) : Array
 	{
-		var s = scale;
-		var o:Number = 0;
-		//
-		return new Array 
-		(
-			s	, 0.0	, 0.0	, 0.0	, o,
-			0.0	, s		, 0.0	, 0.0	, o,
-			0.0	, 0.0	, s		, 0.0	, o,
-			0.0	, 0.0	, 0.0	, 1.0	, o
-		);
+		if(World3D.GO_BRIGHT)
+		{
+			var o:Number = (brightness * 512) - 256;
+			return new Array 
+			(
+				1	, 0.0	, 0.0	, 0.0	, o,
+				0.0	, 1		, 0.0	, 0.0	, o,
+				0.0	, 0.0	, 1		, 0.0	, o,
+				0.0	, 0.0	, 0.0	, 1.0	, 0
+			);
+		}
+		else
+		{
+			var s:Number = brightness;
+			return new Array 
+			(
+				s	, 0.0	, 0.0	, 0.0	, 0,
+				0.0	, s		, 0.0	, 0.0	, 0,
+				0.0	, 0.0	, s		, 0.0	, 0,
+				0.0	, 0.0	, 0.0	, 1.0	, 0
+			);
+						
+		}
 	}
 
 	/**

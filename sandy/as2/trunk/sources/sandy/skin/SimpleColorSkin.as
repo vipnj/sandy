@@ -23,6 +23,7 @@ import sandy.skin.Skin;
 import sandy.skin.SkinType;
 import sandy.skin.BasicSkin;
 import sandy.util.NumberUtil;
+import sandy.util.ColorUtil;
 
 /**
 * SimpleColorSkin
@@ -99,18 +100,27 @@ class sandy.skin.SimpleColorSkin extends BasicSkin implements Skin
 		var col:Number = _color;
 		if( _useLight )
 		{
-			var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
-									   World3D.getInstance().getAmbientLight();
-			// --
-			var r:Number = ( col >> 16 )& 0xFF;
-			var g:Number = ( col >> 8 ) & 0xFF;
-			var b:Number = ( col ) 		& 0xFF;
-			// --
-			r = NumberUtil.constrain( r*(lightStrength), 0, 255 );
-			g = NumberUtil.constrain( g*(lightStrength), 0, 255 );
-			b = NumberUtil.constrain( b*(lightStrength), 0, 255 );
-			// --
-			col =  r << 16 | g << 8 |  b;
+			if(World3D.GO_BRIGHT)
+			{
+				var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
+										   World3D.getInstance().getAmbientLight();
+				col = ColorUtil.calculateLitColour(col, lightStrength);
+			}
+			else
+			{
+				var lightStrength:Number = World3D.getInstance().getLight().calculate(face.createNormale()) + 
+										   World3D.getInstance().getAmbientLight();
+				// --
+				var r:Number = ( col >> 16 )& 0xFF;
+				var g:Number = ( col >> 8 ) & 0xFF;
+				var b:Number = ( col ) 		& 0xFF;
+				// --
+				r = NumberUtil.constrain( r*lightStrength, 0, 255 );
+				g = NumberUtil.constrain( g*lightStrength, 0, 255 );
+				b = NumberUtil.constrain( b*lightStrength, 0, 255 );
+				// --
+				col = r << 16 | g << 8 |  b;
+			}
 		}
 		mc.beginFill( col, _alpha );
 	}

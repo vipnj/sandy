@@ -92,7 +92,8 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public function get visible(): Boolean
 	{
 		// all normals are refreshed every loop. Face is visible is normal face to the camera
-		return ( backfaceCulling ) * ( normal.wz ) <= 0;
+		var a:Vertex = vertices[0];
+		return ( backfaceCulling ) * ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz ) < 0;
 	}
 	
 	public function clip( p_oFrustum:Frustum ):Void

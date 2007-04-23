@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import sandy.core.data.Vector;
+import com.bourre.core.HashCodeFactory;
 
 /**
 * Vertex of a 3D mesh.
@@ -116,7 +117,7 @@ class sandy.core.data.Vertex extends Vector
 	*/
 	public function toString():String
 	{
-		return "sandy.core.data" + "(x:"+x+" y:"+y+" z:"+z+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+"\nsx:" + sx + " sy:"+ sy + ", sz:" + sz +")";
+		return "sandy.core.data" + "(x:"+x+" y:"+y+" z:"+z+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+"\nsx:" + sx + " sy:"+ sy + ", sz:" + sz +")"+HashCodeFactory.getKey(this);
 	}
 	
 }

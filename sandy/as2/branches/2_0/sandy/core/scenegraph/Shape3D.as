@@ -13,7 +13,6 @@ import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.ITransformable;
 import sandy.events.MouseEvent;
 import sandy.materials.Appearance;
-import sandy.math.VectorMath;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
 
@@ -83,19 +82,19 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		if( changed )
 		{
 			var mt:Matrix4 = m_tmpMt;
-			mt.n11 = _vSide.x; 
+			mt.n11 = _vSide.x * _oScale.x; 
 			mt.n12 = _vUp.x; 
 			mt.n13 = _vOut.x; 
 			mt.n14 = _p.x;
 			
 			mt.n21 = _vSide.y; 
-			mt.n22 = _vUp.y; 
+			mt.n22 = _vUp.y * _oScale.y; 
 			mt.n23 = _vOut.y; 
 			mt.n24 = _p.y;
 			
 			mt.n31 = _vSide.z; 
 			mt.n32 = _vUp.z; 
-			mt.n33 = _vOut.z; 
+			mt.n33 = _vOut.z * _oScale.z;  
 			mt.n34 = _p.z;
 			
 			transform.matrix = mt;
@@ -224,7 +223,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 				// we set the polygon to this depth (multiplied by 1000 to avoid the problem of 2 polygons at the same depth
 				l_oFace.container.swapDepths( 10000000 - int(1000*l_nDepth) );
 				// --
-				if( l_nDepth )	p_oCamera.addToDisplayList( l_oFace );
+				p_oCamera.addToDisplayList( l_oFace );
 			}
 		}
 		// -- We push the vertex to project onto the viewport.

@@ -15,8 +15,6 @@ limitations under the License.
 */
 import com.bourre.events.EventBroadcaster;
 
-import flash.geom.Matrix;
-
 import sandy.core.data.UVCoord;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
@@ -27,8 +25,6 @@ import sandy.events.MouseEvent;
 import sandy.materials.Appearance;
 import sandy.math.VectorMath;
 import sandy.view.Frustum;
-import com.bourre.log.Logger;
-import sandy.core.face.PolygonType;
 
 
 /**
@@ -79,7 +75,7 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		// --
 		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
-		container = World3D.getInstance().container.createEmptyMovieClip( id.toString(), id );
+		container = World3D.getInstance().container.createEmptyMovieClip( "polygon_"+id.toString(), id );
 	}
 
 
@@ -124,6 +120,8 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		{
 			vertices[i] = Vertex( m_oGeometry.aVertex[ p_aVertexID[i] ] );
 		}
+		// --
+		cvertices = vertices;
 		// --
 		aUVCoord = new Array( l = p_aUVCoordsID.length );
 		for( i=0; i<l; i++ )

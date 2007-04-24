@@ -174,6 +174,7 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		//
 		while( --l_nLength > -1 )
 		{
+			
 			l_oVertex = l_aPoints[l_nLength];
 
 			l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );

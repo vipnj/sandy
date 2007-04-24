@@ -1,8 +1,8 @@
 import com.bourre.data.libs.GraphicLib;
 import com.bourre.data.libs.GraphicLibLocator;
 import com.bourre.log.Logger;
+import com.bourre.transitions.FPSBeacon;
 import com.bourre.transitions.IFrameListener;
-import com.bourre.transitions.MSBeacon;
 import com.bourre.utils.LuminicTracer;
 import com.bourre.visual.FPSLoggerUI;
 
@@ -71,8 +71,8 @@ class TestCube implements IFrameListener
 		gl.execute();
 		// -- we register to a pulsing event that simple
 		//MSBeacon.getInstance().setFPS( 120 );
-		MSBeacon.getInstance().addFrameListener( this );
-		//FPSBeacon.getInstance().addFrameListener( this );
+		//MSBeacon.getInstance().addFrameListener( this );
+		FPSBeacon.getInstance().addFrameListener( this );
 	}
 	
 	private function _onReady( Void ):Void

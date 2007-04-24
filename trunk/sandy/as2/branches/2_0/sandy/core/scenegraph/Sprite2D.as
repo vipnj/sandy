@@ -16,17 +16,14 @@ limitations under the License.
 
 
 	
-import com.bourre.events.BasicEvent;
-
+import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vertex;
+import sandy.core.face.Polygon;
+import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.Shape3D;
-import sandy.core.World3D;
-import sandy.events.SandyEvent;
-import sandy.skin.MovieSkin;
-import sandy.skin.Skin;
-import sandy.view.Camera3D;
+import sandy.view.CullingState;
 import sandy.view.Frustum;
 
 /**
@@ -36,8 +33,6 @@ import sandy.view.Frustum;
  **/
 class sandy.core.scenegraph.Sprite2D extends Shape3D 
 {
-    public var container:MovieClip;
-    
 	/**
 	* Sprite2D constructor.
 	* A sprite is a special Object3D because it's in fact a bitmap in a 3D space.
@@ -47,53 +42,21 @@ class sandy.core.scenegraph.Sprite2D extends Shape3D
 	public function Sprite2D( p_name:String, pScale:Number) 
 	{
 		super(p_name);
-		
-		// Special case - is using MovieClip rather than default Sprite
-		container = new MovieClip();	
 		// -- we create a fictive point
-		geometry = new Geometry3D( [new Vertex() ] );
-		_v = geometry.points[0];
+		geometry = new Geometry3D();
+		geometry.setVertex(0, 0, 0, 0);
+		_v = geometry.aVertex[0];
+		aPolygons.push( new Polygon(this, geometry, [0] ) );
 		// --
+		_oBSphere 	= new BSphere();
+        _oBBox 		= null;
+        setBoundingSphereRadius( 10 );
+        // --
 		_nScale = (pScale == null ) ? 1 : pScale;
-		// --
-		// Add this graphical object to the World display list
-		World3D.getInstance().getSceneContainer().addChild( container );
 	}
-	
-	/**
-	* Set a Skin to the Object3D.
-	* <p>This method will set the the new Skin to all his faces.</p>
-	* 
-	* @param	s	The TexstureSkin to apply to the object
-	* @return	Boolean True is the skin is applied, false otherwise.
-	*/
-	public function setSkin( s:Skin ):Boolean
-	{
-		if ( !(s instanceof MovieSkin) )
-		{
-			//trace("#Warning [Sprite2D] setSkin Wrong parameter type: MovieSkin expected.");
-			return false;
-		}
-		
-		_s = MovieSkin(s);
-		
-		if( _s.isInitialized() )
-		{
-			__updateContent(null);
-		} 
-		else 
-		{
-			_s.addEventListener( SandyEvent.UPDATE, __updateContent);
-		}
-		
-		return true;
-	}
-	
-	private function __updateContent(p_event:BasicEvent):Void
-	{
-		_s.attach( container );
-		container.cacheAsBitmap = true;
-	}
+
+	public function setBoundingSphereRadius( p_nRadius:Number ):Void
+	{ _oBSphere.radius = p_nRadius; }
 
 	/**
 	* getScale
@@ -103,78 +66,66 @@ class sandy.core.scenegraph.Sprite2D extends Shape3D
 	* @param	void
 	* @return Number the scale value.
 	*/
-	public function getScale():Number
-	{
-		return _nScale;
-	}
+	public function get scale():Number
+	{ return _nScale; }
 
 	/**
 	* Allows you to change the oject's scale.
 	* @param	n Number 	The scale. This value must be a Number. A value of 1 let the scale as the perspective one.
 	* 						A value of 2.0 will make the object twice bigger. 0 is a forbidden value
 	*/
-	public function setScale( n:Number ):Void
+	public function set scale( n:Number )
+	{if( n )	_nScale = n; }
+
+ 	/**
+	 * This method goal is to update the node. For node's with transformation, this method shall
+	 * update the transformation taking into account the matrix cache system.
+	 * FIXME: Transformable nodes shall upate their transform if necessary before calling this method.
+	 */
+	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		if( n )
-		{
-			_nScale = n;
-		}
+		// -- we call the super update mthod
+		super.update( p_oModelMatrix, p_bChanged );
+	}
+	  
+	/**
+	 * This method test the current node on the frustum to get its visibility.
+	 * If the node and its children aren't in the frustum, the node is set to cull
+	 * and it would not be displayed.
+	 * This method is also updating the bounding volumes to process the more accurate culling system possible.
+	 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
+	 * precise culling.
+	 * [MANDATORY] The update method must be called first!
+	 */
+	public function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):Void
+	{
+		super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
+		// --
+		if( culled == CullingState.OUTSIDE ) 	aPolygons[0].container._visible = false;
+		else									aPolygons[0].container._visible = true;
 	}
 	
-    public function render(p_oCamera:Camera3D, p_oViewMatrix:Matrix4, p_bCache:Boolean):Void
+    public function render( p_oCamera:Camera3D ):Void
 	{
-	    // VISIBILITY CHECK
-		if( isVisible() == false ) 
-		{
-		    container.visible = false;
-		    return;
-		}
-		
-        var l_oFrustum:Frustum = p_oCamera.frustrum;
-		// 
-		var l_oModelMatrix:Matrix4 = __updateLocalViewMatrix( p_oCamera, p_oViewMatrix, p_bCache );
-        
         // Now we consider the camera .Fixme consider the possible cache system for camera.
-		var l_oMatrix:Matrix4 = p_oCamera.getProjectionMatrix() ;
-        
-        var v:Vertex;
-        var i:int;
-        for( i=0; v=geometry.points[i]; i++ )
-        {
-            v.wx = v.x * l_oModelMatrix.n11 + v.y * l_oModelMatrix.n12 + v.z * l_oModelMatrix.n13 + l_oModelMatrix.n14;
-		    v.wy = v.x * l_oModelMatrix.n21 + v.y * l_oModelMatrix.n22 + v.z * l_oModelMatrix.n23 + l_oModelMatrix.n24;
-		    v.wz = v.x * l_oModelMatrix.n31 + v.y * l_oModelMatrix.n32 + v.z * l_oModelMatrix.n33 + l_oModelMatrix.n34;
-        }
-        
-		if( l_oFrustum.pointInFrustum( _v.getWorldVector() ) == Frustum.OUTSIDE )
-		{
-		    container.visible = false;
-		    return;
-		} 
-		else 
-		{
-			///////////////////////////////////
-			///////  SCREEN PROJECTION ////////
-			///////////////////////////////////
-			var l_nCste:Number;
-			var l_nOffx:Number = p_oCamera.viewport.w2;
-			var l_nOffy:Number = p_oCamera.viewport.h2;
-			// --
-			l_nCste = 	1 / ( _v.wx * l_oMatrix.n41 + _v.wy * l_oMatrix.n42 + _v.wz * l_oMatrix.n43 + l_oMatrix.n44 );
-			_v.sx =  l_nCste * ( _v.wx * l_oMatrix.n11 + _v.wy * l_oMatrix.n12 + _v.wz * l_oMatrix.n13 + l_oMatrix.n14 ) * l_nOffx + l_nOffx;
-			_v.sy = -l_nCste * ( _v.wx * l_oMatrix.n21 + _v.wy * l_oMatrix.n22 + _v.wz * l_oMatrix.n23 + l_oMatrix.n24 ) * l_nOffy + l_nOffy;
-			// --
-		    container.scaleX = container.scaleY = (_nScale * 100 / _v.wz);
-		    // --
-		    container.x = _v.sx - container.width  / 2;
-		    container.y = _v.sy - container.height / 2;
-		    // We add the graphic object to the display List.
-		    p_oCamera.addToDisplayList( container, _v.wz );  
-		}
+        var l_oMatrix:Matrix4 = _oViewCacheMatrix;
+        // --
+        var v:Vertex = _v;
+        var i:Number;
+        v.wx = v.x * l_oMatrix.n11 + v.y * l_oMatrix.n12 + v.z * l_oMatrix.n13 + l_oMatrix.n14;
+		v.wy = v.x * l_oMatrix.n21 + v.y * l_oMatrix.n22 + v.z * l_oMatrix.n23 + l_oMatrix.n24;
+		v.wz = v.x * l_oMatrix.n31 + v.y * l_oMatrix.n32 + v.z * l_oMatrix.n33 + l_oMatrix.n34;
+        // --
+		aPolygons[0].container.swapDepths( 10000000 - int(1000*v.wz) );
+		// -- we override the value to realize the scaled effect
+		v.wz /= _nScale;
+		// --
+		p_oCamera.addToDisplayList( aPolygons[0] );
+		// --
+		p_oCamera.pushVerticesToRender( geometry.aVertex );
 	}
-
+	// --
 	
 	private var _v:Vertex;
 	private var _nScale:Number;
-	private var _s:MovieSkin;
 }

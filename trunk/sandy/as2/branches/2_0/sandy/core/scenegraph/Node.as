@@ -338,7 +338,7 @@ class sandy.core.scenegraph.Node
 			        _oBSphere.transform( _oViewCacheMatrix );
 			        culled = p_oFrustum.sphereInFrustum( _oBSphere );
 					//
-					if( culled == Frustum.INTERSECT )
+					if( culled == Frustum.INTERSECT && _oBBox )
 					{
 			            ////////////////////////
 			            ////  BOUNDING BOX  ////

@@ -29,6 +29,9 @@ class sandy.materials.ColorMaterial extends Material
 		// --
 		switch( l_points.length )
 		{
+			case 1 :
+				mc.lineTo( l_points[0].sx+1, l_points[0].sy+1 );
+				break;
 			case 2 :
 				mc.lineTo( l_points[1].sx, l_points[1].sy );
 				break;

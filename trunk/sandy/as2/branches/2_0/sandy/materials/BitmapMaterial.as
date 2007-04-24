@@ -74,6 +74,12 @@ class sandy.materials.BitmapMaterial extends Material
 		// --
 		switch( l_points.length )
 		{
+			case 1 :
+				mc.attachBitmap( m_oTexture, 0 );
+				mc._xscale = mc._yscale = (10000 / l_points[0].wz);
+				mc._x = l_points[0].sx - mc._width  / 2;
+				mc._y = l_points[0].sy - mc._height / 2;
+				break;
 			case 2 :
 				mc.lineTo( l_points[1].sx, l_points[1].sy );
 				break;

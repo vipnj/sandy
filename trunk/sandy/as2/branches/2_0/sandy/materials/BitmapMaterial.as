@@ -28,7 +28,10 @@ import sandy.util.NumberUtil;
 
 /**
  * BitmapMaterial
- *  
+ * <p>
+ * This class use a texturing method found on Papervision3D. See the original implementation of Face3D.as on Papervision3D library.
+ * Basically its method unroll the concatenation of the matrix with an initial preparation to make sure the matrix is invertible.
+ * </p>
  * @author		Thomas Pfeiffer - kiroukou
  * @version		2.0
  * @date 		06.04.2007 
@@ -52,6 +55,7 @@ class sandy.materials.BitmapMaterial extends Material
 		texture = t;
 		smooth = false;
 		// --
+		matrix = new Matrix();
 		m_oPoint = new Point(0, 0);
 		m_oCmf = new ColorMatrixFilter();
 		m_oPolygonMatrixMap = new Map();
@@ -163,19 +167,19 @@ class sandy.materials.BitmapMaterial extends Material
 			f.container.attachBitmap( m_oTexture, 0 );
 			//f.container.cacheAsBitmap = true;
 		}
-		else if( f.vertices.length > 3 )
+		else if( f.vertices.length >= 3 )
 		{
 			var m:Matrix = null;
 			// --
 			if( m_nWidth > 0 && m_nHeight > 0 )
 			{		
 				var l_aUV:Array = f.aUVCoord;
-				var u0: Number = l_aUV[0].u;
-				var v0: Number = l_aUV[0].v;
-				var u1: Number = l_aUV[1].u;
-				var v1: Number = l_aUV[1].v;
-				var u2: Number = l_aUV[2].u;
-				var v2: Number = l_aUV[2].v;
+				var u0: Number = l_aUV[0].u * m_nWidth;
+				var v0: Number = l_aUV[0].v * m_nHeight;
+				var u1: Number = l_aUV[1].u * m_nWidth;
+				var v1: Number = l_aUV[1].v * m_nHeight;
+				var u2: Number = l_aUV[2].u * m_nWidth;
+				var v2: Number = l_aUV[2].v * m_nHeight;
 				// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 				if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 				{
@@ -188,7 +192,7 @@ class sandy.materials.BitmapMaterial extends Material
 					v2 -= (v2 > 0.06)? 0.06 : -0.06;
 				}
 				// --
-				m = new Matrix( (u1 - u0), m_nHeight*(v1 - v0)/m_nWidth, m_nWidth*(u2 - u0)/m_nHeight, (v2 - v0), u0*m_nWidth, v0*m_nHeight );
+				m = new Matrix( (u1 - u0), (v1 - v0), (u2 - u0), (v2 - v0), u0, v0 );
 				m.invert();
 				//Logger.LOG("Polygon matrix : "+f+" "+m);
 			}
@@ -213,16 +217,24 @@ class sandy.materials.BitmapMaterial extends Material
 		var x2: Number = a[2].sx;
 		var y2: Number = a[2].sy;
 		// --
-		var sMat = 	{ 	a:( x1 - x0 ) / m_nWidth, 
-						b:( y1 - y0 ) / m_nWidth, 
-						c:( x2 - x0 ) / m_nHeight, 
-						d:( y2 - y0 ) / m_nHeight, 
-						tx: x0, 
-						ty: y0 
-					};
+		var a1  :Number  = m.a;
+		var b1  :Number  = m.b;
+		var c1  :Number  = m.c;
+		var d1  :Number  = m.d;
+		var tx1 :Number = m.tx;
+		var ty1 :Number = m.ty;
 		// --
-		matrix = m.clone();
-		matrix.concat( sMat );
+		var a2 :Number = x1 - x0;
+		var b2 :Number = y1 - y0;
+		var c2 :Number = x2 - x0;
+		var d2 :Number = y2 - y0;
+		// --
+		matrix.a = a1*a2 + b1*c2;
+		matrix.b = a1*b2 + b1*d2;
+		matrix.c = c1*a2 + d1*c2;
+		matrix.d = c1*b2 + d1*d2;
+		matrix.tx = tx1*a2 + ty1*c2 + x0;
+		matrix.ty = tx1*b2 + ty1*d2 + y0;
 	}
 	
 	/**

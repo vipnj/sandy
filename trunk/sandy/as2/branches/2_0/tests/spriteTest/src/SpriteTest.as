@@ -73,27 +73,21 @@ class tests.spriteTest.src.SpriteTest implements IFrameListener
 	{
 		// -- variables declaration
 		var g:Group = new Group();
-		var tgTranslation:TransformGroup = new TransformGroup("translation");
-		// -- transformations
-		tgTranslation.z = 500;
 		// -- creation of the materials and apperance
 		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
 		var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( b ) ); 
 		// --
-		var l_oMaterial:Material = new ColorMaterial( 0xFF0000, 100 );
-		l_oMaterial.lineAttributes = new LineAttributes( 10, 0xFF, 100 );
-		var l_oAppearance:Appearance = new Appearance( l_oMaterial ); 
-		// --
-		var l_oSprite:Sprite2D = new Sprite2D();
-		l_oSprite.appearance = l_oTextureAppearance;
-		
-		var l_oSprite2:Sprite2D = new Sprite2D();
-		l_oSprite2.x = -100;
-		l_oSprite2.appearance = l_oAppearance;
-		// --
-		tgTranslation.addChild( l_oSprite );
-		tgTranslation.addChild( l_oSprite2 );
-		g.addChild( tgTranslation );
+		var l:Number = 100;
+		var slice:Number = Math.PI * 2 / l;
+		while( --l > -1 )
+		{
+			var l_oSprite:Sprite2D = new Sprite2D("sprite_"+l);
+			l_oSprite.x = 1000 * Math.cos( l*slice );
+			l_oSprite.z = 1000 * Math.sin( l*slice );
+			l_oSprite.appearance = l_oTextureAppearance;
+			// --
+			g.addChild( l_oSprite );
+		}
 		// --
 		return g;
 	}
@@ -105,8 +99,8 @@ class tests.spriteTest.src.SpriteTest implements IFrameListener
 		// --
 		//if(Key.isDown(Key.HOME))   cam.moveForward(1); 
 		//if(Key.isDown(Key.END))    cam.moveForward(-5); 
-		if ( Key.isDown(Key.UP))   cam.moveForward(3);
-		if ( Key.isDown(Key.DOWN)) cam.moveForward(-3);
+		if ( Key.isDown(Key.UP))   cam.moveForward(5);
+		if ( Key.isDown(Key.DOWN)) cam.moveForward(-5);
 		if(Key.isDown(Key.LEFT))   cam.rotateY += 1; 
 		if(Key.isDown(Key.RIGHT))  cam.rotateY -= 1; 		
 		// --

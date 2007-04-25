@@ -50,7 +50,7 @@ class sandy.core.scenegraph.Sprite2D extends Shape3D
 		// --
 		_oBSphere 	= new BSphere();
         _oBBox 		= null;
-        setBoundingSphereRadius( 10 );
+        setBoundingSphereRadius( 50 );
         // --
 		_nScale = (pScale == null ) ? 1 : pScale;
 	}

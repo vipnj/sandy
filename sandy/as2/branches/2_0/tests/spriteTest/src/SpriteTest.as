@@ -24,7 +24,7 @@ import sandy.util.BitmapUtil;
 /**
  * @author thomaspfeiffer
  */
-class tests.spriteTest.src.SpriteTest implements IFrameListener 
+class SpriteTest implements IFrameListener 
 {
 	private var _mc:MovieClip;
 	private var _world:World3D;
@@ -34,14 +34,11 @@ class tests.spriteTest.src.SpriteTest implements IFrameListener
 		Logger.getInstance().addLogListener( LuminicTracer.getInstance() );
 		// --
 		var t:SpriteTest = new SpriteTest(mc);
-		// -- Does not make things a lot faster in AS2 but does in AS3...
-		Matrix4Math.USE_FAST_MATH = true;
 	}
 	
 	public function SpriteTest( p_oMc:MovieClip )
 	{
 		_mc = p_oMc;
-		
 		var fpsUI:FPSLoggerUI = new FPSLoggerUI( _mc, -3 );
 		//
 		_world = World3D.getInstance();
@@ -59,7 +56,6 @@ class tests.spriteTest.src.SpriteTest implements IFrameListener
 		gl.execute();
 		FPSBeacon.getInstance().addFrameListener( this );
 	}	
-
 	
 	private function _onReady( Void ):Void
 	{
@@ -91,7 +87,6 @@ class tests.spriteTest.src.SpriteTest implements IFrameListener
 		// --
 		return g;
 	}
-	
 
 	public function onEnterFrame() : Void 
 	{
@@ -106,5 +101,4 @@ class tests.spriteTest.src.SpriteTest implements IFrameListener
 		// --
 		_world.render();
 	}
-
 }

@@ -270,6 +270,7 @@ class sandy.view.Camera3D
 		//if( _nTilt == -90 || _nTilt == 90 ) return;
 		_compiled = false;
 		nAngle = (nAngle + 360)%360;
+		_nTilt = nAngle;
 		var m:Matrix4 = Matrix4Math.axisRotation ( _vSide.x, _vSide.y, _vSide.z, nAngle );
 		Matrix4Math.vectorMult3x3( m, _vUp);
 		Matrix4Math.vectorMult3x3( m, _vOut);
@@ -285,6 +286,7 @@ class sandy.view.Camera3D
 	{
 		_compiled = false;
 		nAngle = (nAngle + 360)%360;
+		_nYaw = nAngle;
 		var m:Matrix4 = Matrix4Math.axisRotation ( _vUp.x, _vUp.y, _vUp.z, nAngle );
 		Matrix4Math.vectorMult3x3( m, _vSide);
 		Matrix4Math.vectorMult3x3( m, _vOut);
@@ -302,6 +304,7 @@ class sandy.view.Camera3D
 	{
 		_compiled = false;
 		nAngle = (nAngle + 360)%360;
+		_nRoll = nAngle;
 		var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, nAngle );
 		Matrix4Math.vectorMult3x3( m, _vSide);
 		Matrix4Math.vectorMult3x3( m, _vUp);

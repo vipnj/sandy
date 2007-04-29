@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.view {
+package sandy.view 
+{
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
@@ -52,19 +53,18 @@ package sandy.view {
 		// right plane : aNormals[3], aConstants[3] <-> aPoints[0], aPoints[3], aPoints[4], aPoints[7]
 		// left plane  : aNormals[4], aConstants[4] <-> aPoints[1], aPoints[2], aPoints[5], aPoints[6]
 		// back plane  : aNormals[5], aConstants[5] <-> aPoints[4], aPoints[5], aPoints[6], aPoints[7] 	
-		public static var NEAR:Number 	= 0;
-		public static var FAR:Number 	= 1;
-		public static var RIGHT:Number 	= 2;
-		public static var LEFT:Number	= 3;
-	    public static var TOP:Number 	= 4;
-		public static var BOTTOM:Number  = 5; 
+		public static const NEAR:uint 	= 0;
+		public static const FAR:uint 	= 1;
+		public static const RIGHT:uint 	= 2;
+		public static const LEFT:uint	= 3;
+	    public static const TOP:uint 	= 4;
+		public static const BOTTOM:uint = 5; 
 		
 		public static var INSIDE:CullingState = CullingState.INSIDE;
 		public static var OUTSIDE:CullingState = CullingState.OUTSIDE;
 		public static var INTERSECT:CullingState = CullingState.INTERSECT;
 		public static var EPSILON:Number = 0.005;
 	
-		
 		public function Frustum() 
 		{
 			aPlanes = new Array(6);
@@ -169,6 +169,7 @@ package sandy.view {
 	        var d:Number; 
 	        var center:Vector = p_oS.m_oPosition;
 	        var radius:Number = p_oS.m_nTRadius;
+	        // --
 	        for( p = 0; p < 6; p++ ) 
 	        { 
 	            d = aPlanes[p].a * center.x + aPlanes[p].b * center.y + aPlanes[p].c * center.z + aPlanes[p].d; 
@@ -177,6 +178,7 @@ package sandy.view {
 	            if( d > radius ) 
 	                c++; 
 	        } 
+	        // --
 	        return (c == 6) ? Frustum.INSIDE : Frustum.INTERSECT;
 		}
 	

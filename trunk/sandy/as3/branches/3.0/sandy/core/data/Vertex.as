@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
+package sandy.core.data 
+{
 	/**
 	* Vertex of a 3D mesh.
 	* 
@@ -58,15 +59,15 @@ package sandy.core.data {
 		* @param pz the z position number
 		* 
 		*/
-		public function Vertex(px:Number=0, py:Number=0, pz:Number=0, wx:Number=0, wy:Number=0, wz:Number=0)
+		public function Vertex( p_nx:Number=0, p_ny:Number=0, p_nz:Number=0, ...rest )
 		{
-			x = px;
-			y = py;
-			z = pz;
+			x = p_nx;
+			y = p_ny;
+			z = p_nz;
 			// -- 
-			this.wx = wx; 
-			this.wy = wy; 
-			this.wz = wz;
+			wx = (rest[0])?rest[0]:x; 
+			wy = (rest[1])?rest[1]:y;  
+			wz = (rest[2])?rest[2]:z; 
 			// --
 			sy = sx = sz = 0;
 			// --

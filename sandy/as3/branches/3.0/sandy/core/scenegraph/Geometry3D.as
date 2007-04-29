@@ -166,7 +166,7 @@ package sandy.core.scenegraph {
 			}
 			else
 			{
-				var rest:Array = (arguments[1] is Array)? arguments[1]: arguments.splice(1);
+				var rest:Array = (arguments[0] is Array)? arguments[0]: arguments.splice(0);
 				aFacesVertexID[p_nFaceID] = rest;
 				return p_nFaceID;
 			}
@@ -193,7 +193,7 @@ package sandy.core.scenegraph {
 			}
 			else
 			{
-				var rest:Array = (arguments[1] is Array)? arguments[1]: arguments.splice(1);
+				var rest:Array = (arguments[0] is Array)? arguments[0]: arguments.splice(0);
 				aFacesUVCoordsID[p_nFaceID] = rest;
 				return p_nFaceID;
 			}

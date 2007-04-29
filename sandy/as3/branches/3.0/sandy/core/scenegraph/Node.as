@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;

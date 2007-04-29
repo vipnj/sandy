@@ -1,4 +1,5 @@
-package sandy.core.scenegraph {    
+package sandy.core.scenegraph 
+{    
 	import flash.events.MouseEvent;
 	
 	import sandy.bounds.BBox;
@@ -36,10 +37,10 @@ package sandy.core.scenegraph {
 	    {
 	    	if( aPolygons != null && aPolygons.length > 0 )
 	    	{
-	    		var i:Number, l:Number;
+	    		var i:int, l:int = aPolygons.length;
 	    		for( i=0; i<l; i++ )
 		    	{
-		    		Polygon( aPolygons[i] ).destroy();
+		    		Polygon( aPolygons[int(i)] ).destroy();
 		    	}
 	    	}
 	    }
@@ -210,12 +211,14 @@ package sandy.core.scenegraph {
 				    	l_oFace.cvertices = l_oFace.vertices;
 				    }
 				    // --
-					l_nDepth = l_oFace.getZAverage();
 					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-					if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth + l_nDepth/1000;
+					if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth;
+					else l_nDepth = l_oFace.getZAverage();
 					// we set the polygon to this depth (multiplied by 1000 to avoid the problem of 2 polygons at the same depth
 					//l_oFace.container.swapDepths( 10000000 - int(1000*l_nDepth) );
-					l_oFace.container.parent.swapChildren( l_oFace.container, l_oFace.container.parent.getChildAt( 10000000 - int(1000*l_nDepth) ) ); 
+					//l_oFace.container.parent.setChildIndex( l_oFace.container, int(l_nDepth/100) );
+					//l_oFace.container.parent.swapChildren( l_oFace.container, l_oFace.container.parent.getChildAt( l_nDepth ) ); 
+					l_oFace.depth = l_nDepth;
 					// --
 					p_oCamera.addToDisplayList( l_oFace );
 				}
@@ -229,7 +232,7 @@ package sandy.core.scenegraph {
 		{
 			// Now we register to the update event
 			m_oAppearance = p_oApp;
-			//
+			// --
 			if( m_oGeometry )
 			{
 				var l_faces:Array = aPolygons;

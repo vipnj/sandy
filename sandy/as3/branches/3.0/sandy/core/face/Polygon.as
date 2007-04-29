@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.face {
+package sandy.core.face 
+{
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
@@ -80,8 +81,6 @@ package sandy.core.face {
 			
 			container = new Sprite();
 			container.name = "polygon_"+id;
-			
-			World3D.getInstance().container.addChild( container );
 		}
 	
 		/**
@@ -106,8 +105,10 @@ package sandy.core.face {
 			p_oFrustum.clipFrustum( cvertices );
 		}
 		
-		public function render():void
+		public function render( p_mcContainer:Sprite ):void
 		{
+			p_mcContainer.addChild( container );
+			// --
 			if( visible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
 			else			m_oAppearance.backMaterial.renderPolygon( this );
 		}

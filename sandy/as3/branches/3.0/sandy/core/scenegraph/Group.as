@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Node;
@@ -88,7 +89,7 @@ package sandy.core.scenegraph {
 			// --
 			for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
 			{
-			    if( l_oNode.culled != Frustum.OUTSIDE ) 
+			    //if( l_oNode.culled != Frustum.OUTSIDE )
 			    	l_oNode.render( p_oCamera );
 			    
 			    // --

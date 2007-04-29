@@ -1,7 +1,8 @@
 /**
  * @author thomaspfeiffer
  */
-package sandy.view {
+package sandy.view 
+{
 	public class CullingState 
 	{
 		public static function get INTERSECT():CullingState { return _INTERSECT_ ; };

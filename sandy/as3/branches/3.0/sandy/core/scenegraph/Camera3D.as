@@ -14,7 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
+	import flash.display.Sprite;
+	
+	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
 	import sandy.core.face.Polygon;
@@ -127,28 +131,36 @@ package sandy.core.scenegraph {
 		
 		public function clearDisplayList():void
 		{
-		    var l_oDisplayElt:Polygon;
-		    var i:Number;
+		    var i:int;
 		    // --
-		    if( m_aDisplayListCopy == null ) return;
+		    var l_mcContainer:Sprite = World3D.getInstance().container;
+		    var l_nLength:int = l_mcContainer.numChildren;
+		    // --
+		    if( l_nLength == 0 ) return;
 		    
-			for( i=0; l_oDisplayElt = m_aDisplayListCopy[i]; i++ )
+			for( i=0; i < l_nLength; i++ )
 			{
-			   //l_oDisplayElt.container.
-			   for( var j:Number = 0; j < l_oDisplayElt.container.numChildren; j++ )
-			   	l_oDisplayElt.container.removeChildAt( j );
+				try
+				{
+					if( l_mcContainer.getChildAt(i) ) 	
+						l_mcContainer.removeChildAt(i);
+				} catch (e:RangeError)
+					{;}
 			}
-	
 		}
 		
 		public function renderDisplayList():void
 		{
-		    var l_oDisplayElt:Polygon = null;
-		    var i:Number;
+		    var i:int;
+		    var l:int =  m_aDisplayList.length;
 		    // --
-			for( i=0; l_oDisplayElt = m_aDisplayList[i]; i++ )
+		    var l_mcContainer:Sprite = World3D.getInstance().container;
+		    // --
+		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		    // --
+			for( i=0; i < l; i++ )
 			{
-			   l_oDisplayElt.render();
+			   m_aDisplayList[i].render( l_mcContainer );
 			}
 			// --
 			m_aDisplayListCopy = m_aDisplayList.concat();

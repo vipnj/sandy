@@ -13,11 +13,14 @@ package
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
 	import sandy.primitive.Box;
+	import sandy.core.scenegraph.Sprite2D;
+	import sandy.primitive.Cylinder;
 	
 	public class SimpleTest1 extends Sprite
 	{
 		private var world : World3D;
 		private var camera : Camera3D;
+		private var box:Cylinder;
 		
 		public function SimpleTest1()
 		{
@@ -26,18 +29,22 @@ package
 			
 			// create scene
 			var g:Group = new Group();
-			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", 2 );
-			box.appearance = new Appearance( new ColorMaterial( 0xffff000) );
-			box.enableClipping = true;
-						
-			g.addChild( box );
+			
+			//for(var i:Number=0; i<200; i++) {
+				box = new Cylinder( "cylinder", 500, 500, 8, 8, 500);
+				box.appearance = new Appearance( new ColorMaterial( 0xffff00) );
+				box.x = Math.random() * 500;
+				box.y = Math.random() * 500;
+				box.z = Math.random() * 500;
+				
+				g.addChild( box );
+			//}
 			
 			world.root = g;
 			
-			world.camera = new Camera3D( 500, 500 );
-			world.root.addChild( world.camera );
-			world.camera.z = -300;
-			
+			world.camera = new Camera3D( 1500, 1500 );
+			world.camera.z = 300;
+
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
 			stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDownHandler );
 		}
@@ -45,7 +52,7 @@ package
 		private function keyDownHandler( event : KeyboardEvent ) : void
 		{
 			var camera:Camera3D = world.camera;
-			
+trace("keydown");			
 			switch( event.keyCode ) {
 				case Keyboard.UP:
 					camera.moveForward(5);
@@ -64,6 +71,7 @@ package
 		
 		private function enterFrameHandler( event : Event ) : void
 		{
+			trace( box.culled +" "+box.name);
 			world.render();
 		}
 	}

@@ -36,7 +36,6 @@ package sandy.events
 								   cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-			trace("SandyEvent constructor: " + type);
 		}
 		
 		override public function clone():Event

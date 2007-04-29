@@ -101,8 +101,8 @@ package sandy.core.scenegraph {
 		{
 			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 			// --
-			if( culled == CullingState.OUTSIDE ) 	aPolygons[0].container._visible = false;
-			else									aPolygons[0].container._visible = true;
+			if( culled == CullingState.OUTSIDE ) 	aPolygons[0].container.visible = false;
+			else									aPolygons[0].container.visible = true;
 		}
 		
 	    public override function render( p_oCamera:Camera3D ):void

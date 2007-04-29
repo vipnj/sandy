@@ -18,7 +18,7 @@ package sandy.core.scenegraph {
 	    public function Shape3D( p_sName:String, p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
 	    {
 	        super( p_sName );
-	        if( geometry != null ) geometry = p_geometry;
+	        geometry = p_geometry;
 	        //
 	        m_bBackFaceCulling = true;
 			m_bEnableForcedDepth = false;
@@ -134,7 +134,7 @@ package sandy.core.scenegraph {
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void
-		{	
+		{
 			var l_nDepth:Number;
 			var l_oFace:Polygon;
 			var l_oVertex:Vertex;
@@ -250,6 +250,7 @@ package sandy.core.scenegraph {
 		
 		public function set geometry( p_geometry:Geometry3D ):void
 		{
+			if( p_geometry == null ) return;
 			// TODO shall we clone the geometry?
 			m_oGeometry = p_geometry;
 			updateBoundingVolumes();

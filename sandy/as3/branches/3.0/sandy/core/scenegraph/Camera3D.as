@@ -27,6 +27,7 @@ package sandy.core.scenegraph
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
+	import flash.display.DisplayObject;
 	
 	/**
 	* Camera3D
@@ -57,7 +58,7 @@ package sandy.core.scenegraph
 			frustrum = new Frustum();
 			// --
 			setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
-			m_aDisplayList = new Array();
+			m_aDisplayListCopy = m_aDisplayList = new Array();
 			m_aVerticesList = new Array();
 			// It's a non visible node
 			visible = false;
@@ -133,19 +134,12 @@ package sandy.core.scenegraph
 		{
 		    var i:int;
 		    // --
-		    var l_mcContainer:Sprite = World3D.getInstance().container;
-		    var l_nLength:int = l_mcContainer.numChildren;
+		    var l_mcChild:Sprite;
+		    var l_nLength:int = m_aDisplayListCopy.length;
 		    // --
-		    if( l_nLength == 0 ) return;
-		    
 			for( i=0; i < l_nLength; i++ )
 			{
-				try
-				{
-					if( l_mcContainer.getChildAt(i) ) 	
-						l_mcContainer.removeChildAt(i);
-				} catch (e:RangeError)
-					{;}
+				m_aDisplayListCopy[int(i)].container.graphics.clear();
 			}
 		}
 		
@@ -153,14 +147,14 @@ package sandy.core.scenegraph
 		{
 		    var i:int;
 		    var l:int =  m_aDisplayList.length;
-		    // --
 		    var l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
 			for( i=0; i < l; i++ )
 			{
-			   m_aDisplayList[i].render( l_mcContainer );
+			   l_mcContainer.setChildIndex(m_aDisplayList[i].container, i);
+			   m_aDisplayList[i].render();
 			}
 			// --
 			m_aDisplayListCopy = m_aDisplayList.concat();

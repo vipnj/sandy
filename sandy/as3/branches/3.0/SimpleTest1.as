@@ -1,8 +1,12 @@
 package
 {
+	import flash.display.BitmapData;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.KeyboardEvent;
+	import flash.display.Stage;
+	import flash.display.StageScaleMode;
+	import flash.events.*;
+	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
@@ -13,65 +17,87 @@ package
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
 	import sandy.primitive.Box;
-	import sandy.core.scenegraph.Sprite2D;
-	import sandy.primitive.Cylinder;
-	
+
+    [SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate=120)] 
+    
 	public class SimpleTest1 extends Sprite
 	{
+		internal static const SCREEN_WIDTH:int = 500;
+		internal static const SCREEN_HEIGHT:int = 500;
+		
 		private var world : World3D;
 		private var camera : Camera3D;
-		private var box:Cylinder;
+		private var keyPressed:Array;
 		
 		public function SimpleTest1()
 		{
-			world = World3D.getInstance(); 
-			world.container = this;
-			
-			// create scene
-			var g:Group = new Group();
-			
-			//for(var i:Number=0; i<200; i++) {
-				box = new Cylinder( "cylinder", 500, 500, 8, 8, 500);
-				box.appearance = new Appearance( new ColorMaterial( 0xffff00) );
-				box.x = Math.random() * 500;
-				box.y = Math.random() * 500;
-				box.z = Math.random() * 500;
-				
-				g.addChild( box );
-			//}
-			
-			world.root = g;
-			
-			world.camera = new Camera3D( 1500, 1500 );
-			world.camera.z = 300;
-
+			super();
+			// --
+			stage.scaleMode = StageScaleMode.NO_SCALE ;
+			// -- INIT
+			keyPressed = [];
+			// -- User interface
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
+			// --
+			_init();
+			// --
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
-			stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDownHandler );
 		}
 		
-		private function keyDownHandler( event : KeyboardEvent ) : void
+		private function _init()
 		{
-			var camera:Camera3D = world.camera;
-trace("keydown");			
-			switch( event.keyCode ) {
-				case Keyboard.UP:
-					camera.moveForward(5);
-					break;
-				case Keyboard.DOWN:
-					camera.moveForward(-5);
-					break;
-				case Keyboard.LEFT:
-					camera.rotateY += 1;
-					break;
-				case Keyboard.RIGHT:
-					camera.rotateY -= 1;
-					break;
-			}
+			// --
+			var l_mcWorld:MovieClip = new MovieClip();
+			l_mcWorld.x = (stage.stageWidth - SCREEN_WIDTH) / 2;
+			l_mcWorld.y = (stage.stageHeight - SCREEN_HEIGHT) / 2;
+			addChild(l_mcWorld);
+			world = World3D.getInstance(); 
+			world.container = l_mcWorld;
+			// --
+			world.camera = new Camera3D( SCREEN_WIDTH, SCREEN_HEIGHT );
+			world.camera.z = -300;
+			// -- create scene
+			var g:Group = new Group();
+			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", 2 );
+			box.appearance = new Appearance( new ColorMaterial( 0xffff000, 50) );
+			box.enableBackFaceCulling = false;
+			// --			
+			g.addChild( box );
+			world.root = g;
+			world.root.addChild( world.camera );
 		}
-		
+	
+		public function __onKeyDown(e:KeyboardEvent):void
+		{
+            keyPressed[e.keyCode]=true;
+        }
+        
+        public function __onKeyUp(e:KeyboardEvent):void
+        {
+            keyPressed[e.keyCode]=false;
+        }
+  
 		private function enterFrameHandler( event : Event ) : void
 		{
-			trace( box.culled +" "+box.name);
+			var cam:Camera3D = world.camera;
+			// --
+			if( keyPressed[Keyboard.RIGHT] ) 
+			{   
+			    cam.rotateY -= 1;
+			}
+			if( keyPressed[Keyboard.LEFT] )     
+			{
+			    cam.rotateY += 1;
+			}		
+			if( keyPressed[Keyboard.UP] )
+			{ 
+			    cam.moveForward( 2 );
+			}
+			if( keyPressed[Keyboard.DOWN] )
+			{ 
+			    cam.moveForward( -2 );
+			}	
 			world.render();
 		}
 	}

@@ -81,6 +81,7 @@ package sandy.core.face
 			
 			container = new Sprite();
 			container.name = "polygon_"+id;
+			World3D.getInstance().container.addChild( container );
 		}
 	
 		/**
@@ -105,10 +106,8 @@ package sandy.core.face
 			p_oFrustum.clipFrustum( cvertices );
 		}
 		
-		public function render( p_mcContainer:Sprite ):void
+		public function render():void
 		{
-			p_mcContainer.addChild( container );
-			// --
 			if( visible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
 			else			m_oAppearance.backMaterial.renderPolygon( this );
 		}
@@ -160,14 +159,13 @@ package sandy.core.face
 			// -- We normalize the sum and return it
 			var a:Array = cvertices;
 			var l:Number= a.length;
-			var d:Number = 0;
 			// --
 			while( --l > -1 )
 			{
-				d += a[(l)].wz;
+				depth += a[(l)].wz;
 			}
 			// --
-			depth = d / a.length;
+			depth /= a.length;
 			return depth;
 		}
 	
@@ -261,7 +259,6 @@ package sandy.core.face
 			cvertices = null;
 			vertices = null;
 		}
-		
 	
 		/*
 		 ***********************
@@ -283,6 +280,5 @@ package sandy.core.face
 		{
 			dispatchEvent(e);
 		}
-	
 	}
 }

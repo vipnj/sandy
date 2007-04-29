@@ -1,4 +1,5 @@
-package sandy.materials {
+package sandy.materials 
+{
 	import sandy.core.face.Polygon;
 	import sandy.materials.Material;
 	import flash.display.Sprite;
@@ -11,11 +12,11 @@ package sandy.materials {
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;
 		// --
-		public function ColorMaterial( p_nColor:Number = 0, p_nAlpha:Number = 0)
+		public function ColorMaterial( p_nColor:Number = 0, p_nAlpha:Number = 1.0 )
 		{
 			super();
 			m_nColor = p_nColor;
-			m_nAlpha = p_nAlpha;
+			m_nAlpha = p_nAlpha/100;
 		}
 		
 		public override function renderPolygon( p_oPolygon:Polygon ):void 
@@ -23,7 +24,7 @@ package sandy.materials {
 			var sprite:Sprite = p_oPolygon.container;
 			var l_points:Array = p_oPolygon.cvertices;
 			// --
-			sprite.graphics.beginFill( m_nColor, m_nAlpha );
+			sprite.graphics.beginFill( m_nColor, m_nAlpha);
 			// --
 			if( lineAttributes )
 				sprite.graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );

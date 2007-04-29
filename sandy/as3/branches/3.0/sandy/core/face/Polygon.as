@@ -78,7 +78,7 @@ package sandy.core.face {
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 			// Add this graphical object to the World display list
 			
-			var container:Sprite = new Sprite();
+			container = new Sprite();
 			container.name = "polygon_"+id;
 			
 			World3D.getInstance().container.addChild( container );
@@ -120,6 +120,7 @@ package sandy.core.face {
 		{
 			var i:Number, l:Number;
 			// --
+			if( p_aUVCoordsID == null ) return;
 			vertices = new Array( l = p_aVertexID.length );
 			for( i=0; i<l; i++ )
 			{

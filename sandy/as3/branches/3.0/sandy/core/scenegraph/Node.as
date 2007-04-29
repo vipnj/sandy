@@ -339,6 +339,7 @@ package sandy.core.scenegraph {
 				        /////////////////////////
 				        _oBSphere.transform( _oViewCacheMatrix );
 				        culled = p_oFrustum.sphereInFrustum( _oBSphere );
+				        
 						//
 						if( culled == Frustum.INTERSECT && _oBBox )
 						{

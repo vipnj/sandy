@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive {
+package sandy.primitive 
+{
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.primitive.Primitive3D;
@@ -41,16 +42,16 @@ package sandy.primitive {
 		*
 		* @param As many parameters as needed points can be passed. However a minimum of 2 vector instance must be given.
 		*/
-		public function Line3D ( p_sName:String, deb:Vector, fin:Vector )
+		public function Line3D ( p_sName:String, ...rest )
 		{
 			super ( p_sName );
-			if( arguments.length < 2 )
+			if( rest.length < 2 )
 			{
 				trace('Line3D::Number of arguments to low');
 			}
 			else
 			{
-				geometry = generate ( arguments.splice(1) );
+				geometry = generate( rest );
 				enableBackFaceCulling = false;
 			}
 		}
@@ -60,7 +61,7 @@ package sandy.primitive {
 		* 
 		* <p>Generate all is needed to construct the Line3D : </p>
 		*/
-		public function generate (... arguments) : Geometry3D
+		public function generate ( ... arguments ) : Geometry3D
 		{
 			var l_oGeometry:Geometry3D = new Geometry3D();
 			var l_aPoints:Array = arguments[0];

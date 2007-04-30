@@ -16,7 +16,7 @@ limitations under the License.
 package sandy.materials 
 {
 	import flash.display.BitmapData;
-	import flash.display.Sprite;
+	import flash.display.Shape;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -49,7 +49,7 @@ package sandy.materials
 		 * Create a new BitmapMaterial.
 		 * @param t : The bitmapdata
 		 */
-		public function BitmapMaterial( t:BitmapData, p_oLineAttr:LineAttributes )
+		public function BitmapMaterial( t:BitmapData, p_oLineAttr:LineAttributes = null )
 		{
 			super();
 			// --
@@ -66,7 +66,7 @@ package sandy.materials
 	
 		public override function renderPolygon( p_oPolygon:Polygon ):void 
 		{
-			var sprite:Sprite = p_oPolygon.container;
+			var sprite:Shape = p_oPolygon.container;
 			var l_points:Array = p_oPolygon.cvertices;
 			// --
 			if( l_points.length == 1 )
@@ -167,7 +167,7 @@ package sandy.materials
 			if( f.vertices.length == 1 )
 			{
 				// Small hack, which is enought for the moment
-				f.container.addChild( new Bitmap(m_oTexture) );
+				//f.container.addChild( new Bitmap(m_oTexture) );
 				//f.container.cacheAsBitmap = true;
 			}
 			else if( f.vertices.length >= 3 )

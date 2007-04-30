@@ -65,6 +65,7 @@ package sandy.core.data
 		private var m_aUVCoords:Array;
 		/** Unique face id */
 		private var id:Number;
+		private var m_bVisible:Boolean;
 		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
 		{
@@ -94,7 +95,8 @@ package sandy.core.data
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
 			var a:Vertex = vertices[0];
 			var l_nDot:Number = ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz );
-			return (( backfaceCulling ) * (l_nDot) < 0);
+			m_bVisible = (( backfaceCulling ) * (l_nDot) < 0);
+			return m_bVisible;
 		}
 		
 		public function clip( p_oFrustum:Frustum ):void
@@ -113,7 +115,7 @@ package sandy.core.data
 		
 		public function render():void
 		{
-			if( visible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
+			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this );
 			else			m_oAppearance.backMaterial.renderPolygon( this );
 		}
 		
@@ -125,7 +127,6 @@ package sandy.core.data
 		{
 			var i:Number, l:Number;
 			// --
-			if( p_aUVCoordsID == null ) return;
 			vertices = new Array( l = p_aVertexID.length );
 			for( i=0; i<l; i++ )
 			{
@@ -133,14 +134,15 @@ package sandy.core.data
 			}
 			// --
 			cvertices = vertices;
-			// --
-			aUVCoord = new Array( l = p_aUVCoordsID.length );
-			for( i=0; i<l; i++ )
+			// -- every polygon does not have some texture coordinates
+			if( p_aUVCoordsID )
 			{
-				aUVCoord[i] = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
+				aUVCoord = new Array( l = p_aUVCoordsID.length );
+				for( i=0; i<l; i++ )
+				{
+					aUVCoord[i] = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
+				}
 			}
-			// TODO update the texture matrix? or just when the appearance is applied.
-			// Second choice because we need the picture dimensions
 			// --
 			normal = Vertex( m_oGeometry.aFacesNormals[ p_nFaceNormalID ] );
 			// If no normal has been given, we create it ourself.
@@ -151,8 +153,6 @@ package sandy.core.data
 				normal = Vertex( m_oGeometry.aFacesNormals[ l_nID ] );
 			}
 		}
-		
-	
 		
 		/**
 		 * Return the depth average of the face.

@@ -89,9 +89,8 @@ package sandy.core.scenegraph
 			// --
 			for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
 			{
-			    //if( l_oNode.culled != Frustum.OUTSIDE )
+			    if( l_oNode.culled != Frustum.OUTSIDE )
 			    	l_oNode.render( p_oCamera );
-			    
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
 			    l_oNode.culled = CullingState.INSIDE; // Default value is inside.

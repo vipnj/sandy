@@ -16,18 +16,18 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
-	import flash.display.DisplayObject;
 	
 	/**
 	* Camera3D
@@ -47,7 +47,7 @@ package sandy.core.scenegraph
 		 * @param nFoc The focal of the Camera3D
 		 * @param s the screen associated to the camera
 		 */
-		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 3000, p_nFar:Number = 10 )
+		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 10, p_nFar:Number = 3000 )
 		{
 			super( null );
 			_viewport = new ViewPort( p_nWidth, p_nHeight );

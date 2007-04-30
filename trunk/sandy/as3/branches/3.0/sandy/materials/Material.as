@@ -13,11 +13,12 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.materials {
+package sandy.materials 
+{
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
 	
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.materials.LineAttributes;
 	import sandy.materials.MaterialType;
 	

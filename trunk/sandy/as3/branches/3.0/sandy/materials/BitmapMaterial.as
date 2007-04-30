@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.materials {
+package sandy.materials 
+{
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.filters.ColorMatrixFilter;
@@ -47,9 +48,11 @@ package sandy.materials {
 		 * Create a new BitmapMaterial.
 		 * @param t : The bitmapdata
 		 */
-		public function BitmapMaterial( t:BitmapData )
+		public function BitmapMaterial( t:BitmapData, p_oLineAttr:LineAttributes )
 		{
 			super();
+			// --
+			lineAttributes = p_oLineAttr;
 			// --
 			texture = t;
 			smooth = false;

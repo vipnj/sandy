@@ -1,7 +1,8 @@
 /**
  * @author thomaspfeiffer
  */
-package sandy.materials {
+package sandy.materials 
+{
 	public class LineAttributes 
 	{
 		private var m_nThickness:Number;
@@ -13,7 +14,7 @@ package sandy.materials {
 		public function LineAttributes( p_nThickness:Number, p_nColor:Number, p_nAlpha:Number )
 		{
 			m_nThickness = p_nThickness;
-			m_nAlpha = p_nAlpha;
+			m_nAlpha = p_nAlpha/100;
 			m_nColor = p_nColor;
 			// --
 			modified = true;

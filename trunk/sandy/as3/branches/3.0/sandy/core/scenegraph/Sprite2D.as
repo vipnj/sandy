@@ -19,7 +19,7 @@ package sandy.core.scenegraph {
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;

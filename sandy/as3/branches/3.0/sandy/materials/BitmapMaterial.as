@@ -22,9 +22,10 @@ package sandy.materials
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.util.NumberUtil;
 	import flash.display.Bitmap;
+	import sandy.core.data.Polygon;
 	
 	/**
 	 * BitmapMaterial

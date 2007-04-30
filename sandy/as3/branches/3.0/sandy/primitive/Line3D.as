@@ -17,7 +17,7 @@ package sandy.primitive {
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.primitive.Primitive3D;
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.Geometry3D;
 	

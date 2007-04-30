@@ -16,7 +16,6 @@ limitations under the License.
 
 package sandy.core.scenegraph {
 	import sandy.core.data.Vertex;
-	import sandy.core.face.Polygon;
 	import sandy.core.data.AnimationData;
 	import sandy.core.data.UVCoord;
 	

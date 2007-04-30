@@ -175,7 +175,7 @@ package sandy.core.data
 		 */
 		public override function toString():String
 		{
-			return "sandy.core.face.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
+			return "sandy.core.data.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
 		}
 	
 		/**

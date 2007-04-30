@@ -87,19 +87,24 @@ package sandy.bounds {
 			var p:Array = new Array(pPoints.length);
 			if(pPoints.length == 0) return;
 			p[0] = pPoints[0].getVector();
-			var i:Number, j:Number, l:Number = pPoints.length;
-			for( i = 1; i < l; i++) 
+			var i:int, j:int, l:int = pPoints.length;
+			
+			while( i < l ) 
 			{
-				p[i] = pPoints[int(i)].getVector();
+				p[int(i)] = pPoints[int(i)].getVector();
+				i++;
 			}
 	
 			var p1:Vector = p[0];
 			var p2:Vector = p[0];
 			// find the farthest couple of points
 			var dmax:Number = 0;
-			for( i = 0; i < l; i++) 
+			i=0;
+			
+			while( i < l ) 
 			{
-				for( j = i + 1; j < l; j++) 
+				j = i + 1;
+				while( j < l ) 
 				{
 					x = p[int(j)].x - p[int(i)].x;
 					y = p[int(j)].y - p[int(i)].y;
@@ -111,7 +116,11 @@ package sandy.bounds {
 						p1 = p[int(i)];
 						p2 = p[int(j)];
 					}
+					
+					j++;
 				}
+				
+				i++;
 			}
 	
 			center = new Vector((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2);
@@ -150,13 +159,16 @@ package sandy.bounds {
 		private function pointsOutofSphere(p:Array):Array
 		{
 			var r:Array = new Array();
-			var i:Number;
-			for(i = 0; i < p.length; i++) 
+			var i:int, l:int = p.length;
+			
+			while( i < l ) 
 			{
 				if(distance(p[int(i)]) > 0) 
 				{
 					r.push( p[int(i)] );
 				}
+				
+				i++;
 			}
 			return r;
 		}
@@ -177,14 +189,15 @@ package sandy.bounds {
 		private function computeRadius(ps:Array):Number
 		{
 			var x:Number, y:Number, z:Number, d:Number, dmax:Number = 0;
-			var i:Number;
-			for(i = 0; i < ps.length; i++) 
+			var i:int, l:int = ps.length;
+			while( i < l ) 
 			{
 				x = ps[int(i)].x - center.x;
 				y = ps[int(i)].x - center.x;
 				z = ps[int(i)].x - center.x;
 				d = x * x + y * y + z * z;
 				if(d > dmax) dmax = d;
+				i++;
 			}
 			return Math.sqrt(dmax);
 		}

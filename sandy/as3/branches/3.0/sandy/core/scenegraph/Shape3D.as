@@ -432,17 +432,17 @@ package sandy.core.scenegraph
 		//////////////////////
 		private function _onPress(e:MouseEvent):void
 		{
-			dispatchEvent(e);
+			//dispatchEvent(e);
 		}
 		
 		private function _onRollOver(e:MouseEvent):void
 		{
-			dispatchEvent(e);
+			//dispatchEvent(e);
 		}
 		
 		private function _onRollOut(e:MouseEvent):void
 		{
-			dispatchEvent(e);
+			//dispatchEvent(e);
 		}
 	
 	// ______________

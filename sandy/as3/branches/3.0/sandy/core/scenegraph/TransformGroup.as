@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.core.scenegraph.ATransformable;
 	import sandy.core.scenegraph.Camera3D;
@@ -68,14 +69,16 @@ package sandy.core.scenegraph {
 			// TODO
 			// Parse the children, take their bounding volume and merge it with the current node recurssively. 
 			// After that call the super cull method to get the correct cull value.		
-			var l_oNode:Node;
-			var l_nId:Number;
-			var l_nLength:Number = _aChilds.length;
-			//
 			changed = p_bChanged || changed;
-			for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
+			var l_oNode:Node;
+			var l_nId:int = 0;
+			var l_nLength:int = _aChilds.length;
+			//
+			while( l_nId < l_nLength )
 			{
-			    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed );
+			    l_oNode = _aChilds[int(l_nId)];
+			    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed || l_oNode.changed );
+			    l_nId++;
 			}
 			// --
 			super.cull( p_oFrustum, p_oViewMatrix, changed );
@@ -84,16 +87,19 @@ package sandy.core.scenegraph {
 		public override function render( p_oCamera:Camera3D ):void
 		{
 			var l_oNode:Node;
-			var l_nId:Number;
-			var l_nLength:Number = _aChilds.length;
-			//
-			for( l_nId = 0; l_oNode = _aChilds[l_nId]; l_nId++ )
+			var l_nId:int = 0;
+			var l_nLength:int = _aChilds.length;
+			// --
+			while( l_nId < l_nLength )
 			{
+			    l_oNode = _aChilds[int(l_nId)];
 			    if( l_oNode.culled != Frustum.OUTSIDE )
 			    	l_oNode.render( p_oCamera );
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
 			    l_oNode.culled = CullingState.INSIDE; // Default value is inside.
+			    // --
+			    l_nId++;
 			}
 		}
 		

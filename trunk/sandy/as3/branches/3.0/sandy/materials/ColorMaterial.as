@@ -13,7 +13,7 @@ package sandy.materials
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;
 		// --
-		public function ColorMaterial( p_nColor:Number = 0, p_nAlpha:Number = 1.0, p_oLineAttr:LineAttributes = null )
+		public function ColorMaterial( p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:LineAttributes = null )
 		{
 			super();
 			m_nColor = p_nColor;

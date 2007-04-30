@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive {
+package sandy.primitive 
+{
 	/**
 	* Primitive3D
 	* 

@@ -11,7 +11,7 @@ package sandy.materials
 		// --
 		public var modified:Boolean;
 		
-		public function LineAttributes( p_nThickness:Number, p_nColor:Number, p_nAlpha:Number )
+		public function LineAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 100 )
 		{
 			m_nThickness = p_nThickness;
 			m_nAlpha = p_nAlpha/100;

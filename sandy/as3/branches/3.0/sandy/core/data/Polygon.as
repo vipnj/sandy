@@ -37,7 +37,7 @@ package sandy.core.data
 	* @version		1.0
 	* @date 		12.01.2006 
 	**/
-	public class Polygon extends EventDispatcher
+	public final class Polygon extends EventDispatcher
 	{
 	// _______
 	// STATICS_______________________________________________________	
@@ -93,14 +93,20 @@ package sandy.core.data
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
 			var a:Vertex = vertices[0];
-			return ( backfaceCulling ) * ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz ) < 0;
+			var l_nDot:Number = ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz );
+			return (( backfaceCulling ) * (l_nDot) < 0);
 		}
 		
 		public function clip( p_oFrustum:Frustum ):void
 		{
 			cvertices = vertices.concat();
-			var l_nPLength:Number = cvertices.length;
-			while( --l_nPLength>-1) cvertices[l_nPLength] = vertices[l_nPLength].clone2();
+			var l_nId:int = 0;
+			var l_nPLength:int = cvertices.length;
+			while( l_nId < l_nPLength ) 
+			{
+				cvertices[int(l_nId)] = vertices[int(l_nId)].clone2();
+				l_nId++;
+			}
 			// -- 
 			p_oFrustum.clipFrustum( cvertices );
 		}
@@ -157,11 +163,13 @@ package sandy.core.data
 		{
 			// -- We normalize the sum and return it
 			var a:Array = cvertices;
-			var l:Number= a.length;
+			var l_nId:int = 0;
+			var l_nLength:int= a.length;
 			// --
-			while( --l > -1 )
+			while( l_nId < l_nLength )
 			{
-				depth += a[(l)].wz;
+				depth += a[int(l_nId)].wz;
+				l_nId ++;
 			}
 			// --
 			depth /= a.length;

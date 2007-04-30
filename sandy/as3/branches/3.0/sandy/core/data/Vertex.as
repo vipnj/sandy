@@ -26,7 +26,7 @@ package sandy.core.data
 	* @version		1.0
 	* @date 		15/12/2006
 	*/
-	public class Vertex
+	public final class Vertex
 	{
 		public var x:Number;
 		public var y:Number;

@@ -15,7 +15,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Node;

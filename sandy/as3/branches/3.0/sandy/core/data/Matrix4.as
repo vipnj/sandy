@@ -14,16 +14,16 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
+package sandy.core.data 
+{
 	/**
 	* Matrix with 4 lines & 4 columns.
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
-
 	* @version		1.0
 	* @date 		28.03.2006
 	*/
-	public class Matrix4 
+	public final class Matrix4 
 	{
 		/**
 		 * {@code Matrix4} cell.

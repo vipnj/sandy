@@ -14,9 +14,9 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	import sandy.core.data.Vertex;
-	import sandy.core.data.AnimationData;
 	import sandy.core.data.UVCoord;
 	
 	

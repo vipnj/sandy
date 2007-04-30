@@ -47,7 +47,7 @@ package sandy.core.scenegraph
 		 * @param nFoc The focal of the Camera3D
 		 * @param s the screen associated to the camera
 		 */
-		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 10, p_nFar:Number = 3000 )
+		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 50, p_nFar:Number = 10000 )
 		{
 			super( null );
 			_viewport = new ViewPort( p_nWidth, p_nHeight );

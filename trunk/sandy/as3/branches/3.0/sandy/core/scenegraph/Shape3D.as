@@ -28,7 +28,7 @@ package sandy.core.scenegraph
 			m_nForcedDepth = 0;
 			m_bEv = false;
 			// --
-			appearance = p_oAppearance;
+			if( p_oAppearance ) appearance = p_oAppearance;
 			// -- 
 			updateBoundingVolumes();
 	    }

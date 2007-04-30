@@ -124,7 +124,7 @@ package sandy.core.scenegraph
 		* @param	index Number The ID of the child you want to get
 		* @return 	Node The desired Node or null is no child with this ID has been found
 		*/
-		public function getChildFromId( id:Number, p_recurs:Boolean ):Node 
+		public function getChildFromId( id:Number, p_recurs:Boolean=false ):Node 
 		{
 			var l:Number = _aChilds.length;
 			while( -- l > -1 )
@@ -152,7 +152,7 @@ package sandy.core.scenegraph
 		* @param	index Number The name of the child you want to get
 		* @return 	Node The desired Node or null is no child with this name has been found
 		*/
-		public function getChildByName( pName:String, p_recurs:Boolean ):Node 
+		public function getChildByName( pName:String, p_recurs:Boolean=false ):Node 
 		{
 			var l:Number = _aChilds.length;
 			while( -- l > -1 )
@@ -389,7 +389,7 @@ package sandy.core.scenegraph
 		////////////////////
 		
 		// TODO: private function in original implementation
-		public function Node( p_sName:String ) 
+		public function Node( p_sName:String = "" ) 
 		{
 			parent = null;
 			_aChilds = [];

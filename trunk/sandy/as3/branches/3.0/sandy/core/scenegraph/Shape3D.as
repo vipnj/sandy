@@ -38,22 +38,24 @@ package sandy.core.scenegraph
 	    	if( aPolygons != null && aPolygons.length > 0 )
 	    	{
 	    		var i:int, l:int = aPolygons.length;
-	    		for( i=0; i<l; i++ )
+	    		while( i<l )
 		    	{
 		    		Polygon( aPolygons[int(i)] ).destroy();
+		    		i++;
 		    	}
 	    	}
 	    }
 	    
 	    private function __generate( p_oGeometry:Geometry3D ):void
 	    {
-	    	var i:Number, l:Number;
+	    	var i:int, l:int;
 	    	//
 	    	aPolygons = new Array( l = p_oGeometry.aFacesVertexID.length );
 	    	//
-	    	for( i=0; i<l; i++ )
+	    	while( i<l )
 	    	{
 	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+	    		i++;
 	    	}
 	    }
 	

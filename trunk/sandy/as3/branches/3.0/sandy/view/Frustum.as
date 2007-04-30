@@ -154,7 +154,7 @@ package sandy.view
 		
 		public function pointInFrustum( p:Vector ):CullingState
 		{
-			for( var i:Number = 0; i < 6; i++)
+			for( var i:int = 0; i < 6; i++)
 			{
 				if ( PlaneMath.classifyPoint( aPlanes[int(i)], p) == PlaneMath.NEGATIVE )
 					return Frustum.OUTSIDE;
@@ -190,7 +190,7 @@ package sandy.view
 			var plane:Plane;
 			var p:Array = box.aTCorners;
 			// for each plane do ...
-			for(var i:Number = 0; i < 6; i++) 
+			for(var i:int = 0; i < 6; i++) 
 			{
 				plane = aPlanes[int(i)];
 				// reset counters for corners in and out

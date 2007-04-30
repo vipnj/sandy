@@ -187,9 +187,9 @@ package sandy.core.scenegraph
 		public function removeChildById( pId:Number ):Boolean 
 		{
 			var found:Boolean = false;
-			var i:Number, l:Number = _aChilds.length;
+			var i:int, l:int = _aChilds.length;
 	
-			for( i = 0; i < l && !found; i++ )
+			while( i < l && !found )
 		    {
 				if( _aChilds[int(i)].id == pId  )
 				{
@@ -197,6 +197,7 @@ package sandy.core.scenegraph
 					changed = true;
 					found = true;
 				}
+				i++;
 			}
 			
 			return found;
@@ -213,9 +214,9 @@ package sandy.core.scenegraph
 		public function removeChildByName( pName:String):Boolean 
 		{
 			var found:Boolean = false;
-			var i:Number;
-			var l:Number = _aChilds.length;
-			for( i = 0; i < l && !found; i++ )
+			var i:int;
+			var l:int = _aChilds.length;
+			while( i < l && !found )
 			{
 				if( _aChilds[int(i)].name == pName  )
 				{
@@ -223,6 +224,7 @@ package sandy.core.scenegraph
 					changed = true;
 					found = true;
 				}
+				i++;
 			}
 			
 			return found;
@@ -236,7 +238,7 @@ package sandy.core.scenegraph
 		public function destroy():void 
 		{			
 			// should we kill all the childs, or just make them childs of current node parent ?
-			var l:Number = _aChilds.length;
+			var l:int = _aChilds.length;
 			while( --l > -1 )
 			{
 				_aChilds[int(l)].destroy();
@@ -255,7 +257,7 @@ package sandy.core.scenegraph
 		 */
 		public function remove() :void 
 		{
-			var l:Number = _aChilds.length;
+			var l:int = _aChilds.length;
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
 			parent.removeChildById( this.id );
@@ -302,7 +304,7 @@ package sandy.core.scenegraph
 			changed = changed || p_bChanged;
 			//
 			var l_nId:int = 0;
-			var l_nLength:Number = _aChilds.length;
+			var l_nLength:int = _aChilds.length;
 			while( l_nId < l_nLength )
 			{
 				_aChilds[l_nId].update( p_oModelMatrix, changed );

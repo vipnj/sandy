@@ -9,6 +9,10 @@ package
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	
+	import com.mir3.display.FPSMetter;
+	//import com.mir3.display.SceneStats;
+	import com.mir3.utils.KeyManager;
+	
 	import sandy.core.World3D;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
@@ -16,6 +20,7 @@ package
 	import sandy.events.SandyEvent;
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
+	import sandy.materials.LineAttributes;
 	import sandy.primitive.Box;
 
     [SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate=120)] 
@@ -34,6 +39,8 @@ package
 			super();
 			// --
 			stage.scaleMode = StageScaleMode.NO_SCALE ;
+			// -- FPS
+			addChild(new FPSMetter(false, 110, stage));
 			// -- INIT
 			keyPressed = [];
 			// -- User interface
@@ -45,7 +52,7 @@ package
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
 		}
 		
-		private function _init()
+		private function _init():void
 		{
 			// --
 			var l_mcWorld:MovieClip = new MovieClip();
@@ -60,12 +67,15 @@ package
 			// -- create scene
 			var g:Group = new Group();
 			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", 2 );
-			box.appearance = new Appearance( new ColorMaterial( 0xffff000, 50) );
+			box.appearance = new Appearance(new ColorMaterial( 0xff00, 20, new LineAttributes( 2, 0xFF0000, 100 ) ),
+											new ColorMaterial( 0xFF, 50, new LineAttributes( 2, 0xFF00, 100 ) ) );
 			box.enableBackFaceCulling = false;
 			// --			
 			g.addChild( box );
 			world.root = g;
 			world.root.addChild( world.camera );
+			// --
+			return;
 		}
 	
 		public function __onKeyDown(e:KeyboardEvent):void

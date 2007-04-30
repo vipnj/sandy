@@ -25,6 +25,7 @@ package sandy.core {
 	import sandy.core.scenegraph.Group;
 	import sandy.errors.SingletonError;
 	import sandy.events.SandyEvent;
+	import flash.utils.getTimer;
 	
 	[Event(name="containerCreated", type="sandy.core.SandyEvent")]
 	[Event(name="lightAdded", type="sandy.core.SandyEvent")]

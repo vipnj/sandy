@@ -88,15 +88,17 @@ package sandy.core.scenegraph
 			var l_oNode:Node;
 			var l_nId:int = 0;
 			var l_nLength:int = _aChilds.length;
+			var l_oCStateOut:CullingState = Frustum.OUTSIDE;
+			var l_oCStateIn:CullingState = Frustum.INSIDE;
 			// --
 			while( l_nId < l_nLength )
 			{
 			    l_oNode = _aChilds[int(l_nId)];
-			    if( l_oNode.culled != Frustum.OUTSIDE )
+			    if( l_oNode.culled != l_oCStateOut )
 			    	l_oNode.render( p_oCamera );
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
-			    l_oNode.culled = CullingState.INSIDE; // Default value is inside.
+			    l_oNode.culled = l_oCStateIn; // Default value is inside.
 			    // --
 			    l_nId++;
 			}

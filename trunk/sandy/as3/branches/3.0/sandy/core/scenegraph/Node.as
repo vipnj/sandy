@@ -35,7 +35,7 @@ package sandy.core.scenegraph
 	 * @version		2.0
 	 * @date 		16.03.2007
 	 **/
-	public class Node extends EventDispatcher
+	internal class Node extends EventDispatcher
 	{
 		// This property set the cache status of the current node.
 		public var changed:Boolean;

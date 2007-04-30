@@ -132,29 +132,31 @@ package sandy.core.scenegraph
 		
 		public function clearDisplayList():void
 		{
-		    var i:int;
+		   var l_nId:int = 0;
 		    // --
 		    var l_mcChild:Sprite;
 		    var l_nLength:int = m_aDisplayListCopy.length;
 		    // --
-			for( i=0; i < l_nLength; i++ )
+			while( l_nId < l_nLength )
 			{
-				m_aDisplayListCopy[int(i)].container.graphics.clear();
+				m_aDisplayListCopy[int(l_nId)].container.graphics.clear();
+				l_nId ++;
 			}
 		}
 		
 		public function renderDisplayList():void
 		{
-		    var i:int;
-		    var l:int =  m_aDisplayList.length;
+		    var l_nId:int = 0;
+		    var l_nLength:int =  m_aDisplayList.length;
 		    var l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-			for( i=0; i < l; i++ )
+			while( l_nId < l_nLength )
 			{
-			   l_mcContainer.setChildIndex(m_aDisplayList[i].container, i);
-			   m_aDisplayList[i].render();
+			   l_mcContainer.setChildIndex(m_aDisplayList[int(l_nId)].container, l_nId);
+			   m_aDisplayList[int(l_nId)].render();
+			   l_nId ++;
 			}
 			// --
 			m_aDisplayListCopy = m_aDisplayList.concat();
@@ -168,9 +170,10 @@ package sandy.core.scenegraph
 		
 		public function project():void
 		{
+			var l_nId:int = 0;
 			var l_oVertex:Vertex;
 			var l_aPoints:Array = m_aVerticesList;
-			var l_nLength:Number = m_aVerticesList.length;
+			var l_nLength:int = m_aVerticesList.length;
 			var l_nCste:Number;
 			var l_nOffx:Number = viewport.w2;
 			var l_nOffy:Number = viewport.h2;
@@ -181,14 +184,15 @@ package sandy.core.scenegraph
 			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
 			mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;
 			//
-			while( --l_nLength > -1 )
+			while( l_nId < l_nLength )
 			{
-				
-				l_oVertex = l_aPoints[l_nLength];
-	
+				l_oVertex = l_aPoints[int(l_nId)];
+				// --
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
+				// --
+				l_nId ++;
 			}
 			// --
 			m_aVerticesList = [];	

@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
+package sandy.core.data 
+{
 	/**
 	* Point in 3D world.
 	* 
@@ -31,7 +32,7 @@ package sandy.core.data {
 	*/
 	import sandy.util.NumberUtil;
 	
-	public class Vector
+	public final class Vector
 	{
 		public var x:Number;
 		public var y:Number;

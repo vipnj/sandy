@@ -23,7 +23,7 @@ package sandy.core.data {
 	* @version		0.3
 	* @date 		28.03.2006
 	*/
-	public class UVCoord
+	public final class UVCoord
 	{
 		public var v: Number;
 		public var u: Number;

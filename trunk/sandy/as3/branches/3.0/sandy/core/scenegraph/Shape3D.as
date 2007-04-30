@@ -136,11 +136,12 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
+			var l_nId:int;
 			var l_nDepth:Number;
 			var l_oFace:Polygon;
 			var l_oVertex:Vertex;
 			var l_oNormal:Vertex;
-			var l_nLength:Number;
+			var l_nLength:int;
 			//--
 	        var l_oMatrix:Matrix4 = _oViewCacheMatrix;
 	       	// --
@@ -158,25 +159,29 @@ package sandy.core.scenegraph
 			
 			// -- Now we transform the normals.
 			var l_aNormals:Array = m_oGeometry.aFacesNormals;
+			l_nId = 0;
 			l_nLength = l_aNormals.length;
-			while( --l_nLength > -1 )
+			while( l_nId < l_nLength )
 			{
-				l_oNormal = l_aNormals[l_nLength];
+				l_oNormal = l_aNormals[int(l_nId)];
 				l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
 				l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
 				l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
+				l_nId++;
 			}
 			
 			// Now we can transform the objet vertices into the camera coordinates	
 			var l_aPoints:Array = m_oGeometry.aVertex;
+			l_nId = 0;
 			l_nLength = l_aPoints.length;
-			while( --l_nLength > -1 )
+			while( l_nId < l_nLength )
 			{
-				l_oVertex = l_aPoints[l_nLength];
+				l_oVertex = l_aPoints[int(l_nId)];
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
 				//l_oVertex.projected = false;
+				l_nId++;
 			}
 			
 			/////////////////////////////////////////////////////
@@ -186,10 +191,11 @@ package sandy.core.scenegraph
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			if( m_bClipped ) l_aPoints = [];
 			// --
+			l_nId = 0;
 			l_nLength = l_faces.length;
-			while( --l_nLength > -1 )
+			while( l_nId < l_nLength )
 			{
-			    l_oFace = l_faces[l_nLength];
+			    l_oFace = l_faces[int(l_nId)];
 			   	// --
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
@@ -214,6 +220,7 @@ package sandy.core.scenegraph
 					// --
 					p_oCamera.addToDisplayList( l_oFace );
 				}
+				l_nId++;
 			}
 			// -- We push the vertex to project onto the viewport.
 			p_oCamera.pushVerticesToRender( l_aPoints );

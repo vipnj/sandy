@@ -66,17 +66,20 @@ package sandy.primitive
 			var l_oGeometry:Geometry3D = new Geometry3D();
 			var l_aPoints:Array = arguments[0];
 			// --
-			var i:Number;
-			var l:Number = l_aPoints.length;
+			var i:int;
+			var l:int = l_aPoints.length;
 			// --
-			for( i = 0; i < l; i++ )
+			while( i < l )
 			{
 				l_oGeometry.setVertex( i, l_aPoints[int(i)].x, l_aPoints[int(i)].y, l_aPoints[int(i)].z );
+				i++;
 			}
 			// -- initialisation
-			for( i = 0; i < l-1; i++ )
+			i = 0;
+			while( i < l-1 )
 			{
 				l_oGeometry.setFaceVertexIds( i, i, i+1 );
+				i++;
 			}
 			// --
 			return l_oGeometry;

@@ -240,19 +240,6 @@ package sandy.core.scenegraph
 			return _mpInv;
 		}
 	
-		/*
-		public function applyTransform( p_oTrans:Transform3D ):void
-		{
-			_vUp   = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vOut);
-			_p.x = p_oTrans.matrix.n14;
-			_p.y = p_oTrans.matrix.n24;
-			_p.z = p_oTrans.matrix.n34;
-			changed = true;
-		}
-		*/
-	
 		public function getTransformationMatrixInverse():Matrix4
 		{
 			return  Matrix4Math.getInverse( transform.matrix );
@@ -381,6 +368,5 @@ package sandy.core.scenegraph
 		private var _nFar:Number;
 		private var _nNear:Number;
 		private var m_aVerticesList:Array;
-	
 	}
 }

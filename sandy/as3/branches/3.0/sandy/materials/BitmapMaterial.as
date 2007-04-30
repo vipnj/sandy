@@ -26,6 +26,8 @@ package sandy.materials
 	import sandy.util.NumberUtil;
 	import flash.display.Bitmap;
 	import sandy.core.data.Polygon;
+	import flash.utils.getTimer;
+	import flash.display.Graphics;
 	
 	/**
 	 * BitmapMaterial
@@ -68,6 +70,7 @@ package sandy.materials
 		{
 			var sprite:Shape = p_oPolygon.container;
 			var l_points:Array = p_oPolygon.cvertices;
+			var l_graphics:Graphics = sprite.graphics;
 			// --
 			if( l_points.length == 1 )
 			{
@@ -81,42 +84,43 @@ package sandy.materials
 				// -- we prepare the texture
 				prepare( p_oPolygon );
 				// --
-				sprite.graphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
+				l_graphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
 				// --
 				if( lineAttributes )
-					sprite.graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+					l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 				// --
-				sprite.graphics.moveTo( l_points[0].sx, l_points[0].sy );
+				l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
 				// --
 				switch( l_points.length )
 				{
 					case 2 :
-						sprite.graphics.lineTo( l_points[1].sx, l_points[1].sy );
+						l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
 						break;
 					case 3 :
-						sprite.graphics.lineTo( l_points[1].sx, l_points[1].sy );
-						sprite.graphics.lineTo( l_points[2].sx, l_points[2].sy );
+						l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
+						l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
 						break;
 					case 4 :
-						sprite.graphics.lineTo( l_points[1].sx, l_points[1].sy );
-						sprite.graphics.lineTo( l_points[2].sx, l_points[2].sy );
-						sprite.graphics.lineTo( l_points[3].sx, l_points[3].sy );
+						l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
+						l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
+						l_graphics.lineTo( l_points[3].sx, l_points[3].sy );
 						break;
 					default :
-						var l:Number = l_points.length;
-						while( --l > 0 )
+						var l:int = l_points.length - 1;
+						while( l > 0 )
 						{
-							sprite.graphics.lineTo( l_points[(l)].sx, l_points[(l)].sy);
+							l_graphics.lineTo( l_points[(l)].sx, l_points[(l)].sy);
+							l--;
 						}
 						break;
 				}
 				// -- we draw the last edge
 				if( lineAttributes )
 				{
-					sprite.graphics.lineTo( l_points[0].sx, l_points[0].sy );
+					l_graphics.lineTo( l_points[0].sx, l_points[0].sy );
 				}
 				// --
-				sprite.graphics.endFill();
+				l_graphics.endFill();
 			}
 		}
 			
@@ -177,12 +181,12 @@ package sandy.materials
 				if( m_nWidth > 0 && m_nHeight > 0 )
 				{		
 					var l_aUV:Array = f.aUVCoord;
-					var u0: Number = l_aUV[0].u * m_nWidth;
-					var v0: Number = l_aUV[0].v * m_nHeight;
-					var u1: Number = l_aUV[1].u * m_nWidth;
-					var v1: Number = l_aUV[1].v * m_nHeight;
-					var u2: Number = l_aUV[2].u * m_nWidth;
-					var v2: Number = l_aUV[2].v * m_nHeight;
+					var u0: Number = l_aUV[0].u * m_nWidth,
+						v0: Number = l_aUV[0].v * m_nHeight,
+						u1: Number = l_aUV[1].u * m_nWidth,
+						v1: Number = l_aUV[1].v * m_nHeight,
+						u2: Number = l_aUV[2].u * m_nWidth,
+						v2: Number = l_aUV[2].v * m_nHeight;
 					// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 					if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 					{
@@ -213,24 +217,14 @@ package sandy.materials
 			var a:Array = f.vertices;
 			var m:Matrix = m_oPolygonMatrixMap[f];
 			// --
-			var x0: Number = a[0].sx;
-			var y0: Number = a[0].sy;
-			var x1: Number = a[1].sx;
-			var y1: Number = a[1].sy;
-			var x2: Number = a[2].sx;
-			var y2: Number = a[2].sy;
+			var x0: Number = a[0].sx, y0: Number = a[0].sy, x1: Number = a[1].sx,
+				y1: Number = a[1].sy, x2: Number = a[2].sx, y2: Number = a[2].sy,
 			// --
-			var a1  :Number  = m.a;
-			var b1  :Number  = m.b;
-			var c1  :Number  = m.c;
-			var d1  :Number  = m.d;
-			var tx1 :Number = m.tx;
-			var ty1 :Number = m.ty;
+				a1  :Number  = m.a, b1  :Number  = m.b, c1  :Number  = m.c,
+				d1  :Number  = m.d, tx1 :Number = m.tx, ty1 :Number = m.ty,
 			// --
-			var a2 :Number = x1 - x0;
-			var b2 :Number = y1 - y0;
-			var c2 :Number = x2 - x0;
-			var d2 :Number = y2 - y0;
+				a2 :Number = x1 - x0, b2 :Number = y1 - y0, c2 :Number = x2 - x0,
+				d2 :Number = y2 - y0;
 			// --
 			matrix.a = a1*a2 + b1*c2;
 			matrix.b = a1*b2 + b1*d2;
@@ -276,4 +270,4 @@ package sandy.materials
 	
 	
 	}
-}		
+}

@@ -37,7 +37,7 @@ package sandy.core.data
 	* @version		1.0
 	* @date 		12.01.2006 
 	**/
-	public final class Polygon extends EventDispatcher
+	public final class Polygon
 	{
 	// _______
 	// STATICS_______________________________________________________	
@@ -181,7 +181,7 @@ package sandy.core.data
 		 * Get a String representation of the {@code NFace3D}. 
 		 * @return	A String representing the {@code NFace3D}.
 		 */
-		public override function toString():String
+		public function toString():String
 		{
 			return "sandy.core.data.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
 		}
@@ -192,6 +192,7 @@ package sandy.core.data
 		 */
 		public function enableEvents( b:Boolean ):void
 		{
+	       /*
 	        if( b && !mouseEvents )
 	        {
 	        	container.addEventListener(MouseEvent.CLICK, _onPress);
@@ -207,6 +208,7 @@ package sandy.core.data
 				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 	    	}
 	    	mouseEvents = b;
+	    	*/
 		}
 	
 		/**
@@ -275,17 +277,17 @@ package sandy.core.data
 		
 		private function _onPress(e:MouseEvent):void
 		{
-			dispatchEvent(e);
+			//dispatchEvent(e);
 		}
 		
 		private function _onRollOver(e:MouseEvent):void
 		{
-			dispatchEvent(e);
+			//dispatchEvent(e);
 		}
 		
 		private function _onRollOut(e:MouseEvent):void
 		{
-			dispatchEvent(e);
+			//dispatchEvent(e);
 		}
 	}
 }

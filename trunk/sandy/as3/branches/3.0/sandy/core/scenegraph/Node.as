@@ -35,7 +35,7 @@ package sandy.core.scenegraph
 	 * @version		2.0
 	 * @date 		16.03.2007
 	 **/
-	internal class Node extends EventDispatcher
+	public class Node
 	{
 		// This property set the cache status of the current node.
 		public var changed:Boolean;
@@ -287,7 +287,7 @@ package sandy.core.scenegraph
 			return _visible;
 		}
 			
-		public override function toString():String
+		public function toString():String
 		{
 			return "sandy.core.scenegraph.Node";
 		}
@@ -301,10 +301,12 @@ package sandy.core.scenegraph
 			/* Shall be overriden */
 			changed = changed || p_bChanged;
 			//
+			var l_nId:int = 0;
 			var l_nLength:Number = _aChilds.length;
-			while( --l_nLength > -1 )
+			while( l_nId < l_nLength )
 			{
-				_aChilds[l_nLength].update( p_oModelMatrix, changed );
+				_aChilds[l_nId].update( p_oModelMatrix, changed );
+				l_nId ++;
 			}
 		}
 	

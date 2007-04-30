@@ -150,13 +150,16 @@ package sandy.bounds {
 	    {
 		    var v:Vector;
 		    var l_aCorners:Array = aCorners;
-		    var i:Number, l:Number = 8;
+		    var i:int, l:int = 8;
 		    // --
-		    for(i=0; i<l; i++)
+		    while( i<l ) {
 		        aTCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
+		        i++;
+		    }
 		    // --
 		    m_oTMin = m_oTMax = aTCorners[0];
-			for( i=1; i<l; i++ )
+		    i=1;
+			while( i<l )
 			{
 				v = aTCorners[int(i)];
 				// --
@@ -168,6 +171,8 @@ package sandy.bounds {
 				// --
 				if( v.z < m_oTMin.z )		m_oTMin.z = v.z;
 				else if( v.z > m_oTMax.z )	m_oTMax.z = v.z;
+				
+				i++;
 	    	}
 	    }
 	    

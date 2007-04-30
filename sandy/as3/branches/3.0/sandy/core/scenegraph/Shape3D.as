@@ -6,7 +6,7 @@ package sandy.core.scenegraph
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.materials.Appearance;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
@@ -156,19 +156,15 @@ package sandy.core.scenegraph
 			m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33; m43 = l_oMatrix.n43;
 			m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
 			
-			// -- If necessary we transform the normals vectors
-			if( m_bBackFaceCulling || m_oAppearance.needNormals )
+			// -- Now we transform the normals.
+			var l_aNormals:Array = m_oGeometry.aFacesNormals;
+			l_nLength = l_aNormals.length;
+			while( --l_nLength > -1 )
 			{
-				// Now we can transform the objet vertices into the camera coordinates	
-			    var l_aNormals:Array = m_oGeometry.aFacesNormals;
-			    l_nLength = l_aNormals.length;
-				while( --l_nLength > -1 )
-				{
-					l_oNormal = l_aNormals[l_nLength];
-					l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
-					l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
-					l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
-				}
+				l_oNormal = l_aNormals[l_nLength];
+				l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
+				l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
+				l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
 			}
 			
 			// Now we can transform the objet vertices into the camera coordinates	
@@ -207,7 +203,6 @@ package sandy.core.scenegraph
 				    }
 				    else
 				    {
-						// --
 				    	l_oFace.cvertices = l_oFace.vertices;
 				    }
 				    // --
@@ -215,9 +210,6 @@ package sandy.core.scenegraph
 					if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth;
 					else l_nDepth = l_oFace.getZAverage();
 					// we set the polygon to this depth (multiplied by 1000 to avoid the problem of 2 polygons at the same depth
-					//l_oFace.container.swapDepths( 10000000 - int(1000*l_nDepth) );
-					//l_oFace.container.parent.setChildIndex( l_oFace.container, int(l_nDepth/100) );
-					//l_oFace.container.parent.swapChildren( l_oFace.container, l_oFace.container.parent.getChildAt( l_nDepth ) ); 
 					l_oFace.depth = l_nDepth;
 					// --
 					p_oCamera.addToDisplayList( l_oFace );

@@ -1,8 +1,9 @@
 package sandy.materials 
 {
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.materials.Material;
 	import flash.display.Sprite;
+	import flash.display.Shape;
 
 	/**
 	 * @author thomaspfeiffer
@@ -12,16 +13,18 @@ package sandy.materials
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;
 		// --
-		public function ColorMaterial( p_nColor:Number = 0, p_nAlpha:Number = 1.0 )
+		public function ColorMaterial( p_nColor:Number = 0, p_nAlpha:Number = 1.0, p_oLineAttr:LineAttributes = null )
 		{
 			super();
 			m_nColor = p_nColor;
 			m_nAlpha = p_nAlpha/100;
+			// --
+			lineAttributes = p_oLineAttr;
 		}
 		
 		public override function renderPolygon( p_oPolygon:Polygon ):void 
 		{
-			var sprite:Sprite = p_oPolygon.container;
+			var sprite:Shape = p_oPolygon.container;
 			var l_points:Array = p_oPolygon.cvertices;
 			// --
 			sprite.graphics.beginFill( m_nColor, m_nAlpha);

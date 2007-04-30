@@ -1,7 +1,8 @@
-package sandy.materials {
+package sandy.materials 
+{
 	import flash.display.BitmapData;
 	
-	import sandy.core.face.Polygon;
+	import sandy.core.data.Polygon;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
 	import sandy.materials.Material;

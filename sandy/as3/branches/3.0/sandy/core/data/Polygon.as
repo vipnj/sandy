@@ -14,7 +14,7 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.face 
+package sandy.core.data 
 {
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
@@ -27,7 +27,7 @@ package sandy.core.face
 	import sandy.view.Frustum;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
-	import flash.display.Sprite;
+	import flash.display.Shape;
 	
 	
 	/**
@@ -46,7 +46,7 @@ package sandy.core.face
 	// PUBLIC________________________________________________________		
 		public var owner:Shape3D;
 		public var depth:Number;
-		public var container:Sprite;
+		public var container:Shape;
 		public var cvertices:Array;
 		public var vertices:Array;
 		public var normal:Vertex;
@@ -78,8 +78,7 @@ package sandy.core.face
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 			// Add this graphical object to the World display list
-			
-			container = new Sprite();
+			container = new Shape();
 			container.name = "polygon_"+id;
 			World3D.getInstance().container.addChild( container );
 		}

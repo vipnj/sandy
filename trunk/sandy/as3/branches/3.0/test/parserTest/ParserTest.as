@@ -26,7 +26,7 @@ package
 	import sandy.parser.IParser;
 	import sandy.parser.ParserEvent;
 	
-	[SWF(width="800", height="800", backgroundColor="#FFFFFF")] 
+	[SWF(width="800", height="800", backgroundColor="#FFFFFF", frameRate=120)] 
 	/**
 	 * @author thomaspfeiffer
 	 */
@@ -56,13 +56,14 @@ package
 			_world.container = this;
 			_init();
 			//-- browser booster
-			timer = new Timer(16);
+			timer = new Timer(10);
 			timer.addEventListener( TimerEvent.TIMER, onEnterFrame );
 		}
 		
 		private function _init():void
 		{
-			var l_iParser:IParser = Parser.create("assets/Rhino.ASE");
+			//var l_iParser:IParser = Parser.create("assets/Rhino.ASE");
+			var l_iParser:IParser = Parser.create("assets/Space1.3ds");
 			l_iParser.addEventListener( ParserEvent.onInitEVENT, _createScene );
 			l_iParser.parse();
 		}
@@ -71,15 +72,15 @@ package
 		{
 			_world.root = p_eEvent.group;
 			m_oShape = _world.root.getChildFromId( 1 ) as Shape3D;
-			//var l_oApp:Appearance = new Appearance( new ColorMaterial( 0xFF ) );
-			var pic:Bitmap = new Texture();
-			var l_oApp:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ); 
+			var l_oApp:Appearance = new Appearance( new ColorMaterial( 0xFF ) );
+			//var pic:Bitmap = new Texture();
+			//var l_oApp:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ); 
 			m_oShape.appearance = l_oApp;
-			m_oShape.rotateX = 180;
-			m_oShape.rotateY = 90;
+			//m_oShape.rotateX = 180;
+			//m_oShape.rotateY = 90;
 			// --
 			_world.camera = new Camera3D( SCREEN_WIDTH, SCREEN_HEIGHT );
-			_world.camera.z = -8000;
+			_world.camera.z = -500;
 			_world.root.addChild( _world.camera );
 			// --
 			timer.start();

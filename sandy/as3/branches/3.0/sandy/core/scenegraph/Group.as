@@ -70,37 +70,22 @@ package sandy.core.scenegraph
 			// After that call the super cull method to get the correct cull value.		
 			changed = p_bChanged || changed;
 			var l_oNode:Node;
-			var l_nId:int = 0;
-			var l_nLength:int = _aChilds.length;
-			//
-			while( l_nId < l_nLength )
-			{
-			    l_oNode = _aChilds[int(l_nId)];
+			for each( l_oNode in _aChilds )
 			    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed || l_oNode.changed );
-			    l_nId++;
-			}
 			// --
 			super.cull( p_oFrustum, p_oViewMatrix, changed );
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_oNode:Node;
-			var l_nId:int = 0;
-			var l_nLength:int = _aChilds.length;
-			var l_oCStateOut:CullingState = Frustum.OUTSIDE;
-			var l_oCStateIn:CullingState = Frustum.INSIDE;
-			// --
-			while( l_nId < l_nLength )
+			var l_oNode:Node, l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
+			for each( l_oNode in _aChilds )
 			{
-			    l_oNode = _aChilds[int(l_nId)];
 			    if( l_oNode.culled != l_oCStateOut )
 			    	l_oNode.render( p_oCamera );
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
 			    l_oNode.culled = l_oCStateIn; // Default value is inside.
-			    // --
-			    l_nId++;
 			}
 		}
 	}

@@ -25,10 +25,7 @@ package sandy.parser
 		{
 			super( p_sUrl );
 		}
-		
-		/////////////////////
-		///  PROPERTIES   ///
-		/////////////////////		
+			
 		protected override function parseData( e:Event ):void
 		{
 			super.parseData( e );

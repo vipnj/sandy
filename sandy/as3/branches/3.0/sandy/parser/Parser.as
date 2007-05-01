@@ -2,10 +2,12 @@ package sandy.parser
 {
 	import sandy.parser.AParser;
 	import sandy.parser.ASEParser;
+	import sandy.parser.Parser3DS;
 	
 	public final class Parser
 	{
 		public static const ASE:String = "ASE";
+		public static const MAX_3DS:String = "3DS";
 		
 		public static function create( p_sFileName:String, p_sParserType:String=null ):IParser
 		{
@@ -23,6 +25,7 @@ package sandy.parser
 				case "DAE":
 					break;
 				case "3DS":
+					l_iParser = new Parser3DS( p_sFileName );
 					break;
 				default:
 					break;

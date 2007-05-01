@@ -138,7 +138,7 @@ package sandy.core.scenegraph
 		{
 		    var l_oPoly:Polygon, l_nId:int = 0, l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
-		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		    m_aDisplayList.sortOn( "depth", Array.NUMERIC );
 		    // --
 			for each( l_oPoly in m_aDisplayList )
 			{

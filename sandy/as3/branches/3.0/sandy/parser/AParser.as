@@ -17,12 +17,15 @@ package sandy.parser
 		protected var m_oGroup:Group;
 		protected var m_oFileLoader:URLLoader
 		private var m_sUrl:String;
+		protected var m_sDataFormat:String;
 		
 		public function AParser( p_sUrl:String )
 		{ 
 			m_sUrl = p_sUrl;
 			m_oFileLoader = new URLLoader();
 			m_oGroup = new Group('parser');
+			
+			m_sDataFormat = URLLoaderDataFormat.TEXT;
 		}
 		
 		/**
@@ -54,7 +57,7 @@ package sandy.parser
 			m_oFileLoader.addEventListener( Event.COMPLETE, parseData );
 			m_oFileLoader.addEventListener( IOErrorEvent.IO_ERROR , _io_error );
 			// Lancer le chargement
-			m_oFileLoader.dataFormat = URLLoaderDataFormat.TEXT;
+			m_oFileLoader.dataFormat = m_sDataFormat;
 			m_oFileLoader.load(urlRequest);
 		}
 	}

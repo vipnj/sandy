@@ -186,11 +186,10 @@ package sandy.core.data
 		 *       9  10 11 12 <br>
 		 *       13 14 15 16 </code>
 		 */	
-		public function Matrix4(... arguments) 
+		public function Matrix4(... rest) 
 		{
-			if(arguments.length == 16)
+			if(rest.length == 16)
 			{
-				var rest:Array = arguments;
 				n11 = rest[0] ; n12 = rest[1] ; n13 = rest[2] ; n14 = rest[3] ;
 				n21 = rest[4] ; n22 = rest[5] ; n23 = rest[6] ; n24 = rest[7] ;
 				n31 = rest[8] ; n32 = rest[9] ; n33 = rest[10]; n34 = rest[11];

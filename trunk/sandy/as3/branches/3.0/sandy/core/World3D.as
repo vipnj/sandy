@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core {
+package sandy.core 
+{
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	
@@ -44,7 +45,7 @@ package sandy.core {
 	{
 		public var root:Group;
 		public var camera:Camera3D;
-				
+		public var container:Sprite;
 		/**
 		 * Constructor.
 		 * <p>You can have only one World3D</p>
@@ -60,8 +61,7 @@ package sandy.core {
 			{ 
 				// default light
 				_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
-				
-				_container = null;
+				container = null;
 			}
 		}
 		
@@ -81,18 +81,7 @@ package sandy.core {
 			return instance;
 		}
 		
-		public function set container( pContainer:Sprite ):void
-		{
-			_container = pContainer;
-			dispatchEvent( new SandyEvent( SandyEvent.CONTAINER_CREATED ) );
-		}
-	
-		
-		public function get container():Sprite
-		{
-			return _container;
-		}
-		
+
 		/**
 		 * We set the unique ligth of the 3D world.
 		 * @param	l	Light3D		The light instance
@@ -103,7 +92,6 @@ package sandy.core {
 			if(_light) _light.destroy();
 			// --
 			_light = l;
-			
 			dispatchEvent( new SandyEvent( SandyEvent.LIGHT_ADDED ) );
 		}
 		
@@ -126,9 +114,9 @@ package sandy.core {
 		{
 			// we set a variable to remember the number of objects 
 			// and in the same time we strop if no objects are displayable
-			if( root && camera && _container )
+			if( root && camera && container )
 			{
-				dispatchEvent( new SandyEvent( SandyEvent.RENDER ) );
+				//dispatchEvent( new SandyEvent( SandyEvent.RENDER ) );
 				// --
 				root.update( null, false );
 				root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
@@ -151,10 +139,8 @@ package sandy.core {
 		////////////////////
 		//// PRIVATE
 		////////////////////
-		private var _container:Sprite;
 		private var _light : Light3D; //the unique light instance of the world
 		private static var instance:World3D;
 		private static var create:Boolean;
-
 	}
 }

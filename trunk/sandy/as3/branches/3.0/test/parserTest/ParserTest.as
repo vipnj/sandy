@@ -14,7 +14,8 @@ package
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	import flash.events.TimerEvent;
-	
+	import flash.text.TextFieldAutoSize;
+		
 	import sandy.core.World3D;
 	import sandy.core.data.*;
 	import sandy.math.*;
@@ -25,7 +26,7 @@ package
 	import sandy.parser.IParser;
 	import sandy.parser.ParserEvent;
 	
-	[SWF(width="800", height="800", backgroundColor="#FFFFFF", frameRate=120)] 
+	[SWF(width="800", height="800", backgroundColor="#FFFFFF")] 
 	/**
 	 * @author thomaspfeiffer
 	 */
@@ -38,6 +39,8 @@ package
 		private var timer:Timer;
 		private var m_oShape:Shape3D;
 		
+		private var fps: CustomFPS;
+		
 		[Embed(source="assets/texrin2.jpg")]
 		private var Texture:Class;
 		
@@ -45,7 +48,9 @@ package
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE ;
 			// -- FPS
-			addChild( new FPSMetter(false, 120, stage) );
+			fps = new CustomFPS();
+			fps.y = 12;
+			addChild( fps );
 			// --
 			_world = World3D.getInstance();
 			_world.container = this;
@@ -57,7 +62,7 @@ package
 		
 		private function _init():void
 		{
-			var l_iParser:IParser = Parser.parse("assets/Rhino.ASE");
+			var l_iParser:IParser = Parser.create("assets/Rhino.ASE");
 			l_iParser.addEventListener( ParserEvent.onInitEVENT, _createScene );
 			l_iParser.parse();
 		}
@@ -70,6 +75,8 @@ package
 			var pic:Bitmap = new Texture();
 			var l_oApp:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ); 
 			m_oShape.appearance = l_oApp;
+			m_oShape.rotateX = 180;
+			m_oShape.rotateY = 90;
 			// --
 			_world.camera = new Camera3D( SCREEN_WIDTH, SCREEN_HEIGHT );
 			_world.camera.z = -8000;
@@ -80,9 +87,8 @@ package
 	
 		private function onEnterFrame( event: Event ): void
 		{
-			m_oShape.rotateX -= 0.005 * (SCREEN_HEIGHT/2 - this.mouseY);
-			m_oShape.rotateY += 0.005 * (SCREEN_WIDTH/2 - this.mouseX);
 			_world.render();
+			fps.nextFrame();
 		}
 	}
 }

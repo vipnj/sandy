@@ -124,39 +124,27 @@ package sandy.core.scenegraph
 	///////////////////////////////////////
 	//// GRAPHICAL ELEMENTS MANAGMENT /////
 	///////////////////////////////////////
-	
-		public function pushVerticesToRender( p_aVertices:Array ):void
-		{
-			m_aVerticesList = m_aVerticesList.concat( p_aVertices );
-		}
-		
+
 		public function clearDisplayList():void
 		{
-		   var l_nId:int = 0;
-		    // --
-		    var l_mcChild:Sprite;
-		    var l_nLength:int = m_aDisplayListCopy.length;
-		    // --
-			while( l_nId < l_nLength )
+		    var l_oPoly:Polygon;
+			for each( l_oPoly in m_aDisplayListCopy )
 			{
-				m_aDisplayListCopy[int(l_nId)].container.graphics.clear();
-				l_nId ++;
+				l_oPoly.container.graphics.clear();
 			}
 		}
 		
 		public function renderDisplayList():void
 		{
-		    var l_nId:int = 0;
-		    var l_nLength:int =  m_aDisplayList.length;
-		    var l_mcContainer:Sprite = World3D.getInstance().container;
+		    var l_oPoly:Polygon, l_nId:int = 0, l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-			while( l_nId < l_nLength )
+			for each( l_oPoly in m_aDisplayList )
 			{
-			   l_mcContainer.setChildIndex(m_aDisplayList[int(l_nId)].container, l_nId);
-			   m_aDisplayList[int(l_nId)].render();
-			   l_nId ++;
+				l_mcContainer.setChildIndex( l_oPoly.container, l_nId );
+				l_oPoly.render();
+				l_nId ++;
 			}
 			// --
 			m_aDisplayListCopy = m_aDisplayList.concat();
@@ -168,36 +156,29 @@ package sandy.core.scenegraph
 			m_aDisplayList.push( p_oPolygon );
 		}
 		
+		
+		public function pushVerticesToProject( p_aVertices:Array ):void
+		{
+			m_aVerticesList = m_aVerticesList.concat( p_aVertices );
+		}
+		
 		public function project():void
 		{
-			var l_nId:int = 0;
-			var l_oVertex:Vertex;
-			var l_aPoints:Array = m_aVerticesList;
-			var l_nLength:int = m_aVerticesList.length;
-			var l_nCste:Number;
-			var l_nOffx:Number = viewport.w2;
-			var l_nOffy:Number = viewport.h2;
-			var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
-			//
-			mp11 = _mp.n11; mp21 = _mp.n21; mp31 = _mp.n31; mp41 = _mp.n41;
-			mp12 = _mp.n12; mp22 = _mp.n22; mp32 = _mp.n32; mp42 = _mp.n42;
-			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
-			mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;
-			//
-			while( l_nId < l_nLength )
+			var mp11:Number = _mp.n11,mp21:Number = _mp.n21,mp31:Number = _mp.n31,mp41:Number = _mp.n41,
+				mp12:Number = _mp.n12,mp22:Number = _mp.n22,mp32:Number = _mp.n32,mp42:Number = _mp.n42,
+				mp13:Number = _mp.n13,mp23:Number = _mp.n23,mp33:Number = _mp.n33,mp43:Number = _mp.n43,
+				mp14:Number = _mp.n14,mp24:Number = _mp.n24,mp34:Number = _mp.n34,mp44:Number = _mp.n44,
+				l_nOffx:Number = viewport.w2, l_nOffy:Number = viewport.h2, l_nCste:Number, l_oVertex:Vertex;
+			// --
+			for each( l_oVertex in m_aVerticesList )
 			{
-				l_oVertex = l_aPoints[int(l_nId)];
-				// --
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
-				// --
-				l_nId ++;
-			}
-			// --
-			m_aVerticesList = [];	
+			}	
+			m_aVerticesList = [];
 		}
-	
+			
 		/**
 		* Compile the camera transformations by multiplicating the matrix together.
 		* Be carefull to call isModified method before to save computations. 
@@ -212,7 +193,6 @@ package sandy.core.scenegraph
 		 */
 		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
-			// --
 			updatePerspective();
 			updateTransform();
 			super.update( p_oModelMatrix, p_bChanged );

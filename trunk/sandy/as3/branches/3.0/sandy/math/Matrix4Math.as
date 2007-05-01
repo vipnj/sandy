@@ -1,4 +1,5 @@
-﻿package sandy.math {
+﻿package sandy.math 
+{
 	/*
 	# ***** BEGIN LICENSE BLOCK *****
 	Copyright the original author or authors.
@@ -20,6 +21,7 @@
 	import sandy.util.NumberUtil;
 	import sandy.math.FastMath;
 	import sandy.errors.SingletonError;
+	import flash.geom.Matrix;
 	
 	/**
 	* Math functions for {@link Matrix4}.
@@ -70,65 +72,66 @@
 		 */
 		public static function multiply3x3(m1:Matrix4, m2:Matrix4) : Matrix4 
 		{
-			var dest : Matrix4 = Matrix4.createIdentity();
-			var m111:Number = m1.n11; var m211:Number = m2.n11;
-			var m121:Number = m1.n21; var m221:Number = m2.n21;
-			var m131:Number = m1.n31; var m231:Number = m2.n31;
-			var m112:Number = m1.n12; var m212:Number = m2.n12;
-			var m122:Number = m1.n22; var m222:Number = m2.n22;
-			var m132:Number = m1.n32; var m232:Number = m2.n32;
-			var m113:Number = m1.n13; var m213:Number = m2.n13;
-			var m123:Number = m1.n23; var m223:Number = m2.n23;
-			var m133:Number = m1.n33; var m233:Number = m2.n33;
+			var m111:Number = m1.n11, m211:Number = m2.n11,
+			m121:Number = m1.n21, m221:Number = m2.n21,
+			m131:Number = m1.n31, m231:Number = m2.n31,
+			m112:Number = m1.n12, m212:Number = m2.n12,
+			m122:Number = m1.n22, m222:Number = m2.n22,
+			m132:Number = m1.n32, m232:Number = m2.n32,
+			m113:Number = m1.n13, m213:Number = m2.n13,
+			m123:Number = m1.n23, m223:Number = m2.n23,
+			m133:Number = m1.n33, m233:Number = m2.n33;
 			
-			dest.n11 = m111 * m211 + m112 * m221 + m113 * m231;
-			dest.n12 = m111 * m212 + m112 * m222 + m113 * m232;
-			dest.n13 = m111 * m213 + m112 * m223 + m113 * m233;
-	
-			dest.n21 = m121 * m211 + m122 * m221 + m123 * m231;
-			dest.n22 = m121 * m212 + m122 * m222 + m123 * m232;
-			dest.n23 = m121 * m213 + m122 * m223 + m123 * m233;
-	
-			dest.n31 = m131 * m211 + m132 * m221 + m133 * m231;
-			dest.n32 = m131 * m212 + m132 * m222 + m133 * m232;
-			dest.n33 = m131 * m213 + m132 * m223 + m133 * m233;
-		
-			return dest;
+			return new Matrix4
+			(
+				m111 * m211 + m112 * m221 + m113 * m231,
+				m111 * m212 + m112 * m222 + m113 * m232,
+				m111 * m213 + m112 * m223 + m113 * m233,
+				0,
+				m121 * m211 + m122 * m221 + m123 * m231,
+				m121 * m212 + m122 * m222 + m123 * m232,
+				m121 * m213 + m122 * m223 + m123 * m233,
+				0,
+				m131 * m211 + m132 * m221 + m133 * m231,
+				m131 * m212 + m132 * m222 + m133 * m232,
+				m131 * m213 + m132 * m223 + m133 * m233,
+				0,
+				0,0,0,1			
+			);
 		}
 	
 		public static function multiply4x3( m1:Matrix4, m2:Matrix4 ):Matrix4
 		{
-			var dest : Matrix4 = Matrix4.createIdentity();
-			var m111:Number = m1.n11; var m211:Number = m2.n11;
-			var m121:Number = m1.n21; var m221:Number = m2.n21;
-			var m131:Number = m1.n31; var m231:Number = m2.n31;
-			var m112:Number = m1.n12; var m212:Number = m2.n12;
-			var m122:Number = m1.n22; var m222:Number = m2.n22;
-			var m132:Number = m1.n32; var m232:Number = m2.n32;
-			var m113:Number = m1.n13; var m213:Number = m2.n13;
-			var m123:Number = m1.n23; var m223:Number = m2.n23;
-			var m133:Number = m1.n33; var m233:Number = m2.n33;
-			var m214:Number = m2.n14; 
-			var m224:Number = m2.n24; 
-			var m234:Number = m2.n34; 
+			var m111:Number = m1.n11, m211:Number = m2.n11,
+				m121:Number = m1.n21, m221:Number = m2.n21,
+				m131:Number = m1.n31, m231:Number = m2.n31,
+				m112:Number = m1.n12, m212:Number = m2.n12,
+				m122:Number = m1.n22, m222:Number = m2.n22,
+				m132:Number = m1.n32, m232:Number = m2.n32,
+				m113:Number = m1.n13, m213:Number = m2.n13,
+				m123:Number = m1.n23, m223:Number = m2.n23,
+				m133:Number = m1.n33, m233:Number = m2.n33,
+				m214:Number = m2.n14, m224:Number = m2.n24,	m234:Number = m2.n34;
 			
-			dest.n11 = m111 * m211 + m112 * m221 + m113 * m231;
-			dest.n12 = m111 * m212 + m112 * m222 + m113 * m232;
-			dest.n13 = m111 * m213 + m112 * m223 + m113 * m233;
-	
-			dest.n21 = m121 * m211 + m122 * m221 + m123 * m231;
-			dest.n22 = m121 * m212 + m122 * m222 + m123 * m232;
-			dest.n23 = m121 * m213 + m122 * m223 + m123 * m233;
-	
-			dest.n31 = m131 * m211 + m132 * m221 + m133 * m231;
-			dest.n32 = m131 * m212 + m132 * m222 + m133 * m232;
-			dest.n33 = m131 * m213 + m132 * m223 + m133 * m233;
-			
-			dest.n14 = m214 * m111 + m224 * m112 + m234 * m113 + m1.n14;
-			dest.n24 = m214 * m121 + m224 * m122 + m234 * m123 + m1.n24;
-			dest.n34 = m214 * m131 + m224 * m132 + m234 * m133 + m1.n34;
-			
-			return dest;
+			return new Matrix4
+			(
+				m111 * m211 + m112 * m221 + m113 * m231,
+				m111 * m212 + m112 * m222 + m113 * m232,
+				m111 * m213 + m112 * m223 + m113 * m233,
+				m214 * m111 + m224 * m112 + m234 * m113 + m1.n14,
+				
+				m121 * m211 + m122 * m221 + m123 * m231,
+				m121 * m212 + m122 * m222 + m123 * m232,
+				m121 * m213 + m122 * m223 + m123 * m233,
+				m214 * m121 + m224 * m122 + m234 * m123 + m1.n24,
+				
+				m131 * m211 + m132 * m221 + m133 * m231,
+				m131 * m212 + m132 * m222 + m133 * m232,
+				m131 * m213 + m132 * m223 + m133 * m233,
+				m214 * m131 + m224 * m132 + m234 * m133 + m1.n34,
+				
+				0, 0, 0, 1
+			);
 		}
 			
 		/**
@@ -140,33 +143,37 @@
 		 */
 		public static function multiply(m1:Matrix4, m2:Matrix4) : Matrix4 
 		{
-			var dest:Matrix4 = Matrix4.createIdentity();
-			var m111:Number, m211:Number, m121:Number, m221:Number, m131:Number, m231:Number, m141:Number, m241:Number;
-			var m112:Number, m212:Number, m122:Number, m222:Number, m132:Number, m232:Number, m142:Number, m242:Number;
-			var m113:Number, m213:Number, m123:Number, m223:Number, m133:Number, m233:Number, m143:Number, m243:Number;
-			var m114:Number, m214:Number, m124:Number, m224:Number, m134:Number, m234:Number, m144:Number, m244:Number;
-	
-			dest.n11 = (m111=m1.n11) * (m211=m2.n11) + (m112=m1.n12) * (m221=m2.n21) + (m113=m1.n13) * (m231=m2.n31) + (m114=m1.n14) * (m241=m2.n41);
-			dest.n12 = m111 * (m212=m2.n12) + m112 * (m222=m2.n22) + m113 * (m232=m2.n32) + m114 * (m242=m2.n42);
-			dest.n13 = m111 * (m213=m2.n13) + m112 * (m223=m2.n23) + m113 * (m233=m2.n33) + m114 * (m243=m2.n43);
-			dest.n14 = m111 * (m214=m2.n14) + m112 * (m224=m2.n24) + m113 * (m234=m2.n34) + m114 * (m244=m2.n44);
-	
-			dest.n21 = (m121=m1.n21) * m211 + (m122=m1.n22) * m221 + (m123=m1.n23) * m231 + (m124=m1.n24) * m241;
-			dest.n22 = m121 * m212 + m122 * m222 + m123 * m232 + m124 * m242;
-			dest.n23 = m121 * m213 + m122 * m223 + m123 * m233 + m124 * m243;
-			dest.n24 = m121 * m214 + m122 * m224 + m123 * m234 + m124 * m244;
-	
-			dest.n31 = (m131=m1.n31) * m211 + (m132=m1.n32) * m221 + (m133=m1.n33) * m231 + (m134=m1.n34) * m241;
-			dest.n32 = m131 * m212 + m132 * m222 + m133 * m232 + m134 * m242;
-			dest.n33 = m131 * m213 + m132 * m223 + m133 * m233 + m134 * m243;
-			dest.n34 = m131 * m214 + m132 * m224 + m133 * m234 + m134 * m244;
-	
-			dest.n41 = (m141=m1.n41) * m211 + (m142=m1.n42) * m221 + (m143=m1.n43) * m231 + (m144=m1.n44) * m241;
-			dest.n42 = m141 * m212 + m142 * m222 + m143 * m232 + m144 * m242;
-			dest.n43 = m141 * m213 + m142 * m223 + m143 * m233 + m144 * m243;
-			dest.n44 = m141 * m214 + m142 * m224 + m143 * m234 + m144 * m244;
-	
-			return dest;
+			var m111:Number = m1.n11, m121:Number = m1.n21, m131:Number = m1.n31, m141:Number = m1.n41,
+				m112:Number = m1.n12, m122:Number = m1.n22, m132:Number = m1.n32, m142:Number = m1.n42, 
+				m113:Number = m1.n13, m123:Number = m1.n23, m133:Number = m1.n33, m143:Number = m1.n43,
+				m114:Number = m1.n14, m124:Number = m1.n24, m134:Number = m1.n34, m144:Number = m1.n44,
+				m211:Number = m2.n11, m221:Number = m2.n21, m231:Number = m2.n31, m241:Number = m2.n41,
+				m212:Number = m2.n12, m222:Number = m2.n22, m232:Number = m2.n32, m242:Number = m2.n42, 
+				m213:Number = m2.n13, m223:Number = m2.n23, m233:Number = m2.n33, m243:Number = m2.n43,
+				m214:Number = m2.n14, m224:Number = m2.n24, m234:Number = m2.n34, m244:Number = m2.n44;
+			
+			return new Matrix4
+			(
+				m111 * m211 + m112 * m221 + m113 * m231 + m114 * m241,
+				m111 * m212 + m112 * m222 + m113 * m232 + m114 * m242,
+				m111 * m213 + m112 * m223 + m113 * m233 + m114 * m243,
+				m111 * m214 + m112 * m224 + m113 * m234 + m114 * m244,
+		
+				m121 * m211 + m122 * m221 + m123 * m231 + m124 * m241,
+				m121 * m212 + m122 * m222 + m123 * m232 + m124 * m242,
+				m121 * m213 + m122 * m223 + m123 * m233 + m124 * m243,
+				m121 * m214 + m122 * m224 + m123 * m234 + m124 * m244,
+		
+				m131 * m211 + m132 * m221 + m133 * m231 + m134 * m241,
+				m131 * m212 + m132 * m222 + m133 * m232 + m134 * m242,
+				m131 * m213 + m132 * m223 + m133 * m233 + m134 * m243,
+				m131 * m214 + m132 * m224 + m133 * m234 + m134 * m244,
+		
+				m141 * m211 + m142 * m221 + m143 * m231 + m144 * m241,
+				m141 * m212 + m142 * m222 + m143 * m232 + m144 * m242,
+				m141 * m213 + m142 * m223 + m143 * m233 + m144 * m243,
+				m141 * m214 + m142 * m224 + m143 * m234 + m144 * m244
+			);
 		}
 		
 		/**
@@ -178,16 +185,13 @@
 		 */
 		public static function addMatrix(m1:Matrix4, m2:Matrix4): Matrix4
 		{
-			var dest : Matrix4 = Matrix4.createIdentity();
-			dest.n11 = m1.n11 + m2.n11; dest.n12 = m1.n12 + m2.n12;
-			dest.n13 = m1.n13 + m2.n13;	dest.n14 = m1.n14 + m2.n14;
-			dest.n21 = m1.n21 + m2.n21;	dest.n22 = m1.n22 + m2.n22;	
-			dest.n23 = m1.n23 + m2.n23;	dest.n24 = m1.n24 + m2.n24;
-			dest.n31 = m1.n31 + m2.n31;	dest.n32 = m1.n32 + m2.n32;	
-			dest.n33 = m1.n33 + m2.n33;	dest.n34 = m1.n34 + m2.n34;
-			dest.n41 = m1.n41 + m2.n41;	dest.n42 = m1.n42 + m2.n42;	
-			dest.n43 = m1.n43 + m2.n43;	dest.n44 = m1.n44 + m2.n44;
-			return dest;
+			return new Matrix4
+			(
+				m1.n11 + m2.n11, m1.n12 + m2.n12, m1.n13 + m2.n13, m1.n14 + m2.n14,
+				m1.n21 + m2.n21, m1.n22 + m2.n22, m1.n23 + m2.n23, m1.n24 + m2.n24,
+				m1.n31 + m2.n31, m1.n32 + m2.n32, m1.n33 + m2.n33, m1.n34 + m2.n34,
+				m1.n41 + m2.n41, m1.n42 + m2.n42, m1.n43 + m2.n43, m1.n44 + m2.n44
+			);
 		}
 		
 		/**
@@ -215,8 +219,8 @@
 		public static function vectorMult( m:Matrix4, pv:Vector ): Vector
 		{
 			var l_oVector:Vector =  new Vector(	(pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13 + m.n14),
-											(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23 + m.n24),
-											(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33 + m.n34));
+												(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23 + m.n24),
+												(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33 + m.n34));
 			return l_oVector;
 		}
 	
@@ -231,8 +235,8 @@
 		public static function vectorMult3x3( m:Matrix4, pv:Vector ):Vector
 		{
 			var l_oVector:Vector =   new Vector((pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13),
-										(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23),
-										(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33) );
+												(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23),
+												(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33) );
 			return l_oVector;
 		}
 	        

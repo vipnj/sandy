@@ -47,11 +47,6 @@ package sandy.core.data
 		public var sz:Number;
 		
 		/**
-		 * Used to know if the vertex has been projected, and avoid doublons after clipping
-		 */
-		public var projected:Boolean;
-		
-		/**
 		* Create a new {@code Vertex} Instance.
 		* If no
 		* @param px the x position number
@@ -70,8 +65,6 @@ package sandy.core.data
 			wz = (rest[2])?rest[2]:z; 
 			// --
 			sy = sx = sz = 0;
-			// --
-			projected = false;
 		}
 		
 		/**

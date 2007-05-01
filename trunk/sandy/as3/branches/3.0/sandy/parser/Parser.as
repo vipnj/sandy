@@ -5,10 +5,13 @@ package sandy.parser
 	
 	public final class Parser
 	{
-		public static function parse( p_sFileName:String ):IParser
+		public static const ASE:String = "ASE";
+		
+		public static function create( p_sFileName:String, p_sParserType:String=null ):IParser
 		{
-			var l_sExt:String = (p_sFileName.split('.')).reverse()[0];
-			var l_iParser:IParser = null;
+			var l_sExt:String,l_iParser:IParser = null;
+			if( p_sParserType == null )  l_sExt = (p_sFileName.split('.')).reverse()[0];
+			else l_sExt = p_sParserType
 			// --
 			switch( l_sExt.toUpperCase() )
 			{

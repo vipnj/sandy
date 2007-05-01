@@ -126,22 +126,20 @@ package sandy.core.scenegraph
 		*/
 		public function getChildFromId( id:Number, p_recurs:Boolean=false ):Node 
 		{
-			var l:Number = _aChilds.length;
-			while( -- l > -1 )
+			var l_oNode:Node, l_oNode2:Node;
+			for each( l_oNode in _aChilds )
 			{
-				if( Node(_aChilds[int(l)]).id == id )
+				if( l_oNode.id == id )
 				{
-					return _aChilds[int(l)];
+					return l_oNode;
 				}
 			}
 			if( p_recurs )
 			{
-				var node:Node = null;
-				l = _aChilds.length;
-				while( -- l > -1 )
+				for each( l_oNode in _aChilds )
 				{
-					node = Node(_aChilds[int(l)]).getChildFromId( id, p_recurs );
-					if( node != null ) return node;
+					l_oNode2 = l_oNode.getChildFromId( id, p_recurs );
+					if( l_oNode2 != null ) return l_oNode2;
 				}
 			}
 			return null;
@@ -154,21 +152,20 @@ package sandy.core.scenegraph
 		*/
 		public function getChildByName( pName:String, p_recurs:Boolean=false ):Node 
 		{
-			var l:Number = _aChilds.length;
-			while( -- l > -1 )
+			var l_oNode:Node, l_oNode2:Node;
+			for each( l_oNode in _aChilds )
 			{
-				if( Node(_aChilds[int(l)]).name == pName )
+				if( l_oNode.name == pName )
 				{
-					return _aChilds[int(l)];
+					return l_oNode;
 				}
 			}
 			if( p_recurs )
 			{
 				var node:Node = null;
-				l = _aChilds.length;
-				while( -- l > -1 )
+				for each( l_oNode in _aChilds )
 				{
-					node = Node(_aChilds[int(l)]).getChildByName( pName, p_recurs );
+					node = l_oNode.getChildByName( pName, p_recurs );
 					if( node != null ) return node;
 				}
 			}
@@ -302,14 +299,9 @@ package sandy.core.scenegraph
 		{
 			/* Shall be overriden */
 			changed = changed || p_bChanged;
-			//
-			var l_nId:int = 0;
-			var l_nLength:int = _aChilds.length;
-			while( l_nId < l_nLength )
-			{
-				_aChilds[l_nId].update( p_oModelMatrix, changed );
-				l_nId ++;
-			}
+			var l_oNode:Node;
+			for each( l_oNode in _aChilds )
+				l_oNode.update( p_oModelMatrix, changed );
 		}
 	
 		

@@ -99,18 +99,18 @@ package sandy.core.data
 			return m_bVisible;
 		}
 		
-		public function clip( p_oFrustum:Frustum ):void
+		public function clip( p_oFrustum:Frustum ):Array
 		{
-			cvertices = vertices.concat();
-			var l_nId:int = 0;
-			var l_nPLength:int = cvertices.length;
-			while( l_nId < l_nPLength ) 
+			var l_oVertex:Vertex;
+			// --
+			cvertices = new Array( vertices.length );
+			for each( l_oVertex in vertices ) 
 			{
-				cvertices[int(l_nId)] = vertices[int(l_nId)].clone2();
-				l_nId++;
+				cvertices.push( l_oVertex.clone2() );
 			}
 			// -- 
 			p_oFrustum.clipFrustum( cvertices );
+			return cvertices;
 		}
 		
 		public function render():void

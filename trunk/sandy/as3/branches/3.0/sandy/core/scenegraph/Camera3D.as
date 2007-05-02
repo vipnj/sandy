@@ -127,33 +127,32 @@ package sandy.core.scenegraph
 
 		public function clearDisplayList():void
 		{
-		    var l_oPoly:Polygon;
-			for each( l_oPoly in m_aDisplayListCopy )
+		    var l_oShape:Shape3D;
+			for each( l_oShape in m_aDisplayListCopy )
 			{
-				l_oPoly.container.graphics.clear();
+				l_oShape.container.graphics.clear();
 			}
 		}
 		
 		public function renderDisplayList():void
 		{
-		    var l_oPoly:Polygon, l_nId:int = 0, l_mcContainer:Sprite = World3D.getInstance().container;
+		    var l_oShape:Shape3D, l_nId:int=0, l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
-		    m_aDisplayList.sortOn( "depth", Array.NUMERIC );
+		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-			for each( l_oPoly in m_aDisplayList )
+			for each( l_oShape in m_aDisplayList )
 			{
-				l_mcContainer.setChildIndex( l_oPoly.container, l_nId );
-				l_oPoly.render();
-				l_nId ++;
+				l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
+				l_oShape.display();
 			}
 			// --
-			m_aDisplayListCopy = m_aDisplayList.concat();
+			m_aDisplayListCopy = m_aDisplayList;
 			m_aDisplayList = [];
 		}
 			
-		public function addToDisplayList( p_oPolygon:Polygon ):void
+		public function addToDisplayList( p_oShape:Shape3D ):void
 		{
-			m_aDisplayList.push( p_oPolygon );
+			m_aDisplayList.push( p_oShape );
 		}
 		
 		

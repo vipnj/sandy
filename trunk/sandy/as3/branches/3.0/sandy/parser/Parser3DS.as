@@ -153,8 +153,8 @@ package sandy.parser
 			            	var vertex_c:int = data.readUnsignedShort();
 			            	
 			            	var faceId:int = data.readUnsignedShort(); // TODO what is that? value is 3 or 6 ?....
-			            	l_oGeometry.setFaceVertexIds(i, vertex_a, vertex_b, vertex_c );
-			            	l_oGeometry.setFaceUVCoordsIds(i, vertex_a, vertex_b, vertex_c );
+			            	l_oGeometry.setFaceVertexIds(i, vertex_a, vertex_c, vertex_b );
+			            	l_oGeometry.setFaceUVCoordsIds(i, vertex_a, vertex_c, vertex_b );
 			            	//faces.push( [vertex_a, vertex_b, vertex_c]);
 			            }
 			            /*
@@ -214,8 +214,8 @@ package sandy.parser
 			         	
 			         case Parser3DSChunkTypes.COL_TRU:			//RGB color
 			         	var r:Number = data.readFloat();
-			            var y:Number = data.readFloat();
-			            var z:Number = data.readFloat();
+			            y = data.readFloat();
+			            z = data.readFloat();
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.COL_RGB:			//RGB color

@@ -46,7 +46,6 @@ package sandy.core.data
 	// PUBLIC________________________________________________________		
 		public var owner:Shape3D;
 		public var depth:Number;
-		public var container:Shape;
 		public var cvertices:Array;
 		public var vertices:Array;
 		public var normal:Vertex;
@@ -78,10 +77,6 @@ package sandy.core.data
 			depth = 0;
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
-			// Add this graphical object to the World display list
-			container = new Shape();
-			container.name = "polygon_"+id;
-			World3D.getInstance().container.addChild( container );
 		}
 	
 		/**
@@ -113,10 +108,10 @@ package sandy.core.data
 			return cvertices;
 		}
 		
-		public function render():void
+		public function display( p_mcContainer:Shape ):void
 		{
-			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this );
-			else			m_oAppearance.backMaterial.renderPolygon( this );
+			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, p_mcContainer );
+			else			m_oAppearance.backMaterial.renderPolygon( this, p_mcContainer );
 		}
 		
 		/**

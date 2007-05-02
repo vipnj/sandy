@@ -136,13 +136,13 @@ package sandy.core.scenegraph
 		
 		public function renderDisplayList():void
 		{
-		    var l_oShape:Shape3D, l_mcContainer:Sprite = World3D.getInstance().container;
+		    var l_oShape:Shape3D, l_nId:int=0, l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
-		    m_aDisplayList.sortOn( "depth", Array.NUMERIC );
+		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
 			for each( l_oShape in m_aDisplayList )
 			{
-				l_mcContainer.addChild( l_oShape.container );
+				l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
 				l_oShape.display();
 			}
 			// --

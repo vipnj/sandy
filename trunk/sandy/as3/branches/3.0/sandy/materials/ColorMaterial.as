@@ -37,7 +37,10 @@ package sandy.materials
 			// --
 			switch( l_points.length )
 			{
-				case 2:
+				case 2 :
+					l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
+					break;
+				case 3 :
 					l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
 					l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
 					break;

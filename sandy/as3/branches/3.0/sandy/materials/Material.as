@@ -17,6 +17,7 @@ package sandy.materials
 {
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
+	import flash.display.Shape;
 	
 	import sandy.core.data.Polygon;
 	import sandy.materials.LineAttributes;
@@ -38,7 +39,7 @@ package sandy.materials
 		{return _id;}
 		
 	
-		public function renderPolygon( p_oPolygon:Polygon ):void
+		public function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Shape ):void
 		{
 			;
 		}

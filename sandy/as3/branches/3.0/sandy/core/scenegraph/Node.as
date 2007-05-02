@@ -387,8 +387,8 @@ package sandy.core.scenegraph
 			_aChilds = [];
 			_id = Node._ID_++;
 			// --
-			if(p_sName != "")	name = p_sName;
-			else         		name = String( _id.toString() );
+			if(p_sName)		name = p_sName;
+			else         	name = String( _id.toString() );
 			changed = true;
 			_visible = true;
 			_oBBox = new BBox();

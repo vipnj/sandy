@@ -5,6 +5,7 @@ package sandy.materials
 	import flash.display.Sprite;
 	import flash.display.Shape;
 	import flash.display.Graphics;
+	
 	/**
 	 * @author thomaspfeiffer
 	 */
@@ -22,9 +23,9 @@ package sandy.materials
 			lineAttributes = p_oLineAttr;
 		}
 		
-		public override function renderPolygon( p_oPolygon:Polygon ):void 
+		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Shape ):void 
 		{
-			var sprite:Shape = p_oPolygon.container;
+			var sprite:Shape = p_mcContainer;
 			var l_points:Array = p_oPolygon.cvertices;
 			var l_graphics:Graphics = sprite.graphics;
 			// --
@@ -37,6 +38,9 @@ package sandy.materials
 			// --
 			switch( l_points.length )
 			{
+				case 1 :
+					l_graphics.lineTo( l_points[0].sx+1, l_points[0].sy+1 );
+					break;
 				case 2 :
 					l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
 					break;
@@ -65,6 +69,7 @@ package sandy.materials
 			// --
 			l_graphics.endFill();
 		}
+		
 		public function get alpha():Number
 		{return m_nAlpha;}
 		

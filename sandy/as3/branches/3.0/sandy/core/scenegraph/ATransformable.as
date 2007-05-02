@@ -14,7 +14,7 @@ package sandy.core.scenegraph {
 	{
 		public var transform:Transform3D;
 	
-		public function ATransformable ( p_sName:String )
+		public function ATransformable ( p_sName:String="" )
 		{
 			super( p_sName );
 			_p 		= new Vector();

@@ -66,9 +66,9 @@ package sandy.materials
 			m_oPolygonMatrixMap = new Dictionary();
 		}
 	
-		public override function renderPolygon( p_oPolygon:Polygon ):void 
+		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Shape ):void 
 		{
-			var sprite:Shape = p_oPolygon.container;
+			var sprite:Shape = p_mcContainer;
 			var l_points:Array = p_oPolygon.cvertices;
 			var l_graphics:Graphics = sprite.graphics;
 			// --

@@ -1,6 +1,7 @@
 package sandy.core.scenegraph 
 {    
 	import flash.events.MouseEvent;
+	import flash.display.Shape;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
@@ -10,22 +11,30 @@ package sandy.core.scenegraph
 	import sandy.materials.Appearance;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
-	
+	import sandy.core.World3D;
+
 	public class Shape3D extends ATransformable implements ITransformable
 	{ 
 		public var aPolygons:Array;
-			
-		// Default skin for every Shape3D object.	
-	    public function Shape3D( p_sName:String, p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
+		public var depth:Number;
+		public var container:Shape;
+
+		private var m_aVisiblePoly:Array;
+	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
 	    {
 	        super( p_sName );
+	    	// Add this graphical object to the World display list
+			container = new Shape();
+			//scontainer.name = this.name;
+			World3D.getInstance().container.addChild( container );
+			// --
 	        geometry = p_geometry;
 	        //
 	        m_bBackFaceCulling = true;
 			m_bEnableForcedDepth = false;
 			m_bEnableClipping = false;
 			m_bClipped = false;
-			m_nForcedDepth = 0;
+			depth = m_nForcedDepth = 0;
 			m_bEv = false;
 			// --
 			if( p_oAppearance ) appearance = p_oAppearance;
@@ -138,7 +147,7 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_nDepth:Number, l_oFace:Polygon, l_oVertex:Vertex, l_oNormal:Vertex, l_oMatrix:Matrix4 = _oViewCacheMatrix, 
+			var l_nDepth:Number=0, l_oFace:Polygon, l_oVertex:Vertex, l_oNormal:Vertex, l_oMatrix:Matrix4 = _oViewCacheMatrix, 
 				l_faces:Array = aPolygons, l_oFrustum:Frustum = p_oCamera.frustrum, l_aNormals:Array = m_oGeometry.aFacesNormals,
 				l_aPoints:Array = m_oGeometry.aVertex,
 	        	m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
@@ -161,28 +170,42 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			if( m_bClipped ) l_aPoints = [];
+			m_aVisiblePoly = new Array();
 			// --
 			for each( l_oFace in l_faces )
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
+					m_aVisiblePoly.push( l_oFace );
+					// --
 					if( m_bClipped )
 						l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
 					else
 				    	l_oFace.cvertices = l_oFace.vertices;		   
 					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-					if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth;
-					else l_nDepth = l_oFace.getZAverage();
-					// --
-					l_oFace.depth = l_nDepth;
-					// --
-					p_oCamera.addToDisplayList( l_oFace );
+					if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
 				}
 			}
+			
+			if(m_bEnableForcedDepth)depth = m_nForcedDepth;
+			else 					depth = l_nDepth/m_aVisiblePoly.length;
+			
 			// -- We push the vertex to project onto the viewport.
 			p_oCamera.pushVerticesToProject( l_aPoints );
+			// --
+			p_oCamera.addToDisplayList( this );
 		}
 	
+		public function display():void
+		{
+			var l_oPoly:Polygon;
+			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		    // --
+			for each( l_oPoly in m_aVisiblePoly )
+			{
+				l_oPoly.display( container );
+			}
+		}
 	
 		public function set appearance( p_oApp:Appearance ):void
 		{

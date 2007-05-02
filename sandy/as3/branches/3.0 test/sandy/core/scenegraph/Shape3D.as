@@ -12,19 +12,20 @@ package sandy.core.scenegraph
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	import sandy.core.World3D;
-	
+
 	public class Shape3D extends ATransformable implements ITransformable
 	{ 
 		public var aPolygons:Array;
 		public var depth:Number;
 		public var container:Shape;
 
-	    public function Shape3D( p_sName:String, p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
+		private var m_aVisiblePoly:Array;
+	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
 	    {
 	        super( p_sName );
 	    	// Add this graphical object to the World display list
 			container = new Shape();
-			container.name = this.name;
+			//scontainer.name = this.name;
 			World3D.getInstance().container.addChild( container );
 			// --
 	        geometry = p_geometry;
@@ -169,11 +170,14 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			if( m_bClipped ) l_aPoints = [];
+			m_aVisiblePoly = new Array();
 			// --
 			for each( l_oFace in l_faces )
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
+					m_aVisiblePoly.push( l_oFace );
+					// --
 					if( m_bClipped )
 						l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
 					else
@@ -184,7 +188,7 @@ package sandy.core.scenegraph
 			}
 			
 			if(m_bEnableForcedDepth)depth = m_nForcedDepth;
-			else 					depth = l_nDepth/l_faces.length;
+			else 					depth = l_nDepth/m_aVisiblePoly.length;
 			
 			// -- We push the vertex to project onto the viewport.
 			p_oCamera.pushVerticesToProject( l_aPoints );
@@ -195,9 +199,9 @@ package sandy.core.scenegraph
 		public function display():void
 		{
 			var l_oPoly:Polygon;
-			aPolygons.sortOn( "depth", Array.NUMERIC );
+			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-			for each( l_oPoly in aPolygons )
+			for each( l_oPoly in m_aVisiblePoly )
 			{
 				l_oPoly.display( container );
 			}

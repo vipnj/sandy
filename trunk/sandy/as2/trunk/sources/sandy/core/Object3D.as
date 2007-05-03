@@ -201,7 +201,7 @@ class sandy.core.Object3D extends Leaf
 	{
 		var v:Vertex = aPoints[0];
 		// Does this still need a FIX as per Petit (tx, ty, and tz instead of wx, wy, and wz)?
-		return new Vector( v.tx - v.x, v.ty - v.y, v.tz - v.z );
+		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
 	}
 
 	/**

@@ -1,4 +1,4 @@
-﻿/*
+/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -201,7 +201,7 @@ class sandy.core.Object3D extends Leaf
 	{
 		var v:Vertex = aPoints[0];
 		// Does this still need a FIX as per Petit (tx, ty, and tz instead of wx, wy, and wz)?
-		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
+		return new Vector( v.tx - v.x, v.ty - v.y, v.tz - v.z );
 	}
 
 	/**

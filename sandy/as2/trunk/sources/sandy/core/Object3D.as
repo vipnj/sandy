@@ -192,15 +192,13 @@ class sandy.core.Object3D extends Leaf
 	
 	/**
 	* Returns the position of the Object3D as a 3D vector.
-	* The returned position in the position in the World frame, not the camera's one.
-	* In case you want to get the position to a camera, you'll have to add its position to this vector with VectorMat::add eg.
+	* The returned position in the position in the camera frame
 	* @param	Void
-	* @return	Vector the 3D position of the object
+	* @return	The position
 	*/
 	public function getPosition( Void ):Vector
 	{
 		var v:Vertex = aPoints[0];
-		// Does this still need a FIX as per Petit (tx, ty, and tz instead of wx, wy, and wz)?
 		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
 	}
 

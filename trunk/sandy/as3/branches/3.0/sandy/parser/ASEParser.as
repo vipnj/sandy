@@ -17,8 +17,8 @@ package sandy.parser
 	import sandy.core.scenegraph.Group;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.Appearance;
-	/**
-	 */
+	import sandy.materials.WireFrameMaterial;
+
 	internal final class ASEParser extends AParser implements IParser
 	{
 		public function ASEParser( p_sUrl:String )
@@ -37,6 +37,7 @@ package sandy.parser
 			var line:String;
 			var content:String;
 			var chunk:String;
+			var l_oAppearance:Appearance = null;
 			var l_oGeometry:Geometry3D = null;
 			var l_oShape:Shape3D = null;
 			// -- 
@@ -58,6 +59,13 @@ package sandy.parser
 					case 'MESH_NUMFACES':
 					{		
 						//var num: Number =  Number(line.split( ' ' )[1]);
+						if( l_oGeometry )
+						{
+							l_oShape = new Shape3D( null, l_oGeometry, l_oAppearance );
+							m_oGroup.addChild( l_oShape );
+						}
+						// --
+						l_oAppearance = new Appearance( new WireFrameMaterial() );
 						l_oGeometry = new Geometry3D();
 						break;
 					}	

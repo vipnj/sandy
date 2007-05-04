@@ -35,34 +35,6 @@
 	{
 		public static var USE_FAST_MATH:Boolean = false;
 		
-		private static var instance:Matrix4Math;
-		private static var create:Boolean;
-		
-		/**
-		 * Singleton Constructor
-		 */ 
-		public function Matrix4Math(){
-			if ( !create )
-			{
-				throw new SingletonError();
-			}
-		}
-		
-		/**
-		 * Returns an instance of this class
-		 */
-		public static function getInstance():Matrix4Math
-		{
-			if (instance == null)
-			{
-				create = true;
-				instance = new Matrix4Math();
-				create = false;
-			}
-			
-			return instance;
-		}
-		
 		/**
 		 * Compute the multiplication of 2 {@code Matrix4} but as they were 3x3 matrix.
 		 *
@@ -218,10 +190,10 @@
 		 */    
 		public static function vectorMult( m:Matrix4, pv:Vector ): Vector
 		{
-			var l_oVector:Vector =  new Vector(	(pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13 + m.n14),
-												(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23 + m.n24),
-												(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33 + m.n34));
-			return l_oVector;
+			var x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
+			return  new Vector( (x * m.n11 + y * m.n12 + z * m.n13 + m.n14),
+								(x * m.n21 + y * m.n22 + z * m.n23 + m.n24),
+								(x * m.n31 + y * m.n32 + z * m.n33 + m.n34));
 		}
 	
 		/**
@@ -234,10 +206,10 @@
 		 */
 		public static function vectorMult3x3( m:Matrix4, pv:Vector ):Vector
 		{
-			var l_oVector:Vector =   new Vector((pv.x * m.n11 + pv.y * m.n12 + pv.z * m.n13),
-												(pv.x * m.n21 + pv.y * m.n22 + pv.z * m.n23),
-												(pv.x * m.n31 + pv.y * m.n32 + pv.z * m.n33) );
-			return l_oVector;
+			var x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
+			return  new Vector( (x * m.n11 + y * m.n12 + z * m.n13),
+								(x * m.n21 + y * m.n22 + z * m.n23),
+								(x * m.n31 + y * m.n32 + z * m.n33));
 		}
 	        
 		/**

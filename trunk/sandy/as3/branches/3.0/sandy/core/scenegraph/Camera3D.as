@@ -58,7 +58,7 @@ package sandy.core.scenegraph
 			frustrum = new Frustum();
 			// --
 			setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
-			m_aDisplayListCopy = m_aDisplayList = new Array();
+			m_aDisplayList = new Array();
 			m_aVerticesList = new Array();
 			// It's a non visible node
 			visible = false;
@@ -121,18 +121,9 @@ package sandy.core.scenegraph
 			return _nFar;
 		}
 	
-	///////////////////////////////////////
-	//// GRAPHICAL ELEMENTS MANAGMENT /////
-	///////////////////////////////////////
-
-		public function clearDisplayList():void
-		{
-		    var l_oShape:Shape3D;
-			for each( l_oShape in m_aDisplayListCopy )
-			{
-				l_oShape.container.graphics.clear();
-			}
-		}
+		///////////////////////////////////////
+		//// GRAPHICAL ELEMENTS MANAGMENT /////
+		///////////////////////////////////////
 		
 		public function renderDisplayList():void
 		{
@@ -146,7 +137,6 @@ package sandy.core.scenegraph
 				l_oShape.display();
 			}
 			// --
-			m_aDisplayListCopy = m_aDisplayList;
 			m_aDisplayList = [];
 		}
 			
@@ -345,7 +335,6 @@ package sandy.core.scenegraph
 		 */
 		private var _viewport:ViewPort;
 		private var m_aDisplayList:Array;
-		private var m_aDisplayListCopy:Array;
 		private var _perspectiveChanged:Boolean;
 		private var _nFov:Number;
 		private var _nFar:Number;

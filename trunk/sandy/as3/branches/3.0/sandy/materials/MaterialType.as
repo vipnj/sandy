@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.materials {
+package sandy.materials 
+{
 	/**
 	* Contains all the types of skins that can be used in Sandy.
 	*  
@@ -46,8 +47,8 @@ package sandy.materials {
 		/**
 		* Constant value representing the SimpleLineSkin
 		*/
-		public static function get TEXTURE():MaterialType { return __texture; }
-		private static var __texture:MaterialType = new MaterialType( 3 );
+		public static function get BITMAP():MaterialType { return __bitmap; }
+		private static var __bitmap:MaterialType = new MaterialType( 3 );
 	
 		/**
 		* Constant value representing the MovieSkin

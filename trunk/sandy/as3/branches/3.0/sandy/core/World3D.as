@@ -124,7 +124,6 @@ package sandy.core
 				// --
 				camera.project();
 				// -- clear the polygon's container and the projection vertices list
-	            camera.clearDisplayList();
 	            camera.renderDisplayList();
 			}
 		} // end method

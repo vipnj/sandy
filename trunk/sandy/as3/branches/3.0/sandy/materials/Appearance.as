@@ -17,10 +17,6 @@ package sandy.materials
 			m_oBackMaterial  = 	(p_oBack != null) 	? p_oBack	:	p_oFront;
 		}
 		
-		public function get needNormals():Boolean
-		{ return m_oBackMaterial.needNormals && m_oFrontMaterial.needNormals; }
-	
-		
 		public function get material():Material
 		{
 			return (oRef.visible) ? m_oFrontMaterial : m_oBackMaterial;

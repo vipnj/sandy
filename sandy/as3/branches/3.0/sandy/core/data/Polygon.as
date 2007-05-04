@@ -16,19 +16,16 @@ limitations under the License.
 
 package sandy.core.data 
 {
-	import sandy.core.data.UVCoord;
-	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
+	import flash.display.Sprite;
+	import flash.events.EventDispatcher;
+	import flash.events.MouseEvent;
+	
+	import sandy.core.World3D;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.core.World3D;
 	import sandy.materials.Appearance;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
-	import flash.events.EventDispatcher;
-	import flash.events.MouseEvent;
-	import flash.display.Shape;
-	
 	
 	/**
 	* Polygon
@@ -98,7 +95,7 @@ package sandy.core.data
 		{
 			var l_oVertex:Vertex;
 			// --
-			cvertices = new Array( vertices.length );
+			cvertices = new Array();
 			for each( l_oVertex in vertices ) 
 			{
 				cvertices.push( l_oVertex.clone2() );
@@ -108,7 +105,7 @@ package sandy.core.data
 			return cvertices;
 		}
 		
-		public function display( p_mcContainer:Shape ):void
+		public function display( p_mcContainer:Sprite ):void
 		{
 			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, p_mcContainer );
 			else			m_oAppearance.backMaterial.renderPolygon( this, p_mcContainer );
@@ -120,7 +117,7 @@ package sandy.core.data
 		 */
 		private function __update( p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number ):void
 		{
-			var i:Number, l:Number;
+			var i:int, l:int;
 			// --
 			vertices = new Array( l = p_aVertexID.length );
 			for( i=0; i<l; i++ )
@@ -157,17 +154,13 @@ package sandy.core.data
 		public function getZAverage():Number
 		{
 			// -- We normalize the sum and return it
-			var a:Array = cvertices;
-			var l_nId:int = 0;
-			var l_nLength:int= a.length;
-			// --
-			while( l_nId < l_nLength )
+			var v:Vertex;
+			for each ( v in cvertices )
 			{
-				depth += a[int(l_nId)].wz;
-				l_nId ++;
+				depth += v.wz;
 			}
 			// --
-			depth /= a.length;
+			depth /= cvertices.length;
 			return depth;
 		}
 	

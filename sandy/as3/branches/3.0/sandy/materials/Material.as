@@ -17,7 +17,7 @@ package sandy.materials
 {
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
-	import flash.display.Shape;
+	import flash.display.Sprite;
 	
 	import sandy.core.data.Polygon;
 	import sandy.materials.LineAttributes;
@@ -39,7 +39,7 @@ package sandy.materials
 		{return _id;}
 		
 	
-		public function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Shape ):void
+		public function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void
 		{
 			;
 		}
@@ -49,7 +49,6 @@ package sandy.materials
 			;
 		}
 	
-		
 		/**
 		 * Returns the type of SKin you are using.
 		 * For the BasicSkin class, this value is set to NONE
@@ -57,7 +56,7 @@ package sandy.materials
 		 * @return SkinType The type constant which represents your skin.
 		 */
 		public function get type():MaterialType
-		{ return MaterialType.NONE; }
+		{ return m_nType; }
 		
 		/**
 		 * setLightingEnable. Prepare the skin to use the world light or not. The default value is false.
@@ -101,7 +100,7 @@ package sandy.materials
 			_id = _ID_++;
 			lineAttributes = null;
 			m_bModified = true;
-			needNormals = false;
+			m_nType = MaterialType.NONE;
 		}
 		
 		/**
@@ -110,7 +109,6 @@ package sandy.materials
 		 * 
 		 * THe variable is READ ONLY unless you perfectly know what you are doing.
 		 */
-		public var needNormals:Boolean;
 		
 		public var repeat:Boolean;
 		
@@ -121,6 +119,7 @@ package sandy.materials
 		private var _filters:Array;
 		private var _useLight : Boolean;
 		private var _id:Number;
+		protected var m_nType:MaterialType;
 		private static var _ID_:Number = 0;
 		private static var create:Boolean;
 	}

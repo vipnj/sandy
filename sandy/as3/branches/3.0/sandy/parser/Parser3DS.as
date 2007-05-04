@@ -12,7 +12,6 @@ package sandy.parser
 	import flash.utils.Endian;
 	import flash.utils.getTimer;
 	
-
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Quaternion;
 	import sandy.core.data.Vector;
@@ -23,6 +22,10 @@ package sandy.parser
 	import sandy.math.VertexMath;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.Geometry3D;
+	import sandy.materials.Appearance;
+	import sandy.materials.ColorMaterial;
+	import sandy.materials.WireFrameMaterial;
+	import sandy.math.ColorMath;
 
 	internal final class Parser3DS extends AParser implements IParser
 	{
@@ -61,14 +64,15 @@ package sandy.parser
 			var _rot_m:Array = new Array();		
 			var ad:Array = new Array();
 			var pi180:Number = 180 / Math.PI;
+			// --
+			var l_oAppearance:Appearance = null;
 			var l_oGeometry:Geometry3D = null;
 			var l_oShape:Shape3D = null;
+			// --
 			var x:Number, y:Number, z:Number;
 			var l_qty:uint;
-			
-			var l_bFinished:Boolean = false;
 			// --
-			while( data.bytesAvailable > 0 && l_bFinished == false )
+			while( data.bytesAvailable > 0 )
 			{
 				var id:uint = data.readUnsignedShort();
 				//trace("chunk id: " + id);
@@ -81,70 +85,66 @@ package sandy.parser
 				{
 					case Parser3DSChunkTypes.MAIN3DS:
 						
-						trace("0x4d4d MAIN3DS");
+						//trace("0x4d4d MAIN3DS");
 				        break;
 				        
 				    case Parser3DSChunkTypes.EDIT3DS:
 				    	
-				    	trace("0x3d3d EDIT3DS");
+				    	//trace("0x3d3d EDIT3DS");
 				        break;
 				        
 				   	case Parser3DSChunkTypes.KEYF3DS:
-				   		trace("0xB000 KEYF3DS");
+				   		//trace("0xB000 KEYF3DS");
 				   		break;
 				   
 				    case Parser3DSChunkTypes.EDIT_OBJECT:
 		
-				    	trace("0x4000");
-				    	i=0;
-				    	if( currentObjectName ) l_bFinished = true;
-				    	else
+				    	//trace("0x4000");
+				    	if( l_oGeometry )
 						{
-						    var str:String = readString();
-					        l_oShape = new Shape3D( str );
-					        l_oGeometry = new Geometry3D();
-					        currentObjectName = str;
+					        l_oShape = new Shape3D( currentObjectName, l_oGeometry, l_oAppearance );
+							m_oGroup.addChild( l_oShape );
 					    }
+					    // --
+					    var str:String = readString();
+					    currentObjectName = str;
+					    l_oGeometry = new Geometry3D();
+					    l_oAppearance = new Appearance( new WireFrameMaterial() );
 			         	break;
 			         	
 					case Parser3DSChunkTypes.OBJ_TRIMESH:
 						
-						trace("0x4100");
+						//trace("0x4100");
 	         			break;
 	         		 
 	         		 case Parser3DSChunkTypes.TRI_VERTEXL:        //vertices
 	         		 	
-	         		 	trace("0x4110 vertices");
+	         		 	//trace("0x4110 vertices");
 			            l_qty = data.readUnsignedShort();
 			            for (var i:int=0; i<l_qty; i++)
 			            {
 			            	x = data.readFloat();
 			            	y = data.readFloat();
 			            	z = data.readFloat();
-			            	//trace("vertice["+o.name+"] [" + x +","+y+","+z+"][" + x +","+(-z)+","+y+"]");
-							l_oGeometry.setVertex( i, x, -z, y );
-			            	//o.addPoint( x,-z, y );
+			            	l_oGeometry.setVertex( i, x, -z, y );
 			            }
-			            //trace("In " + (getTimer() - time) + " ms we have list of " + vertex_list.length + " vertices");
-			         	break;
+			            break;
 			        
 			         case Parser3DSChunkTypes.TRI_TEXCOORD:		// texture coords
 				        
-				        trace("0x4140  texture coords");
+				      //  trace("0x4140  texture coords");
 			            l_qty = data.readUnsignedShort();
 			            for (i=0; i<l_qty; i++)
 			            {
 			            	var u:Number = data.readFloat();
 			            	var v:Number = data.readFloat();
-			            	//trace("u v: " + u + " , " + v);
 			            	l_oGeometry.setUVCoords( i, u, 1-v );
-			            	//uvCoordinates.push( o.addUVCoordinate( u, 1 - v ) );
 			            }
 			         	break;
 			         
 			         case Parser3DSChunkTypes.TRI_FACEL1:		// faces
 			         
-						trace("0x4120  faces");
+						//trace("0x4120  faces");
 			            l_qty = data.readUnsignedShort();
 			            for (i = 0; i<l_qty; i++)
 			            {
@@ -155,23 +155,11 @@ package sandy.parser
 			            	var faceId:int = data.readUnsignedShort(); // TODO what is that? value is 3 or 6 ?....
 			            	l_oGeometry.setFaceVertexIds(i, vertex_a, vertex_c, vertex_b );
 			            	l_oGeometry.setFaceUVCoordsIds(i, vertex_a, vertex_c, vertex_b );
-			            	//faces.push( [vertex_a, vertex_b, vertex_c]);
-			            }
-			            /*
-			            for (i = 0; i<l_qty; i++)
-			            {
-			            	var p:Array = faces[i]
-			            	f = new TriFace3D( o, o.aPoints[ p[1] ], o.aPoints[ p[0] ], o.aPoints[ p[2] ] )
-			            	
-			            	f.setUVCoordinates( uvCoordinates[ p[0] ], uvCoordinates[ p[1] ], uvCoordinates[ p[2] ] );
-							o.addFace( f );
-			            }
-			            */
-			            
+			            }			            
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.TRI_LOCAL:		//ParseLocalCoordinateSystem
-			         	trace("0x4160 TRI_LOCAL");
+			         	//trace("0x4160 TRI_LOCAL");
 			         	
 			         	var localX:Vector = readVector();
 			         	var localY:Vector = readVector();
@@ -184,8 +172,8 @@ package sandy.parser
 									         				localY.x, localY.y, localY.z,0,
 									         				0,0,0,1 );
 						
-						l_oShape.transform.matrix = init_m;
-						l_oShape.setPosition( origin.x, -origin.y, origin.z );
+						//l_oShape.transform.matrix = init_m;
+						//l_oShape.setPosition( origin.x, -origin.y, origin.z );
 						/* _rot_m[currentObjectName] = init_m;
 						 
 			         	var originVertex:Vertex = origin.toVertex();
@@ -198,7 +186,7 @@ package sandy.parser
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.OBJ_LIGHT:		//Lights
-			         	trace("0x4600 Light");
+			         	//trace("0x4600 Light");
 			            var light:Vector = readVector();
 			         	break;
 			         	
@@ -216,16 +204,18 @@ package sandy.parser
 			         	var r:Number = data.readFloat();
 			            y = data.readFloat();
 			            z = data.readFloat();
+			            l_oAppearance.frontMaterial = new ColorMaterial( ColorMath.rgb2hex( r, y, z ) );
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.COL_RGB:			//RGB color
 			         	x = data.readByte();
 			            y = data.readByte();
 			            z = data.readByte();
+			            l_oAppearance.frontMaterial = new ColorMaterial( ColorMath.rgb2hex( x, y, z ) );
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.OBJ_CAMERA:		//Cameras
-			         	trace("0x4700 Cameras");
+			         	//trace("0x4700 Cameras");
 			         	
 			         	x = data.readFloat();
 			            y = data.readFloat();
@@ -242,19 +232,19 @@ package sandy.parser
 			         
 			         // animation
 			         case Parser3DSChunkTypes.KEYF_FRAMES:
-			         	trace("0xB008 KEYF_FRAMES");
+			         	//trace("0xB008 KEYF_FRAMES");
 			         	startFrame = data.readInt();
 			         	endFrame = data.readInt();
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.KEYF_OBJDES:
-			         	trace("0xB002 KEYF_OBJDES");
+			         	//trace("0xB002 KEYF_OBJDES");
 			         	startFrame = data.readInt();
 			         	endFrame = data.readInt();
 			         	break;
 			        
 			         case Parser3DSChunkTypes.NODE_ID:
-			         	trace("0xB030 NODE_ID");
+			         	//trace("0xB030 NODE_ID");
 
 			         	var node_id:uint = data.readUnsignedShort();
 			         	/*
@@ -269,7 +259,7 @@ package sandy.parser
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.NODE_HDR:
-			         	trace("0xB010 NODE_HDR");
+			         	//trace("0xB010 NODE_HDR");
 			         	/*
 			         	var name:String = readString();
 			         	var flag1:uint = data.readUnsignedShort();
@@ -288,7 +278,7 @@ package sandy.parser
 			         	break;	
 			         
 			         case Parser3DSChunkTypes.PIVOT:
-			         	trace("0xB013 PIVOTR");
+			         	//trace("0xB013 PIVOTR");
 			         	x = data.readFloat();
 			            y = data.readFloat();
 			            z = data.readFloat();
@@ -299,7 +289,7 @@ package sandy.parser
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.POS_TRACK_TAG:
-			         	trace("0xB020 POS_TRACK_TAG");
+			         	//trace("0xB020 POS_TRACK_TAG");
 			         	
 			         	var flag1:uint = data.readUnsignedShort();
 			         	for (var j:int=0; j<8; j++)
@@ -333,7 +323,7 @@ package sandy.parser
 			         	break;	
 			         	
 			         case Parser3DSChunkTypes.ROT_TRACK_TAG:
-			         	trace("0xB021 ROT_TRACK_TAG");
+			         	//trace("0xB021 ROT_TRACK_TAG");
 			         	
 			         	flag1 = data.readUnsignedShort();
 			         	for (j = 0; j<8; j++)
@@ -383,7 +373,7 @@ package sandy.parser
 			         	break;	
 			         	
 			         case Parser3DSChunkTypes.SCL_TRACK_TAG:
-			         	trace("0xB022 SCL_TRACK_TAG");
+			         	//trace("0xB022 SCL_TRACK_TAG");
 			         	
 			         	flag1 = data.readUnsignedShort();
 			         	for (j=0; j<8; j++)
@@ -417,12 +407,12 @@ package sandy.parser
 				        */
 			         	break;				
 			         default:
-				        trace("default");
+				        //trace("default");
 			            data.position += l_chunk_length-6;
 			 	}
 			}
 			// -- 
-			l_oShape.geometry = l_oGeometry;
+			l_oShape = new Shape3D( currentObjectName, l_oGeometry, l_oAppearance);
 			m_oGroup.addChild( l_oShape );
 			// -- Parsing is finished
 			var l_eOnInit:ParserEvent = new ParserEvent( ParserEvent.onInitEVENT );

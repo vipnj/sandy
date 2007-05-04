@@ -1,7 +1,7 @@
 package sandy.core.scenegraph 
 {    
 	import flash.events.MouseEvent;
-	import flash.display.Shape;
+	import flash.display.Sprite;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
@@ -17,14 +17,14 @@ package sandy.core.scenegraph
 	{ 
 		public var aPolygons:Array;
 		public var depth:Number;
-		public var container:Shape;
+		public var container:Sprite;
 
 		private var m_aVisiblePoly:Array;
 	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
 	    {
 	        super( p_sName );
 	    	// Add this graphical object to the World display list
-			container = new Shape();
+			container = new Sprite();
 			//scontainer.name = this.name;
 			World3D.getInstance().container.addChild( container );
 			// --
@@ -133,16 +133,24 @@ package sandy.core.scenegraph
 		{
 			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 			// -- We update the clipped property if necessary and requested by the user.
+			m_bClipped = false;
+			// --
 			if( culled == CullingState.INTERSECT )
 			{
 				if( m_bEnableClipping ) 
 				{
 					m_bClipped = true;
-					return;
 				}
+				container.visible = true;
 			}
-			// --
-			m_bClipped = false;
+			else if( culled == CullingState.INSIDE )
+			{
+				container.visible = true;
+			}
+			else
+			{
+				container.visible = false;
+			}
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void
@@ -200,6 +208,8 @@ package sandy.core.scenegraph
 		{
 			var l_oPoly:Polygon;
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+		    // --
+		    container.graphics.clear();
 		    // --
 			for each( l_oPoly in m_aVisiblePoly )
 			{

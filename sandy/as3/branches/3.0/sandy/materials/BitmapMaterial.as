@@ -16,7 +16,7 @@ limitations under the License.
 package sandy.materials 
 {
 	import flash.display.BitmapData;
-	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -55,6 +55,8 @@ package sandy.materials
 		{
 			super();
 			// --
+			m_nType = MaterialType.BITMAP;
+			// --
 			lineAttributes = p_oLineAttr;
 			// --
 			texture = t;
@@ -66,18 +68,17 @@ package sandy.materials
 			m_oPolygonMatrixMap = new Dictionary();
 		}
 	
-		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Shape ):void 
+		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			var sprite:Shape = p_mcContainer;
 			var l_points:Array = p_oPolygon.cvertices;
-			var l_graphics:Graphics = sprite.graphics;
+			var l_graphics:Graphics = p_mcContainer.graphics;
 			// --
 			if( l_points.length == 1 )
 			{
 				//FIXME I don't like the way the perspective is applied here...
-				sprite.scaleX = sprite.scaleY = (10000 / l_points[0].wz);
-				sprite.x = l_points[0].sx - sprite.width / 2;
-				sprite.y = l_points[0].sy - sprite.height / 2;;
+				p_mcContainer.scaleX = p_mcContainer.scaleY = (10000 / l_points[0].wz);
+				p_mcContainer.x = l_points[0].sx - p_mcContainer.width / 2;
+				p_mcContainer.y = l_points[0].sy - p_mcContainer.height / 2;
 			}
 			else
 			{
@@ -116,9 +117,7 @@ package sandy.materials
 				}
 				// -- we draw the last edge
 				if( lineAttributes )
-				{
 					l_graphics.lineTo( l_points[0].sx, l_points[0].sy );
-				}
 				// --
 				l_graphics.endFill();
 			}
@@ -156,15 +155,6 @@ package sandy.materials
 			texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
 		}
 		
-		/**
-		 * getType, returns the type of the skin
-		 * @param void
-		 * @return	The appropriate SkinType
-		 */
-		 public override function get type ():MaterialType
-		 { return MaterialType.TEXTURE; }
-		
-		
 		public override function init( f:Polygon ):void
 		{
 			// The Sprite case
@@ -181,26 +171,29 @@ package sandy.materials
 				if( m_nWidth > 0 && m_nHeight > 0 )
 				{		
 					var l_aUV:Array = f.aUVCoord;
-					var u0: Number = l_aUV[0].u * m_nWidth,
-						v0: Number = l_aUV[0].v * m_nHeight,
-						u1: Number = l_aUV[1].u * m_nWidth,
-						v1: Number = l_aUV[1].v * m_nHeight,
-						u2: Number = l_aUV[2].u * m_nWidth,
-						v2: Number = l_aUV[2].v * m_nHeight;
-					// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
-					if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
+					if( l_aUV )
 					{
-						u0 -= (u0 > 0.05)? 0.05 : -0.05;
-						v0 -= (v0 > 0.07)? 0.07 : -0.07;
-					}	
-					if( u2 == u1 && v2 == v1 )
-					{
-						u2 -= (u2 > 0.05)? 0.04 : -0.04;
-						v2 -= (v2 > 0.06)? 0.06 : -0.06;
+						var u0: Number = l_aUV[0].u * m_nWidth,
+							v0: Number = l_aUV[0].v * m_nHeight,
+							u1: Number = l_aUV[1].u * m_nWidth,
+							v1: Number = l_aUV[1].v * m_nHeight,
+							u2: Number = l_aUV[2].u * m_nWidth,
+							v2: Number = l_aUV[2].v * m_nHeight;
+						// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
+						if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
+						{
+							u0 -= (u0 > 0.05)? 0.05 : -0.05;
+							v0 -= (v0 > 0.07)? 0.07 : -0.07;
+						}	
+						if( u2 == u1 && v2 == v1 )
+						{
+							u2 -= (u2 > 0.05)? 0.04 : -0.04;
+							v2 -= (v2 > 0.06)? 0.06 : -0.06;
+						}
+						// --
+						m = new Matrix( (u1 - u0), (v1 - v0), (u2 - u0), (v2 - v0), u0, v0 );
+						m.invert();
 					}
-					// --
-					m = new Matrix( (u1 - u0), (v1 - v0), (u2 - u0), (v2 - v0), u0, v0 );
-					m.invert();
 					//Logger.LOG("Polygon matrix : "+f+" "+m);
 				}
 				// --

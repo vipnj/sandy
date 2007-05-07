@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -15,11 +15,12 @@ limitations under the License.
 */
 
 import sandy.core.data.Vertex;
-import sandy.core.scenegraph.Object3D;
+import sandy.core.scenegraph.Shape3D;
+
 
 /**
 * AnimationData
-* Handles the data allowing to transform a {@code Object3D} instance.
+* Handles the data allowing to transform a {@code Shape3D} instance.
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein	- zeusprod
 * @since		1.0
@@ -53,9 +54,9 @@ class sandy.core.data.AnimationData
 	* The value given in parameter is the position of the vertex (not an offset).
 	* @param	idFrame Number the frame id
 	* @param	idVertex Number the id of the vertex to modify
-	* @param	x Number The x 3D component you want to apply to the Object3D original vertex
-	* @param	y Number The y 3D component you want to apply to the Object3D original vertex
-	* @param	z Number The z 3D component you want to apply to the Object3D original vertex
+	* @param	x Number The x 3D component you want to apply to the Shape3D original vertex
+	* @param	y Number The y 3D component you want to apply to the Shape3D original vertex
+	* @param	z Number The z 3D component you want to apply to the Shape3D original vertex
 	*/
 	public function addElement( idFrame:Number, idVertex:Number, x:Number, y:Number, z:Number ):Void
 	{
@@ -70,15 +71,17 @@ class sandy.core.data.AnimationData
 	/**
 	* Modify an objet with this animator.
 	* THe object vertex will be changed to the animator positions at he specified frame.
-	* @param	o Object3D The object you want to animate
+	* @param	o Shape3D The object you want to animate
 	* @param	idFrame Number the frame number you want to animate the object at.
 	*/
-	public function animate( o:Object3D, idFrame:Number )
+	public function animate( o:Shape3D, idFrame:Number )
 	{
 		var i:Number,l:Number;
 		var v:Vertex;
 		var p:Object;
-		var aV:Array = o.aPoints;
+		// var aV:Array = o.aPoints;
+		var aV:Array = o.geometry.aVertex; // FIXME - Is this the right replacement for aPoints?
+
 		var a:Array = _aFrames[ (idFrame) ];
 		//
 		if( (l = a.length) )
@@ -92,7 +95,7 @@ class sandy.core.data.AnimationData
 				v.z = p.z;
 			}
 			// we notify the object modification to the cache system
-			o.setModified( true );
+			o.changed = true;
 		}
 	}
 	

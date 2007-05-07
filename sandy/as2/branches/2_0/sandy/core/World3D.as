@@ -158,6 +158,13 @@ class sandy.core.World3D
 	}
 
 
+	/**
+	 * Returns a version string ("2.0"), useful for conditional code
+	 */	
+	public static function getVersion( Void ) : String
+	{
+		return _version;
+	}
 	////////////////////
 	//// PRIVATE
 	////////////////////
@@ -166,4 +173,5 @@ class sandy.core.World3D
 	private var _oEB:EventBroadcaster;//_oEB : The EventBroadcaster instance which manage the event system of world3D.
 	private var _light : Light3D; //the unique light instance of the world
 	private var _eOnRender:BasicEvent;
+	private static var _version:String = "2.0";
 }

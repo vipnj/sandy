@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -192,9 +192,9 @@ class sandy.core.Object3D extends Leaf
 	
 	/**
 	* Returns the position of the Object3D as a 3D vector.
-	* The returned position in the position in the camera frame
+	* The returned position in the position in the camera's frame, not the world's one.
 	* @param	Void
-	* @return	The position
+	* @return	Vector the 3D position of the object
 	*/
 	public function getPosition( Void ):Vector
 	{
@@ -275,7 +275,7 @@ class sandy.core.Object3D extends Leaf
 		_sb.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
 		_sb.addEventListener( SkinEvent.onInitEVENT,   this, __onSkinInited );
 		//
-		__updateTextureMatrices( _sb );
+		__updateTextureMatrices(_sb);
 		//
 		_needRedraw = true;
 		return true;
@@ -558,10 +558,11 @@ class sandy.core.Object3D extends Leaf
 		var res:Number;
 		var l:Number;
 		aClipped = aPoints;
-		// Is clipping enable on that object
+		// If clipping is enabled on that object
 		if( _enableClipping )
 		{
-			// If a polygon was intersecting previously, we need to initialize its faces at their original state.
+			// If a polygon was intersecting previously, we need to initialize its
+			// faces at their original state.
 			if( _bPolyClipped )
 			{
 			    l = aFaces.length;
@@ -574,22 +575,25 @@ class sandy.core.Object3D extends Leaf
 				
 			delete _oBSphere;
 			_oBSphere = new BSphere( this );
+			
 			res = frustum.sphereInFrustum( _oBSphere );
-			if( res  == Frustum.OUTSIDE )
+			
+			// If the bounding sphere is outside the Frustrum, then clip (don't draw) the object
+			if( res == Frustum.OUTSIDE )
 			{
 				result = true;
 			}
 			else if( res == Frustum.INTERSECT )
 			{
-				// The bounding sphere is intersecting a place at least.
-				// Let's check the bounding box volume
+				// The bounding sphere is intersecting in at least one place.
+				// Let's check the bounding box volume.
 				delete _oBBox;
 				_oBBox = new BBox( this );
 				res = frustum.boxInFrustum( _oBBox );
 				//res = frustum.isBoxInFrustum( _oBBox.min, _oBBox.max );
 				if( res == Frustum.OUTSIDE )
 				{
-					// OUSIDE, the objet is clipped
+					// It's OUTSIDE, so again, the object is clipped
 					result =  true;
 				}
 				else if (res == Frustum.INTERSECT )
@@ -603,7 +607,8 @@ class sandy.core.Object3D extends Leaf
 						aClipped = aClipped.concat( aFaces[l].clip( frustum ) );
 					}
 					// We consider that the object is not clipped and needs to be draw.
-					_bPolyClipped = true;
+					_bPolyClipped = true; // FIXME - This looks wrong. Shouldn't it be set to false?
+					//_bPolyClipped = false;
 				}// ELSE => INSIDE
 			}// ELSE => INSIDE
 		}// ELSE => INSIDE
@@ -672,7 +677,8 @@ class sandy.core.Object3D extends Leaf
 	*/ 
 	private function __onSkinUpdated( e:SkinEvent ):Void
 	{
-		_needRedraw = true;	
+		_needRedraw = true;
+		__updateTextureMatrices(e.getTarget());	
 	}
 	
 

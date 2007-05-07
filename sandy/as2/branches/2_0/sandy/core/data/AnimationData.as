@@ -15,14 +15,16 @@ limitations under the License.
 */
 
 import sandy.core.data.Vertex;
-import sandy.core.Object3D;
+import sandy.core.scenegraph.Object3D;
 
 /**
 * AnimationData
 * Handles the data allowing to transform a {@code Object3D} instance.
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		24.06.2006
+* @author		Bruce Epstein	- zeusprod
+* @since		1.0
+* @version		2.0
+* @date 		07.05.2007
 */
 class sandy.core.data.AnimationData
 {

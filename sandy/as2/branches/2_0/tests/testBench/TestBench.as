@@ -29,9 +29,10 @@ class TestBench
 	private var obj:ATransformable;
 	private var rangle =0;
 	
-	public static function main( mc:MovieClip ):Void
+	public static function main( mc:MovieClip ):TestBench
 	{
 		var t:TestBench = new TestBench(mc);
+		return t;
 	}
 	// Creat the environment
 	public function TestBench( p_oMc:MovieClip ){
@@ -113,21 +114,22 @@ class TestBench
 			m_nTime = getTimer();
 		}
 		var cam = _world.camera;
-		if(Key.isDown(Key.HOME))   cam.moveForward(1); 
+		if(Key.isDown(Key.HOME))   cam.moveForward(5); 
 		if(Key.isDown(Key.END))    cam.moveForward(-5); 
 		//if ( Key.isDown(Key.UP))   cam.moveUpwards(1);
 		//if ( Key.isDown(Key.DOWN)) cam.moveUpwards(-1);
 		//if(Key.isDown(Key.LEFT))   cam.moveSideways(-1); 
 		//if(Key.isDown(Key.RIGHT))  cam.moveSideways(1); 		
-		if ( Key.isDown(Key.UP))   box.rotateX-=0.5;
-		if ( Key.isDown(Key.DOWN)) box.rotateX+=0.5;
-		if ( Key.isDown(Key.LEFT))  box.rotateY-=0.5; 
-		if ( Key.isDown(Key.RIGHT))  box.rotateY+=0.5; 		
+		if ( Key.isDown(Key.UP))   box.rotateX-=1;
+		if ( Key.isDown(Key.DOWN)) box.rotateX+=1;
+		if ( Key.isDown(Key.LEFT))  box.rotateY-=1; 
+		if ( Key.isDown(Key.RIGHT))  box.rotateY+=1; 		
 		//cam.lookAt( 0, 0, 0 );
 		_world.render();
 	}
-	// Reportiing pertinant angles
+	// Reporting pertinent angles
 	function report(){
+		trace ("Reporting");
 		var faces:Array = box.aPolygons;
 		for ( var i = 0; i < faces.length; i++) {
 			trace(faces[i].id + (faces[i].visible?" visible": ""));

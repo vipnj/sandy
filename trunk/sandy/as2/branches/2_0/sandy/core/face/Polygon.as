@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -31,8 +31,10 @@ import sandy.view.Frustum;
 * Polygon
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Mirek Mencel
-* @version		1.0
-* @date 		12.01.2006 
+* @author		Bruce Epstein
+* @since		1.0
+* @version		2.0
+* @date 		07.05.2007 
 **/
 class sandy.core.face.Polygon extends EventBroadcaster
 {
@@ -50,6 +52,8 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public var aUVCoord:Array;
 	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
 	public var backfaceCulling:Number;
+	public var clipped:Boolean = false;  // FIXME - added to get Object3D to compile
+	
 // _______
 // PRIVATE_______________________________________________________			
 
@@ -63,6 +67,12 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	/** Unique face id */
 	private var id:Number;
 	
+	 // FIXME - added to get Object3D to compile
+	public function isVisible(Void):Boolean {
+		return true;
+	}
+	
+		
 	public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number )
 	{
 		id = Polygon._ID_ ++;

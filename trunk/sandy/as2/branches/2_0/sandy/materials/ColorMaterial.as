@@ -1,5 +1,7 @@
-import sandy.core.face.Polygon;
+﻿import sandy.core.face.Polygon;
 import sandy.materials.Material;
+import sandy.materials.MaterialType;
+
 /**
  * @author thomaspfeiffer
  */
@@ -60,6 +62,26 @@ class sandy.materials.ColorMaterial extends Material
 		// --
 		mc.endFill();
 	}
+	
+	/**
+	 * getType, returns the type of the Material
+	 * @param Void
+	 * @return	The appropriate MaterialType
+	 */
+	 public function get type ():MaterialType
+	 { return MaterialType.COLOR; } 
+	
+	
+	/**
+	* Returns the name of the Material you are using.
+	* @param	Void
+	* @return String representing your Material.
+	*/
+	public function getName( Void ):String
+	{
+		return "COLOR"; 
+	}
+	
 	public function get alpha():Number
 	{return m_nAlpha;}
 	

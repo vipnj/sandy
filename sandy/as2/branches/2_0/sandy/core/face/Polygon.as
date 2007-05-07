@@ -52,7 +52,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	public var aUVCoord:Array;
 	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
 	public var backfaceCulling:Number;
-	public var clipped:Boolean = false;  // FIXME - added to get Object3D to compile
 	
 // _______
 // PRIVATE_______________________________________________________			
@@ -66,12 +65,6 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	private var mouseEvents:Boolean;
 	/** Unique face id */
 	private var id:Number;
-	
-	 // FIXME - added to get Object3D to compile
-	public function isVisible(Void):Boolean {
-		return true;
-	}
-	
 		
 	public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number )
 	{

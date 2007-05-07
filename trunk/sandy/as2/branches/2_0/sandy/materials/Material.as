@@ -21,8 +21,6 @@ import sandy.core.face.Polygon;
 import sandy.materials.LineAttributes;
 import sandy.materials.MaterialType;
 
-import com.bourre.events.EventBroadcaster;
-
 /**
  * ABSTRACT CLASS
  * <p>
@@ -31,7 +29,7 @@ import com.bourre.events.EventBroadcaster;
  * @author		Thomas Pfeiffer - kiroukou
  * @version		2.0
  **/
-class sandy.materials.Material extends EventBroadcaster
+class sandy.materials.Material
 {
 	public var lineAttributes:LineAttributes;
 

@@ -22,8 +22,8 @@ import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.Shape3D;
 import sandy.events.MouseEvent;
 import sandy.events.SkinEvent;
-import sandy.skin.Skin;
-import sandy.view.Camera3D;
+import sandy.materials.Material;
+import sandy.core.scenegraph.Camera3D;
 import sandy.view.Frustum;
 
 
@@ -31,8 +31,10 @@ import sandy.view.Frustum;
 * <p>Represent an Object3D in a World3D</p>
 * 
 * @author	Thomas Pfeiffer - kiroukou
-* @version	1.0
-* @date 	23.06.2006
+ * @author		Bruce Epstein	- zeusprod
+ * @since		1.0
+ * @version		2.0
+ * @date 		07.05.2007
 */
 class sandy.core.scenegraph.Object3D extends Shape3D
 {
@@ -40,7 +42,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 // ______________
 // [PRIVATE] DATA________________________________________________		
 
-	private var _sb:Skin ; // The back Skin of this Object3D
+	private var _sb:Material ; // The back Skin of this Object3D
 	private var _bEv:Boolean; // The event system state (enable or not)
 	private var _backFaceCulling:Boolean;
 	private var _enableClipping:Boolean;
@@ -63,6 +65,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	public function Object3D ( p_sName:String, p_geometry:Geometry3D )
 	{
 		super(p_sName, p_geometry);
+
 		//
 		_backFaceCulling = true;
 		_bEv = false;
@@ -125,9 +128,9 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	* Returns the skin used for the back faces of this object. Returns the skin instance.
 	* If you gave no value for this skin, the "normal" skin will be returned as it is the default back skin.
 	* @param	void
-	* @return	Skin The skin object.
+	* @return	Material The material (skin) object.
 	*/
-	public function getBackSkin():Skin 
+	public function getBackSkin():Material 
 	{
 		return _sb;
 	}
@@ -141,7 +144,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 	* @return	Boolean True is the skin is applied, false otherwise.
 	*/
-	public function setBackSkin( pSb:Skin ):Boolean
+	public function setBackSkin( pSb:Material ):Boolean
 	{
 		if(_sb)
 		{

@@ -16,27 +16,36 @@ limitations under the License.
 import com.bourre.events.BasicEvent;
 import com.bourre.events.EventType;
 
-import sandy.skin.SkinType;
+import sandy.materials.MaterialType;
+
+// FIXME - perhaps SkinEvent class should be renamed to MaterialsEvent (also fix Object3D.as which uses SkinEvent)
 
 /**
  * @author 		Thomas Pfeiffer - kiroukou
- * @version		1.0
- * @date 		23.06.2006
+ * @author		Bruce Epstein	- zeusprod
+ * @since		1.0
+ * @version		2.0
+ * @date 		07.05.2007
  */
 class sandy.events.SkinEvent extends BasicEvent 
 {
 	public static var UPDATE:EventType = new EventType('onUpdateEVENT');
 	
-	public function SkinEvent(e : EventType, oT, type:SkinType ) 
+	public function SkinEvent(e : EventType, oT, type:MaterialType ) 
 	{
 		super( e, oT );
 		_type = type;
 	}
 	
-	public function getSkinType( Void ):SkinType
+	public function getSkinType( Void ):MaterialType
+	{
+		return getMaterialType();
+	}
+	
+	public function getMaterialType( Void ):MaterialType
 	{
 		return _type;
 	}
 	
-	private var _type:SkinType;
+	private var _type:MaterialType;
 }

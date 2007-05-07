@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,28 +13,27 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive 
-{
-	import sandy.core.data.UVCoord;
-	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
-	import sandy.core.face.IPolygon;
-	import sandy.core.face.Polygon;
 
-	import sandy.core.scenegraph.Object3D;
-	import sandy.core.scenegraph.Geometry3D;
-	import sandy.primitive.Primitive3D;
+import sandy.core.data.UVCoord;
+import sandy.core.data.Vector;
+import sandy.core.data.Vertex;
+import sandy.core.face.Polygon;
+
+import sandy.core.scenegraph.Object3D;
+import sandy.core.scenegraph.Geometry3D;
+import sandy.primitive.Primitive3D;
 
 	/**
-	* VPlane
+	* Plane3D
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
+	* @author		Bruce Epstein 	- zeusprod
 	* @since		0.1
-	* @version		0.2
-	* @date 		12.01.2006 
+	* @version		2.0
+	* @date 		07.05.2007 
 	**/
 
-	public class Plane3D extends Object3D implements Primitive3D
+class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	{
 		//////////////////
 		///PRIVATE VARS///
@@ -58,12 +57,13 @@ package sandy.primitive
 		* @param 	mode String represent the two available modes to generates the faces.
 		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 		*/
-		public function Plane3D( p_Name:String=null, h:Number = 6, lg:Number = 6, q:Number = 1, mode:String = 'tri')
+		public function Plane3D( p_Name:String, h:Number, lg:Number, q:Number, mode:String)
 		{
+			//if (p_Name == undefined) 	{p_Name = null};
 			super( p_Name ) ;
-			_h = h;
-			_lg = lg;
-			_q = (q <= 0 || q > 10) ?  1 : Number(q) ;
+			_h  = (h == undefined) ? 6 : h;
+			_lg = (lg == undefined) ? 6 : lg;
+			_q  = (q <= 0 || q > 10) ?  1 : Number(q) ;
 			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
 			generate() ;
 		}
@@ -75,7 +75,7 @@ package sandy.primitive
 		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
 		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
 		*/
-		public function generate():void
+		public function generate():Void
 		{
 			
 			var l_geometry:Geometry3D = new Geometry3D();
@@ -87,8 +87,8 @@ package sandy.primitive
 			var pasH:Number = _h/_q;
 			var pasL:Number = _lg/_q;
 			var p:Vertex; 
-			var id1:int,id2:int,id3:int,id4:int;
-			var f:IPolygon;
+			var id1:Number, id2:Number, id3:Number, id4:Number;
+			var f:Polygon;
 			var i:Number = -h2;
 			var created:Boolean = false;
 			var n:Vector;
@@ -131,5 +131,3 @@ package sandy.primitive
 			setGeometry(l_geometry);
 		}
 	}
-
-}

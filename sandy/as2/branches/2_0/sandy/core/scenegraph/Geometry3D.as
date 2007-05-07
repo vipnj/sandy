@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -245,7 +245,7 @@ class sandy.core.scenegraph.Geometry3D
 	* 	Creates clone.
 	* 	
 	* 	NOTE: 	Because polygon keeps also instance-specific data like Skin for instance, 
-	* 			on the Geomoetry level we're considering it only as a set of connections between points, 
+	* 			on the Geometry level we're considering it only as a set of connections between points, 
 	* 			so only coordinates and normal are copied over during the clone process.
 	* 
 	* @return	Geometry3D	Copy of this geometry

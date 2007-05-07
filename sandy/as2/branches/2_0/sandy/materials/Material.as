@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -21,6 +21,8 @@ import sandy.core.face.Polygon;
 import sandy.materials.LineAttributes;
 import sandy.materials.MaterialType;
 
+import com.bourre.events.EventBroadcaster;
+
 /**
  * ABSTRACT CLASS
  * <p>
@@ -29,7 +31,7 @@ import sandy.materials.MaterialType;
  * @author		Thomas Pfeiffer - kiroukou
  * @version		2.0
  **/
-class sandy.materials.Material
+class sandy.materials.Material extends EventBroadcaster
 {
 	public var lineAttributes:LineAttributes;
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -150,13 +150,23 @@ class sandy.materials.BitmapMaterial extends Material
 	}
 	
 	/**
-	 * getType, returns the type of the skin
+	 * getType, returns the type of the Material
 	 * @param Void
-	 * @return	The appropriate SkinType
+	 * @return	The appropriate MaterialType
 	 */
 	 public function get type ():MaterialType
-	 { return MaterialType.TEXTURE; }
+	 { return MaterialType.TEXTURE; }  // FIXME - Should this be a new BITMAP type?
 	
+	
+	/**
+	* Returns the name of the Material you are using.
+	* @param	Void
+	* @return String representing your Material.
+	*/
+	public function getName( Void ):String
+	{
+		return "TEXTURE";  // FIXME - Should this be a new BITMAP type?
+	}
 	
 	public function init( f:Polygon ):Void
 	{

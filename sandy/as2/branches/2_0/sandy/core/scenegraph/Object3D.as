@@ -24,18 +24,19 @@ import sandy.core.scenegraph.Shape3D;
 import sandy.events.MouseEvent;
 import sandy.events.SkinEvent;
 import sandy.materials.Material;
+import sandy.materials.Appearance;
 import sandy.core.scenegraph.Camera3D;
 import sandy.view.Frustum;
 
 
 /**
-* <p>Represent an Object3D in a World3D</p>
-* 
-* @author	Thomas Pfeiffer - kiroukou
-* @author	Tabin Cédric - thecaptain
-* @author	Nicolas Coevoet - [ NikO ]
- * @author		Bruce Epstein	- zeusprod
-* @author	Martin Wood-Mitrovski
+ * <p>Represent an Object3D in a World3D</p>
+ * 
+ * @author	Thomas Pfeiffer - kiroukou
+ * @author	Tabin Cédric	- thecaptain
+ * @author	Nicolas Coevoet - [ NikO ]
+ * @author	Bruce Epstein	- zeusprod
+ * @author	Martin Wood-Mitrovski
  * @since		1.0
  * @version		2.0
  * @date 		07.05.2007
@@ -52,6 +53,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	private var _enableClipping:Boolean;
 	private var _enableForcedDepth:Boolean;
 	private var _forcedDepth:Number;
+	private var _needRedraw:Boolean; // Obsolete? Covered by changed property?
 
 // ___________
 // CONSTRUCTOR___________________________________________________
@@ -143,25 +145,26 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	* @param	Void
 	* @return 	Skin the skin object
 	*/
+	/* Deprecated
 	public function getSkin( Void ):Material
 	{
 		// Deprecated
-		// return _s;
+		return _s;
 	}
+	*/
 	
 	/**
 	* Returns the position of the Object3D as a 3D vector.
-	* The returned position in the position in the World frame, not the camera's one.
-	* In case you want to get the position to a camera, you'll have to add its position to this vector with VectorMat::add eg.
+	* The returned position in the position in the camera's frame, not the world's one.
 	* @param	Void
 	* @return	Vector the 3D position of the object
 	*/
 	public function getPosition( Void ):Vector
 	{
-		var v:Vertex = aPoints[0];
-		// Does this still need a FIX as per Petit (tx, ty, and tz instead of wx, wy, and wz)?
+		var v:Vertex = geometry.aVertex[0];
 		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
 	}
+	
 
 	/**
 	* Returns the position of the center of the Object3D relative to the Flash stage.
@@ -173,9 +176,9 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		var centerX:Number = 0;
 		var centerY:Number = 0;
 		var i:Number = 0;
-		for (i = 0; i < aPoints.length; i++) {
-			centerX += aPoints[i].sx;
-			centerY += aPoints[i].sy;
+		for (i = 0; i < geometry.aVertex.length; i++) {
+			centerX += geometry.aVertex[i].sx;
+			centerY += geometry.aVertex[i].sy;
 		}
 		centerX = centerX / i;
 		centerY = centerY / i;
@@ -202,31 +205,17 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	* Warning : If no backface skin has benn applied, the skin will be applied to the back side of faces too!
 	* </p>
 	* @param	s	The new Material to apply to faces
-	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
-	* @return	Boolean True to apply the Material to the non-default faces skins; false otherwise (default).
 	*/
-	public function setSkin( pS:Material ):Boolean
+	public function setSkin( pS:Material ):Void
 	{
-		//
-		_s.removeEventListener( SkinEvent.onUpdateEVENT, this );
-		// Now we register to the update event
-		_s = pS;
-		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );
-		_s.addEventListener( SkinEvent.onInitEVENT,   this, __onSkinInited );
-
-		__updateTextureMatrices(_s);
-
-		_needRedraw = true;
-		return true;
+		appearance = new Appearance(pS);
 	}
 	
 	/**
 	* Set a Skin to the back of all the faces of the object
-	* <p>This method will set the the new Skin to all his faces.</p>
+	* <p>This method will set the the new Material to all his faces.</p>
 	* 
-	* @param	s	The new Skin
-	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
-	* @return	Boolean True is the skin is applied, false otherwise.
+	* @param	s	The new Material
 	*/
 	public function setBackSkin( pSb:Material ):Boolean
 	{
@@ -238,7 +227,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		_sb = pSb;
 		_sb.addEventListener( SkinEvent.UPDATE, __onSkinUpdated );
 		//
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = geometry.aFacesVertexID;
 		var l:Number = l_faces.length;
 		while( --l > -1 )
 		{
@@ -262,7 +251,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	*/
 	public function enableEvents( b:Boolean ):Void
 	{
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = geometry.aFacesVertexID;
 		var l:Number = l_faces.length;
 		// -- 
 		if( b )
@@ -301,7 +290,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	public function setVisible( b:Boolean ):Void
 	{
 		_visible = b;
-		setModified( true );
+		changed = true;
 	}
 	
 	/**
@@ -335,7 +324,7 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	public function swapCulling():Void
 	{
 		
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = geometry.aFacesVertexID;
 		var l:Number = l_faces.length;
 		
 		for( var i:Number = 0;i < l; i++ )
@@ -347,7 +336,18 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		changed = true;
 	}
 	
+	function __updateLocalViewMatrix ():Matrix4 {
+		// FIXME - this function doesn't exist yet. Dummied in by Bruce Epstein (zeusprod)
+		// to solve compiler errors.
+		return undefined;
+	}
 
+	function __frustumCulling ():Number {
+		// FIXME - this function doesn't exist yet. Dummied in by Bruce Epstein (zeusprod)
+		// to solve compiler errors.
+		return undefined;
+	}
+	
 	/**
 	* Render the Object3D.
 	* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
@@ -359,7 +359,8 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		var l_nDepth:Number;
 		var l_oFace:Polygon;
 		var l_oFrustum:Frustum = p_oCamera.frustrum;
-		// 
+		
+		// FIXME - where is the __updateLocalViewMatrix() method?
 		var l_oModelMatrix:Matrix4 = __updateLocalViewMatrix( p_oCamera, p_oViewMatrix, p_bCache );
         
         // Now we consider the camera .Fixme consider the possible cache system for camera.
@@ -368,6 +369,8 @@ class sandy.core.scenegraph.Object3D extends Shape3D
         // Before doing any transformation of the object geometry, we are just going to transform its bounding volumes
         // and check if it is still in the camera field of view. If yes we do the transformations and the projection.
         var l_bClipped:Boolean = false;
+		
+		// FIXME - where is the __frustumCulling() method?
         var res:Number = __frustumCulling( l_oModelMatrix, p_oCamera.frustrum );
         if( res == Frustum.OUTSIDE ) return;
         else if( res == Frustum.INTERSECT && _enableClipping ) l_bClipped = true;
@@ -375,11 +378,16 @@ class sandy.core.scenegraph.Object3D extends Shape3D
         ///////////////////////////////////
         ///// VERTICES TRANSFORMATION /////
         ///////////////////////////////////
-        var l_aPoints:Array = geometry.points;  // TODO, we shall transform the normals too to have a faster isVisible face computation!
-        
+        //var l_aPoints:Array = geometry.points;  // TODO, we shall transform the normals too to have a faster isVisible face computation!
+         var l_aPoints:Array = geometry.aVertex;  // FIXME - Is this the correct replacement for geometry.points?
+		
+		
         // If we are here, is that the object shall be displayed. So we can transform its vertices into the camera
         // view coordinates
-        var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
+        var m11:Number, m21:Number, m31:Number, m41:Number;
+		var m12:Number, m22:Number, m32:Number, m42:Number;
+		var m13:Number, m23:Number, m33:Number, m43:Number;
+		var m14:Number, m24:Number, m34:Number, m44:Number;
 		var l_oVertex:Vertex;
 		var l_lId:Number;
         //
@@ -390,7 +398,10 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		// If necessary we transform the normals vectors
 		if( _backFaceCulling )
 		{
-		    var l_aNormals:Array = geometry.normals;
+		    // var l_aNormals:Array = geometry.normals;
+			var l_aNormals:Array = geometry.aFacesNormals; // FIXME - Is this the correct replacement for geometry.normals?
+		
+		
 		    // Now we can transform the objet vertices into the camera coordinates	
 			for( l_lId = 0; l_oVertex = l_aNormals[int(l_lId)]; l_lId ++ )
 			{
@@ -419,14 +430,14 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		// Il the polygons will be clipped, we shall allocate a new array container the clipped vertex.
 		if( l_bClipped ) l_aPoints = [];
 		
-		var l_faces:Array = geometry.faces;
+		var l_faces:Array = geometry.aFacesVertexID;
 		var l_visibleFaces:Array = [];
 		//
 		for( l_lId = 0; l_oFace = l_faces[int(l_lId)]; l_lId++ )
 		{	
 		    if ( l_oFace.isVisible() || !_backFaceCulling) 
 			{
-				l_oFace.isClipped = false;
+				l_oFace.clipped = false;
 				if( l_bClipped )
 				{
 				    l_oFace.clip( l_oFrustum );
@@ -464,7 +475,8 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 		for( l_lId = 0; l_oFace = l_visibleFaces[int(l_lId)]; l_lId++ )
 		{
 		    l_oFace.render();
-		    p_oCamera.addToDisplayList( l_oFace.container, l_oFace.depth );    
+		    //p_oCamera.addToDisplayList( l_oFace.container, l_oFace.depth );  // FIXME 
+			p_oCamera.addToDisplayList( l_oFace);   
 		}	    
 	}
 
@@ -513,14 +525,13 @@ class sandy.core.scenegraph.Object3D extends Shape3D
 	 * If the skin / texture has changed update the matrices for each face
 	 * @param	s: Skin - the updated skin
 	*/
-	/*
-	private function __updateTextureMatrices(s:Skin):Void
+	private function __updateTextureMatrices(s:Material):Void
 	{
-		var l:Number = aFaces.length;
+		// This is probably wrong.
+		var l:Number = geometry.aFacesVertexID.length;
 		while( --l > -1 )
 		{
-			aFaces[l].updateTextureMatrix( s );
+			geometry.aFacesVertexID[l].updateTextureMatrix( s );
 		}
 	}
-*/
 }

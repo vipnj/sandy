@@ -134,6 +134,7 @@ package sandy.core.scenegraph
 			for each( l_oShape in m_aDisplayList )
 			{
 				l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
+				//l_mcContainer.addChild( l_oShape.container );
 				l_oShape.display();
 			}
 			// --
@@ -157,11 +158,11 @@ package sandy.core.scenegraph
 				mp12:Number = _mp.n12,mp22:Number = _mp.n22,mp32:Number = _mp.n32,mp42:Number = _mp.n42,
 				mp13:Number = _mp.n13,mp23:Number = _mp.n23,mp33:Number = _mp.n33,mp43:Number = _mp.n43,
 				mp14:Number = _mp.n14,mp24:Number = _mp.n24,mp34:Number = _mp.n34,mp44:Number = _mp.n44,
-				l_nOffx:Number = viewport.w2, l_nOffy:Number = viewport.h2, l_nCste:Number, l_oVertex:Vertex;
+				l_nOffx:Number = viewport.w2, l_nOffy:Number = viewport.h2, l_oVertex:Vertex;
 			// --
 			for each( l_oVertex in m_aVerticesList )
 			{
-				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+				var l_nCste:Number = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
 			}	

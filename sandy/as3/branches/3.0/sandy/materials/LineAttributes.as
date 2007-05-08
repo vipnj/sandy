@@ -3,7 +3,7 @@
  */
 package sandy.materials 
 {
-	public class LineAttributes 
+	public final class LineAttributes 
 	{
 		private var m_nThickness:Number;
 		private var m_nColor:Number;

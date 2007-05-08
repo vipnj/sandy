@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.bounds {
+package sandy.bounds 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
@@ -29,7 +30,7 @@ package sandy.bounds {
 	* @version		0.1
 	* @date 		22.02.2006
 	*/
-	public class BSphere
+	public final class BSphere
 	{
 		public var center:Vector;
 		public var radius:Number;
@@ -119,7 +120,6 @@ package sandy.bounds {
 					
 					j++;
 				}
-				
 				i++;
 			}
 	

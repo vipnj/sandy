@@ -141,21 +141,18 @@ package sandy.core.scenegraph
 				{
 					m_bClipped = true;
 				}
-				container.visible = true;
+				;//container.visible = true;
 			}
-			else if( culled == CullingState.INSIDE )
+			else if( culled == CullingState.OUTSIDE )
 			{
-				container.visible = true;
-			}
-			else
-			{
-				container.visible = false;
+				// We clear it to avoid any ghost effect.
+				container.graphics.clear();//container.visible = false;
 			}
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_nDepth:Number=0, l_oFace:Polygon, l_oVertex:Vertex, l_oNormal:Vertex, l_oMatrix:Matrix4 = _oViewCacheMatrix, 
+			var l_nDepth:Number=0, l_oMatrix:Matrix4 = _oViewCacheMatrix, 
 				l_faces:Array = aPolygons, l_oFrustum:Frustum = p_oCamera.frustrum, l_aNormals:Array = m_oGeometry.aFacesNormals,
 				l_aPoints:Array = m_oGeometry.aVertex,
 	        	m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
@@ -163,14 +160,14 @@ package sandy.core.scenegraph
 				m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 				m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 			// -- Now we transform the normals.
-			for each( l_oNormal in l_aNormals )
+			for each( var l_oNormal:Vertex in l_aNormals )
 			{
 				l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
 				l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
 				l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
 			}
 			// -- Now we can transform the objet vertices into the camera coordinates
-			for each( l_oVertex in l_aPoints )
+			for each( var l_oVertex:Vertex in l_aPoints )
 			{
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
@@ -180,7 +177,7 @@ package sandy.core.scenegraph
 			if( m_bClipped ) l_aPoints = [];
 			m_aVisiblePoly = new Array();
 			// --
-			for each( l_oFace in l_faces )
+			for each( var l_oFace:Polygon in l_faces )
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{

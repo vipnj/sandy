@@ -15,19 +15,19 @@ limitations under the License.
 */
 package sandy.materials 
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import flash.utils.getTimer;
 	
 	import sandy.core.data.Polygon;
+	import sandy.core.data.Vertex;
 	import sandy.util.NumberUtil;
-	import flash.display.Bitmap;
-	import sandy.core.data.Polygon;
-	import flash.utils.getTimer;
-	import flash.display.Graphics;
 	
 	/**
 	 * BitmapMaterial
@@ -92,32 +92,8 @@ package sandy.materials
 				// --
 				l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
 				// --
-				switch( l_points.length )
-				{
-					case 2 :
-						l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
-						break;
-					case 3 :
-						l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
-						l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
-						break;
-					case 4 :
-						l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
-						l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
-						l_graphics.lineTo( l_points[3].sx, l_points[3].sy );
-						break;
-					default :
-						var l:int = l_points.length - 1;
-						while( l > 0 )
-						{
-							l_graphics.lineTo( l_points[(l)].sx, l_points[(l)].sy);
-							l--;
-						}
-						break;
-				}
-				// -- we draw the last edge
-				if( lineAttributes )
-					l_graphics.lineTo( l_points[0].sx, l_points[0].sy );
+				for each( var l_oPoint:Vertex in l_points )
+					l_graphics.lineTo( l_oPoint.sx, l_oPoint.sy);
 				// --
 				l_graphics.endFill();
 			}

@@ -9,7 +9,7 @@ package sandy.materials
 	/**
 	 * @author thomaspfeiffer
 	 */
-	public class ColorMaterial extends Material 
+	public final class ColorMaterial extends Material 
 	{
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;

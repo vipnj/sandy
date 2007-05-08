@@ -1,7 +1,8 @@
 /**
  * @author thomaspfeiffer
  */
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	public interface ITransformable 
 	{
 		/**

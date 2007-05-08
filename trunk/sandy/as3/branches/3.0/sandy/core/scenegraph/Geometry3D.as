@@ -45,7 +45,7 @@ package sandy.core.scenegraph
 	* 	@date		07.04.2007
 	*/
 	
-	public class Geometry3D
+	public final class Geometry3D
 	{	
 	// ______
 	// PUBLIC________________________________________________________	

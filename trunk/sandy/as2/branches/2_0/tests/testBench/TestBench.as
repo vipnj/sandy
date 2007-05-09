@@ -34,7 +34,7 @@ class TestBench
 		var t:TestBench = new TestBench(mc);
 		return t;
 	}
-	// Creat the environment
+	// Create the environment
 	public function TestBench( p_oMc:MovieClip ){
 		_mc = p_oMc;
 		// All to get timing info
@@ -58,12 +58,41 @@ class TestBench
 		// We need a camera in the world
 		_world.camera = new Camera3D(550, 400);
 		_world.root.addChild( _world.camera );		
-		//_world.camera.near = 100;
+		//_world.camera.near = Number(foo.text);
+		var fovY = undefined;
+		var aspectRatio = undefined;
+		var zNear:Number = 100;
+		var zFar:Number = 30000;
+		//_world.camera.setPerspectiveProjection(fovY, aspectRatio, zNear, zFar);
+	
 		_world.camera.z = -300;
 		//_world.camera.y = 200;
 		//_world.camera.x = 200;		
 		// --
 		_mc.onEnterFrame = Delegate.create( this, _onRender );
+		
+		// zNear and zFar sliderss
+		var zNearCh:Object = new Object();
+		zNearCh.scroll = function (evt:Object):Void {
+			var zNear = _root.zNearSlider_mc.scrollPosition;
+			//trace ("zNear " + zNear);
+			World3D.getInstance().camera.near = zNear;
+			//var zFar = _root.zFarSlider_mc.scrollPosition;
+			//World3D.getInstance().camera.setPerspectiveProjection(undefined, undefined, zNear, zFar);
+	
+		}
+		_root.zNearSlider_mc.addEventListener("scroll", zNearCh);
+		
+		
+		var zFarCh:Object = new Object();
+		zFarCh.scroll = function (evt:Object):Void {
+			
+			World3D.getInstance().camera.far = _root.zFarSlider_mc.scrollPosition;
+			//World3D.getInstance().camera.setPerspectiveProjection(undefined, undefined, zNear, zFar);
+			//trace ("zFar " + _root.zFarSlider_mc.scrollPosition + " " + World3D.getInstance().camera.far);
+		}
+		_root.zFarSlider_mc.addEventListener("scroll", zFarCh);
+
 	}
 		
 	// Create the objec tree

@@ -71,7 +71,7 @@ class sandy.materials.BitmapMaterial extends Material
 			//FIXME I don't like the way the perspective is applied here...
 			mc._xscale = mc._yscale = (10000 / l_points[0].wz);
 			mc._x = l_points[0].sx - mc._width  / 2;
-			mc._y = l_points[0].sy - mc._height / 2;;
+			mc._y = l_points[0].sy - mc._height / 2;
 		}
 		else
 		{

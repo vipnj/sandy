@@ -95,13 +95,14 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		return ( backfaceCulling ) * ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz ) < 0;
 	}
 	
-	public function clip( p_oFrustum:Frustum ):Void
+	public function clip( p_oFrustum:Frustum ):Array
 	{
-		cvertices = vertices.concat();
+		cvertices = new Array();
 		var l_nPLength:Number = cvertices.length;
 		while( --l_nPLength>-1) cvertices[l_nPLength] = vertices[l_nPLength].clone2();
 		// -- 
 		p_oFrustum.clipFrustum( cvertices );
+		return cvertices;
 	}
 	
 	public function render():Void

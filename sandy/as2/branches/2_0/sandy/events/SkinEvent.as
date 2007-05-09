@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -18,7 +18,8 @@ import com.bourre.events.EventType;
 
 import sandy.materials.MaterialType;
 
-// FIXME - perhaps SkinEvent class should be renamed to MaterialsEvent (also fix Object3D.as which uses SkinEvent)
+// FIXME - perhaps SkinEvent class should be renamed to MaterialsEvent 
+// (was Object3D.as, which is obsolete, the last class to use SkinEvent?)
 
 /**
  * @author 		Thomas Pfeiffer - kiroukou

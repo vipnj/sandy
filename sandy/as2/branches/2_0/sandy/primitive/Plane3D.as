@@ -19,7 +19,7 @@ import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.face.Polygon;
 
-import sandy.core.scenegraph.Object3D;
+import sandy.core.scenegraph.Shape3D;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.primitive.Primitive3D;
 
@@ -33,7 +33,7 @@ import sandy.primitive.Primitive3D;
 	* @date 		07.05.2007 
 	**/
 
-class sandy.primitive.Plane3D extends Object3D implements Primitive3D
+class sandy.primitive.Plane3D extends Shape3D implements Primitive3D
 	{
 		//////////////////
 		///PRIVATE VARS///
@@ -75,59 +75,54 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
 		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
 		*/
-		public function generate():Void
+		public function generate():Geometry3D
 		{
-			
-			var l_geometry:Geometry3D = new Geometry3D();
-			
-					//Creation of the points
-			var uv1:UVCoord, uv2:UVCoord, uv3:UVCoord, uv4:UVCoord;
+			//Creation of the points
 			var h2:Number = _h/2;
 			var l2:Number = _lg/2;
 			var pasH:Number = _h/_q;
 			var pasL:Number = _lg/_q;
-			var p:Vertex; 
-			var id1:Number, id2:Number, id3:Number, id4:Number;
-			var f:Polygon;
 			var i:Number = -h2;
 			var created:Boolean = false;
 			var n:Vector;
 
+			var l_geometry:Geometry3D = new Geometry3D();
+			
 			do
 			{
 				var j:Number = -l2;
 				
 				do
 				{
-					p = new Vertex(j,0,i); id1 = l_geometry.addPoint(p);
-					p = new Vertex(j+pasL,0,i); id2 = l_geometry.addPoint(p);
-					p = new Vertex(j+pasL,0,i+pasH); id3 = l_geometry.addPoint(p);
-					p = new Vertex(j,0,i+pasH); id4 = l_geometry.addPoint(p);
+					l_geometry.setVertex(0, j,		0, i); 
+					l_geometry.setVertex(1, j+pasL,	0, i); 
+					l_geometry.setVertex(2, j+pasL,	0, i+pasH);
+					l_geometry.setVertex(3, j,		0, i+pasH);
 					
 					//We add the texture coordinates
-					uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
-					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
-					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
-					uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+					l_geometry.setUVCoords(0, (j+l2)/_lg,		(i+h2)/_h);
+					l_geometry.setUVCoords(1, (j+l2+pasL)/_lg,	(i+h2)/_h);
+					l_geometry.setUVCoords(2, (j+l2+pasL)/_lg,	(i+h2+pasH)/_h);
+					l_geometry.setUVCoords(3, (j+l2)/_lg,		(i+h2+pasH)/_h);
 					
 					//Face creation
 					if( _mode == 'tri' )
 					{
-						l_geometry.createFaceByIds(id1, id2, id4 );
-						l_geometry.addUVCoords( uv1, uv2, uv4 );
+						l_geometry.setFaceVertexIds  (0, 0, 1, 3 );
+						l_geometry.setFaceUVCoordsIds(0, 0, 1, 3 );
 						
-						l_geometry.createFaceByIds(id2, id3, id4 );
-						l_geometry.addUVCoords( uv2, uv3, uv4 );
+						l_geometry.setFaceVertexIds  (1, 1, 2, 3 );
+						l_geometry.setFaceUVCoordsIds(1, 1, 2, 3 );
 					}
 					else if( _mode == 'quad' )
 					{
-						l_geometry.createFaceByIds(id1, id2, id3, id4 );
-						l_geometry.addUVCoords( uv1, uv2, uv3 );
+						l_geometry.setFaceVertexIds  (0, 0, 1, 2, 3 );
+						l_geometry.setFaceUVCoordsIds(0, 0, 1, 2 );
 					}
 				} while( (j += pasL) < (l2-1) );
 			} while( (i += pasH) < (h2-1) );
 			// Can't understand why I must compute -1 with 3 in quality to have the correct value!
 			
-			setGeometry(l_geometry);
+			return l_geometry;
 		}
 	}

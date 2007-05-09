@@ -198,12 +198,11 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		   	// --
 		    if ( l_oFace.visible || !m_bBackFaceCulling) 
 			{
-				l_oFace.cvertices = l_oFace.vertices;
+				
 				if( m_bClipped )
-				{
-					// -- We proceed to a real copy of the original vertices array.
 					l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
-			    }
+			    else
+			    	l_oFace.cvertices = l_oFace.vertices;
 			    // --
 				l_nDepth = l_oFace.getZAverage();
 				// -- if the object is set at a specific depth we cange it, but add a small value that makes the sorting more accurate

@@ -14,10 +14,12 @@ import sandy.core.scenegraph.Group;
 import sandy.core.scenegraph.TransformGroup;
 import sandy.core.World3D;
 import sandy.materials.Appearance;
-import sandy.materials.ColorMaterial;
+import sandy.materials.BitmapMaterial;
 import sandy.materials.LineAttributes;
 import sandy.primitive.Box;
 import sandy.util.BitmapUtil;
+
+import tests.testBench.src.TestBench;
 
 /**
  * @author thomas pfeiffer
@@ -77,8 +79,8 @@ class TestBench implements IFrameListener
 		//m_oTG.z = 500;
 		// --
 		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
-		//var l_oMaterial:BitmapMaterial = new BitmapMaterial(b);
-		var l_oMaterial:ColorMaterial = new ColorMaterial( 0xFFCC00, 50 );
+		var l_oMaterial:BitmapMaterial = new BitmapMaterial(b);
+		//var l_oMaterial:ColorMaterial = new ColorMaterial( 0xFFCC00, 50 );
 		l_oMaterial.lineAttributes = new LineAttributes( 2, 0, 100 );
 		var l_oTextureAppearance:Appearance = new Appearance( l_oMaterial ); 
 		// --

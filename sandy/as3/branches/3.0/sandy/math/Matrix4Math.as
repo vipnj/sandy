@@ -44,7 +44,7 @@
 		 */
 		public static function multiply3x3(m1:Matrix4, m2:Matrix4) : Matrix4 
 		{
-			var m111:Number = m1.n11, m211:Number = m2.n11,
+			const m111:Number = m1.n11, m211:Number = m2.n11,
 			m121:Number = m1.n21, m221:Number = m2.n21,
 			m131:Number = m1.n31, m231:Number = m2.n31,
 			m112:Number = m1.n12, m212:Number = m2.n12,
@@ -71,10 +71,11 @@
 				0,0,0,1			
 			);
 		}
+
 	
 		public static function multiply4x3( m1:Matrix4, m2:Matrix4 ):Matrix4
 		{
-			var m111:Number = m1.n11, m211:Number = m2.n11,
+			const m111:Number = m1.n11, m211:Number = m2.n11,
 				m121:Number = m1.n21, m221:Number = m2.n21,
 				m131:Number = m1.n31, m231:Number = m2.n31,
 				m112:Number = m1.n12, m212:Number = m2.n12,
@@ -115,7 +116,7 @@
 		 */
 		public static function multiply(m1:Matrix4, m2:Matrix4) : Matrix4 
 		{
-			var m111:Number = m1.n11, m121:Number = m1.n21, m131:Number = m1.n31, m141:Number = m1.n41,
+			const m111:Number = m1.n11, m121:Number = m1.n21, m131:Number = m1.n31, m141:Number = m1.n41,
 				m112:Number = m1.n12, m122:Number = m1.n22, m132:Number = m1.n32, m142:Number = m1.n42, 
 				m113:Number = m1.n13, m123:Number = m1.n23, m133:Number = m1.n33, m143:Number = m1.n43,
 				m114:Number = m1.n14, m124:Number = m1.n24, m134:Number = m1.n34, m144:Number = m1.n44,
@@ -190,7 +191,7 @@
 		 */    
 		public static function vectorMult( m:Matrix4, pv:Vector ): Vector
 		{
-			var x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
+			const x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
 			return  new Vector( (x * m.n11 + y * m.n12 + z * m.n13 + m.n14),
 								(x * m.n21 + y * m.n22 + z * m.n23 + m.n24),
 								(x * m.n31 + y * m.n32 + z * m.n33 + m.n34));
@@ -206,7 +207,7 @@
 		 */
 		public static function vectorMult3x3( m:Matrix4, pv:Vector ):Vector
 		{
-			var x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
+			const x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
 			return  new Vector( (x * m.n11 + y * m.n12 + z * m.n13),
 								(x * m.n21 + y * m.n22 + z * m.n23),
 								(x * m.n31 + y * m.n32 + z * m.n33));
@@ -227,14 +228,14 @@
 			ay = NumberUtil.toRadian(ay);
 			az = NumberUtil.toRadian(az);
 			// --
-			var a:Number = ( USE_FAST_MATH == false ) ? Math.cos( ax ) : FastMath.cos(ax);
-			var b:Number = ( USE_FAST_MATH == false ) ? Math.sin( ax ) : FastMath.sin(ax);
-			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( ay ) : FastMath.cos(ay);
-			var d:Number = ( USE_FAST_MATH == false ) ? Math.sin( ay ) : FastMath.sin(ay);
-			var e:Number = ( USE_FAST_MATH == false ) ? Math.cos( az ) : FastMath.cos(az);
-			var f:Number = ( USE_FAST_MATH == false ) ? Math.sin( az ) : FastMath.sin(az);
-			var ad:Number = a * d	;
-			var bd:Number = b * d	;
+			const a:Number = ( USE_FAST_MATH == false ) ? Math.cos( ax ) : FastMath.cos(ax);
+			const b:Number = ( USE_FAST_MATH == false ) ? Math.sin( ax ) : FastMath.sin(ax);
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( ay ) : FastMath.cos(ay);
+			const d:Number = ( USE_FAST_MATH == false ) ? Math.sin( ay ) : FastMath.sin(ay);
+			const e:Number = ( USE_FAST_MATH == false ) ? Math.cos( az ) : FastMath.cos(az);
+			const f:Number = ( USE_FAST_MATH == false ) ? Math.sin( az ) : FastMath.sin(az);
+			const ad:Number = a * d	;
+			const bd:Number = b * d	;
 	
 			m.n11 =   c  * e         ;
 			m.n12 = - c  * f         ;
@@ -258,8 +259,8 @@
 		{
 			var m:Matrix4 = Matrix4.createIdentity();
 			angle = NumberUtil.toRadian(angle);
-			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
 	
 			m.n22 =  c;
 			m.n23 =  s;
@@ -277,8 +278,8 @@
 		{
 			var m:Matrix4 = Matrix4.createIdentity();
 			angle = NumberUtil.toRadian(angle);
-			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
 			// --
 			m.n11 =  c;
 			m.n13 = -s;
@@ -296,8 +297,8 @@
 		{
 			var m:Matrix4 = Matrix4.createIdentity();
 			angle = NumberUtil.toRadian(angle);
-			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
 			// --
 			m.n11 =  c;
 			m.n12 =  s;
@@ -332,9 +333,9 @@
 			var m:Matrix4 	= Matrix4.createIdentity();
 			angle = NumberUtil.toRadian( angle );
 			// -- modification pour verifier qu'il n'y ai pas un probleme de precision avec la camera
-			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
-			var scos:Number	= 1 - c ;
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			const scos:Number	= 1 - c ;
 			// --
 			var suv	:Number = u * v * scos ;
 			var svw	:Number = v * w * scos ;

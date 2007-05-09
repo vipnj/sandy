@@ -152,13 +152,13 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_nDepth:Number=0, l_oMatrix:Matrix4 = _oViewCacheMatrix, 
-				l_faces:Array = aPolygons, l_oFrustum:Frustum = p_oCamera.frustrum, l_aNormals:Array = m_oGeometry.aFacesNormals,
-				l_aPoints:Array = m_oGeometry.aVertex,
+			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex;
+	        const l_oMatrix:Matrix4 = _oViewCacheMatrix, l_faces:Array = aPolygons, l_oFrustum:Frustum = p_oCamera.frustrum, l_aNormals:Array = m_oGeometry.aFacesNormals,
 	        	m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
 				m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
 				m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 				m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
+			
 			// -- Now we transform the normals.
 			for each( var l_oNormal:Vertex in l_aNormals )
 			{
@@ -203,12 +203,11 @@ package sandy.core.scenegraph
 	
 		public function display():void
 		{
-			var l_oPoly:Polygon;
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
 		    container.graphics.clear();
 		    // --
-			for each( l_oPoly in m_aVisiblePoly )
+			for each( var l_oPoly:Polygon in m_aVisiblePoly )
 			{
 				l_oPoly.display( container );
 			}

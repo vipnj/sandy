@@ -30,7 +30,6 @@ package sandy.core.scenegraph
 	 * @version		1.0
 	 * @date 		28.03.2006
 	 **/
-	 
 	public class Group extends Node
 	{
 		/**
@@ -43,16 +42,6 @@ package sandy.core.scenegraph
 		{
 			super( p_sName );
 		}
-	
-		/**
-		 * This method goal is to update the node. For node's with transformation, this method shall
-		 * update the transformation taking into account the matrix cache system.
-		 */
-		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
-		{
-			super.update( p_oModelMatrix, p_bChanged );
-		}
-	
 		
 		/**
 		 * This method test the current node on the frustum to get its visibility.
@@ -68,18 +57,17 @@ package sandy.core.scenegraph
 			// TODO
 			// Parse the children, take their bounding volume and merge it with the current node recurssively. 
 			// After that call the super cull method to get the correct cull value.		
-			changed = p_bChanged || changed;
-			var l_oNode:Node;
-			for each( l_oNode in _aChilds )
-			    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed || l_oNode.changed );
+			for each( var l_oNode:Node in _aChilds )
+			    l_oNode.cull( p_oFrustum, p_oViewMatrix, p_bChanged || p_bChanged );
 			// --
-			super.cull( p_oFrustum, p_oViewMatrix, changed );
+			super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_oNode:Node, l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
-			for each( l_oNode in _aChilds )
+			var l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
+			// --
+			for each( var l_oNode:Node in _aChilds )
 			{
 			    if( l_oNode.culled != l_oCStateOut )
 			    	l_oNode.render( p_oCamera );

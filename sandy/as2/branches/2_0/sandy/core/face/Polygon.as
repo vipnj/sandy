@@ -97,12 +97,13 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	
 	public function clip( p_oFrustum:Frustum ):Array
 	{
-		cvertices = new Array();
-		var l_nPLength:Number = cvertices.length;
-		while( --l_nPLength>-1) cvertices[l_nPLength] = vertices[l_nPLength].clone2();
+		cvertices = vertices.concat();
+		//var l_nPLength:Number = cvertices.length;
+		//for (var i:Number = 0; i < l_nPLength; i++)
+		//	cvertices.push( vertices[i].clone2() );
 		// -- 
 		p_oFrustum.clipFrustum( cvertices );
-		return cvertices;
+		return vertices.concat( cvertices );
 	}
 	
 	public function render():Void

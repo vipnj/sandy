@@ -7,7 +7,6 @@ import sandy.core.transform.*;
 import sandy.core.World3D;
 import sandy.primitive.Box;
 import sandy.primitive.Sphere;
-import sandy.skin.*;
 import sandy.materials.Appearance;
 import sandy.materials.ColorMaterial;
 import sandy.materials.Material;

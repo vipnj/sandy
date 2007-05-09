@@ -40,16 +40,19 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	/**
 	 * Create a new Camera3D.
 	 * The default camera projection is the perspective one with default parameters values.
-	 * @param nFoc The focal of the Camera3D
-	 * @param s the screen associated to the camera
+	 * @param pWidth Number The width of the world
+ 	 * @param pHeight Number The height of the world
+	 * @param pFear Number Near z-plane. Default is 10.
+	 * @param pFear Number Far z-plane. Default is 3000.
+		 
 	 */
 	public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number, p_nNear:Number, p_nFar:Number  )
 	{
 		super( null );
 		_viewport = new ViewPort( p_nWidth, p_nHeight );
-		_nFov = (p_nFov)?p_nFov:45;
-		_nFar = (p_nFar)?p_nFar:3000;
-		_nNear = (p_nNear)?p_nNear:10;
+		_nFov = (p_nFov)   ? p_nFov : 45;
+		_nFar = (p_nFar)   ? p_nFar : 3000;
+		_nNear = (p_nNear) ? p_nNear : 10;
 		// --
 		frustrum = new Frustum();
 		// --
@@ -258,8 +261,8 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	* Set an orthographic projection. This projection in opposite of the perspective one, don't distort distances and pictures
 	* @param	screenWidth The screen width. Default value: the screen width
 	* @param	screenHeight The screen height. Default value: the screen height.
-	* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
-	* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+	* @param	zNear The distance betweeen the camera position and the near plane. Default is value set via Constructor.
+	* @param	zFar The distance betweeen the camera position and the far plane. Default is value set via Constuctor.
 	*/
 	/*
 	public function setOrthoProjection(screenWidth:Number, screenHeight:Number, zNear:Number, zFar:Number):Void
@@ -268,8 +271,8 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		// --
 		if( undefined == screenWidth ) screenWidth = _is.getSize().width;
 		if( undefined == screenHeight ) screenHeight = _is.getSize().height;
-		if( undefined == zNear ) zNear = 10;
-		if( undefined == zFar ) zFar = 10000;
+		if( undefined == zNear ) zNear = _nNear;
+		if( undefined == zFar )  zFar = _nFar;
 		// --
 		w = 2*zNear/screenWidth;
 		h = 2*zNear/screenHeight;
@@ -289,12 +292,17 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	* Set a projection matrix with perspective. This projection allows a more human visual representation of objects.
 	* @param	fovY The angle of view in degress. Default value: 45.
 	* @param	aspectRatio The ratio between vertical and horizontal pixels. Default value: the screeen ratio (width/height)
-	* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
-	* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
+	* @param	zNear The distance betweeen the camera position and the near plane. Default is value set via Constructor.
+	* @param	zFar The distance betweeen the camera position and the far plane. Default is value set via Constructor.
 	*/
 	public function setPerspectiveProjection(fovY:Number, aspectRatio:Number, zNear:Number, zFar:Number):Void
 	{
 		var cotan:Number, Q:Number;
+		
+		if( undefined == zNear ) fovY = _nFov;
+		if( undefined == zNear ) zNear = _nNear;
+		if( undefined == zFar )  zFar = _nFar;
+		
 		// --
 		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
 		// --

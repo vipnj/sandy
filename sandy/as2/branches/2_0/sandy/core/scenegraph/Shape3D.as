@@ -162,19 +162,15 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33; m43 = l_oMatrix.n43;
 		m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
 		
-		// -- If necessary we transform the normals vectors
-		if( m_bBackFaceCulling || m_oAppearance.needNormals )
+		// Now we can transform the objet vertices into the camera coordinates	
+	    var l_aNormals:Array = m_oGeometry.aFacesNormals;
+	    l_nLength = l_aNormals.length;
+		while( --l_nLength > -1 )
 		{
-			// Now we can transform the objet vertices into the camera coordinates	
-		    var l_aNormals:Array = m_oGeometry.aFacesNormals;
-		    l_nLength = l_aNormals.length;
-			while( --l_nLength > -1 )
-			{
-				l_oNormal = l_aNormals[l_nLength];
-				l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
-				l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
-				l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
-			}
+			l_oNormal = l_aNormals[l_nLength];
+			l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
+			l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
+			l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
 		}
 		
 		// Now we can transform the objet vertices into the camera coordinates	
@@ -186,7 +182,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 			l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 			l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 			l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
-			//l_oVertex.projected = false;
 		}
 		
 		/////////////////////////////////////////////////////
@@ -203,18 +198,11 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		   	// --
 		    if ( l_oFace.visible || !m_bBackFaceCulling) 
 			{
+				l_oFace.cvertices = l_oFace.vertices;
 				if( m_bClipped )
 				{
 					// -- We proceed to a real copy of the original vertices array.
-					l_oFace.clip( l_oFrustum );
-					// -- If there's some vertices, we push them into the vertices to render
-				    if( l_oFace.cvertices.length ) 
-			            l_aPoints = l_aPoints.concat( l_oFace.cvertices );
-			    }
-			    else
-			    {
-					// --
-			    	l_oFace.cvertices = l_oFace.vertices;
+					l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
 			    }
 			    // --
 				l_nDepth = l_oFace.getZAverage();

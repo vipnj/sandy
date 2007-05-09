@@ -40,9 +40,9 @@ class SpriteTest implements IFrameListener
 	{
 		_mc = p_oMc;
 		var fpsUI:FPSLoggerUI = new FPSLoggerUI( _mc, -3 );
-		//
+		// --
 		_world = World3D.getInstance();
-		// FIRST THING TO INITIALIZE
+		// -- FIRST THING TO INITIALIZE
 		_world.container = p_oMc;
 		_init();
 	}

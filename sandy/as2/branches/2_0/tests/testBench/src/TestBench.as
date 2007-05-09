@@ -65,6 +65,7 @@ class TestBench implements IFrameListener
 		_world.root = _createScene();
 		// We need a camera in the world
 		_world.camera = new Camera3D(500, 500);
+		_world.camera.z = -300;
 		_world.root.addChild( _world.camera );		
 	}
 		
@@ -73,7 +74,7 @@ class TestBench implements IFrameListener
 	{
 		var g:Group = new Group();
 		m_oTG = new TransformGroup("translation");
-		m_oTG.z = 500;
+		//m_oTG.z = 500;
 		// --
 		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
 		//var l_oMaterial:BitmapMaterial = new BitmapMaterial(b);
@@ -84,7 +85,7 @@ class TestBench implements IFrameListener
 		box = new Box( "myBox", 100, 100, 100, "tri", 1 );
 		box.appearance = l_oTextureAppearance;
 		box.enableClipping = true;
-		box.z = -100;
+		//box.z = -100;
 		// --
 		m_oTG.addChild( box );
 		g.addChild( m_oTG );

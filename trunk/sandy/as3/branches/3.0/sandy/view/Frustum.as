@@ -154,9 +154,7 @@ package sandy.view
 		
 		public function pointInFrustum( p:Vector ):CullingState
 		{
-			var plane:Plane;
-	        // --
-	        for each( plane in aPlanes ) 
+	        for each( var plane:Plane in aPlanes ) 
 			{
 				if ( PlaneMath.classifyPoint( plane, p) == PlaneMath.NEGATIVE )
 					return Frustum.OUTSIDE;
@@ -166,10 +164,10 @@ package sandy.view
 		
 		public function sphereInFrustum( p_oS:BSphere ):CullingState
 		{
-	        var p:Number = 0, c:int = 0, d:Number, radius:Number = p_oS.m_nTRadius, plane:Plane;
-	        var x:Number=p_oS.m_oPosition.x, y:Number=p_oS.m_oPosition.y, z:Number=p_oS.m_oPosition.z;
+	        var p:Number = 0, c:int = 0, d:Number;
+	        const x:Number=p_oS.m_oPosition.x, y:Number=p_oS.m_oPosition.y, z:Number=p_oS.m_oPosition.z, radius:Number = p_oS.m_nTRadius;
 	        // --
-	        for each( plane in aPlanes ) 
+	        for each( var plane:Plane in aPlanes ) 
 	        { 
 	            d = plane.a * x + plane.b * y + plane.c * z + plane.d; 
 	            if( d <= -radius ) 
@@ -183,16 +181,17 @@ package sandy.view
 	
 		public function boxInFrustum( box:BBox ):CullingState
 		{
-			var result:CullingState = Frustum.INSIDE, out:Number,iin:Number, k:int, d:Number, v:Vector, plane:Plane, p:Array = box.aTCorners;
+			var result:CullingState = Frustum.INSIDE, out:Number,iin:Number, k:int, d:Number;
+			const p:Array = box.aTCorners;
 			// for each plane do ...
-			for each( plane in aPlanes )
+			for each( var plane:Plane in aPlanes )
 			{
 				// reset counters for corners in and out
 				out = 0; iin = 0;
 				// for each corner of the box do ...
 				// get out of the cycle as soon as a box as corners
 				// both inside and out of the frustum
-				for each( v in p )
+				for each( var v:Vector in p )
 				{
 					d = PlaneMath.distanceToPoint( plane, v ) ;
 					// is the corner outside or inside

@@ -336,7 +336,7 @@ package sandy.core.scenegraph
 				        /////////////////////////
 				        _oBSphere.transform( _oViewCacheMatrix );
 				        culled = p_oFrustum.sphereInFrustum( _oBSphere );
-						//
+						// --
 						if( culled == Frustum.INTERSECT && _oBBox )
 						{
 				            ////////////////////////
@@ -348,7 +348,6 @@ package sandy.core.scenegraph
 					}
 				}
 			}
-			/* FIXME : Shape 3D shall override this method and perform  check to know if object needs clipping or not */
 		}
 		
 		public function render( p_oCamera:Camera3D ):void

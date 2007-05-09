@@ -222,12 +222,10 @@ package sandy.materials
 			);
 		}
 	
-	
 		public function toString():String
 		{
 			return 'sandy.materials.BitmapMaterial' ;
 		}
-		
 		
 		private var m_oTexture:BitmapData;
 		private var m_nHeight:Number;
@@ -236,7 +234,5 @@ package sandy.materials
 		private var m_oPoint:Point;
 		private var m_oCmf:ColorMatrixFilter;
 		private var _texture:BitmapData;
-	
-	
 	}
 }

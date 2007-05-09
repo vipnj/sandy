@@ -408,9 +408,9 @@ class sandy.math.Matrix4Math
 	 * |0  0  0  1|
 	 * </pre>
 	 *
-	 * @param {@code nRotX} translation X.
-	 * @param {@code nRotY} translation Y.
-	 * @param {@code nRotZ} translation Z.
+	 * @param {@code nXScale} scale X.
+	 * @param {@code nYScale} scale Y.
+	 * @param {@code nZScale} scale Z.
 	 * @return The result of computation : a {@code Matrix}.
 	 */
 	public static function scale(nXScale:Number, nYScale:Number, nZScale:Number) : Matrix4 

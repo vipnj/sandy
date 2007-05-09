@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-	import sandy.core.scenegraph.Object3D;
+	import sandy.core.scenegraph.Shape3D;
+	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.face.Polygon;
 	import sandy.primitive.Primitive3D;
 	import sandy.core.data.Vertex;
@@ -32,7 +33,7 @@ limitations under the License.
 	* @version		2.0
 	* @date 		07.05.2007 
 	**/
-class sandy.primitive.Pyramid extends Object3D implements Primitive3D
+class sandy.primitive.Pyramid extends Shape3D implements Primitive3D
 	{
 		//////////////////
 		///PRIVATE VARS///
@@ -40,7 +41,6 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 		private var _h:Number;
 		private var _lg:Number;
 		private var _radius:Number ;
-		private var _aUv:Array = new Array();
 
 		/**
 		* This is the constructor to call when you nedd to create a Pyramid primitive.
@@ -67,9 +67,13 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
 		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
 		*/
-	public function generate (Void) : Void
+	public function generate () : Geometry3D
 		{
-		var f:Polygon;
+			
+			// initialization
+			var l_geometry:Geometry3D = new Geometry3D();
+			
+			var f:Polygon;
 			//Creation des points
 			_h = -_h;
 			var r2:Number = _radius/2;
@@ -80,48 +84,51 @@ class sandy.primitive.Pyramid extends Object3D implements Primitive3D
 			  \ 4  \
 			   0-----1
 			*/
+			var l_nID0:Number = l_geometry.getNextVertexID();
+			l_geometry.setVertex( l_nID0, -r2, 0, l2 );
 
-			aPoints.push( new Vertex(-r2,0,l2) );
-			aPoints.push( new Vertex( r2,0,l2) );
-			aPoints.push( new Vertex( r2,0,-l2) );
-			aPoints.push( new Vertex(-r2,0,-l2) );
-			aPoints.push( new Vertex( 0,h2,0) );	
+			var l_nID1:Number = l_geometry.getNextVertexID();
+			l_geometry.setVertex( l_nID1, r2, 0, l2 );
 
-			_aUv.push(new UVCoord (0,0.5));//0
-			_aUv.push(new UVCoord (0,33,0.5));//1
-			_aUv.push(new UVCoord (0.66,0.5));//2
-			_aUv.push(new UVCoord (1,0.5));//3
-			_aUv.push(new UVCoord (1,1));
+			var l_nID2:Number = l_geometry.getNextVertexID();
+			l_geometry.setVertex( l_nID2, r2, 0, -l2 );
 
+			var l_nID3:Number = l_geometry.getNextVertexID();
+			l_geometry.setVertex( l_nID3, -r2, 0, -l2 );
+
+			var l_nID4:Number = l_geometry.getNextVertexID();
+			l_geometry.setVertex( l_nID4, 0, h2, 0 );
+			
+			l_geometry.setUVCoords( 0, 0,		0.5);	//0
+			l_geometry.setUVCoords( 1, 0.33,	0.5);	//1
+			l_geometry.setUVCoords( 2, 0.66,	0.5);	//2
+			l_geometry.setUVCoords( 3, 1,		0.5);	//3
+			l_geometry.setUVCoords( 3, 1,		1);		//4
+			   
 			//Creation des faces
 			//Face avant
-			f = new Polygon(this, aPoints[0], aPoints[1], aPoints[4] );
-			f.setUVCoords( _aUv[0], _aUv[1], _aUv[4] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_geometry.setFaceVertexIds  ( l_geometry.aFacesVertexID.length,   0, 1, 4 );
+			l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, 0, 1, 4 );
+			
 			//Face derriere
-			f = new Polygon(this, aPoints[3], aPoints[2], aPoints[0] );
-			f.setUVCoords( _aUv[3], _aUv[2], _aUv[0] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
-			f = new Polygon(this, aPoints[0], aPoints[2], aPoints[1] );
-			f.setUVCoords( _aUv[0], _aUv[2], _aUv[1] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_geometry.setFaceVertexIds  ( l_geometry.aFacesVertexID.length,   3, 2, 0 );
+			l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, 3, 2, 0 );
+			
+			l_geometry.setFaceVertexIds  ( l_geometry.aFacesVertexID.length,   0, 2, 1 );
+			l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, 0, 2, 1 );
+			
 			//Face gauche
-			f = new Polygon(this, aPoints[4], aPoints[3], aPoints[0] );
-			f.setUVCoords( _aUv[4], _aUv[3], _aUv[0] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_geometry.setFaceVertexIds  ( l_geometry.aFacesVertexID.length,   4, 3, 0 );
+			l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, 4, 3, 0 );
+			
 			//Face droite
-			f = new Polygon(this, aPoints[3], aPoints[4], aPoints[2] );
-			f.setUVCoords( _aUv[3], _aUv[4], _aUv[2] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
-			f = new Polygon(this, aPoints[4], aPoints[1], aPoints[2] );
-			f.setUVCoords( _aUv[4], _aUv[1], _aUv[2] );
-			aNormals.push ( f.createNormale () );
-			addFace( f );
+			l_geometry.setFaceVertexIds  ( l_geometry.aFacesVertexID.length,   3, 4, 2 );
+			l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, 3, 4, 2 );
+			
+			l_geometry.setFaceVertexIds  ( l_geometry.aFacesVertexID.length,   4, 1, 2 );
+			l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, 4, 1, 2 );
+			
+			return l_geometry; 
 		}
 	/**
 	* getSize() returns the length, height, and radius as a Vector (useful for storing an object's attributes).

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -36,7 +36,7 @@ class sandy.core.scenegraph.Sprite3D extends Sprite2D
 	* 							isn't adapted to your needs. Default value is 1.0 which means unchanged. A value of 2.0 will make the object
 	* 							twice bigger and so on.
 	*/
-	public function Sprite3D( p_Name:String, pScale:Number pOffset:Number ) 
+	public function Sprite3D ( p_Name:String, pScale:Number, pOffset:Number ) 
 	{
 		super(p_Name, pScale);
 		// -- we create a fictive normal vector

@@ -232,10 +232,6 @@ class sandy.view.Frustum
 		{
 			return cvert;
 		}	
-		/*
-		var tmp:Array = new Array( cvert.length );
-		for( var i:Number=0; i < cvert.length; i++ ) tmp[i] = new Vertex( cvert[i].wx, cvert[i].wy, cvert[i].wz );
-		*/
 		var tmp:Array = cvert;
 		
 		tmp = clipPolygon( aPlanes[LEFT], tmp ); // left

@@ -1,4 +1,4 @@
-﻿/*
+/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -249,10 +249,11 @@ class sandy.core.face.Polygon implements IPolygon
 	public function clip( frustum:Frustum ):Array
 	{
 		delete _aClipped;
-		_aClipped = frustum.clipFrustum( _aVertex );
+		_aClipped = _aVertex.concat();
+		frustum.clipFrustum( _aClipped );
 		_nCL = _aClipped.length;
 		clipped = true;
-		return _aClipped;
+		return _aVertex.concat(_aClipped);
 	}
 
 	/**

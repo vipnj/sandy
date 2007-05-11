@@ -68,6 +68,12 @@ class sandy.skin.SkinType
 	public static function get VIDEO():SkinType { return __video; }
 	private static var __video:SkinType = new SkinType( 6 );
 	
+	/**
+	* Constant value representing the SimplePointSkin
+	*/
+	public static function get SIMPLE_POINT():SkinType { return __simple_point; }
+	private static var __simple_point:SkinType = new SkinType( 7 );
+	
 	//---------//
 	//Variables//
 	//---------//

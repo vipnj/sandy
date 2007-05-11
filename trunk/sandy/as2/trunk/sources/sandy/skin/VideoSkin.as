@@ -59,6 +59,17 @@ class sandy.skin.VideoSkin extends TextureSkin
 	 {
 	 	return SkinType.VIDEO;
 	 }
+	 
+	 /**
+	* Returns the name of the skin you are using.
+	* For the VideoSkin class, this value is set to "VIDEO"
+	* @param	Void
+	* @return String representing your skin.
+	*/
+	public function getName( Void ):String
+	{
+		return "VIDEO";
+	}
 
 	public function toString( Void ):String
 	{

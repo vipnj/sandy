@@ -89,6 +89,17 @@ class sandy.skin.SimpleColorSkin extends BasicSkin implements Skin
 	 }
 	 
 	/**
+	* Returns the name of the skin you are using.
+	* For the SimpleColorSkin class, this value is set to "SIMPLE_COLOR"
+	* @param	Void
+	* @return String representing your skin.
+	*/
+	public function getName( Void ):String
+	{
+		return "SIMPLE_COLOR";
+	}
+	
+	/**
 	* Start the rendering of the Skin
 	* @param f	The face which is being rendered
 	* @param mc The mc where the face will be build.

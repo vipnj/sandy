@@ -48,7 +48,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	
 
 	/**
-	* Returns the type of SKin you are using.
+	* Returns the type of Skin you are using.
 	* For the BasicSkin class, this value is set to NONE
 	* @param	Void
 	* @return SkinType The type constant which represents your skin.
@@ -56,6 +56,17 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	public function getType( Void ):SkinType
 	{
 		return SkinType.NONE;
+	}
+	
+	/**
+	* Returns the name of the skin you are using.
+	* For the BasicSkin class, this value is set to "NONE"
+	* @param	Void
+	* @return String representing your skin.
+	*/
+	public function getName( Void ):String
+	{
+		return "NONE";
 	}
 	
 	/**
@@ -104,7 +115,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 		_filters 	= [];
 		_useLight 	= false;
 		_id = _ID_++;
-		World3D.getInstance().addEventListener( World3D.onLightAddedEVENT, this, __onLightAdded );
+		World3D.getInstance(_root.world_mc).addEventListener( World3D.onLightAddedEVENT, this, __onLightAdded );
 	}
 	
 	private function __onLightAdded( e:BasicEvent ):Void

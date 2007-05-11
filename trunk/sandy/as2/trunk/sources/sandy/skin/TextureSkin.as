@@ -132,6 +132,17 @@ class sandy.skin.TextureSkin extends BasicSkin implements Skin
 	 {
 	 	return SkinType.TEXTURE;
 	 }
+	 
+	 /**
+	* Returns the name of the skin you are using.
+	* For the TextureSkin class, this value is set to "TEXTURE"
+	* @param	Void
+	* @return String representing your skin.
+	*/
+	public function getName( Void ):String
+	{
+		return "TEXTURE";
+	}
 	
 	/**
 	* Start the rendering of the Skin

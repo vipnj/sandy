@@ -183,6 +183,18 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 		return SkinType.MOVIE;
 	}
 	
+	 
+	 /**
+	* Returns the name of the skin you are using.
+	* For the MovieSkin class, this value is set to "MOVIE"
+	* @param	Void
+	* @return String representing your skin.
+	*/
+	public function getName( Void ):String
+	{
+		return "MOVIE";
+	}
+	
 	/**
 	* Returns the MovieClip used to texture objects with.
 	* Useful for example when you need to apply a function to the movieClip, such as stop(), gotoAndPlay(), etc..
@@ -357,8 +369,9 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 			_initialized = true;
 			_animated = target._totalframes > 1;
 			setAnimateUpdate(_animate && _animated);
-			//broadcastEvent(_eOnUpdate);
+			broadcastEvent(_eOnUpdate);
 			broadcastEvent(_eOnInit);
+			
 		}
 	}
 	

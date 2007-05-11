@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -17,6 +17,7 @@ limitations under the License.
 import com.bourre.events.EventBroadcaster;
 import com.bourre.events.EventType;
 import com.bourre.events.IEvent;
+import com.bourre.commands.Delegate;
 
 import sandy.core.data.UVCoord;
 import sandy.core.face.IPolygon;
@@ -38,7 +39,7 @@ import sandy.events.ParserEvent;
 class sandy.util.AseParser
 {
 	/**
-	 *  The OBject3D object is initialized
+	 *  The Object3D object is initialized
 	 */
 	public static var onInitEVENT:EventType = new EventType( 'onInitEVENT' );
 	/**
@@ -100,17 +101,67 @@ class sandy.util.AseParser
 	private static var _oEB:EventBroadcaster = new EventBroadcaster( AseParser );
 	
 	private static var _eProgress:ParserEvent = new ParserEvent( AseParser.onProgressEVENT, null, 0, "" );
-	private static var _CONTEXT:Object = new Object();
-	
+	//private static var _CONTEXT:Object = new Object();
+	private var _CONTEXT:Object;
+	private var lv: LoadVars;
+
 	/**
 	* Interval of time between two calls to parsing method. A big value makes parsing slower but less CPU intensive.
 	*/
 	public static var INTERVAL:Number = 5;
+	
 	/**
 	* Number of lines parsed after a parsing method call. This is a good factor to change if you want to make your parser faster or less CPU intensive
 	*/
-	public static var ITERATIONS_PER_INTERVAL:Number = 10;
+	public static var ITERATIONS_PER_INTERVAL:Number = 50;
 	
+	public function AseParser ( o:Object3D, url: String ) {
+		
+		//trace ("New AseParser object " + url);
+		_CONTEXT = new Object();
+		_CONTEXT.object = o;
+		
+		lv = new LoadVars();
+		 // Delegate the onLoad handler to this instance's scope
+		lv.onLoad = Delegate.create( this, aseFileLoaded );
+		lv.load( url );//+'&t='+getTimer()
+		
+		AseParser.broadcastEvent( new ParserEvent(AseParser.onLoadEVENT ) );
+	}
+	
+	
+			
+	private function aseFileLoaded( success: Boolean ): Void
+	{
+		if( !success ) 
+		{
+			trace ("loading ASE file failed");
+			AseParser.broadcastEvent( new ParserEvent( AseParser.onFailEVENT ) );
+		}
+		else
+		{
+			//-- here come spaghetti, but its only a boring parser --//
+			// AseParser._CONTEXT.object = o;
+			//_CONTEXT.lines 	= unescape( this ).split( '\r\n' );
+			// We've changed the scope, so "this" is not the lv object. Get the result from lv
+			_CONTEXT.lines 	= unescape( lv.toString() ).split( '\r\n' );
+			
+			_CONTEXT.linesLength = _CONTEXT.lines.length;
+			
+			_CONTEXT.uvCoordinates = new Array();
+			_CONTEXT.faces 	= new Array();	
+			if (_CONTEXT.linesLength > 0) { 
+				//_CONTEXT.id = setInterval(AseParser._parse, AseParser.INTERVAL );
+				// Use "this" as the scope for the _parse routine invoked by the interval
+				_CONTEXT.id = setInterval(this, "_parse", AseParser.INTERVAL );
+			} else {
+				trace ("Something is wrong with _CONTEXT.linesLength in ASE parser");
+			}
+		}
+
+	};
+		
+
 	/**
 	* Initialize the object passed in parameter (which should be new) with the datas stored in the ASE file given in second parameter
 	* @param	o Object3D 	The Object3D we want to initialize
@@ -118,31 +169,12 @@ class sandy.util.AseParser
 	*/
 	public static function parse( o:Object3D, url: String ): Void
 	{
-		var lv: LoadVars = new LoadVars();
-		//-- here come spaghetti, but its only a boring parser --//
-		lv.onLoad = function( sucess: Boolean ): Void
-		{
-			if( !sucess ) 
-			{
-				AseParser.broadcastEvent( new ParserEvent( AseParser.onFailEVENT ) );
-			}
-			else
-			{
-				AseParser._CONTEXT.object = o;
-				AseParser._CONTEXT.lines 	= unescape( this ).split( '\r\n' );
-				AseParser._CONTEXT.linesLength = AseParser._CONTEXT.lines.length;
-				AseParser._CONTEXT.uvCoordinates = new Array();
-				AseParser._CONTEXT.faces 	= new Array();	
-				AseParser._CONTEXT.id = setInterval( AseParser._parse, AseParser.INTERVAL );
-			}
-	
-		};
-		lv.load( url );//+'&t='+getTimer()
-		AseParser.broadcastEvent( new ParserEvent(AseParser.onLoadEVENT ) );
+		//trace ("Reached parse in AseParser.as");
+		new AseParser (o, url);
 	}	
 	
 	
-	private static function _parse( Void ):Void
+	private function _parse( Void ):Void
 	{
 		//-- local vars
 		var line:String;
@@ -246,9 +278,9 @@ class sandy.util.AseParser
 	{
 		var lv: LoadVars = new LoadVars();
 		//-- here come spaghetti, but its only a boring parser --//
-		lv.onLoad = function( sucess: Boolean ): Void
+		lv.onLoad = function( success: Boolean ): Void
 		{
-			if( !sucess ) 
+			if( !success ) 
 			{
 				AseParser.broadcastEvent( new ParserEvent( AseParser.onFailEVENT ) );
 				return;

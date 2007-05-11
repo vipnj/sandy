@@ -20,25 +20,23 @@ import sandy.skin.BasicSkin;
 import sandy.skin.SkinType;
 
 /**
-* SimpleLineSkin
+* SimplePointSkin
 *  
-* @author		Thomas Pfeiffer - kiroukou
-* @author		Tabin C�dric - thecaptain
-* @author		Nicolas Coevoet - [ NikO ]
-* @version		0.2
-* @date 		12.01.2006 
+* @author		Bruce Epstein - zeusprod
+* @version		1.2.1
+* @date 		01.05.2007 
 **/
-class sandy.skin.SimpleLineSkin extends BasicSkin implements Skin
+class sandy.skin.SimplePointSkin extends BasicSkin implements Skin
 {
 	/**
-	* Create a new SimpleLineSkin
+	* Create a new SimplePointSkin
 	* 
 	* @param t The size of line
-	* @param c The color ot the line
+	* @param c The color of the line
 	* @param a The alpha of the line
 	* 
 	*/ 
-	public function SimpleLineSkin( t:Number, c:Number,  a:Number )
+	public function SimplePointSkin( t:Number, c:Number,  a:Number )
 	{
 		super();
 		_thickness 	= (isNaN(t)) ? 2 : t;
@@ -87,44 +85,45 @@ class sandy.skin.SimpleLineSkin extends BasicSkin implements Skin
 	 */
 	 public function getType ( Void ):SkinType
 	 {
-	 	return SkinType.SIMPLE_LINE;
+	 	return SkinType.SIMPLE_POINT;
 	 }
 	
-   /**
+	
+	 /**
 	* Returns the name of the skin you are using.
-	* For the SimpleLineSkin class, this value is set to "SIMPLE_LINE"
+	* For the SimplePointSkin class, this value is set to "SIMPLE_POINT"
 	* @param	Void
 	* @return String representing your skin.
 	*/
 	public function getName( Void ):String
 	{
-		return "SIMPLE_LINE";
+		return "SIMPLE_POINT";
 	}
 	
 	/**
 	* Start the rendering of the Skin
-	* @param f	The face which is being rendered
-	* @param mc The mc where the face will be build.
+	* @param f	The face that is being rendered
+	* @param mc The mc where the face will be built.
 	*/ 	
 	public function begin( f:IPolygon, mc:MovieClip ):Void
 	{
 		mc.filters = _filters;
-		mc.lineStyle( thickness, color,alpha);
+		//mc.lineStyle( thickness, color, alpha);
 	}
 	
 	/**
 	* Finish the rendering of the Skin
-	* @param f	The face which is being rendered
-	* @param mc The mc where the face will be build.
+	* @param f	The face that is being rendered
+	* @param mc The mc where the face will be built.
 	*/ 	
 	public function end( f:IPolygon, mc:MovieClip ):Void
 	{
-		; // nothing here
+		//mc.moveTo(a[0].sx, a[0].sy);// nothing here
 	}
 	
 	public function toString( Void ):String
 	{
-		return 'sandy.skin.SimpleLineSkin' ;
+		return 'sandy.skin.SimplePointSkin' ;
 	}
 	
 	/**

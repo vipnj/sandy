@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -89,6 +89,17 @@ class sandy.skin.ZLightenSkin extends BasicSkin implements Skin
 	 {
 	 	return SkinType.ZLIGHTEN;
 	 }
+	 
+	 /**
+	* Returns the name of the skin you are using.
+	* For the ZLightenSkin class, this value is set to "ZLIGHTEN"
+	* @param	Void
+	* @return String representing your skin.
+	*/
+	public function getName( Void ):String
+	{
+		return "ZLIGHTEN";
+	}
 	 	
 	/**
 	* Enable (true value) or disable (false value) the blend mode. The blend mode allows

@@ -64,6 +64,12 @@ class sandy.view.Camera3D
 		// --
 		viewport = new Viewport( p_nWidth, p_nHeight );
 		frustrum = new Frustum();
+		
+		// -- Default to fov 45, near plane 50 and far plane 3000
+		_nFovY = 45;
+		_nNear = 50;
+		_nFar = 3000;
+		
 		setPerspectiveProjection();
 		//setPerspective();
 		// --
@@ -331,6 +337,15 @@ class sandy.view.Camera3D
 		return _nFovY;
 	}
 	
+	public function getNearPlane( Void ):Number
+	{
+		return _nNear;
+	}
+	public function getFarPlane( Void ):Number
+	{
+		return _nFar;
+	}
+	
 	/**
 	* Set the position of the camera. Basically apply a translation.
 	* @param x x position of the camera
@@ -496,23 +511,27 @@ class sandy.view.Camera3D
 	
 	/**
 	* Set a projection matrix with perspective. This projection allows a more human visual representation of objects.
-	* @param	fovY The angle of view in degress. Default value: 45.
+	* @param	fovY The angle of view in degress. Default value is 45 when Camera is created. If undefined, it defaults to last setting.
 	* @param	aspectRatio The ratio between vertical and horizontal pixels. Default value: the screeen ratio (width/height)
-	* @param	zNear The distance between the camera position and the near plane. Default value: 50.
-	* @param	zFar The distance between the camera position and the far plane. Default value: 3,000.
+	* @param	zNear The distance between the camera position and the near plane. Default value is 50 when Camera is created. If undefined, it defaults to last setting.
+	* @param	zFar The distance between the camera position and the far plane. Default value: 3,000 when Camera is created. If undefined, it defaults to last setting.
 	*/
 	public function setPerspectiveProjection(fovY:Number, aspectRatio:Number, zNear:Number, zFar:Number):Void
 	{
+		//trace ("reached setPerspectiveProjection");
 		var cotan:Number, Q:Number;
 		// --
-		if( undefined == fovY ) fovY = 45;
+		if( undefined == fovY ) fovY = _nFovY;
 		if( undefined == aspectRatio ) aspectRatio = viewport.ratio;
-		if( undefined == zNear ) zNear = 50;
-		if( undefined == zFar ) zFar = 3000;
+		if( undefined == zNear ) zNear = _nNear;
+		if( undefined == zFar ) zFar = _nFar;
 		// --
 		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
 		
 		_nFovY = fovY;
+		_nNear = zNear;
+		_nFar  = zFar;
+		
 		fovY = NumberUtil.toRadian( fovY );
 		cotan = 1 / Math.tan(fovY / 2);
 		Q = zFar/(zFar - zNear);
@@ -633,4 +652,7 @@ class sandy.view.Camera3D
 	
 	// The field-of-view
 	private var _nFovY;
+	// Near and far planes
+	private var _nFar:Number;
+	private var _nNear:Number;
 }

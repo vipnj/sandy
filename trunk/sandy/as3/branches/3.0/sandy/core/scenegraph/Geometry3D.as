@@ -270,47 +270,52 @@ package sandy.core.scenegraph
 		public function clone():Geometry3D
 		{
 			var l_result:Geometry3D = new Geometry3D();
-			var i:Number = 0;
+			var i:uint = 0, l_oVertex:Vertex;
 			// Points
-			var l:Number = aVertex.length;
-			for (i = 0; i<l; i++)
+			for each( l_oVertex in aVertex )
 			{
-				l_result.aVertex[i] = Vertex( aVertex[i] ).clone();
+				l_result.aVertex[i] = l_oVertex.clone();
+				i++;
 			}
 			
 			// Faces
-			l = aFacesVertexID.length;
-			for (i = 0; i<l; i++)
+			i = 0;
+			for each( var a:Array in aFacesVertexID )
 			{
-				l_result.aFacesVertexID[i] = (aFacesVertexID[i] as Array).concat();
+				l_result.aFacesVertexID[i] = a.concat();
+				i++;
 			}
 			
 			// Normals
-			l = aFacesNormals.length;
-			for (i = 0; i<l; i++)
+			i = 0;
+			for each( l_oVertex in aVertex )
 			{
-				l_result.aFacesNormals[i] = Vertex( aFacesNormals[i] ).clone();
+				l_result.aFacesNormals[i] = l_oVertex.clone();
+				i++;
 			}
 			
 			// Normals
-			l = aVertexNormals.length;
-			for (i = 0; i<l; i++)
+			i = 0;
+			for each( l_oVertex in aVertexNormals )
 			{
-				l_result.aVertexNormals[i] = Vertex( aVertexNormals[i] ).clone();
+				l_result.aVertexNormals[i] = l_oVertex.clone();
+				i++;
 			}
 			
 			// UVs face
-			l = aFacesUVCoordsID.length;
-			for (i = 0; i<l; i++)
+			i = 0;
+			for each( var b:Array in aFacesUVCoordsID )
 			{
-				l_result.aFacesUVCoordsID[i] = aFacesUVCoordsID[i].concat();
+				l_result.aFacesUVCoordsID[i] = b.concat();
+				i++;
 			}
 			
 			// UVs coords
-			l = aUVCoords.length;
-			for (i = 0; i<l; i++)
+			i = 0;
+			for each( var u:UVCoord in aUVCoords )
 			{
-				l_result.aUVCoords[i] = UVCoord( aUVCoords[i] ).clone();
+				l_result.aUVCoords[i] = u.clone();
+				i++;
 			}
 			
 			

@@ -16,7 +16,7 @@ package sandy.core.scenegraph
 
 	public class Shape3D extends ATransformable implements ITransformable
 	{ 
-		public var aPolygons:Array;
+		public var aPolygons:Dictionary;
 		public var depth:Number;
 		public var container:Sprite;
 
@@ -58,11 +58,10 @@ package sandy.core.scenegraph
 	    
 	    private function __generate( p_oGeometry:Geometry3D ):void
 	    {
-	    	var i:int, l:int;
+	    	aPolygons = new Dictionary();//new Array( l = p_oGeometry.aFacesVertexID.length );
+	    	var i:int = 0;
 	    	//
-	    	aPolygons = new Array( l = p_oGeometry.aFacesVertexID.length );
-	    	//
-	    	while( i<l )
+	    	for each ( var o:* in p_oGeometry.aFacesVertexID )
 	    	{
 	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
 	    		i++;
@@ -153,12 +152,13 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex;
-	        const l_oMatrix:Matrix4 = _oViewCacheMatrix, l_faces:Array = aPolygons, l_oFrustum:Frustum = p_oCamera.frustrum, l_aNormals:Array = m_oGeometry.aFacesNormals,
-	        	m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
-				m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
-				m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
-				m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
+			var l_nDepth:Number=0, l_aPoints:Dictionary = m_oGeometry.aVertex;
+	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
+					l_aNormals:Dictionary = m_oGeometry.aFacesNormals,
+					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
+					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
+					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
+					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 			
 			// -- Now we transform the normals.
 			for each( var l_oNormal:Vertex in l_aNormals )
@@ -175,18 +175,17 @@ package sandy.core.scenegraph
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-			if( m_bClipped ) l_aPoints = [];
 			m_aVisiblePoly = new Array();
 			var l_oToProject:Dictionary = new Dictionary();
 			// --
-			for each( var l_oFace:Polygon in l_faces )
+			for each( var l_oFace:Polygon in aPolygons )
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
 					m_aVisiblePoly.push( l_oFace );
 					// --
 					if( m_bClipped )
-						l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
+						l_oFace.clip( l_oFrustum );
 					else
 				    	l_oFace.cvertices = l_oFace.vertices;		   
 					
@@ -226,11 +225,9 @@ package sandy.core.scenegraph
 			// --
 			if( m_oGeometry )
 			{
-				var l_faces:Array = aPolygons;
-				var l:Number = l_faces.length;
-				while( --l > -1 )
+				for each( var v:Polygon in aPolygons )
 				{
-					l_faces[int(l)].appearance = m_oAppearance;
+					v.appearance = m_oAppearance;
 				}
 			}
 		}
@@ -350,26 +347,25 @@ package sandy.core.scenegraph
 		*/
 		public function set enableEvents( b:Boolean ):void
 		{
-			var l_faces:Array = aPolygons;
-			var l:Number = l_faces.length;
-			// -- 
 			if( b )
 			{
 				if( !m_bEv )
 				{
-					
-	    			while( --l > -1 )
-	    			{
+					/*
+	    			for each( var v:Polygon in aPolygons )
+					{
 	    			    l_faces[int(l)].enableEvents( true );
 						l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
 						l_faces[int(l)].container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
 						l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
 						l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 	    			}
+	    			*/
 				}
 			}
 			else if( !b && m_bEv )
 			{
+				/*
 				while( --l > -1 )
 	    		{
 	    	        l_faces[int(l)].enableEvents( false );
@@ -378,6 +374,7 @@ package sandy.core.scenegraph
 					l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
 					l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 	    		}
+	    		*/
 			}
 			m_bEv = b;
 		}
@@ -391,13 +388,9 @@ package sandy.core.scenegraph
 		*/
 		public function swapCulling():void
 		{
-			
-			var l_faces:Array = aPolygons;
-			var l:Number = l_faces.length;
-			
-			for( var i:Number = 0;i < l; i++ )
+			for each( var v:Polygon in aPolygons )
 			{
-				l_faces[int(i)].swapCulling();
+				v.swapCulling();
 			}
 			changed = true;
 		}
@@ -408,12 +401,10 @@ package sandy.core.scenegraph
 			// 	FIXME Fix it - it should be more like 
 			//	geometry.destroy();
 			// --
-			var l_faces:Array = aPolygons;
-			var l:Number = l_faces.length;
-			while( --l > -1 )
+			for each( var v:Polygon in aPolygons )
 			{
-				l_faces[int(l)].destroy();
-				l_faces[int(l)] = null;
+				v.destroy();
+				v = null;
 			}
 			// --
 			super.destroy();

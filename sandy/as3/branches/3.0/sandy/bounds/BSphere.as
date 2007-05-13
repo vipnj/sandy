@@ -15,6 +15,8 @@ limitations under the License.
 */
 package sandy.bounds 
 {
+	import flash.utils.Dictionary;
+	
 	import sandy.core.data.Matrix4;
 	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
@@ -44,7 +46,7 @@ package sandy.bounds
 		 * Verry usefull for clipping and so performance !
 		 * 
 		 */	
-		public static function create( p_aPts:Array ):BSphere
+		public static function create( p_aPts:Dictionary ):BSphere
 		{
 		    var l_sphere:BSphere = new BSphere();
 		    l_sphere.compute( p_aPts );
@@ -82,18 +84,17 @@ package sandy.bounds
 		}
 		
 				
-		public function compute( pPoints:Array ):void
+		public function compute( pPoints:Dictionary ):void
 		{
 			var x:Number, y:Number, z:Number, d:Number;
-			var p:Array = new Array(pPoints.length);
 			if(pPoints.length == 0) return;
-			p[0] = pPoints[0].getVector();
+			
+			var p:Array = new Array();
 			var i:int, j:int, l:int = pPoints.length;
 			
-			while( i < l ) 
+			for each( var v:Vertex in pPoints )
 			{
-				p[int(i)] = pPoints[int(i)].getVector();
-				i++;
+				p.push( v.getVector() );
 			}
 	
 			var p1:Vector = p[0];

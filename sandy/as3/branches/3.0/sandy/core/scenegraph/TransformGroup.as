@@ -36,7 +36,7 @@ package sandy.core.scenegraph
 		* This class is one of the most important because it represents a node in the tree scene representation in Sandy.
 		* It has a matrix which is in fact its Transform3D property matrix.
 		*/ 	
-		public function TransformGroup( p_sName:String )
+		public function TransformGroup( p_sName:String="" )
 		{
 			super( p_sName );
 		}

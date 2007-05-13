@@ -13,7 +13,10 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.bounds {
+package sandy.bounds 
+{
+	import flash.utils.Dictionary;
+	
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.data.Matrix4;
@@ -51,18 +54,19 @@ package sandy.bounds {
 		 * Verry usefull for clipping and so performance !
 		 * 
 		 */	
-		public static function create( p_aPts:Array ):BBox
-		{if(p_aPts.length == 0) return null;
+		public static function create( p_aPts:Dictionary ):BBox
+		{
+			if(p_aPts.length == 0) return null;
+		   
 		    var l:Number = p_aPts.length;
 		    var l_min:Vector = new Vector();
 		    var l_max:Vector = new Vector();
-			l_min.x = l_max.x = p_aPts[0].x;
-			l_min.y = l_max.y = p_aPts[0].y;
-			l_min.z = l_max.z = p_aPts[0].z;
-			while( --l > 1 )
+			l_min.x = Number.MAX_VALUE;l_max.x = Number.MIN_VALUE;
+			l_min.y = Number.MAX_VALUE;l_max.y = Number.MIN_VALUE;
+			l_min.z = Number.MAX_VALUE;l_max.z = Number.MIN_VALUE;
+			
+			for each( var v:Vertex in p_aPts )
 			{
-				var v:Vertex = p_aPts[int(l)];
-				// --
 				if( v.x < l_min.x )		l_min.x = v.x;
 				else if( v.x > l_max.x )	l_max.x = v.x;
 				if( v.y < l_min.y )		l_min.y = v.y;
@@ -152,7 +156,8 @@ package sandy.bounds {
 		    var l_aCorners:Array = aCorners;
 		    var i:int, l:int = 8;
 		    // --
-		    while( i<l ) {
+		    while( i<l ) 
+		    {
 		        aTCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
 		        i++;
 		    }

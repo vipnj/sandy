@@ -21,6 +21,7 @@ package sandy.core.scenegraph
 		public var container:Sprite;
 
 		private var m_aVisiblePoly:Array;
+		
 	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
 	    {
 	        super( p_sName );
@@ -176,14 +177,12 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly = new Array();
-			var l_oToProject:Dictionary = new Dictionary();
+			var l_oToProject:Dictionary = new Dictionary(true);
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
-					m_aVisiblePoly.push( l_oFace );
-					// --
 					if( m_bClipped )
 						l_oFace.clip( l_oFrustum );
 					else
@@ -194,6 +193,8 @@ package sandy.core.scenegraph
 					
 					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
 					if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
+					
+					m_aVisiblePoly.push( l_oFace );
 				}
 			}
 			

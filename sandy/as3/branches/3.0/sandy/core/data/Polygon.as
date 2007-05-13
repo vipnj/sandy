@@ -38,7 +38,9 @@ package sandy.core.data
 	{
 	// _______
 	// STATICS_______________________________________________________	
-		private static var _ID_:Number = 0;
+		private static var _ID_:uint = 0;
+		/** Unique face id */
+		public const id:uint = _ID_++;
 	// ______
 	// PUBLIC________________________________________________________		
 		public var owner:Shape3D;
@@ -59,14 +61,10 @@ package sandy.core.data
 		private var m_oAppearance:Appearance;
 		/** array of ID of uv coordinates in geometry object */
 		private var m_aUVCoords:Array;
-		/** Unique face id */
-		private var id:Number;
 		private var m_bVisible:Boolean;
 		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
 		{
-			id = Polygon._ID_ ++;
-			// --
 			owner = p_oOwner;
 			m_oGeometry = p_geometry;
 			// --
@@ -102,7 +100,7 @@ package sandy.core.data
 			}
 			// -- 
 			p_oFrustum.clipFrustum( cvertices );
-			return cvertices;
+			return cvertices = vertices.concat( cvertices );
 		}
 		
 		public function display( p_mcContainer:Sprite ):void

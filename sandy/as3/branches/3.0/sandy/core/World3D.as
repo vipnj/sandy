@@ -121,8 +121,6 @@ package sandy.core
 				root.update( null, false );
 				root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
 				root.render( camera );
-				// --
-				camera.project();
 				// -- clear the polygon's container and the projection vertices list
 	            camera.renderDisplayList();
 			}

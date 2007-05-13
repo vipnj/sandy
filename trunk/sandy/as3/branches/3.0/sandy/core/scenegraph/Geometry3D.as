@@ -16,6 +16,8 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
+	import flash.utils.Dictionary;
+	
 	import sandy.core.data.Vertex;
 	import sandy.core.data.UVCoord;
 	
@@ -51,16 +53,22 @@ package sandy.core.scenegraph
 	// PUBLIC________________________________________________________	
 		
 		/** Array of vertex */
-		public var aVertex:Array;
+		public var aVertex:Dictionary;
 		/** Array of faces composed from vertices */
-		public var aFacesVertexID:Array;
-		public var aFacesUVCoordsID:Array;
+		public var aFacesVertexID:Dictionary;
+		public var aFacesUVCoordsID:Dictionary;
 		/** Normals */
-		public var aFacesNormals:Array;
-		public var aVertexNormals:Array;
+		public var aFacesNormals:Dictionary;
+		public var aVertexNormals:Dictionary;
 		/** UV Coords for faces */
-		public var aUVCoords:Array;	
+		public var aUVCoords:Dictionary;	
 		
+		private var m_nLastVertexId:int = 0;
+		private var m_nLastNormalId:int = 0;
+		private var m_nLastFaceId:int = 0;
+		private var m_nLastFaceUVId:int = 0;
+		private var m_nLastUVId:int = 0;
+		private var m_nLastVertexNormalId:int = 0;
 	// ___________
 	// CONSTRUCTOR___________________________________________________
 		
@@ -75,12 +83,12 @@ package sandy.core.scenegraph
 		
 		public function init():void
 		{
-			aVertex = new Array();
-			aFacesVertexID = new Array();
-			aFacesNormals = new Array();
-			aFacesUVCoordsID = new Array();
-			aVertexNormals = new Array();
-			aUVCoords = new Array();
+			aVertex = new Dictionary();
+			aFacesVertexID = new Dictionary();
+			aFacesNormals = new Dictionary();
+			aFacesUVCoordsID = new Dictionary();
+			aVertexNormals = new Dictionary();
+			aUVCoords = new Dictionary();
 		}
 		
 		/**
@@ -95,7 +103,10 @@ package sandy.core.scenegraph
 			if( aVertex[p_nVertexID] )
 				return -1;
 			else
-			{ aVertex[p_nVertexID] = new Vertex(p_nX, p_nY, p_nZ); return p_nVertexID; }
+			{ 
+				aVertex[p_nVertexID] = new Vertex(p_nX, p_nY, p_nZ); 
+				return ++m_nLastVertexId - 1;  
+			}
 		}
 		
 		/**
@@ -103,7 +114,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextVertexID():Number
 		{
-			return aVertex.length || 0;
+			return m_nLastVertexId;
 		}	
 	
 		/**
@@ -118,7 +129,10 @@ package sandy.core.scenegraph
 			if( aFacesNormals[p_nNormalID] )
 				return -1;
 			else
-			{ aFacesNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return p_nNormalID; }
+			{ 
+				aFacesNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); 
+				return ++m_nLastNormalId - 1; 
+			}
 		}
 	
 		/**
@@ -126,7 +140,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextFaceNormalID():Number
 		{
-			return aFacesNormals.length || 0;
+			return m_nLastNormalId;
 		}
 			
 		/**
@@ -141,7 +155,10 @@ package sandy.core.scenegraph
 			if( aVertexNormals[p_nNormalID] )
 				return -1;
 			else
-			{ aVertexNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); return p_nNormalID; }
+			{ 
+				aVertexNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); 
+				return ++m_nLastNormalId - 1;  
+			}
 		}
 		
 		/**
@@ -149,7 +166,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextVertexNormalID():Number
 		{
-			return aVertexNormals.length || 0;
+			return m_nLastNormalId;
 		}
 		
 		/**
@@ -167,7 +184,7 @@ package sandy.core.scenegraph
 			{
 				var rest:Array = (arguments[0] is Array)? arguments[0]: arguments.splice(0);
 				aFacesVertexID[p_nFaceID] = rest;
-				return p_nFaceID;
+				return ++m_nLastFaceId - 1; 
 			}
 		}
 	
@@ -176,7 +193,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextFaceID():Number
 		{
-			return aFacesVertexID.length || 0;
+			return m_nLastFaceId;
 		}
 		
 		/**
@@ -194,7 +211,7 @@ package sandy.core.scenegraph
 			{
 				var rest:Array = (arguments[0] is Array)? arguments[0]: arguments.splice(0);
 				aFacesUVCoordsID[p_nFaceID] = rest;
-				return p_nFaceID;
+				return ++m_nLastFaceUVId - 1; 
 			}
 		}
 			
@@ -203,7 +220,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextFaceUVCoordID():Number
 		{
-			return aFacesUVCoordsID.length || 0;
+			return m_nLastFaceUVId;
 		}
 			
 		
@@ -229,7 +246,7 @@ package sandy.core.scenegraph
 			else
 			{
 				aUVCoords[p_nID] = new UVCoord( p_UValue, p_nVValue );
-				return p_nID;
+				return ++m_nLastUVId - 1; 
 			}
 		}
 	
@@ -238,7 +255,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextUVCoordID():Number
 		{
-			return aUVCoords.length || 0;
+			return m_nLastUVId;
 		}
 		
 		/**

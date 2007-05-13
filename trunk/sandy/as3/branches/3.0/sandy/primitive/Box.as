@@ -186,20 +186,20 @@ package sandy.primitive
 				{
 					//l_geometry.createFace( p0, p1, p3 );
 					//l_geometry.addUVCoords( uv0, uv1, uv3 );
-					l_geometry.setFaceVertexIds( l_geometry.aFacesVertexID.length, p0, p1, p3 );
-					l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, uv0, uv1, uv3 );
+					l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), p0, p1, p3 );
+					l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv0, uv1, uv3 );
 					
 					//l_geometry.createFace( p2, p3, p1 );
 					//l_geometry.addUVCoords( uv2, uv3, uv1 );
-					l_geometry.setFaceVertexIds( l_geometry.aFacesVertexID.length, p2, p3, p1 );
-					l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, uv2, uv3, uv1 );
+					l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), p2, p3, p1 );
+					l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv2, uv3, uv1 );
 				}
 				else if( _mode == 'quad' )
 				{
 					//l_geometry.createFace( p0, p1, p2, p3 );
 					//l_geometry.addUVCoords( uv0, uv1, uv2 );
-					l_geometry.setFaceVertexIds( l_geometry.aFacesVertexID.length, p0, p1, p2, p3 );
-					l_geometry.setFaceUVCoordsIds( l_geometry.aFacesUVCoordsID.length, uv0, uv1, uv2 );
+					l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), p0, p1, p2, p3 );
+					l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv0, uv1, uv2 );
 				}
 			}
 			else

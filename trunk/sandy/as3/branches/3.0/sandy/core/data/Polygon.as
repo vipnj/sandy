@@ -117,22 +117,25 @@ package sandy.core.data
 		 */
 		private function __update( p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number ):void
 		{
-			var i:int, l:int;
+			var i:int=0, l:int;
 			// --
-			vertices = new Array( l = p_aVertexID.length );
-			for( i=0; i<l; i++ )
+			vertices = new Array();
+			for each( var o:* in p_aVertexID )
 			{
 				vertices[i] = Vertex( m_oGeometry.aVertex[ p_aVertexID[i] ] );
+				i++;
 			}
 			// --
 			cvertices = vertices;
 			// -- every polygon does not have some texture coordinates
 			if( p_aUVCoordsID )
 			{
-				aUVCoord = new Array( l = p_aUVCoordsID.length );
-				for( i=0; i<l; i++ )
+				aUVCoord = new Array();
+				i = 0;
+				for each( var p:* in p_aVertexID )
 				{
 					aUVCoord[i] = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
+					i++;
 				}
 			}
 			// --

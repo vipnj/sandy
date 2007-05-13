@@ -28,6 +28,7 @@ package sandy.core.scenegraph
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
+	import flash.utils.Dictionary;
 	
 	/**
 	* Camera3D
@@ -50,7 +51,7 @@ package sandy.core.scenegraph
 		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 50, p_nFar:Number = 10000 )
 		{
 			super( null );
-			_viewport = new ViewPort( p_nWidth, p_nHeight );
+			viewport = new ViewPort( p_nWidth, p_nHeight );
 			_nFov = p_nFov;
 			_nFar = p_nFar;
 			_nNear = p_nNear;
@@ -59,7 +60,6 @@ package sandy.core.scenegraph
 			// --
 			setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
 			m_aDisplayList = new Array();
-			m_aVerticesList = new Array();
 			// It's a non visible node
 			visible = false;
 		}
@@ -72,6 +72,7 @@ package sandy.core.scenegraph
 		{
 			_viewport = pVP;
 			_perspectiveChanged = true;
+			m_nOffx = viewport.w2; m_nOffy = viewport.h2;
 		}
 		
 		public function get viewport():ViewPort
@@ -147,28 +148,17 @@ package sandy.core.scenegraph
 		}
 		
 		
-		public function pushVerticesToProject( p_aVertices:Array ):void
+
+			
+		public function project( p_aList:Dictionary ):void
 		{
-			m_aVerticesList = m_aVerticesList.concat( p_aVertices );
-		}
-		
-		public function project():void
-		{
-			const mp11:Number = _mp.n11,mp21:Number = _mp.n21,mp31:Number = _mp.n31,mp41:Number = _mp.n41,
-				mp12:Number = _mp.n12,mp22:Number = _mp.n22,mp32:Number = _mp.n32,mp42:Number = _mp.n42,
-				mp13:Number = _mp.n13,mp23:Number = _mp.n23,mp33:Number = _mp.n33,mp43:Number = _mp.n43,
-				mp14:Number = _mp.n14,mp24:Number = _mp.n24,mp34:Number = _mp.n34,mp44:Number = _mp.n44,				
-				l_nOffx:Number = viewport.w2, l_nOffy:Number = viewport.h2;
-			// --
-			for each( var l_oVertex:Vertex in m_aVerticesList )
+			for each( var l_oVertex:Vertex in p_aList )
 			{
 				var l_nCste:Number = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
-				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
+				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
+				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
 			}	
-			m_aVerticesList = [];
 		}
-			
 		/**
 		* Compile the camera transformations by multiplicating the matrix together.
 		* Be carefull to call isModified method before to save computations. 
@@ -279,7 +269,12 @@ package sandy.core.scenegraph
 			_mp.n33 = Q;
 			_mp.n34 = -Q*zNear;
 			_mp.n43 = 1;
-	
+			// to optimize later
+			mp11 = _mp.n11; mp21 = _mp.n21; mp31 = _mp.n31; mp41 = _mp.n41;
+			mp12 = _mp.n12; mp22 = _mp.n22; mp32 = _mp.n32; mp42 = _mp.n42,
+			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43,
+			mp14 = _mp.n14; mp24 = _mp.n24, mp34 = _mp.n34; mp44 = _mp.n44,				
+			
 			changed = true;	
 		}
 			
@@ -340,6 +335,11 @@ package sandy.core.scenegraph
 		private var _nFov:Number;
 		private var _nFar:Number;
 		private var _nNear:Number;
-		private var m_aVerticesList:Array;
+		
+		private var mp11:Number, mp21:Number,mp31:Number,mp41:Number,
+					mp12:Number,mp22:Number,mp32:Number,mp42:Number,
+					mp13:Number,mp23:Number,mp33:Number,mp43:Number,
+					mp14:Number,mp24:Number,mp34:Number,mp44:Number,				
+					m_nOffx:Number, m_nOffy:Number;
 	}
 }

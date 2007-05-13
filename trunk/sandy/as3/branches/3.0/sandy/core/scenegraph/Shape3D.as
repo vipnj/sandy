@@ -12,6 +12,7 @@ package sandy.core.scenegraph
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	import sandy.core.World3D;
+	import flash.utils.Dictionary;
 
 	public class Shape3D extends ATransformable implements ITransformable
 	{ 
@@ -176,6 +177,7 @@ package sandy.core.scenegraph
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			if( m_bClipped ) l_aPoints = [];
 			m_aVisiblePoly = new Array();
+			var l_oToProject:Dictionary = new Dictionary();
 			// --
 			for each( var l_oFace:Polygon in l_faces )
 			{
@@ -187,6 +189,10 @@ package sandy.core.scenegraph
 						l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
 					else
 				    	l_oFace.cvertices = l_oFace.vertices;		   
+					
+					for each( var l_oV:Vertex in l_oFace.cvertices )
+						l_oToProject[l_oV.id] = l_oV;
+					
 					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
 					if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
 				}
@@ -196,7 +202,7 @@ package sandy.core.scenegraph
 			else 					depth = l_nDepth/m_aVisiblePoly.length;
 			
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.pushVerticesToProject( l_aPoints );
+			p_oCamera.project( l_oToProject );
 			// --
 			p_oCamera.addToDisplayList( this );
 		}

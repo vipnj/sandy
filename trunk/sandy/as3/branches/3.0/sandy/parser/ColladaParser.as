@@ -146,16 +146,8 @@ package sandy.parser
 				
 				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
-				/*l_oOutpGeom.setFaceNormal( 
-					i, 
-					l_aNormalFloats[ l_aVertex[ 0 ] ].x,
-					l_aNormalFloats[ l_aVertex[ 0 ] ].y,
-					l_aNormalFloats[ l_aVertex[ 0 ] ].z
-				); */
 			}
-			
-			//l_oOutpGeom.setFaceVertexIds(
-			
+						
 			return l_oOutpGeom;
 		}
 		

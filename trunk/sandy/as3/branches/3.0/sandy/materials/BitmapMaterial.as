@@ -39,10 +39,8 @@ package sandy.materials
 	 * @version		2.0
 	 * @date 		06.04.2007 
 	 **/
-	
 	public class BitmapMaterial extends Material
 	{
-		// --
 		public var matrix:Matrix;
 		// --
 		public var smooth:Boolean;
@@ -70,8 +68,8 @@ package sandy.materials
 	
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			var l_points:Array = p_oPolygon.cvertices;
-			var l_graphics:Graphics = p_mcContainer.graphics;
+			const l_points:Array = p_oPolygon.cvertices;
+			const l_graphics:Graphics = p_mcContainer.graphics;
 			// --
 			if( l_points.length == 1 )
 			{
@@ -170,7 +168,6 @@ package sandy.materials
 						m = new Matrix( (u1 - u0), (v1 - v0), (u2 - u0), (v2 - v0), u0, v0 );
 						m.invert();
 					}
-					//Logger.LOG("Polygon matrix : "+f+" "+m);
 				}
 				// --
 				m_oPolygonMatrixMap[f] = m;
@@ -183,24 +180,17 @@ package sandy.materials
 		 */
 		private function prepare( f:Polygon ):void
 		{
-			var a:Array = f.vertices;
-			var m:Matrix = m_oPolygonMatrixMap[f];
+			const m:Matrix = m_oPolygonMatrixMap[f],
+				x0: Number = f.vertices[0].sx, y0: Number = f.vertices[0].sy,			
+				a2:Number = f.vertices[1].sx - x0, b2:Number = f.vertices[1].sy - y0, 
+				c2:Number = f.vertices[2].sx - x0, d2:Number = f.vertices[2].sy - y0;
 			// --
-			var x0: Number = a[0].sx, y0: Number = a[0].sy, x1: Number = a[1].sx,
-				y1: Number = a[1].sy, x2: Number = a[2].sx, y2: Number = a[2].sy,
-			// --
-				a1  :Number  = m.a, b1  :Number  = m.b, c1  :Number  = m.c,
-				d1  :Number  = m.d, tx1 :Number = m.tx, ty1 :Number = m.ty,
-			// --
-				a2 :Number = x1 - x0, b2 :Number = y1 - y0, c2 :Number = x2 - x0,
-				d2 :Number = y2 - y0;
-			// --
-			matrix.a = a1*a2 + b1*c2;
-			matrix.b = a1*b2 + b1*d2;
-			matrix.c = c1*a2 + d1*c2;
-			matrix.d = c1*b2 + d1*d2;
-			matrix.tx = tx1*a2 + ty1*c2 + x0;
-			matrix.ty = tx1*b2 + ty1*d2 + y0;
+			matrix.a = m.a*a2 + m.b*c2;
+			matrix.b = m.a*b2 + m.b*d2;
+			matrix.c = m.c*a2 + m.d*c2;
+			matrix.d = m.c*b2 + m.d*d2;
+			matrix.tx = m.tx*a2 + m.ty*c2 + x0;
+			matrix.ty = m.tx*b2 + m.ty*d2 + y0;
 		}
 		
 		/**
@@ -234,5 +224,6 @@ package sandy.materials
 		private var m_oPoint:Point;
 		private var m_oCmf:ColorMatrixFilter;
 		private var _texture:BitmapData;
+
 	}
 }

@@ -28,6 +28,9 @@ package sandy.core.data
 	*/
 	public final class Vertex
 	{
+		private static var ID:uint = 0;
+		public const id:uint = ID ++;
+		
 		public var x:Number;
 		public var y:Number;
 		public var z:Number;

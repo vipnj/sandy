@@ -43,15 +43,15 @@ package sandy.parser
 				var l_oNode : XML = l_oNodes[i];
 				l_oGeometry = new Geometry3D();
 				l_oAppearance = new Appearance( new WireFrameMaterial() );
-				
-				// -- create a new shape object
-				var l_oShape : Shape3D = new Shape3D( l_oNode.@name );
+
+				var l_aGeomArray:Array = l_oNode.instance_geometry.@url.split("#");
+				var l_sGeometryID : String = l_aGeomArray[1];
 				// -- get the vertices
-				l_oGeometry = getGeometry( l_oNode.instance_geometry.@url.split("#")[1] ); 
+				l_oGeometry = getGeometry( l_sGeometryID ); 
 				
 				// -- create the new shape
-				l_oShape = new Shape3D( l_oNode.@name, l_oGeometry, l_oAppearance);
-trace(l_oShape);
+				var l_oShape:Shape3D = new Shape3D( l_oNode.@name, l_oGeometry, l_oAppearance );
+
 				// -- add the shape to the group node
 				m_oGroup.addChild( l_oShape );
 			}
@@ -144,24 +144,8 @@ trace(l_oShape);
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
 				
-				var vertex_a : Vertex = new Vertex(
-					l_aVertexFloats[ l_aVertex[ 0 ] ].x,
-					l_aVertexFloats[ l_aVertex[ 0 ] ].y,
-					l_aVertexFloats[ l_aVertex[ 0 ] ].z
-				);
-				var vertex_b : Vertex = new Vertex( 
-					l_aVertexFloats[ l_aVertex[ 1 ] ].x,
-					l_aVertexFloats[ l_aVertex[ 1 ] ].y,
-					l_aVertexFloats[ l_aVertex[ 1 ] ].z
-				);
-				var vertex_c : Vertex = new Vertex( 
-					l_aVertexFloats[ l_aVertex[ 2 ] ].x,
-					l_aVertexFloats[ l_aVertex[ 2 ] ].y,
-					l_aVertexFloats[ l_aVertex[ 2 ] ].z
-				);
-				
-				l_oOutpGeom.setFaceVertexIds( i, vertex_a, vertex_c, vertex_b );
-				l_oOutpGeom.setFaceUVCoordsIds( i, vertex_a, vertex_c, vertex_b );
+				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
+				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 				/*l_oOutpGeom.setFaceNormal( 
 					i, 
 					l_aNormalFloats[ l_aVertex[ 0 ] ].x,

@@ -93,14 +93,10 @@ package sandy.core.data
 		{
 			var l_oVertex:Vertex;
 			// --
-			cvertices = new Array();
-			for each( l_oVertex in vertices ) 
-			{
-				cvertices.push( l_oVertex.clone2() );
-			}
+			cvertices = vertices.concat();
 			// -- 
 			p_oFrustum.clipFrustum( cvertices );
-			return cvertices = vertices.concat( cvertices );
+			return vertices.concat( cvertices );
 		}
 		
 		public function display( p_mcContainer:Sprite ):void

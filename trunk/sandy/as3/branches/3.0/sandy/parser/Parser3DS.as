@@ -126,7 +126,7 @@ package sandy.parser
 			            	x = data.readFloat();
 			            	y = data.readFloat();
 			            	z = data.readFloat();
-			            	l_oGeometry.setVertex( i, x, -z, y );
+			            	l_oGeometry.setVertex( i, 25*x, -25*z, 25*y );
 			            }
 			            break;
 			        

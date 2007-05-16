@@ -90,11 +90,12 @@ package sandy.bounds
 			if(pPoints.length == 0) return;
 			
 			var p:Array = new Array();
-			var i:int, j:int, l:int = pPoints.length;
+			var i:int, j:int, l:int = 0;
 			
 			for each( var v:Vertex in pPoints )
 			{
 				p.push( v.getVector() );
+				l++;
 			}
 	
 			var p1:Vector = p[0];

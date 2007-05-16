@@ -15,35 +15,32 @@ limitations under the License.
 */
 package sandy.primitive 
 {
+	import sandy.core.data.Polygon;
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.core.data.Polygon;
-
 	import sandy.core.scenegraph.Geometry3D;
-	import sandy.primitive.Primitive3D;
 	import sandy.core.scenegraph.Shape3D;
 
 	/**
-	* VPlane
+	* Plane3D
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
-	* @since		0.1
 	* @version		0.2
 	* @date 		12.01.2006 
 	**/
 
 	public class Plane3D extends Shape3D implements Primitive3D
 	{
+		public static const VERTICAL:String = "vertical";
+		public static const HORIZONTAL:String = "horizontal";
 		//////////////////
 		///PRIVATE VARS///
 		//////////////////	
 		private var _h:Number;
 		private var _lg:Number;
 		private var _q:Number;
-		/*
-		 * Mode with 3 or 4 points per face
-		 */
+		private var m_sType:String;
 		private var _mode : String;
 		
 		/**
@@ -57,14 +54,15 @@ package sandy.primitive
 		* @param 	mode String represent the two available modes to generates the faces.
 		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 		*/
-		public function Plane3D( p_Name:String=null, h:Number = 6, lg:Number = 6, q:Number = 1, mode:String = 'tri')
+		public function Plane3D( p_Name:String=null, h:Number = 6, lg:Number = 6, q:uint = 1, p_sType:String = Plane3D.VERTICAL, mode:String = PrimitiveMode.TRI )
 		{
 			super( p_Name ) ;
 			_h = h;
 			_lg = lg;
-			_q = (q <= 0 || q > 10) ?  1 : Number(q) ;
-			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
-			generate() ;
+			_q = q;
+			_mode = ( mode != PrimitiveMode.TRI && mode != PrimitiveMode.QUAD ) ? PrimitiveMode.TRI : mode;
+			m_sType = ( p_sType != Plane3D.HORIZONTAL && p_sType != Plane3D.VERTICAL ) ? Plane3D.VERTICAL : p_sType;
+			geometry = generate() ;
 		}
 
 		/**
@@ -74,20 +72,16 @@ package sandy.primitive
 		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
 		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
 		*/
-		public function generate():void
+		public function generate( ...arguments ):Geometry3D
 		{
-			
 			var l_geometry:Geometry3D = new Geometry3D();
-			
-					//Creation of the points
-			var uv1:UVCoord, uv2:UVCoord, uv3:UVCoord, uv4:UVCoord;
+			//Creation of the points
+			var uv1:int, uv2:int, uv3:int, uv4:int;
 			var h2:Number = _h/2;
 			var l2:Number = _lg/2;
 			var pasH:Number = _h/_q;
 			var pasL:Number = _lg/_q;
-			var p:Vertex; 
 			var id1:int,id2:int,id3:int,id4:int;
-			var f:IPolygon;
 			var i:Number = -h2;
 			var created:Boolean = false;
 			var n:Vector;
@@ -95,39 +89,48 @@ package sandy.primitive
 			do
 			{
 				var j:Number = -l2;
-				
 				do
 				{
-					p = new Vertex(j,0,i); id1 = l_geometry.addPoint(p);
-					p = new Vertex(j+pasL,0,i); id2 = l_geometry.addPoint(p);
-					p = new Vertex(j+pasL,0,i+pasH); id3 = l_geometry.addPoint(p);
-					p = new Vertex(j,0,i+pasH); id4 = l_geometry.addPoint(p);
+					if( m_sType == Plane3D.HORIZONTAL )
+					{
+						id1 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, 0, i );
+						id2 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, 0, i ); 
+						id3 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, 0, i+pasH );
+						id4 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, 0, i+pasH );
+					}
+					else
+					{
+						id1 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, i, 0 );
+						id2 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, i, 0 ); 
+						id3 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, i+pasH, 0 );
+						id4 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, i+pasH, 0 );
+					}
 					
 					//We add the texture coordinates
-					uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
-					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
-					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
-					uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+					uv1 = l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), (j+l2)/_lg, 1-(i+h2)/_h );
+					uv2 = l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), (j+l2+pasL)/_lg, 1-(i+h2)/_h);
+					uv3 = l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), (j+l2+pasL)/_lg, 1-(i+h2+pasH)/_h);
+					uv4 = l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), (j+l2)/_lg, 1-(i+h2+pasH)/_h);
 					
 					//Face creation
-					if( _mode == 'tri' )
+					if( _mode == PrimitiveMode.TRI )
 					{
-						l_geometry.createFaceByIds(id1, id2, id4 );
-						l_geometry.addUVCoords( uv1, uv2, uv4 );
+						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), id1, id2, id4 );
+						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv1, uv2, uv4 );
 						
-						l_geometry.createFaceByIds(id2, id3, id4 );
-						l_geometry.addUVCoords( uv2, uv3, uv4 );
+						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), id2, id3, id4 );
+						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv2, uv3, uv4 );
 					}
-					else if( _mode == 'quad' )
+					else if( _mode == PrimitiveMode.QUAD )
 					{
-						l_geometry.createFaceByIds(id1, id2, id3, id4 );
-						l_geometry.addUVCoords( uv1, uv2, uv3 );
+						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), id1, id2, id3, id4 );
+						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv1, uv2, uv3 );
 					}
 				} while( (j += pasL) < (l2-1) );
 			} while( (i += pasH) < (h2-1) );
 			// Can't understand why I must compute -1 with 3 in quality to have the correct value!
 			
-			setGeometry(l_geometry);
+			return (l_geometry);
 		}
 	}
 

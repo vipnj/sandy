@@ -17,32 +17,15 @@ package sandy.primitive
 {
 	/**
 	* Primitive3D
-	* 
 	* <p>This is only an interface, to be sure all primitives Object have implements needed methods</p>
-	*  
 	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.2
-	* @date 		12.01.2006 
+	* @version		3.0
+	* @date 		10/05/2007 
 	**/
 	import sandy.core.scenegraph.Geometry3D;
 	
 	public interface Primitive3D
 	{
-		/**
-		* generate
-		* 
-		* <p>generate all is needed to construct the Object3D : </p>
-		* <ul>
-		* 	<li>{@link Vertex}</li>
-		* 	<li>{@link UVCoords}</li>
-		* 	<li>{@link TriFace3D}</li>
-		* 	<li>{@link NFace3D} not implemented yet</li>
-		* </ul>
-		* <p>It can construct dynamically the object, taking care of your preferences given in arguments. <br/>
-		*    Note in Sandy 0.1 all faces have only three points.
-		*    This will change in the future version, 
-		*    and give to you the possibility to choose n points per faces</p> 
-		*/
-		function generate(... arguments):Geometry3D ;
+		function generate(... arguments):Geometry3D;
 	}
 }

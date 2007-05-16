@@ -177,24 +177,26 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly = new Array();
-			var l_oToProject:Dictionary = new Dictionary(true);
+			var l_aTmp:Array = new Array();
+			var l_oToProject:Dictionary = new Dictionary();
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
 					if( m_bClipped )
-						l_oFace.clip( l_oFrustum );
+						l_aTmp = l_oFace.clip( l_oFrustum );
 					else
-				    	l_oFace.cvertices = l_oFace.vertices;		   
-					
-					for each( var l_oV:Vertex in l_oFace.cvertices )
-						l_oToProject[l_oV.id] = l_oV;
-					
-					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-					if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
-					
-					m_aVisiblePoly.push( l_oFace );
+				    	l_aTmp = l_oFace.cvertices = l_oFace.vertices;		   
+										
+					if( l_oFace.cvertices.length )
+					{
+						for each( var l_oV:Vertex in l_aTmp )
+							l_oToProject[l_oV] = l_oV;
+						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
+						if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
+						m_aVisiblePoly.push( l_oFace );
+					}
 				}
 			}
 			

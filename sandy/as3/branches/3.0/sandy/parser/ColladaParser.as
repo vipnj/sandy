@@ -3,20 +3,32 @@ package sandy.parser
 	import flash.events.Event;
 	import flash.xml.XMLNode;
 	
-	import sandy.core.scenegraph.Geometry3D;
-	import sandy.core.scenegraph.Shape3D;
-	import sandy.materials.Appearance;
-	import sandy.materials.WireFrameMaterial;
+	import sandy.core.data.Matrix4;
+	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
+	import sandy.core.scenegraph.Geometry3D;
+	import sandy.core.scenegraph.Node;
+	import sandy.core.scenegraph.Shape3D;
+	import sandy.core.scenegraph.TransformGroup;
+	import sandy.core.transform.Transform3D;
+	import sandy.core.transform.TransformType;
+	import sandy.materials.Appearance;
+	import sandy.materials.ColorMaterial;
+	import sandy.materials.LineAttributes;
+	import sandy.materials.WireFrameMaterial;
+	import sandy.math.Matrix4Math;
 	
 	public class ColladaParser extends AParser implements IParser
 	{
 		private var m_oCollada : XML;
-		private var m_bYUp : Boolean; 
+		private var m_bYUp : Boolean;
+		private var m_oStandardAppearance : Appearance;
 		
 		public function ColladaParser( p_sUrl:String )
 		{
 			super( p_sUrl );
+			
+			m_oStandardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 		}
 		
 		protected override function parseData( e:Event ) : void
@@ -35,31 +47,93 @@ package sandy.parser
 			// -- local variables
 			var l_oNodes : XMLList = p_oScene.node;
 			var l_nNodeLen : int = l_oNodes.length();
-			var l_oGeometry : Geometry3D;
-			var l_oAppearance : Appearance;
 
 			for( var i:int = 0; i < l_nNodeLen; i++ )
 			{
-				var l_oNode : XML = l_oNodes[i];
-				l_oGeometry = new Geometry3D();
-				l_oAppearance = new Appearance( new WireFrameMaterial() );
-
-				var l_aGeomArray:Array = l_oNode.instance_geometry.@url.split("#");
-				var l_sGeometryID : String = l_aGeomArray[1];
-				// -- get the vertices
-				l_oGeometry = getGeometry( l_sGeometryID ); 
-				
-				// -- create the new shape
-				var l_oShape:Shape3D = new Shape3D( l_oNode.@name, l_oGeometry, l_oAppearance );
-
+				var l_oNode : Node = parseNode( l_oNodes[i] );
 				// -- add the shape to the group node
-				m_oGroup.addChild( l_oShape );
+				if( l_oNode != null )
+					m_oGroup.addChild( l_oNode );
 			}
 
 			// -- Parsing is finished
 			var l_eOnInit : ParserEvent = new ParserEvent( ParserEvent.onInitEVENT );
 			l_eOnInit.group = m_oGroup;
 			dispatchEvent( l_eOnInit );
+		}
+		
+		private function parseNode( p_oNode : XML ) : Node
+		{
+			// -- local variables
+			var l_oGeometry : Geometry3D;
+			var l_oAppearance : Appearance;
+
+			if( p_oNode.child( "instance_geometry" ).length() != 0 )
+			{
+				var l_oMatrix : Matrix4 = Matrix4.createIdentity();
+				var l_aGeomArray:Array;
+				var l_sGeometryID : String;
+				var l_oShape:Shape3D;
+				var l_oNodes : XMLList;
+				var l_nNodeLen : int;
+				var l_oAppearence : Appearance;
+				var l_oTransformGroup : TransformGroup;
+				var l_oScale : Transform3D;
+				
+				// -- scale
+				if( p_oNode.scale.length() > 0 ) {
+					l_oMatrix = Matrix4Math.multiply( 
+						l_oMatrix, 
+						Matrix4Math.scaleVector( stringToVector( p_oNode.scale ) )
+					);
+				}
+				// -- translation
+				if( p_oNode.translate.length() > 0 ) {
+					l_oMatrix = Matrix4Math.multiply( 
+						l_oMatrix, 
+						Matrix4Math.translationVector( stringToVector( p_oNode.translate ) )
+					);
+				}
+				
+				l_oGeometry = new Geometry3D();
+				l_oAppearance = new Appearance( new WireFrameMaterial() );
+				l_aGeomArray = p_oNode.instance_geometry.@url.split( "#" );
+				l_sGeometryID = l_aGeomArray[ 1 ];
+				// -- get the vertices
+				l_oGeometry = getGeometry( l_sGeometryID ); 
+				
+				// -- create the new shape
+				l_oShape = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
+
+				// -- loop through subnodes
+				l_oNodes = p_oNode.node;
+				l_nNodeLen = l_oNodes.length();
+	
+				for( var i:int = 0; i < l_nNodeLen; i++ )
+				{
+					var l_oNode : Node = parseNode( l_oNodes[i] );
+					// -- add the shape to the group node
+					if( l_oNode != null )
+						l_oShape.addChild( l_oNode );
+				}
+
+				l_oShape.appearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
+
+				// -- doesn't work yet
+				l_oTransformGroup = new TransformGroup( "transform" );
+				l_oScale = new Transform3D();
+				l_oScale.matrix = l_oMatrix;
+				l_oTransformGroup.transform.type = TransformType.SCALE;
+				l_oTransformGroup.transform = l_oScale;
+				
+				l_oTransformGroup.changed = true;
+				l_oTransformGroup.updateTransform();
+				l_oTransformGroup.addChild( l_oShape );
+
+				return l_oTransformGroup;
+			} else {
+				return null;
+			}
 		}
 		
 		private function getGeometry( p_sGeometryID : String ) :  Geometry3D
@@ -94,21 +168,24 @@ package sandy.parser
 				);
 			} 
 			
-			// -- get uvcoords float array 		
-			var l_sUVCoordsID : String = l_oTriangles.input.( @semantic == "TEXCOORD" ).@source.split("#")[1];
-			var l_aUVCoordsFloats : Array = getFloatArray( l_sUVCoordsID, l_oGeometry );
-			var l_nUVCoordsFloats : int = l_aUVCoordsFloats.length;
-			
-			// -- set uvcoords
-			for( i = 0; i < l_nUVCoordsFloats; i++ )
+			if( l_oTriangles.input.( @semantic == "TEXCOORD" ).length() > 0 )
 			{
-				var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
+				// -- get uvcoords float array 		
+				var l_sUVCoordsID : String = l_oTriangles.input.( @semantic == "TEXCOORD" ).@source.split("#")[1];
+				var l_aUVCoordsFloats : Array = getFloatArray( l_sUVCoordsID, l_oGeometry );
+				var l_nUVCoordsFloats : int = l_aUVCoordsFloats.length;
 				
-				l_oOutpGeom.setUVCoords( 
-					i, 
-					l_oUVCoord.x, 
-					1 - l_oUVCoord.y
-				);		
+				// -- set uvcoords
+				for( i = 0; i < l_nUVCoordsFloats; i++ )
+				{
+					var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
+					
+					l_oOutpGeom.setUVCoords( 
+						i, 
+						l_oUVCoord.x, 
+						1 - l_oUVCoord.y
+					);		
+				}
 			}
 			/*
 			// -- get normals float array 		
@@ -143,7 +220,7 @@ package sandy.parser
 			{
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
-				
+
 				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 			}
@@ -210,6 +287,17 @@ package sandy.parser
 			}
 			
 			return l_aValues;
+		}
+		
+		private function stringToVector( p_sValues : String ) : Vector
+		{
+			var l_aValues : Array = p_sValues.split(" ");
+			var l_nValues : int = l_aValues.length;
+			
+			if( l_nValues != 3 )
+				throw new Error( "A vector must have 3 values" );
+			
+			return new Vector( l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ] );
 		}
 	}
 }

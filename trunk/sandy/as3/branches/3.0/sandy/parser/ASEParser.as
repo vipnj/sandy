@@ -21,16 +21,16 @@ package sandy.parser
 
 	internal final class ASEParser extends AParser implements IParser
 	{
-		public function ASEParser( p_sUrl:String )
+		public function ASEParser( p_sUrl : * )
 		{
 			super( p_sUrl );
 		}
 			
-		protected override function parseData( e:Event ):void
+		protected override function parseData( e:Event=null ):void
 		{
 			super.parseData( e );
 			// --
-			var lines:Array = unescapeMultiByte( (m_oFileLoader.data as String ) ).split( '\r\n' );
+			var lines:Array = unescapeMultiByte( String( m_oFile ) ).split( '\r\n' );
 			var lineLength:uint = lines.length;
 			var id:uint;
 			// -- local vars

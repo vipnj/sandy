@@ -26,6 +26,7 @@ package sandy.core.data
 	import sandy.materials.Appearance;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
+	import sandy.core.scenegraph.IDisplayable;
 	
 	/**
 	* Polygon
@@ -34,7 +35,7 @@ package sandy.core.data
 	* @version		1.0
 	* @date 		12.01.2006 
 	**/
-	public final class Polygon
+	public final class Polygon implements IDisplayable
 	{
 	// _______
 	// STATICS_______________________________________________________	
@@ -44,7 +45,6 @@ package sandy.core.data
 	// ______
 	// PUBLIC________________________________________________________		
 		public var owner:Shape3D;
-		public var depth:Number;
 		public var cvertices:Array;
 		public var vertices:Array;
 		public var normal:Vertex;
@@ -63,15 +63,21 @@ package sandy.core.data
 		private var m_aUVCoords:Array;
 		private var m_bVisible:Boolean;
 		
+		protected var m_nDepth:Number;
+		protected var m_oOriginalContainer:Sprite;
+		protected var m_oContainer:Sprite;
+		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
 		{
 			owner = p_oOwner;
 			m_oGeometry = p_geometry;
 			// --
 			backfaceCulling = 1;
-			depth = 0;
+			m_nDepth = 0;
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
+			m_oOriginalContainer = new Sprite();
+			m_oContainer = m_oOriginalContainer;
 		}
 	
 		/**
@@ -98,12 +104,7 @@ package sandy.core.data
 			p_oFrustum.clipFrustum( cvertices );
 			return vertices.concat( cvertices );
 		}
-		
-		public function display( p_mcContainer:Sprite ):void
-		{
-			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, p_mcContainer );
-			else			m_oAppearance.backMaterial.renderPolygon( this, p_mcContainer );
-		}
+	
 		
 		/**
 		 * Calling this method make the polygon gets its vertice and normals by reference instead of accessing them by their ID.
@@ -150,18 +151,36 @@ package sandy.core.data
 		 */
 		public function getZAverage():Number
 		{
-			// -- We normalize the sum and return it
-			var v:Vertex;
-			for each ( v in cvertices )
+			for each ( var v:Vertex in cvertices )
 			{
-				depth += v.wz;
+				m_nDepth += v.wz;
 			}
-			// --
-			depth /= cvertices.length;
-			return depth;
+			// -- We normalize the sum and return it
+			m_nDepth /= cvertices.length;
+			return m_nDepth;
 		}
 	
+		public function display():void
+		{
+			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, m_oContainer );
+			else			m_oAppearance.backMaterial.renderPolygon( this, m_oContainer );
+		}
 		
+		public function set container( p_oContainer:Sprite ):void
+		{ 
+			if( p_oContainer == null ) m_oContainer = m_oOriginalContainer;
+			else	m_oContainer = p_oContainer; 
+		}
+		
+		public function get container():Sprite
+		{return m_oContainer;}
+		
+		public function get depth():Number
+		{return m_nDepth;}
+		
+		public function set depth( p_nDepth:Number ):void
+		{ m_nDepth = p_nDepth; }
+			
 		/**
 		 * Get a String representation of the {@code NFace3D}. 
 		 * @return	A String representing the {@code NFace3D}.

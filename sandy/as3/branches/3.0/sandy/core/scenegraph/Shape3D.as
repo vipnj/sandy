@@ -14,29 +14,33 @@ package sandy.core.scenegraph
 	import sandy.core.World3D;
 	import flash.utils.Dictionary;
 
-	public class Shape3D extends ATransformable implements ITransformable
+	public class Shape3D extends ATransformable implements ITransformable, IDisplayable
 	{ 
+		public static const SINGLE_CONTAINER:Boolean = true;
 		public var aPolygons:Dictionary;
-		public var depth:Number;
-		public var container:Sprite;
-
+		
+		protected var m_bUseSingleContainer:Boolean;
+		protected var m_nDepth:Number;
+		protected var m_oContainer:Sprite;
+		//protected va
 		private var m_aVisiblePoly:Array;
 		
-	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null )
+	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
 	    {
 	        super( p_sName );
-	    	// Add this graphical object to the World display list
-			container = new Sprite();
-			//scontainer.name = this.name;
-			World3D.getInstance().container.addChild( container );
+	    	// -- Add this graphical object to the World display list
+			m_oContainer = new Sprite();
+			// -- HACK to make sure that the correct container system will be applied
+			m_bUseSingleContainer = !p_bUseSingleContainer;
+			useSingleContainer = p_bUseSingleContainer;
 			// --
 	        geometry = p_geometry;
-	        //
+	        // --
 	        m_bBackFaceCulling = true;
 			m_bEnableForcedDepth = false;
 			m_bEnableClipping = false;
 			m_bClipped = false;
-			depth = m_nForcedDepth = 0;
+			m_nDepth = m_nForcedDepth = 0;
 			m_bEv = false;
 			// --
 			if( p_oAppearance ) appearance = p_oAppearance;
@@ -44,30 +48,36 @@ package sandy.core.scenegraph
 			updateBoundingVolumes();
 	    }
 	    
-	    private function __destroy():void
+	    public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
 	    {
-	    	if( aPolygons != null && aPolygons.length > 0 )
+	    	var l_oFace:Polygon;
+	    	// --
+	    	if( p_bUseSingleContainer == m_bUseSingleContainer ) return;
+	    	// --
+	    	if( p_bUseSingleContainer )
 	    	{
-	    		var i:int, l:int = aPolygons.length;
-	    		while( i<l )
-		    	{
-		    		Polygon( aPolygons[int(i)] ).destroy();
-		    		i++;
-		    	}
+	    		for each( l_oFace in aPolygons )
+	    		{
+					World3D.getInstance().container.removeChild( l_oFace.container );
+					l_oFace.container = m_oContainer;
+	    		}
+	    		// --
+	    		World3D.getInstance().container.addChild( m_oContainer );
 	    	}
-	    }
-	    
-	    private function __generate( p_oGeometry:Geometry3D ):void
-	    {
-	    	aPolygons = new Dictionary();//new Array( l = p_oGeometry.aFacesVertexID.length );
-	    	var i:int = 0;
-	    	//
-	    	for each ( var o:* in p_oGeometry.aFacesVertexID )
+	    	else
 	    	{
-	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
-	    		i++;
+	    		World3D.getInstance().container.removeChild( m_oContainer );
+	    		// --
+	    		for each( l_oFace in aPolygons )
+	    		{
+					// we reset the polygon container to the original one, and add it to the world container
+					l_oFace.container = null;
+					World3D.getInstance().container.addChild( l_oFace.container );
+	    		}
 	    	}
+	    	m_bUseSingleContainer = p_bUseSingleContainer;
 	    }
+
 	
 	            
 	    public function updateBoundingVolumes():void
@@ -184,43 +194,59 @@ package sandy.core.scenegraph
 			{
 			    if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
+					// we manage the clipping
 					if( m_bClipped )
 						l_aTmp = l_oFace.clip( l_oFrustum );
 					else
 				    	l_aTmp = l_oFace.cvertices = l_oFace.vertices;		   
-										
+					
+					// If the face is on screen, we manage some computations for a good display					
 					if( l_oFace.cvertices.length )
 					{
+						// we add the vertices to the projection list
 						for each( var l_oV:Vertex in l_aTmp )
 							l_oToProject[l_oV] = l_oV;
+						
 						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
 						if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
-						m_aVisiblePoly.push( l_oFace );
+						else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
+						
+						// -- we manage the display list depending on the mode choosen
+						if( m_bUseSingleContainer )
+							m_aVisiblePoly.push( l_oFace );
+						else
+							p_oCamera.addToDisplayList( l_oFace );
 					}
 				}
 			}
-			
-			if(m_bEnableForcedDepth)depth = m_nForcedDepth;
-			else 					depth = l_nDepth/m_aVisiblePoly.length;
-			
-			// -- We push the vertex to project onto the viewport.
-			p_oCamera.project( l_oToProject );
 			// --
-			p_oCamera.addToDisplayList( this );
+			if( m_bUseSingleContainer )
+			{
+				if(m_bEnableForcedDepth)m_nDepth = m_nForcedDepth;
+				else 					m_nDepth = l_nDepth/m_aVisiblePoly.length;
+				p_oCamera.addToDisplayList( this );
+			}
+			// -- We push the vertex to project onto the viewport.
+			p_oCamera.project( l_oToProject );			
 		}
 	
+		// Called only if the useSignelContainer property is enabled!
 		public function display():void
 		{
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-		    container.graphics.clear();
-		    // --
 			for each( var l_oPoly:Polygon in m_aVisiblePoly )
 			{
-				l_oPoly.display( container );
+				l_oPoly.display();
 			}
 		}
-	
+		
+		public function get container():Sprite
+		{return m_oContainer;}
+		
+		public function get depth():Number
+		{return m_nDepth;}
+		
 		public function set appearance( p_oApp:Appearance ):void
 		{
 			// Now we register to the update event
@@ -237,9 +263,7 @@ package sandy.core.scenegraph
 		
 	
 		public function get appearance():Appearance 
-		{
-			return m_oAppearance;
-		}
+		{return m_oAppearance;}
 		       
 		
 		public function set geometry( p_geometry:Geometry3D ):void
@@ -249,24 +273,18 @@ package sandy.core.scenegraph
 			m_oGeometry = p_geometry;
 			updateBoundingVolumes();
 			// --
-			__destroy();
-			__generate( m_oGeometry );
+			__destroyPolygons();
+			__generatePolygons( m_oGeometry );
 		}
 		
 		public function get geometry():Geometry3D
-		{
-			return m_oGeometry;
-		}
+		{return m_oGeometry;}
 		
 		public function set enableClipping( b:Boolean ):void
-		{
-			m_bEnableClipping = b;
-		}
+		{m_bEnableClipping = b;}
 	
 		public function get enableClipping():Boolean
-		{
-			return m_bEnableClipping;
-		}
+		{return m_bEnableClipping;}
 			
 		/**
 		 * Enable (true) or disable (false) the object forced depth.
@@ -286,9 +304,7 @@ package sandy.core.scenegraph
 		 * Returns a boolean value specifying if the depth is forced or not
 		 */
 		public function	get enableForcedDepth():Boolean
-		{
-			return m_bEnableForcedDepth;
-		}
+		{return m_bEnableForcedDepth;}
 		
 		/**
 		 * Set a forced depth for this object.
@@ -296,20 +312,14 @@ package sandy.core.scenegraph
 		 * The higher the depth is, the sooner the more far the object will be represented.
 		 */
 		public function set forcedDepth( pDepth:Number ):void
-		{
-			m_nForcedDepth = pDepth;
-			changed = true;
-		}
+		{m_nForcedDepth = pDepth; changed = true;}
 		
 		/**
 		 * Allows you to retrieve the forced depth value.
 		 * The default value is 0.
 		 */
 		public function get forcedDepth():Number
-		{
-			return m_nForcedDepth;
-		}
-	
+		{return m_nForcedDepth;}
 	
 		/**
 		 * If set to {@code false}, all Face3D of the Object3D will be draw.
@@ -325,9 +335,7 @@ package sandy.core.scenegraph
 			}
 		}
 		public function get enableBackFaceCulling():Boolean
-		{
-			return m_bBackFaceCulling;
-		}
+		{return m_bBackFaceCulling;}
 			
 						
 		/**
@@ -350,6 +358,7 @@ package sandy.core.scenegraph
 		*/
 		public function set enableEvents( b:Boolean ):void
 		{
+			// To use only when use Single container is disabled _
 			if( b )
 			{
 				if( !m_bEv )
@@ -412,24 +421,36 @@ package sandy.core.scenegraph
 			// --
 			super.destroy();
 		}
+
 	
-		//////////////////////
-		/// PRIVATE METHODS //  
-		//////////////////////
-		private function _onPress(e:MouseEvent):void
-		{
-			//dispatchEvent(e);
-		}
-		
-		private function _onRollOver(e:MouseEvent):void
-		{
-			//dispatchEvent(e);
-		}
-		
-		private function _onRollOut(e:MouseEvent):void
-		{
-			//dispatchEvent(e);
-		}
+	    private function __destroyPolygons():void
+	    {
+	    	if( aPolygons != null && aPolygons.length > 0 )
+	    	{
+	    		var i:int, l:int = aPolygons.length;
+	    		while( i<l )
+		    	{
+		    		Polygon( aPolygons[int(i)] ).destroy();
+		    		if( m_bUseSingleContainer == false ) World3D.getInstance().container.removeChild( aPolygons[i].container );
+		    		i++;
+		    	}
+	    	}
+	    }    
+	    private function __generatePolygons( p_oGeometry:Geometry3D ):void
+	    {
+	    	aPolygons = new Dictionary();
+	    	var i:int = 0;
+	    	//
+	    	for each ( var o:* in p_oGeometry.aFacesVertexID )
+	    	{
+	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+	    		// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
+	    		if( m_bUseSingleContainer == false ) World3D.getInstance().container.addChild( aPolygons[i].container );
+	    		else aPolygons[i].container = m_oContainer;
+	    		i++;
+	    	}
+	    }
+	    	
 	
 	// ______________
 	// [PRIVATE] DATA________________________________________________				

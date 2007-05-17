@@ -132,24 +132,22 @@ package sandy.core.scenegraph
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-			for each( var l_oShape:Shape3D in m_aDisplayList )
+			for each( var l_oShape:IDisplayable in m_aDisplayList )
 			{
-				l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
-				//l_mcContainer.addChild( l_oShape.container );
+				//l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
+				l_mcContainer.addChild( l_oShape.container );
+				l_oShape.container.graphics.clear();
 				l_oShape.display();
 			}
 			// --
 			m_aDisplayList = [];
 		}
 			
-		public function addToDisplayList( p_oShape:Shape3D ):void
+		public function addToDisplayList( p_oShape:IDisplayable ):void
 		{
 			m_aDisplayList.push( p_oShape );
 		}
-		
-		
-
-			
+	
 		public function project( p_aList:Dictionary ):void
 		{
 			for each( var l_oVertex:Vertex in p_aList )

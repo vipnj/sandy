@@ -117,7 +117,7 @@ package sandy.materials
 		//////////////////	
 		protected var m_bModified:Boolean;
 		private var _filters:Array;
-		private var _useLight : Boolean;
+		protected var _useLight : Boolean;
 		private var _id:Number;
 		protected var m_nType:MaterialType;
 		private static var _ID_:Number = 0;

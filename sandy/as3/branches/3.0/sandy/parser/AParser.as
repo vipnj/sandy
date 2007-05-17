@@ -15,17 +15,24 @@ package sandy.parser
 		protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.onProgressEVENT );
 		protected const m_oLoader:URLLoader = new URLLoader();
 		protected var m_oGroup:Group;
+		protected var m_oFile:Object;
 		protected var m_oFileLoader:URLLoader
 		private var m_sUrl:String;
 		protected var m_sDataFormat:String;
 		
-		public function AParser( p_sUrl:String )
+		public function AParser( p_sFile:* )
 		{ 
-			m_sUrl = p_sUrl;
-			m_oFileLoader = new URLLoader();
 			m_oGroup = new Group('parser');
 			
-			m_sDataFormat = URLLoaderDataFormat.TEXT;
+			if( p_sFile is String )
+			{
+				m_sUrl = p_sFile;
+				m_oFileLoader = new URLLoader();
+			
+				m_sDataFormat = URLLoaderDataFormat.TEXT;
+			} else {
+				m_oFile = p_sFile;
+			}
 		}
 		
 		/**
@@ -37,9 +44,13 @@ package sandy.parser
 			dispatchEvent( new ParserEvent( ParserEvent.onFailEVENT ) );
 		}
 		
-		protected function parseData( e:Event ):void
+		protected function parseData( e:Event=null ):void
 		{
-			m_oFileLoader = URLLoader( e.target );
+			if( e != null )
+			{
+				m_oFileLoader = URLLoader( e.target );
+				m_oFile = m_oFileLoader.data;
+			}
 		}
 		
 	    /**
@@ -51,14 +62,19 @@ package sandy.parser
 	     */
 	    public function parse():void
 		{
-			// Construction d'un objet URLRequest qui encapsule le chemin d'acc√É¬®s
-			var urlRequest:URLRequest = new URLRequest( m_sUrl );
-			// Ecoute de l'evennement COMPLETE
-			m_oFileLoader.addEventListener( Event.COMPLETE, parseData );
-			m_oFileLoader.addEventListener( IOErrorEvent.IO_ERROR , _io_error );
-			// Lancer le chargement
-			m_oFileLoader.dataFormat = m_sDataFormat;
-			m_oFileLoader.load(urlRequest);
+			if( m_sUrl is String )
+			{
+				// Construction d'un objet URLRequest qui encapsule le chemin d'acc√É¬®s
+				var urlRequest:URLRequest = new URLRequest( m_sUrl );
+				// Ecoute de l'evennement COMPLETE
+				m_oFileLoader.addEventListener( Event.COMPLETE, parseData );
+				m_oFileLoader.addEventListener( IOErrorEvent.IO_ERROR , _io_error );
+				// Lancer le chargement
+				m_oFileLoader.dataFormat = m_sDataFormat;
+				m_oFileLoader.load(urlRequest);
+			} else {
+				parseData();
+			}			
 		}
 	}
 }

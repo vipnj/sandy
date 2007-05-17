@@ -53,7 +53,7 @@ package sandy.parser
 	     * @param scene  Array 	All 3D objects will be added here
 	     * @param url    String	The url of the .3DS file used to initialized the Object3D
 	     */
-	   protected override function parseData( e:Event ):void
+	   protected override function parseData( e:Event=null ):void
 		{
 			super.parseData( e );
 			// --			

@@ -24,21 +24,21 @@ package sandy.parser
 		private var m_bYUp : Boolean;
 		private var m_oStandardAppearance : Appearance;
 		
-		public function ColladaParser( p_sUrl:String )
+		public function ColladaParser( p_oFile : * )
 		{
-			super( p_sUrl );
-			
+			super( p_oFile );
+
 			m_oStandardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 		}
 		
-		protected override function parseData( e:Event ) : void
+		protected override function parseData( e:Event=null ) : void
 		{
 			super.parseData( e );
 			
 			// -- read the XML
-			m_oCollada = new XML( m_oFileLoader.data );
+			m_oCollada = XML( m_oFile );
+
 			default xml namespace = m_oCollada.namespace();
-			
 			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
 		}
 		
@@ -96,7 +96,7 @@ package sandy.parser
 				}
 				
 				l_oGeometry = new Geometry3D();
-				l_oAppearance = new Appearance( new WireFrameMaterial() );
+				l_oAppearance = m_oStandardAppearance;//getAppearance( p_oNode );
 				l_aGeomArray = p_oNode.instance_geometry.@url.split( "#" );
 				l_sGeometryID = l_aGeomArray[ 1 ];
 				// -- get the vertices
@@ -298,6 +298,22 @@ package sandy.parser
 				throw new Error( "A vector must have 3 values" );
 			
 			return new Vector( l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ] );
+		}
+		
+		private function getAppearance( p_oNode : XML ) : Appearance
+		{
+			// -- local variables
+			var l_sSymbol : String;
+			var l_sTarget : String;
+			var l_oMaterials : Object;
+			
+			// -- Get this node's instance materials
+			for each( var l_oInstMat : XML in p_oNode..instance_material )
+			{
+				l_oMaterials[ l_oInstMat.@symbol ] = l_oInstMat.@target.split( "#" )[1];
+			}
+			
+			return m_oStandardAppearance;
 		}
 	}
 }

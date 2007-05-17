@@ -11,24 +11,24 @@ package sandy.parser
 		public static const MAX_3DS:String = "3DS";
 		public static const COLLADA:String = "DAE";
 		
-		public static function create( p_sFileName:String, p_sParserType:String=null ):IParser
+		public static function create( p_sFile:*, p_sParserType:String=null ):IParser
 		{
 			var l_sExt:String,l_iParser:IParser = null;
-			if( p_sParserType == null )  l_sExt = (p_sFileName.split('.')).reverse()[0];
+			if( p_sFile is String && p_sParserType == null )  l_sExt = (p_sFile.split('.')).reverse()[0];
 			else l_sExt = p_sParserType
 			// --
 			switch( l_sExt.toUpperCase() )
 			{
 				case "ASE":
-					l_iParser = new ASEParser( p_sFileName );
+					l_iParser = new ASEParser( p_sFile );
 					break;
 				case "OBJ":
 					break;
 				case "DAE":
-					l_iParser = new ColladaParser( p_sFileName );
+					l_iParser = new ColladaParser( p_sFile );
 					break;
 				case "3DS":
-					l_iParser = new Parser3DS( p_sFileName );
+					l_iParser = new Parser3DS( p_sFile );
 					break;
 				default:
 					break;

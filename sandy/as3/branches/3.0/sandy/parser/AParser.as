@@ -19,18 +19,20 @@ package sandy.parser
 		protected var m_oFileLoader:URLLoader
 		private var m_sUrl:String;
 		protected var m_sDataFormat:String;
+		protected var m_nScale:Number;
 		
-		public function AParser( p_sFile:* )
+		public function AParser( p_sFile:*, p_nScale:Number )
 		{ 
 			m_oGroup = new Group('parser');
-			
+			m_nScale = p_nScale;
 			if( p_sFile is String )
 			{
 				m_sUrl = p_sFile;
 				m_oFileLoader = new URLLoader();
-			
 				m_sDataFormat = URLLoaderDataFormat.TEXT;
-			} else {
+			} 
+			else 
+			{
 				m_oFile = p_sFile;
 			}
 		}
@@ -48,9 +50,9 @@ package sandy.parser
 		{
 			if( e != null )
 			{
-				m_oFileLoader = URLLoader( e.target );
+			m_oFileLoader = URLLoader( e.target );
 				m_oFile = m_oFileLoader.data;
-			}
+		}
 		}
 		
 	    /**
@@ -64,17 +66,17 @@ package sandy.parser
 		{
 			if( m_sUrl is String )
 			{
-				// Construction d'un objet URLRequest qui encapsule le chemin d'acc√É¬®s
-				var urlRequest:URLRequest = new URLRequest( m_sUrl );
-				// Ecoute de l'evennement COMPLETE
-				m_oFileLoader.addEventListener( Event.COMPLETE, parseData );
-				m_oFileLoader.addEventListener( IOErrorEvent.IO_ERROR , _io_error );
-				// Lancer le chargement
-				m_oFileLoader.dataFormat = m_sDataFormat;
-				m_oFileLoader.load(urlRequest);
+			// Construction d'un objet URLRequest qui encapsule le chemin d'acc√É¬®s
+			var urlRequest:URLRequest = new URLRequest( m_sUrl );
+			// Ecoute de l'evennement COMPLETE
+			m_oFileLoader.addEventListener( Event.COMPLETE, parseData );
+			m_oFileLoader.addEventListener( IOErrorEvent.IO_ERROR , _io_error );
+			// Lancer le chargement
+			m_oFileLoader.dataFormat = m_sDataFormat;
+			m_oFileLoader.load(urlRequest);
 			} else {
 				parseData();
-			}			
 		}
+	}
 	}
 }

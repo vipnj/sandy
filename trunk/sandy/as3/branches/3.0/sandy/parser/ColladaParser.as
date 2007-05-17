@@ -21,12 +21,12 @@ package sandy.parser
 	public class ColladaParser extends AParser implements IParser
 	{
 		private var m_oCollada : XML;
-		private var m_bYUp : Boolean;
+		private var m_bYUp : Boolean; 
 		private var m_oStandardAppearance : Appearance;
 		
-		public function ColladaParser( p_oFile : * )
+		public function ColladaParser( p_sUrl:String, p_nScale:Number )
 		{
-			super( p_oFile );
+			super( p_sUrl, p_nScale );
 
 			m_oStandardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 		}
@@ -112,10 +112,10 @@ package sandy.parser
 				for( var i:int = 0; i < l_nNodeLen; i++ )
 				{
 					var l_oNode : Node = parseNode( l_oNodes[i] );
-					// -- add the shape to the group node
+				// -- add the shape to the group node
 					if( l_oNode != null )
 						l_oShape.addChild( l_oNode );
-				}
+			}
 
 				l_oShape.appearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 
@@ -133,7 +133,7 @@ package sandy.parser
 				return l_oTransformGroup;
 			} else {
 				return null;
-			}
+		}
 		}
 		
 		private function getGeometry( p_sGeometryID : String ) :  Geometry3D
@@ -162,30 +162,30 @@ package sandy.parser
 				
 				l_oOutpGeom.setVertex( 
 					i, 
-					l_oVertex.x, 
-					-l_oVertex.z,
-					l_oVertex.y
+					l_oVertex.x * m_nScale, 
+					-l_oVertex.z * m_nScale,
+					l_oVertex.y * m_nScale
 				);
 			} 
 			
 			if( l_oTriangles.input.( @semantic == "TEXCOORD" ).length() > 0 )
 			{
-				// -- get uvcoords float array 		
-				var l_sUVCoordsID : String = l_oTriangles.input.( @semantic == "TEXCOORD" ).@source.split("#")[1];
-				var l_aUVCoordsFloats : Array = getFloatArray( l_sUVCoordsID, l_oGeometry );
-				var l_nUVCoordsFloats : int = l_aUVCoordsFloats.length;
+			// -- get uvcoords float array 		
+			var l_sUVCoordsID : String = l_oTriangles.input.( @semantic == "TEXCOORD" ).@source.split("#")[1];
+			var l_aUVCoordsFloats : Array = getFloatArray( l_sUVCoordsID, l_oGeometry );
+			var l_nUVCoordsFloats : int = l_aUVCoordsFloats.length;
+			
+			// -- set uvcoords
+			for( i = 0; i < l_nUVCoordsFloats; i++ )
+			{
+				var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
 				
-				// -- set uvcoords
-				for( i = 0; i < l_nUVCoordsFloats; i++ )
-				{
-					var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
-					
-					l_oOutpGeom.setUVCoords( 
-						i, 
-						l_oUVCoord.x, 
-						1 - l_oUVCoord.y
-					);		
-				}
+				l_oOutpGeom.setUVCoords( 
+					i, 
+					l_oUVCoord.x, 
+					1 - l_oUVCoord.y
+				);		
+			}
 			}
 			/*
 			// -- get normals float array 		
@@ -220,7 +220,7 @@ package sandy.parser
 			{
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
-
+				
 				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 			}
@@ -298,7 +298,7 @@ package sandy.parser
 				throw new Error( "A vector must have 3 values" );
 			
 			return new Vector( l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ] );
-		}
+	}
 		
 		private function getAppearance( p_oNode : XML ) : Appearance
 		{

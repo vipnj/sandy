@@ -21,9 +21,9 @@ package sandy.parser
 
 	internal final class ASEParser extends AParser implements IParser
 	{
-		public function ASEParser( p_sUrl : * )
+		public function ASEParser( p_sUrl:String, p_nScale:Number )
 		{
-			super( p_sUrl );
+			super( p_sUrl, p_nScale );
 		}
 			
 		protected override function parseData( e:Event=null ):void
@@ -79,7 +79,7 @@ package sandy.parser
 							var v2:Number = Number(content.replace(vertexReg, "$4"));
 							var v3:Number = Number(content.replace(vertexReg, "$3"));
 
-							l_oGeometry.setVertex(id, v1, -v2, v3 );
+							l_oGeometry.setVertex(id, v1*m_nScale, -v2*m_nScale, v3*m_nScale );
 						}
 						break;
 					}	

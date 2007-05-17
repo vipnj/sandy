@@ -24,12 +24,14 @@ package sandy.parser
 					break;
 				case "OBJ":
 					break;
+					
 				case "DAE":
 					l_iParser = new ColladaParser( p_sFile, p_nScale );
 					break;
 				case "3DS":
 					l_iParser = new Parser3DS( p_sFile, p_nScale );
 					break;
+					
 				default:
 					break;
 			}

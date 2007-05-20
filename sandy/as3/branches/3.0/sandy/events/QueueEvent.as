@@ -16,33 +16,29 @@ limitations under the License.
 
 package sandy.events
 {
-	/**
-	* Sandy custom events
-	*
-	* @author		Dennis Ippel
-	* @version		1.0
-	**/
 	import flash.events.Event;
 
-	public class SandyEvent extends Event
+	public class QueueEvent extends Event
 	{
-		public static const LIGHT_ADDED:String = "lightAdded";
-		public static const LIGHT_UPDATED:String = "lightUpdated";
-		public static const RENDER:String = "render";
-		public static const CONTAINER_CREATED:String = "containerCreated";
-		public static const SKIN_UPDATED:String = "skinUpdated";
-		public static const QUEUE_COMPLETE:String = "queueComplete";
-		public static const QUEUE_LOADER_ERROR:String = "queueLoaderError";
+		private var _loaders : Object;
+		public static const QUEUE_COMPLETE : String = "queueComplete";
+		public static const QUEUE_LOADER_ERROR : String = "queueLoaderError";
 		
-		public function SandyEvent(type:String, bubbles:Boolean = false,
-								   cancelable:Boolean = false)
+		public function QueueEvent( type : String, loaders : Object=null, bubbles : Boolean = false,
+								   cancelable : Boolean = false)
 		{
 			super(type, bubbles, cancelable);
+			_loaders = loaders;
+		}
+		
+		public function getLoaders() : Object
+		{
+			return _loaders;
 		}
 		
 		override public function clone():Event
 	    {
-	        return new SandyEvent(type, bubbles, cancelable);
+	        return new QueueEvent(type, bubbles, _loaders, cancelable);
 	    }
 	}
 }

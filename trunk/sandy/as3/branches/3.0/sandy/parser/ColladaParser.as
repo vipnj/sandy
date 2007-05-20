@@ -1,6 +1,9 @@
 package sandy.parser
 {
+	import flash.display.Bitmap;
+	import flash.display.Loader;
 	import flash.events.Event;
+	import flash.net.URLRequest;
 	import flash.xml.XMLNode;
 	
 	import sandy.core.data.Matrix4;
@@ -12,19 +15,27 @@ package sandy.parser
 	import sandy.core.scenegraph.TransformGroup;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.transform.TransformType;
+	import sandy.events.SandyEvent;
 	import sandy.materials.Appearance;
+	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
 	import sandy.materials.WireFrameMaterial;
 	import sandy.math.Matrix4Math;
+	import sandy.util.LoaderQueue;
+	import sandy.events.QueueEvent;
+	import sandy.util.NumberUtil;
 	
 	public class ColladaParser extends AParser implements IParser
 	{
 		private var m_oCollada : XML;
 		private var m_bYUp : Boolean; 
 		private var m_oStandardAppearance : Appearance;
+		private var m_oMaterials : Object;
 		
-		public function ColladaParser( p_sUrl:String, p_nScale:Number )
+		public var RELATIVE_TEXTURE_PATH : String;
+		
+		public function ColladaParser( p_sUrl:*, p_nScale:Number )
 		{
 			super( p_sUrl, p_nScale );
 
@@ -39,7 +50,11 @@ package sandy.parser
 			m_oCollada = XML( m_oFile );
 
 			default xml namespace = m_oCollada.namespace();
-			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
+			
+			if( m_oCollada.library_images.length() > 0 )
+				m_oMaterials = loadImages( m_oCollada.library_images.image );
+			else
+				parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
 		}
 		
 		private function parseScene( p_oScene : XML ) : void
@@ -66,7 +81,6 @@ package sandy.parser
 		{
 			// -- local variables
 			var l_oGeometry : Geometry3D;
-			var l_oAppearance : Appearance;
 
 			if( p_oNode.child( "instance_geometry" ).length() != 0 )
 			{
@@ -76,7 +90,7 @@ package sandy.parser
 				var l_oShape:Shape3D;
 				var l_oNodes : XMLList;
 				var l_nNodeLen : int;
-				var l_oAppearence : Appearance;
+				var l_oAppearance : Appearance;
 				var l_oTransformGroup : TransformGroup;
 				var l_oScale : Transform3D;
 				
@@ -96,11 +110,15 @@ package sandy.parser
 				}
 				
 				l_oGeometry = new Geometry3D();
-				l_oAppearance = m_oStandardAppearance;//getAppearance( p_oNode );
+				//l_oAppearance = m_oStandardAppearance;//getAppearance( p_oNode );
+				l_oAppearance = getAppearance( p_oNode );
+				//l_oMaterials = getMaterials( p_oNode );
+				//l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ "D__Dev_FlexProjects_Papervision3DTutorial_assets_borobudur-java-indonesia_png" ].bitmapData ) );
+				
 				l_aGeomArray = p_oNode.instance_geometry.@url.split( "#" );
 				l_sGeometryID = l_aGeomArray[ 1 ];
 				// -- get the vertices
-				l_oGeometry = getGeometry( l_sGeometryID ); 
+				l_oGeometry = getGeometry( l_sGeometryID, m_oMaterials ); 
 				
 				// -- create the new shape
 				l_oShape = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
@@ -115,9 +133,9 @@ package sandy.parser
 				// -- add the shape to the group node
 					if( l_oNode != null )
 						l_oShape.addChild( l_oNode );
-			}
+				}
 
-				l_oShape.appearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
+//				l_oShape.appearance = l_oAppearance;//;new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 
 				// -- doesn't work yet
 				l_oTransformGroup = new TransformGroup( "transform" );
@@ -133,10 +151,10 @@ package sandy.parser
 				return l_oTransformGroup;
 			} else {
 				return null;
-		}
+			}
 		}
 		
-		private function getGeometry( p_sGeometryID : String ) :  Geometry3D
+		private function getGeometry( p_sGeometryID : String, p_oMaterials : Object ) :  Geometry3D
 		{
 			var i : int;
 			var l_oOutpGeom : Geometry3D = new Geometry3D();
@@ -145,6 +163,7 @@ package sandy.parser
 			// -- triangles
 			var l_oTriangles : XML = l_oGeometry.mesh.triangles[0];
 			var l_aTriangles : Array = stringToArray( l_oTriangles.p );
+			var l_sMaterial : String = l_oTriangles.@material;
 			var l_nCount : Number = Number( l_oTriangles.@count );
 			var l_nStep : Number = l_oTriangles.input.length(); 
 			
@@ -170,22 +189,22 @@ package sandy.parser
 			
 			if( l_oTriangles.input.( @semantic == "TEXCOORD" ).length() > 0 )
 			{
-			// -- get uvcoords float array 		
-			var l_sUVCoordsID : String = l_oTriangles.input.( @semantic == "TEXCOORD" ).@source.split("#")[1];
-			var l_aUVCoordsFloats : Array = getFloatArray( l_sUVCoordsID, l_oGeometry );
-			var l_nUVCoordsFloats : int = l_aUVCoordsFloats.length;
-			
-			// -- set uvcoords
-			for( i = 0; i < l_nUVCoordsFloats; i++ )
-			{
-				var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
+				// -- get uvcoords float array 		
+				var l_sUVCoordsID : String = l_oTriangles.input.( @semantic == "TEXCOORD" ).@source.split("#")[1];
+				var l_aUVCoordsFloats : Array = getFloatArray( l_sUVCoordsID, l_oGeometry );
+				var l_nUVCoordsFloats : int = l_aUVCoordsFloats.length;
 				
-				l_oOutpGeom.setUVCoords( 
-					i, 
-					l_oUVCoord.x, 
-					1 - l_oUVCoord.y
-				);		
-			}
+				// -- set uvcoords
+				for( i = 0; i < l_nUVCoordsFloats; i++ )
+				{
+					var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
+					
+					l_oOutpGeom.setUVCoords( 
+						i, 
+						l_oUVCoord.x, 
+						1 - l_oUVCoord.y
+					);		
+				}
 			}
 			/*
 			// -- get normals float array 		
@@ -220,11 +239,12 @@ package sandy.parser
 			{
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
-				
+
 				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
 				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
+
 			}
-						
+
 			return l_oOutpGeom;
 		}
 		
@@ -303,17 +323,98 @@ package sandy.parser
 		private function getAppearance( p_oNode : XML ) : Appearance
 		{
 			// -- local variables
-			var l_sSymbol : String;
-			var l_sTarget : String;
-			var l_oMaterials : Object;
+			var l_oAppearance : Appearance;
 			
 			// -- Get this node's instance materials
 			for each( var l_oInstMat : XML in p_oNode..instance_material )
 			{
-				l_oMaterials[ l_oInstMat.@symbol ] = l_oInstMat.@target.split( "#" )[1];
+				// -- get the corresponding material from the library
+				var l_oMaterial : XML = m_oCollada.library_materials.material.( @id == l_oInstMat.@target.split( "#" )[ 1 ] )[ 0 ];
+				// -- get the corresponding effect
+				var l_sEffectID : String = l_oMaterial.instance_effect.@url.split( "#" )[ 1 ];
+				
+				var l_oEffect : XML = ( l_sEffectID == "" )
+					? m_oCollada.library_effects.effect[ 0 ][ 0 ]
+					: m_oCollada.library_effects.effect.( @id == l_sEffectID )[ 0 ];
+				
+				// -- no textures here or colors defined 
+				if( l_oEffect..texture.length() == 0 && l_oEffect..phong.length() == 0 ) return null;
+				
+				if( l_oEffect..texture.length() > 0 )
+				{
+					// -- get the texture ID and use it to get the surface source
+					var l_sTextureID : String = l_oEffect..texture[ 0 ].@texture;
+					var l_sSurfaceID : String = l_oEffect..newparam.( @sid == l_sTextureID ).sampler2D.source;
+					
+					// -- now get the image ID
+					var l_sImageID : String = l_oEffect..newparam.( @sid == l_sSurfaceID ).surface.init_from;
+					// -- get image's location on the hard drive
+					
+					l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ l_sImageID ].bitmapData ) );
+					if( l_oAppearance == null ) l_oAppearance = m_oStandardAppearance;
+				}
+				else if( l_oEffect..phong.length() > 0 )
+				{
+					// -- get the ambient color
+					var l_aColors : Array = stringToArray( l_oEffect..phong..ambient.color );
+					var l_nColor : Number;
+					
+					var r : int = NumberUtil.constrain( l_aColors[0] * 255, 0, 255 );
+					var g : int = NumberUtil.constrain( l_aColors[1] * 255, 0, 255 );
+					var b : int = NumberUtil.constrain( l_aColors[2] * 255, 0, 255 );
+
+					l_nColor =  r << 16 | g << 8 |  b;
+					
+					l_oAppearance = new Appearance( new ColorMaterial( l_nColor, l_aColors[ 3 ] * 100 ) );
+				}				
+			}
+			return l_oAppearance;
+		}
+		
+		private function loadImages( p_oLibImages : XMLList ) : Object
+		{
+			var l_oImages : Object = new Object();
+			var l_oQueue : LoaderQueue = new LoaderQueue();
+			
+			for each( var l_oImage : XML in p_oLibImages )
+			{
+				var l_oInitFrom : String = l_oImage.init_from;
+				l_oImages[ l_oImage.@id ] = {
+					id : l_oImage.@id,
+					fileName : l_oInitFrom.substring( l_oInitFrom.lastIndexOf( "/" ) + 1, l_oInitFrom.length )
+				}
+				
+				l_oQueue.add( 
+					l_oImage.@id,
+					new URLRequest( RELATIVE_TEXTURE_PATH + "/" + l_oImages[ l_oImage.@id ].fileName )
+				);
+					
+				trace(l_oImages[ l_oImage.@id ].fileName);
+			}
+			l_oQueue.addEventListener( QueueEvent.QUEUE_COMPLETE, imageQueueCompleteHandler );
+			l_oQueue.addEventListener( QueueEvent.QUEUE_LOADER_ERROR, imageQueueLoaderErrorHandler );
+			l_oQueue.start();
+			
+			return l_oImages;
+		}
+		
+		private function imageQueueCompleteHandler( p_oEvent : QueueEvent ) : void
+		{
+			var l_oLoaders : Object = p_oEvent.getLoaders();
+			
+			for each( var l_oLoader : Object in l_oLoaders )
+			{
+				m_oMaterials[ l_oLoader.ID ].bitmapData = Bitmap( l_oLoader.loader.content ).bitmapData;
 			}
 			
-			return m_oStandardAppearance;
+			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
+		}
+		
+		private function imageQueueLoaderErrorHandler( p_oEvent : QueueEvent ) : void
+		{
+			trace("loading failed");
+			
+			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
 		}
 	}
 }

@@ -245,8 +245,10 @@ class sandy.core.Object3D extends Leaf
 	*/
 	public function setSkin( pS:Skin ):Boolean
 	{
-		//
+		// Remove any old listeners. This way, we don't get notified about an old skin 
+		// loading after we already changed the skin, for example.
 		_s.removeEventListener( SkinEvent.onUpdateEVENT, this );
+		_s.removeEventListener( SkinEvent.onInitEVENT, this );
 		// Now we register to the update event
 		_s = pS;
 		_s.addEventListener( SkinEvent.onUpdateEVENT, this, __onSkinUpdated );

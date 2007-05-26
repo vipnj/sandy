@@ -23,9 +23,10 @@ import sandy.util.BezierUtil;
 * some nice movements</p>
 * 
 * @author		Thomas Pfeiffer - kiroukou
+* @author		Thomas Balitout - samothtronicien
 * @since		1.0
-* @version		1.0
-* @date 		27.04.2006
+* @version		1.2.2
+* @date 		26.05.2007
 */
 class sandy.core.data.BezierPath
 {
@@ -96,7 +97,7 @@ class sandy.core.data.BezierPath
 		}
 		else
 		{
-			_aContainer.push( new Vector( x, y, z ) );
+			_aContainer.push( new Vector( x, -y, z ) );
 			return true;
 		}
 	}

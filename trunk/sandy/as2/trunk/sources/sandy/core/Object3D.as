@@ -740,4 +740,3 @@ class sandy.core.Object3D extends Leaf
 	private var _oEB:EventBroadcaster;	
 	private var _bPolyClipped:Boolean;
 }
-                                                                                               

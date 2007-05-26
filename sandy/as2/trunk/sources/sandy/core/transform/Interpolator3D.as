@@ -22,35 +22,22 @@ import sandy.core.transform.ITransform3D;
 * <p>The Interpolator3D is applied to each Object3D into a Group.</p>
 *  
 * @author		Thomas Pfeiffer - kiroukou
+* @author		Thomas Balitout - samothtronicien
 * @since		0.1
-* @version		0.2
-* @date 		12.01.2006
+* @version		1.2.2
+* @date 		26.05.2007
 * 
 **/
 interface sandy.core.transform.Interpolator3D extends ITransform3D
 {
-	/**
-	 * setDuration
-	 * @param t Number The number of frames that you want the interpolation last
-	 * @return
-	 */
 	public function setDuration ( t:Number ):Void;
-	
-	/**
-	* Make the Interpolator reverse its movement
-	*/
+
 	public function yoyo( Void ):Void;
-	
-	/**
-	 * Let the interpolator do a new loop 
-	 */
+
 	public function redo( Void ):Void;
 	
 	public function getFrame( Void ):Number;
 	
-	/**
-	 * Returns the current percent of the Interpolation
-	 */
 	public function getPercent( Void ):Number;
 	
 	public function getProgress( Void ):Number;
@@ -65,9 +52,24 @@ interface sandy.core.transform.Interpolator3D extends ITransform3D
 	
 	public function getStartMatrix( Void ):Matrix4;
 	
+	public function isInitialState( Void ):Boolean;
+	
+	public function isFinalState( Void ):Boolean;
+	
+	public function setFinal( Void ):Void;
+	
+	public function setInitial( Void ):Void;
+	
+	public function skipNextFrame( Void ):Void;
+	
+	public function getName( Void ):String;
+	
 	public function pause( Void ):Void;
+	
 	public function resume( Void ):Void;
+	
 	public function isPaused( Void ):Boolean;
+	
 	public function isFinished( Void ):Boolean;
 	
 }

@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 import com.bourre.events.BasicEvent;
-
-import sandy.core.World3D;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.core.transform.BasicInterpolator;
@@ -25,14 +23,14 @@ import sandy.core.transform.TransformType;
 import sandy.math.Matrix4Math;
 import sandy.math.VectorMath;
 
-
-
 /**
 * RotationInterpolator
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		23.06.2006
+* @author		Thomas Balitout - samothtronicien
+* @since		1.0
+* @version		1.2.2
+* @date 		26.05.2007
 **/
 class sandy.core.transform.RotationInterpolator extends BasicInterpolator implements Interpolator3D
 {
@@ -42,30 +40,32 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 	 * @param f Function 	The function generating the interpolation value. 
 	 * 						You can use what you want even if Sandy recommends the Ease class
 	 * 						The function must return a number between [0,1] and must have a parameter between [0,1] too.
-	 * @param onFrames Number	The number of frames that would be used to do the interpolation. 
+	 * @param pnFrames Number	The number of frames that would be used to do the interpolation. 
 	 * 							The smaller the faster the interpolation will be.
 	 * @param pmin Number [facultative]The value containing the original rotation offset that will be applied to the object's vertex. Default value is 0.
 	 * @param pmax Number [facultative]The value containing the final rotation offset to apply to the object's vertex. Default value is 360.
-	 * 
+	 * @param n String		Name of the Object, useful for debugging.
 	 */
-	public function RotationInterpolator( f:Function, pnFrames:Number, pmin:Number, pmax:Number )
+	public function RotationInterpolator( f:Function, pnFrames:Number, pmin:Number, pmax:Number, n:String )
 	{
-		super( f, pnFrames );
+		super( f, pnFrames, (n == undefined)?"RotationInterpolator":n );
 		_vAxis = new Vector( 0, 1, 0 );
 		_vRef = null;
 		_nMin = (undefined == pmin) ? 0 : pmin;
 		_nMax = (undefined == pmax) ? 360 : pmax;
-		_current = _nMin;
 		_nDiff = _nMax - _nMin;
-		_eOnProgress['_nType'] = _eOnStart['_nType'] = _eOnEnd['_nType'] = _eOnResume['_nType'] = _eOnPause['_nType'] = getType();
-		__updateRotation();
-		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __render ); 
+		__update();
 	}
 	
-	private function __updateRotation( Void ):Void
+	private function __update( Void ):Void
 	{	
-		if( undefined == _vRef )	_m = Matrix4Math.axisRotationVector( _vAxis, _current );
-		else						_m = Matrix4Math.axisRotationWithReference( _vAxis, _vRef, _current );
+		var p:Number = getProgress();
+		var _current:Number;
+		if( _way == 1 ) _current = _nMin + _nDiff * _f ( p );
+		else _current = _nMax - _nDiff * _f ( p );
+		
+		if( undefined == _vRef ) _m = Matrix4Math.axisRotationVector( _vAxis, _current );
+		else _m = Matrix4Math.axisRotationWithReference( _vAxis, _vRef, _current );
 		_modified = true;
 	}
 	
@@ -73,20 +73,20 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 	 * Allows you to change the axis of rotation. This axis will be automatically be normalized!
 	 * If the axis components are very small the rotation will be paused automatically until you change the axis.
 	 * @param v Vector the vector that contains the axis components.
-	 * @return Nothing
+	 * @return Boolean false if the the given axis is not good.
 	 */
-	public function setAxisOfRotation ( v:Vector ):Void
+	public function setAxisOfRotation ( v:Vector ):Boolean
 	{
 		if( Math.abs( v.x ) < 0.001 && Math.abs( v.y ) < 0.001 && Math.abs( v.z ) < 0.001 )
 		{
-			_blocked = true;
+			return false;
 		}
 		else
 		{
-			_blocked = false;
 			_vAxis = v;
 			VectorMath.normalize( _vAxis );
-			__updateRotation();
+			__update();
+			return true;
 		}
 	}
 		
@@ -99,7 +99,17 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 	public function setPointOfReference ( v:Vector ):Void
 	{
 		_vRef = v;
-		__updateRotation();
+		__update();
+	}
+	
+	/**
+	 * Allows you to get the point of reference of the rotation.
+	 * @param Void
+	 * @return Vector The point of reference
+	 */
+	public function getPointOfReference ( Void ):Vector
+	{
+		return _vRef;
 	}
 	
 	/**
@@ -113,76 +123,30 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 		_nMin = (undefined == start) ? 0 : start;
 		_nMax = (undefined == end) ? 360 : end;
 		_nDiff = _nMax - _nMin;
-		_current = _nMin;
-		__updateRotation();
+		__update();
 	}
 
 	/**
-	* Render the current node. This interpolator makes this method being called every World3D render call.
+	* Return the matrix corresponding to the first frame of the interpolation
 	* @param	Void
+	* @return Matrix4
 	*/
-	private function __render( Void ):Void
-	{
-		if( false == _paused && false == _finished )
-		{
-			// special condition because blocked doesn't mean stopped. It just block the rendering
-			if( false == _blocked )
-			{
-				var p:Number = getProgress();
-				if( _way == 1 )	_current = _nMin + _nDiff * _f ( p );
-				else			_current = _nMax - _nDiff * _f ( p );
-				// --
-				__updateRotation();
-				// --
-				_eOnProgress.setPercent( getPercent() );
-				broadcastEvent( _eOnProgress );
-				// --
-				if ( (_frame == 0 && _way == -1)  || (_way == 1 && _frame == _duration) )
-				{
-					_finished = true;
-					broadcastEvent( _eOnEnd );
-				}
-				else
-				{
-					_frame += _way;
-				}
-			}
-		}
-	}
-
 	public function getStartMatrix( Void ):Matrix4
 	{
-		if( undefined == _vRef )	return Matrix4Math.axisRotationVector( _vAxis, _nMin );
-		else						return Matrix4Math.axisRotationWithReference( _vAxis, _vRef, _nMin );
+		if( undefined == _vRef ) return Matrix4Math.axisRotationVector( _vAxis, _nMin );
+		else return Matrix4Math.axisRotationWithReference( _vAxis, _vRef, _nMin );
 	}
 	
+	/**
+	* Return the matrix corresponding to the last frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getEndMatrix( Void ):Matrix4
 	{
-		if( undefined == _vRef )	return Matrix4Math.axisRotationVector( _vAxis, _nMax );
-		else						return Matrix4Math.axisRotationWithReference( _vAxis, _vRef, _nMax );
+		if( undefined == _vRef ) return Matrix4Math.axisRotationVector( _vAxis, _nMax );
+		else return Matrix4Math.axisRotationWithReference( _vAxis, _vRef, _nMax );
 	}
-
-	/**
-	* redo
-	* <p>Make the interpolation starting again</p>
-	*/
-	public function redo( Void ):Void
-	{
-		super.redo();
-		if( _way == 1 )
-			_m = getStartMatrix();
-		else
-			_m = getEndMatrix();
-	}
-			
-	/**
-	* yoyo
-	* <p>Make the interpolation going in the inversed way</p>
-	*/
-	public function yoyo( Void ):Void
-	{
-		super.yoyo();
-	}	
 	
 	/**
 	* Returns the type of the interpolation. 
@@ -194,9 +158,14 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 		return TransformType.ROTATION_INTERPOLATION;
 	}
 	
+	/**
+	* Returns the class path of the interpolation. 
+	* @param	Void
+	* @return String Class path
+	*/
 	public function toString():String
 	{
-		return 'sandy.core.transform.RotationInterpolator';
+		return 'sandy.core.transform.RotationInterpolatorv2';
 	}
 
 	////////////////
@@ -207,5 +176,4 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 	private var _nMin:Number;
 	private var _nMax:Number;
 	private var _nDiff:Number;
-	private var _current:Number;
 }

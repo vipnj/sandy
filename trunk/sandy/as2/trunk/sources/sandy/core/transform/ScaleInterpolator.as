@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 import com.bourre.events.BasicEvent;
-
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.core.transform.BasicInterpolator;
@@ -29,11 +28,12 @@ import sandy.math.VectorMath;
 * ScaleInterpolator
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.2
-* @date 		28.03.2006
+* @author		Thomas Balitout - samothtronicien
+* @since		1.0
+* @version		1.2.2
+* @date 		26.05.2007
 **/
-class sandy.core.transform.ScaleInterpolator
-	extends BasicInterpolator implements Interpolator3D
+class sandy.core.transform.ScaleInterpolator extends BasicInterpolator implements Interpolator3D
 {
 	/**
 	 * Create a new ScaleInterpolator.
@@ -45,17 +45,15 @@ class sandy.core.transform.ScaleInterpolator
 	 * 							The smaller the faster the interpolation will be.
 	 * @param min Vector The vector containing the initial scale values.
 	 * @param max Vector The vector containing the final scale values.
+	 * @param n String		Name of the Object, useful for debugging.
 	 */
-	public function ScaleInterpolator( f:Function, pnFrames:Number, min:Vector, max:Vector ) 
+	public function ScaleInterpolator( f:Function, pnFrames:Number, min:Vector, max:Vector, n:String )  
 	{
-		super( f, pnFrames );	
+		super( f, pnFrames, (n == undefined)?"PositionInterpolator":n );	
 		_vMin = min;
 		_vMax = max;
-		_current = 0;
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		_eOnProgress['_nType'] = _eOnStart['_nType'] = _eOnEnd['_nType'] = _eOnResume['_nType'] = _eOnPause['_nType'] = getType();
-		__updateScale();
-		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __render );
+		__update();
 	}
 	
 	/**
@@ -65,10 +63,10 @@ class sandy.core.transform.ScaleInterpolator
 	public function setMinScaleVector( v:Vector ):Void
 	{
 		_vMin = v;
-		_current = 0;
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updateScale();
+		__update();
 	}
+	
 	/**
 	* Set the start scale vector. The objects will be initialized after this method call with this value.
 	* @param	x The X axis initial scale value
@@ -77,11 +75,9 @@ class sandy.core.transform.ScaleInterpolator
 	*/
 	public function setMinScale( x:Number, y:Number, z:Number ):Void
 	{
-		_vMin = new Vector( x, y, z );
-		_current = 0;
-		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updateScale();
+		setMinScaleVector( new Vector( x, y, z ) );
 	}
+	
 	/**
 	* Set the end scale vector. The objects will be initialized after this method call.
 	* @param	v The vector containing the end scale properties.
@@ -89,10 +85,10 @@ class sandy.core.transform.ScaleInterpolator
 	public function setMaxScaleVector( v:Vector ):Void
 	{
 		_vMax = v;
-		_current = 0;
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updateScale();
+		__update();
 	}
+	
 	/**
 	* Set the end scale vector. The objects will be initialized after this method call.
 	* @param	x The X axis end scale value
@@ -101,79 +97,41 @@ class sandy.core.transform.ScaleInterpolator
 	*/	
 	public function setMaxScale( x:Number, y:Number, z:Number ):Void
 	{
-		_vMax = new Vector( x, y, z );
-		_current = 0;
-		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updateScale();
+		setMaxScaleVector(new Vector( x, y, z ))
 	}
 	
+	/**
+	* Return the matrix corresponding to the first frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getStartMatrix( Void ):Matrix4
 	{
 		return  Matrix4Math.scaleVector( _vMin );
 	}
 	
+	/**
+	* Return the matrix corresponding to the last frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getEndMatrix( Void ):Matrix4
 	{
 		return  Matrix4Math.scaleVector( _vMax );
 	}
 	
-	private function __updateScale( Void ):Void
+	private function __update( Void ):Void
 	{
-		var c:Number = _current;
+		var p:Number = getProgress();
+		var c:Number = _f( p );
 		var v:Vector;
-		if( _way == -1 ) c = 1 - _current;
+		if( _way == -1 ) c = 1 - c;
 		// -- computing the new position
 		v = VectorMath.scale( _vDiff, c );
 		v = VectorMath.addVector( _vMin, v );
 		_m = Matrix4Math.scaleVector( v );
 		_modified = true;
 	}
-	
-	private function __render( Void ):Void
-	{
-		if( false == _paused && false == _finished )
-		{
-			var p:Number = getProgress();
-			_current = _f( p );
-			// --
-			__updateScale();
-			// --
-			_eOnProgress.setPercent( getPercent() );
-			broadcastEvent( _eOnProgress );
-			// --
-			if ( (_frame == 0 && _way == -1)  || (_way == 1 && _frame == _duration) )
-			{
-				_finished = true;
-				broadcastEvent( _eOnEnd );
-			}
-			else
-			{
-				_frame += _way;
-			}
-		}
-	}
-	
-	/**
-	* redo
-	* <p>Make the interpolation starting again</p>
-	*/
-	public function redo( Void ):Void
-	{
-		super.redo();
-		if( _way == 1 )
-			_m = getStartMatrix();
-		else
-			_m = getEndMatrix();
-	}
-			
-	/**
-	* yoyo
-	* <p>Make the interpolation going in the inversed way</p>
-	*/
-	public function yoyo( Void ):Void
-	{
-		super.yoyo();
-	}	
 	
 	/**
 	* Returns the type of the interpolation. 
@@ -185,15 +143,20 @@ class sandy.core.transform.ScaleInterpolator
 		return TransformType.SCALE_INTERPOLATION;
 	}
 	
+	/**
+	* Returns the class path of the interpolation. 
+	* @param	Void
+	* @return String Class path
+	*/
 	public function toString():String
 	{
 		return 'sandy.core.transfrom.ScaleInterpolator';
 	}
+	
 	//////////////
 	/// PRIVATE
 	//////////////
 	private var _vMin:Vector;
 	private var _vMax:Vector;
 	private var _vDiff:Vector;
-	private var _current:Number;
 }

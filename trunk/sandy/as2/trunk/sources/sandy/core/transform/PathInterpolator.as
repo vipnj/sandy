@@ -28,11 +28,12 @@ import sandy.math.Matrix4Math;
 * PathInterpolator
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		24.07.2006
+* @author		Thomas Balitout - samothtronicien
+* @since		1.0
+* @version		1.2.2
+* @date 		26.05.2007
 */
-class sandy.core.transform.PathInterpolator
-	extends BasicInterpolator implements Interpolator3D
+class sandy.core.transform.PathInterpolator extends BasicInterpolator implements Interpolator3D
 {
 	
 	/**
@@ -46,46 +47,39 @@ class sandy.core.transform.PathInterpolator
 	 * 							The smaller the faster the interpolation will be.
 	 * @param pPath BezierPath The path that objects will go throught
 	 */	
-	public function PathInterpolator( f:Function, pnFrames:Number, pPath:BezierPath ) 
+	public function PathInterpolator( f:Function, pnFrames:Number, pPath:BezierPath, n:String ) 
 	{
-		super( f, pnFrames );	
+		super( f, pnFrames, (n == undefined)?"PathInterpolator":n );
 		_pPath = pPath;
-		_eOnProgress['_nType'] = _eOnStart['_nType'] = _eOnEnd['_nType'] = _eOnResume['_nType'] = _eOnPause['_nType'] = getType();
-		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __render );
+		__update();
 	}
-			
-	private function __render( Void ):Void
+	
+	private function __update( Void ):Void
 	{
-		if( false == _paused && false == _finished )
-		{
-			var current:Vector;
-			var p:Number = getProgress();
-			// --
-			if( _way == 1 )	current = _pPath.getPosition( _f ( p ) );
-			else		current = _pPath.getPosition( 1.0 - _f ( p ) );
-			/* TODO check the sign of the y value */
-			_m = Matrix4Math.translation( current.x, current.y, current.z );
-			// --
-			_eOnProgress.setPercent( getPercent() );
-			broadcastEvent( _eOnProgress );
-			// --
-			if ( (_frame == 0 && _way == -1)  || (_way == 1 && _frame == _duration) )
-			{
-				_finished = true;
-				broadcastEvent( _eOnEnd );
-			}
-			else
-			{
-				_frame += _way;
-			}
-		}
+		var p:Number = getProgress();
+		var current:Vector;
+		if( _way == 1 )	current = _pPath.getPosition( _f ( p ) );
+		else current = _pPath.getPosition( 1.0 - _f ( p ) );
+			
+		_m = Matrix4Math.translation( current.x, -current.y, current.z );
+		_modified = true;
 	}
 
+	/**
+	* Return the matrix corresponding to the first frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getStartMatrix( Void ):Matrix4
 	{
 		return Matrix4Math.translationVector(_pPath.getPosition(0));
 	}
 	
+	/**
+	* Return the matrix corresponding to the last frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getEndMatrix( Void ):Matrix4
 	{
 		return Matrix4Math.translationVector(_pPath.getPosition(1));
@@ -101,35 +95,18 @@ class sandy.core.transform.PathInterpolator
 		return TransformType.PATH_INTERPOLATION;
 	}
 	
+	/**
+	* Returns the class path of the interpolation. 
+	* @param	Void
+	* @return String Class path
+	*/
 	public function toString():String
 	{
 		return 'sandy.core.transform.PathInterpolator';
 	}
-
-	/**
-	* redo
-	* <p>Make the interpolation starting again</p>
-	*/
-	public function redo( Void ):Void
-	{
-		super.redo();
-		if( _way == 1 )
-			_m = getStartMatrix();
-		else
-			_m = getEndMatrix();
-	}
-			
-	/**
-	* yoyo
-	* <p>Make the interpolation going in the inversed way</p>
-	*/
-	public function yoyo( Void ):Void
-	{
-		super.yoyo();
-	}	
 	
 	//////////////
 	/// PRIVATE
 	//////////////
-	private var _pPath:BezierPath;	
+	private var _pPath:BezierPath;
 }

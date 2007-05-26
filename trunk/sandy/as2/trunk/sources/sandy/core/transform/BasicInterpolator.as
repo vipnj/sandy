@@ -15,20 +15,56 @@ limitations under the License.
 */
 import com.bourre.events.EventBroadcaster;
 import com.bourre.events.IEvent;
-
 import sandy.core.data.Matrix4;
-import sandy.core.transform.Transform3D;
+import sandy.core.World3D;
 import sandy.core.transform.TransformType;
 import sandy.events.InterpolationEvent;
 
 
 /**
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		16.05.2006
+* @author		Thomas Balitout - samothtronicien
+* @since		1.0
+* @version		1.2.2
+* @date 		26.05.2007
 **/
-class sandy.core.transform.BasicInterpolator 
+class sandy.core.transform.BasicInterpolator
 {
+	/**
+	* Compute the matrix for the current frame.
+	* @param	Void
+	* @return Void
+	*/
+	private function __update( Void ):Void
+	{
+		//to implement
+	}
+	
+	/**
+	* Render the interpolaion
+	* @param	Void
+	* @return Void
+	*/
+	private function __render( Void ):Void
+	{
+		if( false == _paused && false == _finished )
+		{
+			_framerender = _frame = (_way == -1) ? (_frame-1 >= 0) ? _frame-1 : 0 : (_frame+1 <= _duration2) ? _frame+1 : _duration2;
+
+			__update();
+				
+			_eOnProgress.setPercent( getPercent() );
+			broadcastEvent( _eOnProgress );
+				
+			if( (_frame == 0 && _way == -1) || (_way == 1 && _frame == _duration2) )
+			{
+				(_way == 1) ? _frame = _duration : _frame = -1;
+				_finished = true;
+				broadcastEvent( _eOnEnd );
+			}
+		}
+	}
+	
 	/**
 	 * Make a pause in the Interpolation. You can continue the motion later with resume method.
 	 * Broadcast an InterpolationEvent.
@@ -56,26 +92,36 @@ class sandy.core.transform.BasicInterpolator
 	*/
 	public function redo( Void ):Void
 	{
-		_frame = ( _way == 1 ) ? 0 : _duration;
+		_frame = ( _way == 1 ) ? -1 : _duration;
+		_framerender = _frame + _way;
 		_finished = false;
-		_modified = true;
+		if(_paused)
+		{
+			if( _way == 1 ) _m = getStartMatrix();
+			else _m = getEndMatrix();
+			_modified = true;
+		}
 	}
-			
+	
 	/**
 	* yoyo
 	* <p>Make the interpolation going in the inversed way</p>
 	*/
 	public function yoyo( Void ):Void
 	{
-		// _frame = _duration - _frame;
 		_way = - _way;
 		_finished = false;
-		_modified = true;
+		//_modified = true;
 	}	
 	
+	/**
+	* Returns the number of the current frame
+	* @param	Void
+	* @return a Number between [1 - _duration].
+	*/
 	public function getFrame( Void ):Number
 	{
-		return _frame;
+		return _framerender+1;
 	}
 	
 	/**
@@ -95,8 +141,8 @@ class sandy.core.transform.BasicInterpolator
 	*/
 	public function getProgress( Void ):Number
 	{
-		if( _way == 1 ) return ( _frame / _duration );
-		else			return ( 1 - ( _frame / _duration ) );
+		if( _way == 1 ) return ( _framerender / _duration2 );
+		else		return ( 1 - ( _framerender / _duration2 ) );
 	}
 		
 	/**
@@ -110,6 +156,11 @@ class sandy.core.transform.BasicInterpolator
 		return TransformType.NONE;
 	}
 	
+	public function getName( Void ):String
+	{
+		return _name;
+	}
+	
 	/**
 	 * set the interpolation duration in number of frames. Could be lower than 5!
 	 * @param Number the duration in number of frames
@@ -119,23 +170,60 @@ class sandy.core.transform.BasicInterpolator
 	{
 		if( t == Number.POSITIVE_INFINITY || t > 10000 ) t = 10000;
 		else if( t < 5 ) t = 5;
-		_duration = t;
-		_timeIncrease = 1 / t;
+		
+		var old_duration2:Number = _duration2;
+		
+		_duration = Math.floor(t);
+		_duration2 = _duration - 1;
+		
+		var coef:Number = (_duration2) / (old_duration2);
+		if(_way == 1) _framerender = (Math.round(_framerender * coef)>_duration2)?_duration2:Math.round(_framerender * coef);	
+		else _framerender = (Math.round(_framerender * coef)>_duration2)?_duration2:Math.round(_framerender * coef);		
+		
+		if(_frame <= 0) _framerender = 0;
+		else if(_frame == old_duration2)
+		{
+			_frame = _duration2;
+			_framerender = _duration2;
+		}
+		else if(_frame == old_duration2+1)
+		{
+			_frame = _duration2+1;
+			_framerender = _duration2;
+		}
+		else _frame = _framerender;
+		
+		__update();
 	}
 	
+	/**
+	 * Return the duration in number of frames
+	 * @param Number the duration in number of frames
+	 * @return Void
+	 */
 	public function getDuration ( Void ):Number
 	{
 		return _duration;
 	}
 	
+	/**
+	 * Return the number of frame rendered, between 1 and _duration
+	 * @param Number the duration in number of frames
+	 * @return Void
+	 */
 	public function getDurationElapsed(Void):Number 
 	{
-		return _frame;
+		return (_way == 1)? getFrame() : getDuration() - getFrame();
 	}
-
+	
+	/**
+	 * Return the number of frame which has not been rendered yet
+	 * @param Number the duration in number of frames
+	 * @return Void
+	 */
 	public function getDurationRemaining(Void):Number 
 	{
-		return _duration - _frame;
+		return (_way == 1)? getDuration() - getFrame() : getFrame();
 	}
 		
 	/**
@@ -150,8 +238,6 @@ class sandy.core.transform.BasicInterpolator
 		_oEB.removeAllEventListeners(InterpolationEvent.onProgressEVENT);
 		_oEB.removeAllEventListeners(InterpolationEvent.onResumeEVENT);
 		_oEB.removeAllListeners();
-		_t.removeAllListeners();
-		_t.destroy();
 	}
 	
 	/**
@@ -268,22 +354,89 @@ class sandy.core.transform.BasicInterpolator
 	{
 		return _paused;
 	}
-		
-	private function __render( Void ):Void
+	
+	/**
+	* Returns true if the interpolation is in his initial state
+	* @param	Void
+	* @return Boolean true if the interpolation is in her initial state
+	*/
+	public function isInitialState( Void ):Boolean
 	{
-		// to implement;
+		return _frame == -1;
+	}
+	
+	/**
+	* Returns true if the interpolation is in his final state
+	* @param	Void
+	* @return Boolean true if the interpolation is in her final state
+	*/
+	public function isFinalState( Void ):Boolean
+	{
+		return _frame == _duration;
+	}
+	
+	/**
+	* Set up the interpolation to final state
+	* @param	Void
+	* @return 	Void
+	*/
+	public function setFinal( Void ) : Void
+	{
+		_frame = _duration;
+		_framerender = _duration2;
+	}
+	
+	/**
+	* Set up the interpolation to initial state
+	* @param	Void
+	* @return  	Void
+	*/
+	public function setInitial( Void ) : Void
+	{
+		_frame = -1;
+		_framerender = 0;
 	}
 
+	public function skipNextFrame( Void ) : Void
+	{
+		_frame += _way;
+	}
+	
+	/**
+	* Return the matrix corresponding to the first frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
+	public function getStartMatrix( Void ):Matrix4
+	{
+		//to implement
+		return  new Matrix4();
+	}
+	
+	/**
+	* Return the matrix corresponding to the last frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
+	public function getEndMatrix( Void ):Matrix4
+	{
+		//to implement
+		return  new Matrix4();
+	}
+	
 	////////////
 	// PRIVATE
 	////////////
-	private function BasicInterpolator(f:Function, pnFrames:Number )
+	private function BasicInterpolator(f:Function, pnFrames:Number, n:String )
 	{
 		_way = 1;
 		_duration = pnFrames;
-		_timeIncrease = 1 / pnFrames;
+		_duration2 = pnFrames-1;
 		_f = f;
-		_frame = 0;
+		_frame = -1;
+		_framerender = 0;
+		_name = n;
+		
 		_m = Matrix4.createIdentity();
 		_paused = _finished = _blocked = _modified = false;
 		_oEB = new EventBroadcaster( this );
@@ -292,17 +445,21 @@ class sandy.core.transform.BasicInterpolator
 		_eOnPause 		= new InterpolationEvent( InterpolationEvent.onPauseEVENT, 		this, getType(), 0 );
 		_eOnStart 		= new InterpolationEvent( InterpolationEvent.onStartEVENT, 		this, getType(), 0 );
 		_eOnEnd 		= new InterpolationEvent( InterpolationEvent.onEndEVENT, 		this, getType(), 1 );
+		
+		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __render );
 	}
 	
 	private var _paused:Boolean;
 	private var _finished:Boolean;
-	private var _blocked:Boolean;
-	private var _frame:Number; // percentage
+	private var _blocked:Boolean;// surement à virer car risque de foutre une merde terrible dans sequence et parallel !
+	private var _modified:Boolean;
+		
+	private var _frame:Number; // current frame of the interpolation (just an index, cannot be the true one in some case)
+	private var _framerender:Number; // TRUE current frame of the interpolation [0 <-> _duration2]
 	private var _f:Function;// ease function
-	private var _way:Number;// forward or backward
-	private var _t:Transform3D;// the transformation we are going to update the transformGroup with
-	private var _timeIncrease:Number;// the time between each frames
-	private var _duration:Number;//duration in frames
+	private var _way:Number;// forward or backward (1:forward , -1:backward)
+	private var _duration:Number;// duration in frames
+	private var _duration2:Number;// max index of a frame
 	
 	private var _eOnProgress:InterpolationEvent;
 	private var _eOnPause:InterpolationEvent;
@@ -311,9 +468,7 @@ class sandy.core.transform.BasicInterpolator
 	
 	private var _oEB:EventBroadcaster;
 	private var _eOnStart:InterpolationEvent;
-	private var _modified;
-	private var _durationElapsed : Number;
 
-	private var _m : Matrix4;
-	
+	private var _m:Matrix4;
+	private var _name:String;
 }

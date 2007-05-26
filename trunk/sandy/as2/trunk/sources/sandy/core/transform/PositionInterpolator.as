@@ -19,7 +19,6 @@ import sandy.core.transform.BasicInterpolator;
 import sandy.math.VectorMath;
 import sandy.core.data.Matrix4;
 import sandy.math.Matrix4Math;
-import sandy.core.World3D;
 import sandy.core.transform.TransformType;
 import com.bourre.events.BasicEvent;
 
@@ -27,11 +26,12 @@ import com.bourre.events.BasicEvent;
 * PositionInterpolator
 *  
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		28.03.2006
+* @author		Thomas Balitout - samothtronicien
+* @since		1.0
+* @version		1.2.2
+* @date 		26.05.2007
 */
-class sandy.core.transform.PositionInterpolator
-	extends BasicInterpolator implements Interpolator3D
+class sandy.core.transform.PositionInterpolator extends BasicInterpolator implements Interpolator3D
 {	
 	/**
 	 * Create a new TranslationInterpolator.
@@ -42,19 +42,17 @@ class sandy.core.transform.PositionInterpolator
 	 * 						The function must return a number between [0,1] and must have a parameter between [0,1] too.
 	 * @param onFrames Number	The number of frames that would be used to do the interpolation. 
 	 * 							The smaller the faster the interpolation will be.
-	 * @param min Vector The vector containing the initial offset that will be applied to the object's positions.
-	 * @param max Vector The vector containing the final offset to apply to the object's positions.
+	 * @param min Vector 	The vector containing the initial offset that will be applied to the object's positions.
+	 * @param max Vector	The vector containing the final offset to apply to the object's positions.
+	 * @param n String		Name of the Object, useful for debugging.
 	 */	
-	public function PositionInterpolator( f:Function, pnFrames:Number, min:Vector, max:Vector ) 
+	public function PositionInterpolator( f:Function, pnFrames:Number, min:Vector, max:Vector, n:String ) 
 	{
-		super( f, pnFrames );	
+		super( f, pnFrames, (n == undefined)?"PositionInterpolator":n );
 		_vMin = min;
 		_vMax = max;
 		_vDiff = VectorMath.sub( max, min );
-		_current = _vMin;
-		_eOnProgress['_nType'] = _eOnStart['_nType'] = _eOnEnd['_nType'] = _eOnResume['_nType'] = _eOnPause['_nType'] = getType();
-		__updatePosition();
-		World3D.getInstance().addEventListener( World3D.onRenderEVENT, this, __render );
+		__update();
 	}
 	
 	/**
@@ -63,9 +61,9 @@ class sandy.core.transform.PositionInterpolator
 	*/
 	public function setStartPositionVector( v:Vector ):Void
 	{
-		_current = _vMin = v;
+		_vMin = v;
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updatePosition();
+		__update();
 	}
 	
 	/**
@@ -76,9 +74,17 @@ class sandy.core.transform.PositionInterpolator
 	*/
 	public function setStartPosition( x:Number, y:Number, z:Number ):Void
 	{
-		_current = _vMin = new Vector( x, y, z );
+		_vMin = new Vector( x, y, z );
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updatePosition();
+		__update();
+	}
+	
+	/**
+	* get the start position vector.
+	*/
+	public function getStartPosition( Void ):Vector
+	{
+		return _vMin;
 	}
 	
 	/**
@@ -88,10 +94,9 @@ class sandy.core.transform.PositionInterpolator
 	*/
 	public function setEndPositionVector( v:Vector ):Void
 	{
-		_current = _vMin;
 		_vMax = v;
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updatePosition();
+		__update();
 	}
 	
 	/**
@@ -103,54 +108,49 @@ class sandy.core.transform.PositionInterpolator
 	*/
 	public function setEndPosition( x:Number, y:Number, z:Number ):Void
 	{
-		_current = _vMin;
 		_vMax = new Vector( x, y, z );
 		_vDiff = VectorMath.sub( _vMax, _vMin );
-		__updatePosition();
+		__update();
 	}
 	
-	private function __updatePosition( Void ):Void
+	/**
+	* get the start position vector.
+	*/
+	public function getEndPosition( Void ):Vector
 	{
+		return _vMax;
+	}
+	
+	/**
+	* Compute the matrix for the current frame.
+	* @param	Void
+	* @return Void
+	*/
+	private function __update( Void ):Void
+	{
+		var p:Number = getProgress();
+		var _current:Vector;
+		if( _way == 1 ) _current = VectorMath.addVector( _vMin, VectorMath.scale( _vDiff, _f ( p ) ) );
+		else _current = VectorMath.sub( _vMax, VectorMath.scale( _vDiff, _f ( p ) ) );
 		_m = Matrix4Math.translation( _current.x, _current.y, _current.z );
 		_modified = true;
 	}
 	
-	private function __render( Void ):Void
-	{
-		if( false == _paused && false == _finished )
-		{
-			var p:Number = getProgress();
-			if( _way == 1 )
-			{
-				_current = VectorMath.addVector( _vMin, VectorMath.scale( _vDiff, _f ( p ) ) );
-			}
-			else
-			{
-				_current = VectorMath.sub( _vMax, VectorMath.scale( _vDiff, _f ( p ) ) );
-			}
-			// --
-			__updatePosition();
-			// --
-			_eOnProgress.setPercent( getPercent() );
-			broadcastEvent( _eOnProgress );
-			// --
-			if ( (_frame == 0 && _way == -1) || (_way == 1 && _frame == _duration) )
-			{
-				_finished = true;
-				broadcastEvent( _eOnEnd );
-			}
-			else
-			{
-				_frame += _way;
-			}
-		}
-	}
-	
+	/**
+	* Return the matrix corresponding to the first frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getStartMatrix( Void ):Matrix4
 	{
 		return Matrix4Math.translation(_vMin.x, _vMin.y, _vMin.z);
 	}
 	
+	/**
+	* Return the matrix corresponding to the last frame of the interpolation
+	* @param	Void
+	* @return Matrix4
+	*/
 	public function getEndMatrix( Void ):Matrix4
 	{
 		return Matrix4Math.translation(_vMax.x, _vMax.y, _vMax.z);
@@ -166,32 +166,15 @@ class sandy.core.transform.PositionInterpolator
 		return TransformType.TRANSLATION_INTERPOLATION;
 	}
 	
+	/**
+	* Returns the class path of the interpolation. 
+	* @param	Void
+	* @return String Class path
+	*/
 	public function toString():String
 	{
 		return 'sandy.core.transform.PositionInterpolator';
 	}
-
-	/**
-	* redo
-	* <p>Make the interpolation starting again</p>
-	*/
-	public function redo( Void ):Void
-	{
-		super.redo();
-		if( _way == 1 )
-			_m = getStartMatrix();
-		else
-			_m = getEndMatrix();
-	}
-			
-	/**
-	* yoyo
-	* <p>Make the interpolation going in the inversed way</p>
-	*/
-	public function yoyo( Void ):Void
-	{
-		super.yoyo();
-	}	
 	
 	//////////////
 	/// PRIVATE
@@ -199,5 +182,4 @@ class sandy.core.transform.PositionInterpolator
 	private var _vMin:Vector;
 	private var _vMax:Vector;
 	private var _vDiff:Vector;
-	private var _current:Vector;
 }

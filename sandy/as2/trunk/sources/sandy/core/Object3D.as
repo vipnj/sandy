@@ -42,9 +42,10 @@ import sandy.core.data.Matrix4;
 * @author	Nicolas Coevoet - [ NikO ]
 * @author	Bruce Epstein - zeusprod
 * @author	Martin Wood-Mitrovski
+* @author	Thomas Balitout - samothtronicien
 * @since 	1.0
 * @version	1.2.2
-* @date 	20.04.2007
+* @date 	26.05.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -518,6 +519,8 @@ class sandy.core.Object3D extends Leaf
 		// --
 		//World3D.getInstance().getObjectEventManager().removeEventListeningObject( this );
 		// --
+		
+		container.removeMovieClip();//delete the container to remove the movieclip from the scene
 		super.destroy();
 	}
 	
@@ -737,3 +740,4 @@ class sandy.core.Object3D extends Leaf
 	private var _oEB:EventBroadcaster;	
 	private var _bPolyClipped:Boolean;
 }
+                                                                                               

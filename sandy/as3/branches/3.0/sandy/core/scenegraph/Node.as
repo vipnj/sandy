@@ -16,14 +16,15 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
+	import flash.events.EventDispatcher;
+	
+	import sandy.core.data.Vector;
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
-	import sandy.core.scenegraph.Camera3D;
 	import sandy.math.Matrix4Math;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
-	import flash.events.EventDispatcher;
 	
 	/**
 	 * ABSTRACT CLASS
@@ -196,8 +197,14 @@ package sandy.core.scenegraph
 				}
 				i++;
 			}
-			
 			return found;
+		}
+		
+		
+		public function swapParent( p_oNewParent:Node ):void
+		{
+			if( parent.removeChildById( this.id ) );
+				p_oNewParent.addChild( this );
 		}
 		
 		/**
@@ -208,7 +215,7 @@ package sandy.core.scenegraph
 		* @param	child Node The name of the node you want to remove.
 		* @return Boolean True if the node has been removed from the list, false otherwise.
 		*/
-		public function removeChildByName( pName:String):Boolean 
+		public function removeChildByName( pName:String ):Boolean 
 		{
 			var found:Boolean = false;
 			var i:int;

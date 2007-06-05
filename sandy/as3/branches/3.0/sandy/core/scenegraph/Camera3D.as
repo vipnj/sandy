@@ -29,6 +29,7 @@ package sandy.core.scenegraph
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
 	import flash.utils.Dictionary;
+	import flash.geom.Matrix;
 	
 	/**
 	* Camera3D
@@ -51,7 +52,11 @@ package sandy.core.scenegraph
 		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 50, p_nFar:Number = 10000 )
 		{
 			super( null );
-			viewport = new ViewPort( p_nWidth, p_nHeight );
+			_viewport = new ViewPort( p_nWidth, p_nHeight );
+			_viewport.update();
+			_perspectiveChanged = true;
+			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			
 			_nFov = p_nFov;
 			_nFar = p_nFar;
 			_nNear = p_nNear;
@@ -72,14 +77,25 @@ package sandy.core.scenegraph
 		{
 			_viewport = pVP;
 			_perspectiveChanged = true;
-			m_nOffx = viewport.w2; m_nOffy = viewport.h2;
+			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
 		}
 		
-		public function get viewport():ViewPort
+		public function set viewportWidth( p_nWidth:Number ):void
 		{
-			return _viewport;
+			_viewport.w = p_nWidth;
+			_viewport.update();
+			_perspectiveChanged = true;
+			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
 		}
 		
+		public function set viewportHeight( p_nHeight:Number ):void
+		{
+			_viewport.h = p_nHeight;
+			_viewport.update();
+			_perspectiveChanged = true;
+			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+		}
+				
 		/**
 		 * Angle of view in degrees
 		 */
@@ -135,8 +151,8 @@ package sandy.core.scenegraph
 			for each( var l_oShape:IDisplayable in m_aDisplayList )
 			{
 				//l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
-				l_mcContainer.addChild( l_oShape.container );
 				l_oShape.container.graphics.clear();
+				l_mcContainer.addChild( l_oShape.container );
 				l_oShape.display();
 			}
 			// --
@@ -150,13 +166,15 @@ package sandy.core.scenegraph
 	
 		public function project( p_aList:Dictionary ):void
 		{
+			var l_nCste:Number;
 			for each( var l_oVertex:Vertex in p_aList )
 			{
-				var l_nCste:Number = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
 			}	
 		}
+		
 		/**
 		* Compile the camera transformations by multiplicating the matrix together.
 		* Be carefull to call isModified method before to save computations. 
@@ -172,10 +190,27 @@ package sandy.core.scenegraph
 		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			updatePerspective();
-			updateTransform();
 			super.update( p_oModelMatrix, p_bChanged );
+			// SHOULD BE DONE IN A FASTER WAY
+			_oModelCacheMatrix = Matrix4Math.getInverse(_oModelCacheMatrix);
+			/*new Matrix4( 	_oModelCacheMatrix.n11,
+												_oModelCacheMatrix.n21,
+												_oModelCacheMatrix.n31,
+											  - _oModelCacheMatrix.n14,
+												_oModelCacheMatrix.n12,
+												_oModelCacheMatrix.n22,
+												_oModelCacheMatrix.n32,
+											  - _oModelCacheMatrix.n24,
+												_oModelCacheMatrix.n13,
+												_oModelCacheMatrix.n23,
+												_oModelCacheMatrix.n33,
+											  - _oModelCacheMatrix.n34 );*/
 		}
-		
+				
+		public function get modelMatrix():Matrix4
+		{
+			return _oModelCacheMatrix;
+		}
 		/**
 		 * No cull is necessary for the Camera object. This method does nothing.
 		 */
@@ -211,37 +246,6 @@ package sandy.core.scenegraph
 		{
 			return "sandy.core.scenegraph.Camera3D";
 		}
-			
-		/**
-		* Set an orthographic projection. This projection in opposite of the perspective one, don't distort distances and pictures
-		* @param	screenWidth The screen width. Default value: the screen width
-		* @param	screenHeight The screen height. Default value: the screen height.
-		* @param	zNear The distance betweeen the camera position and the near plane. Default value: 10.
-		* @param	zFar The distance betweeen the camera position and the far plane. Default value: 10,000.
-		*/
-		/*
-		public function setOrthoProjection(screenWidth:Number, screenHeight:Number, zNear:Number, zFar:Number):void
-		{
-			var h:Number, w:Number, Q:Number;
-			// --
-			if( undefined == screenWidth ) screenWidth = _is.getSize().width;
-			if( undefined == screenHeight ) screenHeight = _is.getSize().height;
-			if( undefined == zNear ) zNear = 10;
-			if( undefined == zFar ) zFar = 10000;
-			// --
-			w = 2*zNear/screenWidth;
-			h = 2*zNear/screenHeight;
-			Q = zFar/(zFar - zNear);
-	
-			delete _mp;
-			_mp = Matrix4.createZero();
-			_mp.n11 = w;
-			_mp.n22 = h;
-			_mp.n33 = Q;
-			_mp.n34 = -Q*zNear;
-			_mp.n43 = 1;
-		}
-		*/
 		
 		/**
 		* Set a projection matrix with perspective. This projection allows a more human visual representation of objects.
@@ -276,33 +280,6 @@ package sandy.core.scenegraph
 			changed = true;	
 		}
 			
-			
-		/**
-		 * Update the camera transformation
-		 */
-		public function updateTransform ():void
-		{
-			if( changed )
-			{
-				var mt:Matrix4 = m_tmpMt;
-				mt.n11 = _vSide.x; 
-				mt.n12 = _vSide.y; 
-				mt.n13 = _vSide.z; 
-				mt.n14 = - VectorMath.dot( _vSide, _p );
-				
-				mt.n21 = _vUp.x; 
-				mt.n22 = _vUp.y; 
-				mt.n23 = _vUp.z; 
-				mt.n24 = - VectorMath.dot( _vUp, _p );
-				
-				mt.n31 = _vOut.x; 
-				mt.n32 = _vOut.y; 
-				mt.n33 = _vOut.z; 
-				mt.n34 = - VectorMath.dot( _vOut, _p );
-				
-				transform.matrix = mt;
-			}
-		}
 		
 		public function updatePerspective():void
 		{
@@ -313,15 +290,12 @@ package sandy.core.scenegraph
 			}
 		}
 			
-	//////////////////////////
-	/// PRIVATE PROPERTIES ///
-	//////////////////////////
-	
+		//////////////////////////
+		/// PRIVATE PROPERTIES ///
+		//////////////////////////
+		
 		private var _mp : Matrix4; // projection Matrix4
 		private var _mpInv : Matrix4; // Inverse of the projection matrix 
-		/*
-		 * ViewPort matrix
-		 */
 		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
 	
 		/**

@@ -123,7 +123,7 @@ package sandy.bounds
 		 * @param b Boolean the b is set to true, we will compute the array of vertex once again, otherwise it will return the last compute array.
 		 * @return The array containing 8 Vertex representing the Bounding Box corners.
 		 */
-		private function __computeCorners( b:Boolean ):Array
+		private function __computeCorners( b:Boolean=false ):Array
 		{
 			var minx:Number,miny:Number,minz:Number,maxx:Number,maxy:Number,maxz:Number;
 			if( b == true )
@@ -152,32 +152,26 @@ package sandy.bounds
 	
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-		    var v:Vector;
-		    var l_aCorners:Array = aCorners;
-		    var i:int, l:int = 8;
+		    var lVector:Vector;
 		    // --
-		    while( i<l ) 
+		    for( var lId:uint = 0; lId < 8; lId ++ )
 		    {
-		        aTCorners[int(i)] = Matrix4Math.vectorMult( p_oMatrix, l_aCorners[int(i)] );
-		        i++;
+		        aTCorners[lId] = Matrix4Math.vectorMult( p_oMatrix, aCorners[lId] );
 		    }
 		    // --
-		    m_oTMin = m_oTMax = aTCorners[0];
-		    i=1;
-			while( i<l )
+		    m_oTMin.x = Number.MAX_VALUE;m_oTMax.x = Number.MIN_VALUE;
+			m_oTMin.y = Number.MAX_VALUE;m_oTMax.y = Number.MIN_VALUE;
+			m_oTMin.z = Number.MAX_VALUE;m_oTMax.z = Number.MIN_VALUE;
+		    for each ( lVector  in aTCorners )
 			{
-				v = aTCorners[int(i)];
+				if( lVector.x < m_oTMin.x )		m_oTMin.x = lVector.x;
+				else if( lVector.x > m_oTMax.x )	m_oTMax.x = lVector.x;
 				// --
-				if( v.x < m_oTMin.x )		m_oTMin.x = v.x;
-				else if( v.x > m_oTMax.x )	m_oTMax.x = v.x;
+				if( lVector.y < m_oTMin.y )		m_oTMin.y = lVector.y;
+				else if( lVector.y > m_oTMax.y )	m_oTMax.y = lVector.y;
 				// --
-				if( v.y < m_oTMin.y )		m_oTMin.y = v.y;
-				else if( v.y > m_oTMax.y )	m_oTMax.y = v.y;
-				// --
-				if( v.z < m_oTMin.z )		m_oTMin.z = v.z;
-				else if( v.z > m_oTMax.z )	m_oTMax.z = v.z;
-				
-				i++;
+				if( lVector.z < m_oTMin.z )		m_oTMin.z = lVector.z;
+				else if( lVector.z > m_oTMax.z )	m_oTMax.z = lVector.z;
 	    	}
 	    }
 	    

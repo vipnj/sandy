@@ -186,20 +186,15 @@ package sandy.core.data
 		 *       9  10 11 12 <br>
 		 *       13 14 15 16 </code>
 		 */	
-		public function Matrix4(... rest) 
+		public function Matrix4(pn11:Number=1, pn12:Number=0 , pn13:Number=0 , pn14:Number=0,
+								pn21:Number=0, pn22:Number=1 , pn23:Number=0 , pn24:Number=0,
+								pn31:Number=0, pn32:Number=0 , pn33:Number=1 , pn34:Number=0,
+								pn41:Number=0, pn42:Number=0 , pn43:Number=0 , pn44:Number=1 ) 
 		{
-			if(rest.length == 16)
-			{
-				n11 = rest[0] ; n12 = rest[1] ; n13 = rest[2] ; n14 = rest[3] ;
-				n21 = rest[4] ; n22 = rest[5] ; n23 = rest[6] ; n24 = rest[7] ;
-				n31 = rest[8] ; n32 = rest[9] ; n33 = rest[10]; n34 = rest[11];
-				n41 = rest[12]; n42 = rest[13]; n43 = rest[14]; n44 = rest[15];
-			}
-			else
-			{
-				n11 = n22 = n33 = n44 = 1;
-				n12 = n13 = n14 = n21 = n23 = n24 = n31 = n32 = n34 = n41 = n42 = n43 = 0;
-			}
+			n11 = pn11 ; n12 = pn12 ; n13 = pn13 ; n14 = pn14 ;
+			n21 = pn21 ; n22 =pn22 ; n23 = pn23 ; n24 = pn24 ;
+			n31 = pn31 ; n32 = pn32 ; n33 = pn33; n34 = pn34;
+			n41 = pn41; n42 = pn42; n43 = pn43; n44 = pn44;
 		}
 		
 		/**
@@ -214,10 +209,7 @@ package sandy.core.data
 		*/
 		public static function createIdentity():Matrix4
 		{
-			return new Matrix4( 1, 0, 0, 0,
-								0, 1, 0, 0,
-								0, 0, 1, 0, 
-								0, 0, 0, 1);
+			return new Matrix4();
 		}
 
 		/**

@@ -26,14 +26,14 @@ package sandy.primitive
 	* Plane3D
 	*  
 	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.2
+	* @version		2
 	* @date 		12.01.2006 
 	**/
-
 	public class Plane3D extends Shape3D implements Primitive3D
 	{
-		public static const VERTICAL:String = "vertical";
-		public static const HORIZONTAL:String = "horizontal";
+		public static const XY_ALIGNED:String = "xy_aligned";
+		public static const YZ_ALIGNED:String = "yz_aligned";
+		public static const XZ_ALIGNED:String = "xz_aligned";
 		//////////////////
 		///PRIVATE VARS///
 		//////////////////	
@@ -54,14 +54,14 @@ package sandy.primitive
 		* @param 	mode String represent the two available modes to generates the faces.
 		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 		*/
-		public function Plane3D( p_Name:String=null, h:Number = 6, lg:Number = 6, q:uint = 1, p_sType:String = Plane3D.VERTICAL, mode:String = PrimitiveMode.TRI )
+		public function Plane3D( p_Name:String=null, h:Number = 6, lg:Number = 6, q:uint = 1, p_sType:String = Plane3D.XY_ALIGNED, mode:String = PrimitiveMode.TRI )
 		{
 			super( p_Name ) ;
 			_h = h;
 			_lg = lg;
 			_q = q;
 			_mode = ( mode != PrimitiveMode.TRI && mode != PrimitiveMode.QUAD ) ? PrimitiveMode.TRI : mode;
-			m_sType = ( p_sType != Plane3D.HORIZONTAL && p_sType != Plane3D.VERTICAL ) ? Plane3D.VERTICAL : p_sType;
+			m_sType = p_sType;
 			geometry = generate() ;
 		}
 
@@ -91,19 +91,26 @@ package sandy.primitive
 				var j:Number = -l2;
 				do
 				{
-					if( m_sType == Plane3D.HORIZONTAL )
+					if( m_sType == Plane3D.XZ_ALIGNED )
 					{
 						id1 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, 0, i );
 						id2 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, 0, i ); 
 						id3 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, 0, i+pasH );
 						id4 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, 0, i+pasH );
 					}
-					else
+					else if( m_sType == Plane3D.YZ_ALIGNED )
 					{
 						id1 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, i, 0 );
 						id2 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, i, 0 ); 
 						id3 = l_geometry.setVertex( l_geometry.getNextVertexID(), j+pasL, i+pasH, 0 );
 						id4 = l_geometry.setVertex( l_geometry.getNextVertexID(), j, i+pasH, 0 );
+					}
+					else
+					{
+						id1 = l_geometry.setVertex( l_geometry.getNextVertexID(), 0, j, i );
+						id2 = l_geometry.setVertex( l_geometry.getNextVertexID(), 0, j+pasL, i ); 
+						id3 = l_geometry.setVertex( l_geometry.getNextVertexID(), 0, j+pasL, i+pasH);
+						id4 = l_geometry.setVertex( l_geometry.getNextVertexID(), 0, j, i+pasH);
 					}
 					
 					//We add the texture coordinates

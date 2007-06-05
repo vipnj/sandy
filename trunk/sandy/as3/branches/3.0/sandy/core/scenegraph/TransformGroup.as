@@ -40,19 +40,6 @@ package sandy.core.scenegraph
 		{
 			super( p_sName );
 		}
-		
-		
-		/**
-		 * This method goal is to update the node. For node's with transformation, this method shall
-		 * update the transformation taking into account the matrix cache system.
-		 */
-		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
-		{
-			// Shall be called first
-			updateTransform();
-			//
-			super.update( p_oModelMatrix, p_bChanged );
-		}
 	
 		
 		/**
@@ -90,34 +77,7 @@ package sandy.core.scenegraph
 			}
 		}
 		
-	 	/**
-		 * This method shall be called to update the transform matrix of the current object/node
-		 * before being rendered.
-		 */
-		public function updateTransform():void
-		{
-			if( changed )
-			{
-				var mt:Matrix4 = m_tmpMt;
-				mt.n11 = _vSide.x * _oScale.x; 
-				mt.n12 = _vUp.x; 
-				mt.n13 = _vOut.x; 
-				mt.n14 = _p.x;
-				
-				mt.n21 = _vSide.y; 
-				mt.n22 = _vUp.y * _oScale.y; 
-				mt.n23 = _vOut.y; 
-				mt.n24 = _p.y;
-				
-				mt.n31 = _vSide.z; 
-				mt.n32 = _vUp.z; 
-				mt.n33 = _vOut.z * _oScale.z;  
-				mt.n34 = _p.z;
-				
-				transform.matrix = mt;
-			}
-		}
-			
+	
 		/**
 		* Get a String representation of the {@code TransformGroup}.
 		* 

@@ -1,5 +1,6 @@
-package sandy.view {
-	public class ViewPort
+package sandy.view 
+{
+	public final class ViewPort
 	{
 	    /**
 		* Create a new ViewPort.
@@ -11,6 +12,11 @@ package sandy.view {
 		{
 			w = p_w;
 			h = p_h;
+			update();
+		}
+		
+		public function update():void
+		{
 			w2 = w/2;
 			h2 = h/2;
 			ratio = w/h;

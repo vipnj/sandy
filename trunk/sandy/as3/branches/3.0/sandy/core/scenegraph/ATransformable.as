@@ -487,6 +487,7 @@ package sandy.core.scenegraph {
 		 */
 		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
+			updateTransform();
 			if( p_bChanged || changed )
 			{
 				 if( p_oModelMatrix )
@@ -498,7 +499,34 @@ package sandy.core.scenegraph {
 			super.update( _oModelCacheMatrix, p_bChanged );
 		}
 	
-	
+	 	/**
+		 * This method shall be called to update the transform matrix of the current object/node
+		 * before being rendered.
+		 */
+		public function updateTransform():void
+		{
+			if( changed )
+			{
+				var mt:Matrix4 = m_tmpMt;
+				mt.n11 = _vSide.x * _oScale.x; 
+				mt.n12 = _vUp.x; 
+				mt.n13 = _vOut.x; 
+				mt.n14 = _p.x;
+				
+				mt.n21 = _vSide.y; 
+				mt.n22 = _vUp.y * _oScale.y; 
+				mt.n23 = _vOut.y; 
+				mt.n24 = _p.y;
+				
+				mt.n31 = _vSide.z; 
+				mt.n32 = _vUp.z; 
+				mt.n33 = _vOut.z * _oScale.z;  
+				mt.n34 = _p.z;
+				
+				transform.matrix = mt;
+			}
+		}
+			
 		/**
 		* Get the position of the element.
 		* If the parameter equals "local" the function returns a vector container the position relative to the parent frame.
@@ -513,8 +541,8 @@ package sandy.core.scenegraph {
 			switch( p_sMode )
 			{
 				case "local" 	: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
-				case "absolute" : l_oPos = new Vector( _oViewCacheMatrix.n14, _oViewCacheMatrix.n24, _oViewCacheMatrix.n34 ); break;
-				case "camera" 	: l_oPos = new Vector( _oModelCacheMatrix.n14, _oModelCacheMatrix.n24, _oModelCacheMatrix.n34 ); break;
+				case "camera" : l_oPos = new Vector( _oViewCacheMatrix.n14, _oViewCacheMatrix.n24, _oViewCacheMatrix.n34 ); break;
+				case "absolute" 	: l_oPos = new Vector( _oModelCacheMatrix.n14, _oModelCacheMatrix.n24, _oModelCacheMatrix.n34 ); break;
 				default 		: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
 			}
 			return l_oPos;

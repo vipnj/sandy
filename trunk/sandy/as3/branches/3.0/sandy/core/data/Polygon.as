@@ -97,10 +97,7 @@ package sandy.core.data
 		
 		public function clip( p_oFrustum:Frustum ):Array
 		{
-			var l_oVertex:Vertex;
-			// --
 			cvertices = vertices.concat();
-			// -- 
 			p_oFrustum.clipFrustum( cvertices );
 			return vertices.concat( cvertices );
 		}

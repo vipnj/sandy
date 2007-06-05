@@ -119,7 +119,8 @@ package sandy.core
 				//dispatchEvent( new SandyEvent( SandyEvent.RENDER ) );
 				// --
 				root.update( null, false );
-				root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
+				root.cull( camera.frustrum, camera.modelMatrix, camera.changed );
+				//root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
 				root.render( camera );
 				// -- clear the polygon's container and the projection vertices list
 	            camera.renderDisplayList();

@@ -1,29 +1,23 @@
 package sandy.core.scenegraph 
 {    
-	import flash.events.MouseEvent;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.utils.Dictionary;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
+	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
-	import sandy.core.data.Vertex;
 	import sandy.core.data.Polygon;
+	import sandy.core.data.Vertex;
 	import sandy.materials.Appearance;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
-	import sandy.core.World3D;
-	import flash.utils.Dictionary;
+	import sandy.math.VectorMath;
 
 	public class Shape3D extends ATransformable implements ITransformable, IDisplayable
 	{ 
-		public static const SINGLE_CONTAINER:Boolean = true;
 		public var aPolygons:Dictionary;
-		
-		protected var m_bUseSingleContainer:Boolean;
-		protected var m_nDepth:Number;
-		protected var m_oContainer:Sprite;
-		//protected va
-		private var m_aVisiblePoly:Array;
 		
 	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
 	    {
@@ -58,21 +52,27 @@ package sandy.core.scenegraph
 	    	{
 	    		for each( l_oFace in aPolygons )
 	    		{
-					World3D.getInstance().container.removeChild( l_oFace.container );
+					if( World3D.getInstance().container.contains( l_oFace.container ) ) 
+					{
+						l_oFace.container.graphics.clear();
+						World3D.getInstance().container.removeChild( l_oFace.container );
+					}
 					l_oFace.container = m_oContainer;
 	    		}
-	    		// --
-	    		World3D.getInstance().container.addChild( m_oContainer );
 	    	}
 	    	else
 	    	{
-	    		World3D.getInstance().container.removeChild( m_oContainer );
+	    		if( World3D.getInstance().container.contains(m_oContainer) )
+	    		{
+	    			m_oContainer.graphics.clear();
+	    			World3D.getInstance().container.removeChild( m_oContainer );
+	    		}
 	    		// --
 	    		for each( l_oFace in aPolygons )
 	    		{
 					// we reset the polygon container to the original one, and add it to the world container
+					l_oFace.container.graphics.clear();
 					l_oFace.container = null;
-					World3D.getInstance().container.addChild( l_oFace.container );
 	    		}
 	    	}
 	    	m_bUseSingleContainer = p_bUseSingleContainer;
@@ -88,48 +88,6 @@ package sandy.core.scenegraph
 	            _oBBox 		= BBox.create( m_oGeometry.aVertex );
 	        }
 	    }
-	 
-	 	/**
-		 * This method shall be called to update the transform matrix of the current object/node
-		 * before being rendered.
-		 */
-		public function updateTransform():void
-		{
-			if( changed )
-			{
-				var mt:Matrix4 = m_tmpMt;
-				mt.n11 = _vSide.x * _oScale.x; 
-				mt.n12 = _vUp.x; 
-				mt.n13 = _vOut.x; 
-				mt.n14 = _p.x;
-				
-				mt.n21 = _vSide.y; 
-				mt.n22 = _vUp.y * _oScale.y; 
-				mt.n23 = _vOut.y; 
-				mt.n24 = _p.y;
-				
-				mt.n31 = _vSide.z; 
-				mt.n32 = _vUp.z; 
-				mt.n33 = _vOut.z * _oScale.z;  
-				mt.n34 = _p.z;
-				
-				transform.matrix = mt;
-			}
-		}
-		
-		
-	 	/**
-		 * This method goal is to update the node. For node's with transformation, this method shall
-		 * update the transformation taking into account the matrix cache system.
-		 * FIXME: Transformable nodes shall upate their transform if necessary before calling this method.
-		 */
-		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
-		{
-			// -- Shall be called first
-			updateTransform();
-			// -- we call the super update mthod
-			super.update( p_oModelMatrix, p_bChanged );
-		}
 		  
 		/**
 		 * This method test the current node on the frustum to get its visibility.
@@ -152,12 +110,21 @@ package sandy.core.scenegraph
 				{
 					m_bClipped = true;
 				}
-				;//container.visible = true;
 			}
 			else if( culled == CullingState.OUTSIDE )
 			{
 				// We clear it to avoid any ghost effect.
-				container.graphics.clear();//container.visible = false;
+				if( !m_bUseSingleContainer )
+		    	{
+		    		for each( var l_oFace:Polygon in aPolygons )
+		    		{
+						l_oFace.container.graphics.clear();
+		    		}
+		    	}
+		    	else
+		    	{
+		    		m_oContainer.graphics.clear();
+		    	}
 			}
 		}
 		
@@ -192,7 +159,7 @@ package sandy.core.scenegraph
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
-			    if ( l_oFace.visible || !m_bBackFaceCulling) 
+				if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
 					// we manage the clipping
 					if( m_bClipped )
@@ -255,9 +222,7 @@ package sandy.core.scenegraph
 			if( m_oGeometry )
 			{
 				for each( var v:Polygon in aPolygons )
-				{
 					v.appearance = m_oAppearance;
-				}
 			}
 		}
 		
@@ -358,7 +323,7 @@ package sandy.core.scenegraph
 		*/
 		public function set enableEvents( b:Boolean ):void
 		{
-			// To use only when use Single container is disabled _
+			// To use only when use Single container is disabled 
 			if( b )
 			{
 				if( !m_bEv )
@@ -445,8 +410,8 @@ package sandy.core.scenegraph
 	    	{
 	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
 	    		// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
-	    		if( m_bUseSingleContainer == false ) World3D.getInstance().container.addChild( aPolygons[i].container );
-	    		else aPolygons[i].container = m_oContainer;
+	    		if( m_bUseSingleContainer == true )
+	    			aPolygons[i].container = m_oContainer;
 	    		i++;
 	    	}
 	    }
@@ -464,5 +429,10 @@ package sandy.core.scenegraph
 		/** Geometry of this object */
 		private var m_oGeometry:Geometry3D;
 		
+		protected var m_bUseSingleContainer:Boolean;
+		protected var m_nDepth:Number;
+		protected var m_oContainer:Sprite;
+		//protected va
+		private var m_aVisiblePoly:Array;		
 	}
 }

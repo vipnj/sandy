@@ -212,8 +212,7 @@ class sandy.core.Object3D extends Leaf
 	{
 		var centerX:Number = 0;
 		var centerY:Number = 0;
-		var i:Number = 0;
-		for (i = 0; i < aPoints.length; i++) {
+		for (var i:Number = 0; i < aPoints.length; i++) {
 			centerX += aPoints[i].sx;
 			centerY += aPoints[i].sy;
 		}
@@ -223,6 +222,30 @@ class sandy.core.Object3D extends Leaf
 		// it is part of the Sandy libraries can we can control the toString(); method.
 		return new Vector (centerX, centerY, 0);
 	}
+	
+	/**
+	* Returns the bounding box of the Object3D relative to the Flash stage. Used for zooming.
+	* @param	Void
+	* @return	Vector with x and y properties. z property is always zero.
+	*/
+	public function getSizeOnStage( Void ):Vector
+	{
+		var minX:Number = 10000;
+		var maxX:Number = -10000;
+		var minY:Number = 10000;
+		var maxY:Number = -10000;
+		
+		for (var i:Number = 0; i < aPoints.length; i++) {
+			minX = Math.min(minX, aPoints[i].sx);
+			maxX = Math.max(maxX, aPoints[i].sx);
+			minY = Math.min(minY, aPoints[i].sy);
+			maxY = Math.max(maxY, aPoints[i].sy);
+		}
+		// This could return a 2D Point instead, but I went with Vector since
+		// it is part of the Sandy libraries can we can control the toString(); method.
+		return new Vector (maxX - minX, maxY - minY, 0);
+	}
+	
 	
 	/**
 	* Returns the skin used for the back faces of this object. Returns the skin instance.

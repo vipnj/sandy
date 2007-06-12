@@ -315,7 +315,8 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 	/**
 	 * Creates a brightness transformation matrix according to the supplied brightness level.
 	 * If the World3D.GO_BRIGHT flag is set then the rgb offsets are used (5th column)
-	 * If the flag is not set then the rgb scaling components are used instead.	 */
+	 * If the flag is not set then the rgb scaling components are used instead.
+	 */
 	private function __getBrightnessTransform( brightness:Number ) : Array
 	{
 		if(World3D.GO_BRIGHT)
@@ -388,6 +389,8 @@ class sandy.skin.MovieSkin extends BasicSkin implements Skin
 				trace ("MovieSkin error: " + code);
 				break;
    		}
+		broadcastEvent(_eOnError, code);
+		
 	}
 		
 	// --

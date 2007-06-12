@@ -31,20 +31,24 @@ import sandy.core.light.Light3D;
  * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
  * @since		1.0
- * @version		1.2.1
- * @date 		20.04.2007
+ * @version		1.2.2
+ * @date 		12.06.2007
  **/
 class sandy.skin.BasicSkin extends EventBroadcaster
 {
 	
 	/**
-	 *  The Transformation end Event. Broadcasted when the Interpolation is finished
+	 *  The Transformation end Event. Broadcasted when the skin is updated
 	 */
 	public static var onUpdateEVENT:EventType = SkinEvent.onUpdateEVENT;
 	/**
 	 *  The skin initialized Event. Broadcast when the skin is first loaded (triggers texture matrix recalc)
 	 */
 	public static var onInitEVENT:EventType = SkinEvent.onInitEVENT;
+	/**
+	 *  The skin error Event. Broadcast if skin loading fails.
+	 */
+	public static var onErrorEVENT:EventType = SkinEvent.onErrorEVENT;
 	
 
 	/**
@@ -112,6 +116,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 		super( this );
 		_eOnUpdate 	= new SkinEvent( SkinEvent.onUpdateEVENT, this, getType() );
 		_eOnInit 	= new SkinEvent( SkinEvent.onInitEVENT, this, getType() );
+		_eOnError 	= new SkinEvent( SkinEvent.onErrorEVENT, this, getType() );
 		_filters 	= [];
 		_useLight 	= false;
 		_id = _ID_++;
@@ -135,6 +140,7 @@ class sandy.skin.BasicSkin extends EventBroadcaster
 	private var _useLight : Boolean;
 	private var _eOnUpdate:SkinEvent;
 	private var _eOnInit:SkinEvent;
+	private var _eOnError:SkinEvent;
 	private var _id:Number;
 	private static var _ID_:Number = 0;
 }

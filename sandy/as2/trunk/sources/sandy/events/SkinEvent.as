@@ -21,13 +21,14 @@ import sandy.skin.SkinType;
  * @author		Martin Wood-Mitrovski
  * @author		Bruce Epstein - zeusprod
  * @since		1.1
- * @version		1.2.1
- * @date 		20.04.2007
+ * @version		1.2.2
+ * @date 		12.06.2007
  */
 class sandy.events.SkinEvent extends BasicEvent 
 {
 	public static var onUpdateEVENT:EventType = new EventType('onUpdateEVENT');
 	public static var onInitEVENT:EventType = new EventType('onInitEVENT');
+	public static var onErrorEVENT:EventType = new EventType('onErrorEVENT');
 	
 	// Flag to indicate that the texture matrices need updating
 	public var needsTextureUpdate:Boolean;

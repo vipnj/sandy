@@ -156,7 +156,7 @@ package sandy.core.scenegraph
 				l_oShape.display();
 			}
 			// --
-			m_aDisplayList = [];
+			m_aDisplayList.splice(0);
 		}
 			
 		public function addToDisplayList( p_oShape:IDisplayable ):void

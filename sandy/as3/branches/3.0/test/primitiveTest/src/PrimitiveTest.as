@@ -29,7 +29,7 @@ package
 		internal static const SCREEN_WIDTH:int = 500;
 		internal static const SCREEN_HEIGHT:int = 500;
 		
-		[Embed(source="assets/texture.jpg")]
+		[Embed(source="../assets/texture.jpg")]
 		private var Texture:Class;
 
 		private var _mc:Sprite;

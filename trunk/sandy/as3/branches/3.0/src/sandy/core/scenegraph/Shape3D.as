@@ -1,7 +1,6 @@
 package sandy.core.scenegraph 
 {    
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	
 	import sandy.bounds.BBox;
@@ -13,11 +12,13 @@ package sandy.core.scenegraph
 	import sandy.materials.Appearance;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
-	import sandy.math.VectorMath;
 
 	public class Shape3D extends ATransformable implements ITransformable, IDisplayable
 	{ 
 		public var aPolygons:Dictionary;
+		
+		//private var m_oToProject:Dictionary = new Dictionary(true);
+		private var m_aTmp:Array = new Array();
 		
 	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
 	    {
@@ -153,9 +154,9 @@ package sandy.core.scenegraph
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-			m_aVisiblePoly = new Array();
-			var l_aTmp:Array = new Array();
-			var l_oToProject:Dictionary = new Dictionary();
+			m_aVisiblePoly = new Array;//splice(0);
+			m_aTmp = new Array;//splice(0);
+			var l_oToProject:Dictionary = new Dictionary(true);
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
@@ -163,15 +164,15 @@ package sandy.core.scenegraph
 				{
 					// we manage the clipping
 					if( m_bClipped )
-						l_aTmp = l_oFace.clip( l_oFrustum );
+						m_aTmp = l_oFace.clip( l_oFrustum );
 					else
-				    	l_aTmp = l_oFace.cvertices = l_oFace.vertices;		   
+				    	m_aTmp = l_oFace.cvertices = l_oFace.vertices;		   
 					
 					// If the face is on screen, we manage some computations for a good display					
 					if( l_oFace.cvertices.length )
 					{
 						// we add the vertices to the projection list
-						for each( var l_oV:Vertex in l_aTmp )
+						for each( var l_oV:Vertex in m_aTmp )
 							l_oToProject[l_oV] = l_oV;
 						
 						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
@@ -194,7 +195,9 @@ package sandy.core.scenegraph
 				p_oCamera.addToDisplayList( this );
 			}
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.project( l_oToProject );			
+			p_oCamera.project( l_oToProject );	
+
+			//l_oToProject = null;
 		}
 	
 		// Called only if the useSignelContainer property is enabled!

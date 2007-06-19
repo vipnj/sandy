@@ -13,8 +13,8 @@ class sandy.materials.ColorMaterial extends Material
 	public function ColorMaterial( p_nColor:Number, p_nAlpha:Number )
 	{
 		super();
-		m_nColor = p_nColor;
-		m_nAlpha = p_nAlpha;
+		m_nColor = p_nColor || 0xFF0000;
+		m_nAlpha = p_nAlpha || 100;
 	}
 	
 	function renderPolygon( p_oPolygon:Polygon ):Void 

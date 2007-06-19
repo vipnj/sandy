@@ -1,7 +1,4 @@
 
-    
-import com.bourre.events.EventBroadcaster;
-
 import sandy.bounds.BBox;
 import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
@@ -11,7 +8,6 @@ import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.ITransformable;
-import sandy.events.MouseEvent;
 import sandy.materials.Appearance;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
@@ -25,7 +21,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     {
         super( p_sName );
         geometry = p_geometry;
-        m_oEB = new EventBroadcaster( this );
         //
         m_bBackFaceCulling = true;
 		m_bEnableForcedDepth = false;
@@ -47,6 +42,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     		for( i=0; i<l; i++ )
 	    	{
 	    		Polygon( aPolygons[i] ).destroy();
+	    		broadcaster.removeChild( Polygon( aPolygons[i] ).broadcaster );
 	    	}
     	}
     }
@@ -60,6 +56,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     	for( i=0; i<l; i++ )
     	{
     		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+    		// No need to link the broadcasters, they are alreay linked into the constructor
     	}
     }
 
@@ -351,31 +348,12 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		var l_faces:Array = aPolygons;
 		var l:Number = l_faces.length;
 		// -- 
-		if( b )
-		{
-			if( !m_bEv )
-			{
-				
-    			while( --l > -1 )
-    			{
-    			    l_faces[int(l)].enableEvents( true );
-					l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, this, _onPress);
-					l_faces[int(l)].container.addEventListener(MouseEvent.MOUSE_UP, this,_onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-					l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OVER, this,_onRollOver);	
-					l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OUT, this,_onRollOut);
-    			}
-			}
-		}
-		else if( !b && m_bEv )
-		{
+		if( b != m_bEv )
+		{	
 			while( --l > -1 )
-    		{
-    	        l_faces[int(l)].enableEvents( false );
-				l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, this,_onPress);
-				l_faces[int(l)].container.removeEventListener(MouseEvent.MOUSE_UP, this,_onPress);
-				l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OVER, this,_onRollOver);
-				l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, this,_onRollOut);
-    		}
+			{
+			    l_faces[int(l)].enableEvents( true );
+			}
 		}
 		m_bEv = b;
 	}
@@ -417,82 +395,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		super.destroy();
 	}
 
-
-
-	/**
-	 * Adds passed-in {@code oL} listener for receiving passed-in {@code t} event type.
-	 * 
-	 * <p>Take a look at example below to see all possible method call.
-	 * 
-	 * <p>Example
-	 * <code>
-	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
-	 *   oEB.addEventListener( myClass.onSometingEVENT, myFirstObject);
-	 *   oEB.addEventListener( myClass.onSometingElseEVENT, this, __onSomethingElse);
-	 *   oEB.addEventListener( myClass.onSometingElseEVENT, this, Delegate.create(this, __onSomething) );
-	 * </code>
-	 * 
-	 * @param t Name of the Event.
-	 * @param oL Listener object.
-	 */
-	public function addEventListener(t:String, oL) : Void
-	{
-		m_oEB.addEventListener.apply( m_oEB, arguments );
-	}
-	
-	/**
-	 * Removes passed-in {@code oL} listener that suscribed for passed-in {@code t} event.
-	 * 
-	 * <p>Example
-	 * <code>
-	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
-	 *   oEB.removeEventListener( myClass.onSometingEVENT, myFirstObject);
-	 *   oEB.removeEventListener( myClass.onSometingElseEVENT, this);
-	 * </code>
-	 * 
-	 * @param t Name of the Event.
-	 * @param oL Listener object.
-	 */
-	public function removeEventListener(t:String, oL) : Void
-	{
-		m_oEB.removeEventListener( t, oL );
-	}
-	
-
-	/**
-	 * Wrapper for Macromedia {@code EventDispatcher} polymorphism.
-	 * 
-	 * <p>Example
-	 * <code>
-	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
-	 *   oEB.dispatchEvent( {type:'onSomething', target:this, param:12} );
-	 * </code>
-	 * 
-	 * @param o Event object.
-	 */
-	public function dispatchEvent(o:Object) : Void
-	{
-		m_oEB.dispatchEvent.apply( m_oEB, arguments );
-	}
-	
-	//////////////////////
-	/// PRIVATE METHODS //  
-	//////////////////////
-	private function _onPress(e:MouseEvent):Void
-	{
-		dispatchEvent(e);
-	}
-	
-	private function _onRollOver(e:MouseEvent):Void
-	{
-		dispatchEvent(e);
-	}
-	
-	private function _onRollOut(e:MouseEvent):Void
-	{
-		dispatchEvent(e);
-	}
-
 // ______________
 // [PRIVATE] DATA________________________________________________				
 	private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
@@ -502,7 +404,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	private var m_bClipped:Boolean;
 	private var m_bEnableForcedDepth:Boolean;
 	private var m_nForcedDepth:Number;
-	private var m_oEB:EventBroadcaster;
 	/** Geometry of this object */
 	private var m_oGeometry:Geometry3D;
 	

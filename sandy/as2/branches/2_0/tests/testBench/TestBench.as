@@ -1,17 +1,19 @@
 ﻿import com.bourre.commands.Delegate;
-//mx.utils.Delegate
+
 import flash.display.BitmapData;
-//import sandy.core.scenegraph.Camera3D;
-import sandy.core.scenegraph.*;
-import sandy.core.transform.*;
+
+import sandy.core.face.Polygon;
+import sandy.core.scenegraph.ATransformable;
+import sandy.core.scenegraph.Camera3D;
+import sandy.core.scenegraph.Group;
 import sandy.core.World3D;
-import sandy.primitive.Box;
-import sandy.primitive.Sphere;
+import sandy.events.ObjectEvent;
 import sandy.materials.Appearance;
-import sandy.materials.ColorMaterial;
-import sandy.materials.Material;
 import sandy.materials.BitmapMaterial;
-import sandy.materials.LineAttributes;
+import sandy.materials.ColorMaterial;
+import sandy.primitive.Box;
+
+import tests.testBench.src.TestBench;
 /**
  * @author thomaspfeiffer
  */
@@ -118,6 +120,8 @@ class TestBench
 			faces[i].setSkin(skin3);
 		}*/
 		box.enableClipping = true;
+		box.enableEvents( true );
+		box.broadcaster.addEventListener( ObjectEvent.onPressEVENT, this, onObjectPressed);
 		//box.z = 200;
 		//box.tilt = 45;
 		//box.rotateX = 45;
@@ -130,6 +134,12 @@ class TestBench
 		//sphere.x = 100;
 		//g.addChild( sphere );
 		return g;
+	}
+	
+	public function onObjectPressed( pEvt:ObjectEvent ):Void
+	{
+		Polygon(pEvt.getTarget()).appearance = new Appearance( new ColorMaterial() );
+		trace( pEvt );
 	}
 	
 	private function _onRender( Void ):Void

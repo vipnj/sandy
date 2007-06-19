@@ -13,7 +13,9 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-import com.bourre.events.EventBroadcaster;
+import com.bourre.commands.Delegate;
+import com.bourre.events.BubbleEventBroadcaster;
+import com.bourre.events.EventType;
 
 import sandy.core.data.UVCoord;
 import sandy.core.data.Vector;
@@ -21,7 +23,7 @@ import sandy.core.data.Vertex;
 import sandy.core.scenegraph.Geometry3D;
 import sandy.core.scenegraph.Shape3D;
 import sandy.core.World3D;
-import sandy.events.MouseEvent;
+import sandy.events.ObjectEvent;
 import sandy.materials.Appearance;
 import sandy.math.VectorMath;
 import sandy.view.Frustum;
@@ -36,7 +38,7 @@ import sandy.view.Frustum;
 * @version		2.0
 * @date 		07.05.2007 
 **/
-class sandy.core.face.Polygon extends EventBroadcaster
+class sandy.core.face.Polygon
 {
 // _______
 // STATICS_______________________________________________________	
@@ -53,6 +55,7 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
 	public var backfaceCulling:Number;
 	
+	public var broadcaster:BubbleEventBroadcaster;
 // _______
 // PRIVATE_______________________________________________________			
 
@@ -65,7 +68,8 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	private var mouseEvents:Boolean;
 	/** Unique face id */
 	private var id:Number;
-		
+	private var m_bIsVisible:Boolean;
+	
 	public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number )
 	{
 		id = Polygon._ID_ ++;
@@ -75,10 +79,12 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		// --
 		backfaceCulling = 1;
 		depth = 0;
+		m_bIsVisible = false;
 		// --
 		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
 		container = World3D.getInstance().container.createEmptyMovieClip( "polygon_"+id.toString(), id );
+		broadcaster = new BubbleEventBroadcaster( this, owner.broadcaster );
 	}
 
 
@@ -92,7 +98,7 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	{
 		// all normals are refreshed every loop. Face is visible is normal face to the camera
 		var a:Vertex = vertices[0];
-		return ( backfaceCulling ) * ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz ) < 0;
+		return m_bIsVisible = ( backfaceCulling ) * ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz ) < 0;
 	}
 	
 	public function clip( p_oFrustum:Frustum ):Array
@@ -108,7 +114,7 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	
 	public function render():Void
 	{
-		if( visible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
+		if( m_bIsVisible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
 		else			m_oAppearance.backMaterial.renderPolygon( this );
 	}
 	
@@ -187,17 +193,19 @@ class sandy.core.face.Polygon extends EventBroadcaster
 	{
         if( b && !mouseEvents )
         {
-    		container.addEventListener(MouseEvent.CLICK, this, _onPress);
-    		container.addEventListener(MouseEvent.MOUSE_UP, this, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-    		container.addEventListener(MouseEvent.ROLL_OVER,this,  _onRollOver);	
-    		container.addEventListener(MouseEvent.ROLL_OUT, this, _onRollOut);
+    		container.onPress = Delegate.create( this, _onEvent, ObjectEvent.onPressEVENT );
+    		container.onRelease = Delegate.create( this, _onEvent, ObjectEvent.onReleaseEVENT );
+    		container.onRollOver = Delegate.create(this,  _onEvent, ObjectEvent.onRollOverEVENT );	
+    		container.onRollOut = Delegate.create( this, _onEvent,  ObjectEvent.onRollOutEVENT );
+    		container.onReleaseOutside = Delegate.create( this, _onEvent, ObjectEvent.onReleaseOutsideEVENT );
 		}
 		else if( !b && mouseEvents )
 		{
-			container.addEventListener(MouseEvent.CLICK, this, _onPress);
-			container.removeEventListener(MouseEvent.MOUSE_UP, this, _onPress);
-			container.removeEventListener(MouseEvent.ROLL_OVER, this, _onRollOver);
-			container.removeEventListener(MouseEvent.ROLL_OUT, this, _onRollOut);
+			container.onPress = null;
+    		container.onRelease = null;
+    		container.onRollOver = null;
+    		container.onRollOut = null;
+    		container.onReleaseOutside = null;
     	}
     	mouseEvents = b;
 	}
@@ -259,27 +267,15 @@ class sandy.core.face.Polygon extends EventBroadcaster
 		cvertices = null;
 		vertices = null;
 	}
-	
 
 	/*
 	 ***********************
 	 * EVENTS 
 	 ***********************
-	*/
-	
-	private function _onPress(e:MouseEvent):Void
+	*/	
+	private function _onEvent( e:EventType ):Void
 	{
-		dispatchEvent(e);
-	}
-	
-	private function _onRollOver(e:MouseEvent):Void
-	{
-		dispatchEvent(e);
-	}
-	
-	private function _onRollOut(e:MouseEvent):Void
-	{
-		dispatchEvent(e);
+		broadcaster.broadcastEvent( new ObjectEvent( e, this, owner ) );
 	}
 
 }

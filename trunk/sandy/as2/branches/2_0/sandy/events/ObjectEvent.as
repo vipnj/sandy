@@ -14,7 +14,7 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-import com.bourre.events.BasicEvent;
+import com.bourre.events.BubbleEvent;
 import com.bourre.events.EventType;
 
 import sandy.core.scenegraph.Shape3D;
@@ -24,7 +24,7 @@ import sandy.core.scenegraph.Shape3D;
  * @version		1.0
  * @date 		24.08.2006
  */
-class sandy.events.ObjectEvent extends BasicEvent
+class sandy.events.ObjectEvent extends BubbleEvent
 {
 	/**
 	 * The onPress Object Event. Broadcasted once a face of an object is clicked

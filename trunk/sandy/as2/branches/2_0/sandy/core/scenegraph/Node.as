@@ -21,6 +21,7 @@ import sandy.core.scenegraph.Camera3D;
 import sandy.math.Matrix4Math;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
+import com.bourre.events.BubbleEventBroadcaster;
 
 /**
  * ABSTRACT CLASS
@@ -39,6 +40,7 @@ class sandy.core.scenegraph.Node
 	// This property represent the culling state of the current node
 	public var culled:CullingState;
 	
+	public var broadcaster:BubbleEventBroadcaster;
 	/**
 	* Retuns the unique ID Number that represents the node.
 	* This value is very usefull to retrieve a specific Node.
@@ -70,6 +72,7 @@ class sandy.core.scenegraph.Node
 		if( n )
 		{
 			_parent = n;
+			broadcaster.parent = n.broadcaster;
 			changed = true;
 		}
 	}
@@ -104,6 +107,7 @@ class sandy.core.scenegraph.Node
 		child.parent = this;
 		changed =  true ;
 		_aChilds.push( child );
+		broadcaster.addChild( child.broadcaster );
 	}	
 	
 	/**
@@ -191,6 +195,7 @@ class sandy.core.scenegraph.Node
 			if( _aChilds[int(i)].id == pId  )
 			{
 				_aChilds.splice( i, 1 );
+				broadcaster.removeChild( _aChilds[int(i)].broadcaster );
 				changed = true;
 				found = true;
 			}
@@ -217,6 +222,7 @@ class sandy.core.scenegraph.Node
 			if( _aChilds[int(i)].name == pName  )
 			{
 				_aChilds.splice( i, 1 );
+				broadcaster.removeChild( _aChilds[int(i)].broadcaster );
 				changed = true;
 				found = true;
 			}
@@ -240,7 +246,7 @@ class sandy.core.scenegraph.Node
 			_aChilds[int(l)] = null;	
 		}
 		_aChilds = null;
-		
+		broadcaster = null;
 		// the unlink this node to his parent
 		if( hasParent() == true ) parent.removeChildById( this._id );
 	}
@@ -394,6 +400,8 @@ class sandy.core.scenegraph.Node
 		_visible = true;
 		_oBBox = new BBox();
 		_oBSphere = new BSphere();
+		// --
+		broadcaster = new BubbleEventBroadcaster( this );
 		// -- 
 		_oModelCacheMatrix = null;
 		_oViewCacheMatrix = null;

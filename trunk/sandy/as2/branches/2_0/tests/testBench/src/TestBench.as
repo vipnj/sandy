@@ -8,13 +8,16 @@ import com.bourre.visual.FPSLoggerUI;
 
 import flash.display.BitmapData;
 
+import sandy.core.face.Polygon;
 import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Group;
 import sandy.core.scenegraph.TransformGroup;
 import sandy.core.World3D;
+import sandy.events.ObjectEvent;
 import sandy.materials.Appearance;
 import sandy.materials.BitmapMaterial;
+import sandy.materials.ColorMaterial;
 import sandy.materials.LineAttributes;
 import sandy.primitive.Box;
 import sandy.util.BitmapUtil;
@@ -87,12 +90,21 @@ class TestBench implements IFrameListener
 		box = new Box( "myBox", 100, 100, 100, "tri", 1 );
 		box.appearance = l_oTextureAppearance;
 		box.enableClipping = true;
+		box.enableBackFaceCulling = false;
+		box.enableEvents = true;
+		g.broadcaster.addEventListener( ObjectEvent.onPressEVENT, this, onObjectPressed);
 		//box.z = -100;
 		// --
 		m_oTG.addChild( box );
 		g.addChild( m_oTG );
 		// --
 		return g;
+	}
+	
+	public function onObjectPressed( pEvt:ObjectEvent ):Void
+	{
+		Polygon(pEvt.getTarget()).appearance = new Appearance( new ColorMaterial() );
+		trace( pEvt );
 	}
 	
 	public function onEnterFrame():Void

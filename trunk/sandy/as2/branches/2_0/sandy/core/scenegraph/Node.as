@@ -14,6 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import com.bourre.events.BubbleEventBroadcaster;
+
 import sandy.bounds.BBox;
 import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
@@ -21,7 +23,6 @@ import sandy.core.scenegraph.Camera3D;
 import sandy.math.Matrix4Math;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
-import com.bourre.events.BubbleEventBroadcaster;
 
 /**
  * ABSTRACT CLASS

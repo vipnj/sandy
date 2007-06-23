@@ -56,8 +56,10 @@ class sandy.bounds.BBox
 	    var l:Number = p_aPts.length;
 	    var l_min:Vector = new Vector();
 	    var l_max:Vector = new Vector();
-		l_min.x = l_max.x = p_aPts[0].x; l_min.y = l_max.y = p_aPts[0].y; l_min.z = l_max.z = p_aPts[0].z;
-		while( --l > 1 )
+		l_min.x = l_max.x = p_aPts[0].x; 
+		l_min.y = l_max.y = p_aPts[0].y; 
+		l_min.z = l_max.z = p_aPts[0].z;
+		while( --l > 0 )
 		{
 			var v:Vertex = p_aPts[int(l)];
 			// --

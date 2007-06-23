@@ -117,7 +117,7 @@ class sandy.core.data.Vertex extends Vector
 	*/
 	public function toString():String
 	{
-		return "sandy.core.data" + "(x:"+x+" y:"+y+" z:"+z+"\nwx:"+wx+" wy:"+wy+" wz:"+wz+"\nsx:" + sx + " sy:"+ sy + ", sz:" + sz +")"+HashCodeFactory.getKey(this);
+		return "sandy.core.data.Vertex" + "(x:"+x+" y:"+y+" z:"+z+", wx:"+wx+" wy:"+wy+" wz:"+wz+", sx:" + sx + " sy:"+ sy + ", sz:" + sz +")"+HashCodeFactory.getKey(this);
 	}
 	
 }

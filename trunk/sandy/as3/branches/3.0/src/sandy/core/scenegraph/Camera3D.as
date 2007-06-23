@@ -16,20 +16,16 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.utils.Dictionary;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
-	import sandy.core.data.Polygon;
 	import sandy.math.Matrix4Math;
-	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
-	import flash.utils.Dictionary;
-	import flash.geom.Matrix;
 	
 	/**
 	* Camera3D
@@ -150,7 +146,6 @@ package sandy.core.scenegraph
 		    // --
 			for each( var l_oShape:IDisplayable in m_aDisplayList )
 			{
-				//l_mcContainer.setChildIndex( l_oShape.container, l_nId++ );
 				l_oShape.container.graphics.clear();
 				l_mcContainer.addChild( l_oShape.container );
 				l_oShape.display();
@@ -189,10 +184,10 @@ package sandy.core.scenegraph
 		 */
 		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
-			updatePerspective();
+			if( _perspectiveChanged ) updatePerspective();
 			super.update( p_oModelMatrix, p_bChanged );
 			// SHOULD BE DONE IN A FASTER WAY
-			_oModelCacheMatrix = Matrix4Math.getInverse(_oModelCacheMatrix);
+			m_oModelMatrixInv = Matrix4Math.getInverse(_oModelCacheMatrix);
 			/*new Matrix4( 	_oModelCacheMatrix.n11,
 												_oModelCacheMatrix.n21,
 												_oModelCacheMatrix.n31,
@@ -207,10 +202,15 @@ package sandy.core.scenegraph
 											  - _oModelCacheMatrix.n34 );*/
 		}
 				
+		/**
+		 * Returns the model matrix from the camera, so inverted in comparison of the real model view matrix.
+		 * This allows to replace the elements in the correct camera frame before projection
+		 */
 		public function get modelMatrix():Matrix4
 		{
-			return _oModelCacheMatrix;
+			return m_oModelMatrixInv;
 		}
+		
 		/**
 		 * No cull is necessary for the Camera object. This method does nothing.
 		 */
@@ -236,11 +236,7 @@ package sandy.core.scenegraph
 		{
 			return _mpInv;
 		}
-	
-		public function getTransformationMatrixInverse():Matrix4
-		{
-			return  Matrix4Math.getInverse( transform.matrix );
-		}
+
 		
 		public override function toString():String
 		{
@@ -273,9 +269,9 @@ package sandy.core.scenegraph
 			_mp.n43 = 1;
 			// to optimize later
 			mp11 = _mp.n11; mp21 = _mp.n21; mp31 = _mp.n31; mp41 = _mp.n41;
-			mp12 = _mp.n12; mp22 = _mp.n22; mp32 = _mp.n32; mp42 = _mp.n42,
-			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43,
-			mp14 = _mp.n14; mp24 = _mp.n24, mp34 = _mp.n34; mp44 = _mp.n44,				
+			mp12 = _mp.n12; mp22 = _mp.n22; mp32 = _mp.n32; mp42 = _mp.n42;
+			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
+			mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;			
 			
 			changed = true;	
 		}
@@ -307,7 +303,7 @@ package sandy.core.scenegraph
 		private var _nFov:Number;
 		private var _nFar:Number;
 		private var _nNear:Number;
-		
+		private var m_oModelMatrixInv:Matrix4;
 		private var mp11:Number, mp21:Number,mp31:Number,mp41:Number,
 					mp12:Number,mp22:Number,mp32:Number,mp42:Number,
 					mp13:Number,mp23:Number,mp33:Number,mp43:Number,

@@ -7,6 +7,7 @@ import com.bourre.utils.LuminicTracer;
 import com.bourre.visual.FPSLoggerUI;
 
 import flash.display.BitmapData;
+import flash.filters.GlowFilter;
 
 import sandy.core.face.Polygon;
 import sandy.core.scenegraph.ATransformable;
@@ -74,6 +75,28 @@ class TestBench implements IFrameListener
 		_world.root.addChild( _world.camera );		
 	}
 		
+		
+	private function getFilters():Array
+	{
+		var color:Number = 0x33CCFF;
+		var alpha:Number = .8;
+		var blurX:Number = 35;
+		var blurY:Number = 35;
+		var strength:Number = 2;
+		var quality:Number = 3;
+		var inner:Boolean = false;
+		var knockout:Boolean = false;
+		
+		var filter:GlowFilter = new GlowFilter(color, 
+		                                        alpha, 
+		                                        blurX, 
+		                                        blurY, 
+		                                        strength, 
+		                                        quality, 
+		                                        inner, 
+		                                        knockout);
+		return new Array( filter );
+	}
 	// Create the objec tree
 	private function _createScene( Void ):Group
 	{
@@ -84,13 +107,15 @@ class TestBench implements IFrameListener
 		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
 		var l_oMaterial:BitmapMaterial = new BitmapMaterial(b);
 		//var l_oMaterial:ColorMaterial = new ColorMaterial( 0xFFCC00, 50 );
+		//l_oMaterial.filters = getFilters();
 		l_oMaterial.lineAttributes = new LineAttributes( 2, 0, 100 );
 		var l_oTextureAppearance:Appearance = new Appearance( l_oMaterial ); 
 		// --
 		box = new Box( "myBox", 100, 100, 100, "tri", 1 );
+		box.useSingleContainer = false;
 		box.appearance = l_oTextureAppearance;
-		box.enableClipping = true;
-		box.enableBackFaceCulling = false;
+		//box.enableClipping = true;
+		box.enableBackFaceCulling = true;
 		box.enableEvents = true;
 		g.broadcaster.addEventListener( ObjectEvent.onPressEVENT, this, onObjectPressed);
 		//box.z = -100;
@@ -104,7 +129,6 @@ class TestBench implements IFrameListener
 	public function onObjectPressed( pEvt:ObjectEvent ):Void
 	{
 		Polygon(pEvt.getTarget()).appearance = new Appearance( new ColorMaterial() );
-		trace( pEvt );
 	}
 	
 	public function onEnterFrame():Void

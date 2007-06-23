@@ -37,9 +37,9 @@ class sandy.materials.Material
 	{return _id;}
 	
 
-	function renderPolygon( p_oPolygon:Polygon ):Void
+	function renderPolygon( p_oPolygon:Polygon, p_mcContainer:MovieClip ):Void
 	{
-		;
+		p_mcContainer.filters = _filters;
 	}
 		
 	public function init( f:Polygon ):Void

@@ -1,4 +1,6 @@
-﻿import sandy.core.face.Polygon;
+﻿import com.bourre.log.Logger;
+
+import sandy.core.face.Polygon;
 import sandy.materials.Material;
 import sandy.materials.MaterialType;
 
@@ -17,9 +19,11 @@ class sandy.materials.ColorMaterial extends Material
 		m_nAlpha = p_nAlpha || 100;
 	}
 	
-	function renderPolygon( p_oPolygon:Polygon ):Void 
+	function renderPolygon( p_oPolygon:Polygon, p_mcContainer:MovieClip ):Void 
 	{
-		var mc:MovieClip = p_oPolygon.container;
+		super.renderPolygon( p_oPolygon, p_mcContainer );
+		//
+		var mc:MovieClip = p_mcContainer;
 		var l_points:Array = p_oPolygon.cvertices;
 		// --
 		mc.beginFill( m_nColor, m_nAlpha );

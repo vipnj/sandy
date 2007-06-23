@@ -21,6 +21,7 @@ import sandy.core.data.UVCoord;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.scenegraph.Geometry3D;
+import sandy.core.scenegraph.IDisplayable;
 import sandy.core.scenegraph.Shape3D;
 import sandy.core.World3D;
 import sandy.events.ObjectEvent;
@@ -38,7 +39,7 @@ import sandy.view.Frustum;
 * @version		2.0
 * @date 		07.05.2007 
 **/
-class sandy.core.face.Polygon
+class sandy.core.face.Polygon implements IDisplayable
 {
 // _______
 // STATICS_______________________________________________________	
@@ -54,7 +55,7 @@ class sandy.core.face.Polygon
 	public var aUVCoord:Array;
 	/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
 	public var backfaceCulling:Number;
-	
+	public var originalContainer:MovieClip;
 	public var broadcaster:BubbleEventBroadcaster;
 // _______
 // PRIVATE_______________________________________________________			
@@ -83,7 +84,7 @@ class sandy.core.face.Polygon
 		// --
 		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
-		container = World3D.getInstance().container.createEmptyMovieClip( "polygon_"+id.toString(), id );
+		originalContainer = container = World3D.getInstance().container.createEmptyMovieClip( "polygon_"+id.toString(), id );
 		broadcaster = new BubbleEventBroadcaster( this, owner.broadcaster );
 	}
 
@@ -111,13 +112,13 @@ class sandy.core.face.Polygon
 		p_oFrustum.clipFrustum( cvertices );
 		return vertices.concat( cvertices );
 	}
-	
-	public function render():Void
+
+	public function display():Void
 	{
-		if( m_bIsVisible ) 	m_oAppearance.frontMaterial.renderPolygon( this );
-		else			m_oAppearance.backMaterial.renderPolygon( this );
+		if( m_bIsVisible )m_oAppearance.frontMaterial.renderPolygon( this, container );
+		else			m_oAppearance.backMaterial.renderPolygon( this, container );
 	}
-	
+		
 	/**
 	 * Calling this method make the polygon gets its vertice and normals by reference instead of accessing them by their ID.
 	 * This method shall be called once the geometry created.

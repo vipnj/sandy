@@ -4,7 +4,6 @@ class sandy.view.ViewPort
     /**
 	* Create a new ViewPort.
 	*
-	* @param: mc a MovieClip containig the whole rendered scene
 	* @param: w a Number giving the width of the rendered screen
 	* @param: h a Number giving the height of the rendered screen
 	**/
@@ -12,6 +11,11 @@ class sandy.view.ViewPort
 	{
 		w = p_w;
 		h = p_h;
+		update();
+	}
+	
+	public function update():Void
+	{
 		w2 = w/2;
 		h2 = h/2;
 		ratio = w/h;

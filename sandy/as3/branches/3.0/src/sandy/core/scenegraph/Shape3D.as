@@ -154,8 +154,7 @@ package sandy.core.scenegraph
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-			m_aVisiblePoly = new Array;//splice(0);
-			m_aTmp = new Array;//splice(0);
+			m_aVisiblePoly.splice(0);
 			var l_oToProject:Dictionary = new Dictionary(true);
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
@@ -176,7 +175,7 @@ package sandy.core.scenegraph
 							l_oToProject[l_oV] = l_oV;
 						
 						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-						if( m_bEnableForcedDepth == false ) l_nDepth += l_oFace.getZAverage();
+						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
 						else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
 						
 						// -- we manage the display list depending on the mode choosen
@@ -185,6 +184,7 @@ package sandy.core.scenegraph
 						else
 							p_oCamera.addToDisplayList( l_oFace );
 					}
+					else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
 				}
 			}
 			// --
@@ -196,8 +196,8 @@ package sandy.core.scenegraph
 			}
 			// -- We push the vertex to project onto the viewport.
 			p_oCamera.project( l_oToProject );	
-
-			//l_oToProject = null;
+			// --
+			l_oToProject = undefined;
 		}
 	
 		// Called only if the useSignelContainer property is enabled!
@@ -436,6 +436,6 @@ package sandy.core.scenegraph
 		protected var m_nDepth:Number;
 		protected var m_oContainer:Sprite;
 		//protected va
-		private var m_aVisiblePoly:Array;		
+		private var m_aVisiblePoly:Array = new Array();		
 	}
 }

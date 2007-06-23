@@ -57,9 +57,11 @@ package
 		
 		private function _init():void
 		{
-			_world.root = _createScene();
 			_world.camera = new Camera3D( SCREEN_WIDTH, SCREEN_HEIGHT );
-			_world.root.addChild( _world.camera );
+			_world.camera.z = 1500;
+			_world.root = _createScene();
+			_world.camera.lookAt( 0, 0, 0 );
+			//_world.root.addChild( _world.camera );
 		}
 		
 		private function _createScene():Group
@@ -110,6 +112,7 @@ package
 			var line:Line3D = new Line3D( "myLine", new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
 			line.appearance = new Appearance( new ColorMaterial( 0, 0, new LineAttributes( 1, 0xFF ) ) );
 			// -- Tree creation
+			/*
 			tgTranslation.addChild( box );
 			tgRotation.addChild( hedra );
 			tgRotation.addChild( line );
@@ -119,13 +122,24 @@ package
 			tgRotation.addChild( l_oCone );
 			tgTranslation.addChild( tgRotation );
 			g.addChild( tgTranslation );
+			*/
+			tgTranslation.addChild( box );
+			tgTranslation.addChild( hedra );
+			tgTranslation.addChild( line );
+			tgTranslation.addChild( l_oCylinder );
+			tgTranslation.addChild( l_oTorus );
+			tgTranslation.addChild( l_oSphere );
+			tgTranslation.addChild( l_oCone );
+			tgTranslation.addChild( tgRotation );
+			tgRotation.addChild( _world.camera );
+			g.addChild( tgTranslation );
 			// --
 			return g;
 		}
 	
 		private function enterFrameHandler( event : Event ) : void
 		{
-			tgRotation.rotateY ++;
+			tgRotation.rotateX ++;
 			box.rotateX += 0.5;
 			_world.render();
 		}

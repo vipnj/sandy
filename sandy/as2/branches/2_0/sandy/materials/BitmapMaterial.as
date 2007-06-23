@@ -61,60 +61,52 @@ class sandy.materials.BitmapMaterial extends Material
 		m_oPolygonMatrixMap = new Map();
 	}
 
-	function renderPolygon( p_oPolygon:Polygon ):Void 
+	function renderPolygon( p_oPolygon:Polygon, p_mcContainer:MovieClip  ):Void 
 	{
-		var mc:MovieClip = p_oPolygon.container;
-		var l_points:Array = p_oPolygon.cvertices;
+		super.renderPolygon( p_oPolygon, p_mcContainer );
+		//
+		var mc:MovieClip = p_mcContainer;
+		var l_points:Array = p_oPolygon.cvertices;	
+		// -- we prepare the texture
+		prepare( p_oPolygon );
 		// --
-		if( l_points.length == 1 )
+		mc.beginBitmapFill( m_oTexture, matrix, false, smooth );
+		// --
+		if( lineAttributes )
+			mc.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+		// --
+		mc.moveTo( l_points[0].sx, l_points[0].sy );
+		// --
+		switch( l_points.length )
 		{
-			//FIXME I don't like the way the perspective is applied here...
-			mc._xscale = mc._yscale = (10000 / l_points[0].wz);
-			mc._x = l_points[0].sx - mc._width  / 2;
-			mc._y = l_points[0].sy - mc._height / 2;
+			case 2 :
+				mc.lineTo( l_points[1].sx, l_points[1].sy );
+				break;
+			case 3 :
+				mc.lineTo( l_points[1].sx, l_points[1].sy );
+				mc.lineTo( l_points[2].sx, l_points[2].sy );
+				break;
+			case 4 :
+				mc.lineTo( l_points[1].sx, l_points[1].sy );
+				mc.lineTo( l_points[2].sx, l_points[2].sy );
+				mc.lineTo( l_points[3].sx, l_points[3].sy );
+				break;
+			default :
+				var l:Number = l_points.length;
+				while( --l > 0 )
+				{
+					mc.lineTo( l_points[(l)].sx, l_points[(l)].sy);
+				}
+				break;
 		}
-		else
+		// -- we draw the last edge
+		if( lineAttributes )
 		{
-			// -- we prepare the texture
-			prepare( p_oPolygon );
-			// --
-			mc.beginBitmapFill( m_oTexture, matrix, false, smooth );
-			// --
-			if( lineAttributes )
-				mc.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
-			// --
-			mc.moveTo( l_points[0].sx, l_points[0].sy );
-			// --
-			switch( l_points.length )
-			{
-				case 2 :
-					mc.lineTo( l_points[1].sx, l_points[1].sy );
-					break;
-				case 3 :
-					mc.lineTo( l_points[1].sx, l_points[1].sy );
-					mc.lineTo( l_points[2].sx, l_points[2].sy );
-					break;
-				case 4 :
-					mc.lineTo( l_points[1].sx, l_points[1].sy );
-					mc.lineTo( l_points[2].sx, l_points[2].sy );
-					mc.lineTo( l_points[3].sx, l_points[3].sy );
-					break;
-				default :
-					var l:Number = l_points.length;
-					while( --l > 0 )
-					{
-						mc.lineTo( l_points[(l)].sx, l_points[(l)].sy);
-					}
-					break;
-			}
-			// -- we draw the last edge
-			if( lineAttributes )
-			{
-				mc.lineTo( l_points[0].sx, l_points[0].sy );
-			}
-			// --
-			mc.endFill();
+			mc.lineTo( l_points[0].sx, l_points[0].sy );
 		}
+		// --
+		mc.endFill();
+
 	}
 		
 	public function get texture():BitmapData
@@ -190,7 +182,7 @@ class sandy.materials.BitmapMaterial extends Material
 				var v1: Number = l_aUV[1].v * m_nHeight;
 				var u2: Number = l_aUV[2].u * m_nWidth;
 				var v2: Number = l_aUV[2].v * m_nHeight;
-				// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
+				// -- Fix perpendicular projections. This will certainly solve the freeze problem
 				if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 				{
 					u0 -= (u0 > 0.05)? 0.05 : -0.05;
@@ -204,7 +196,6 @@ class sandy.materials.BitmapMaterial extends Material
 				// --
 				m = new Matrix( (u1 - u0), (v1 - v0), (u2 - u0), (v2 - v0), u0, v0 );
 				m.invert();
-				//Logger.LOG("Polygon matrix : "+f+" "+m);
 			}
 			// --
 			m_oPolygonMatrixMap.put( f, m );

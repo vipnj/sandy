@@ -14,10 +14,12 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
  
+import com.bourre.log.Logger;
+
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vertex;
-import sandy.core.face.Polygon;
 import sandy.core.scenegraph.ATransformable;
+import sandy.core.scenegraph.IDisplayable;
 import sandy.core.scenegraph.ITransformable;
 import sandy.math.Matrix4Math;
 import sandy.math.VectorMath;
@@ -43,13 +45,15 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 * @param pWidth Number The width of the world
  	 * @param pHeight Number The height of the world
 	 * @param pFear Number Near z-plane. Default is 10.
-	 * @param pFear Number Far z-plane. Default is 3000.
-		 
+	 * @param pFear Number Far z-plane. Default is 3000. 
 	 */
 	public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number, p_nNear:Number, p_nFar:Number  )
 	{
 		super( null );
 		_viewport = new ViewPort( p_nWidth, p_nHeight );
+		_viewport.update();
+		m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+		// --
 		_nFov = (p_nFov)   ? p_nFov : 45;
 		_nFar = (p_nFar)   ? p_nFar : 3000;
 		_nNear = (p_nNear) ? p_nNear : 10;
@@ -67,16 +71,30 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 ///// ACCESSORS //////
 //////////////////////		
 
-	public function set viewport( pVP:ViewPort )
+	
+	public function set viewport( pVP:ViewPort ):Void
 	{
 		_viewport = pVP;
 		_perspectiveChanged = true;
+		m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
 	}
 	
-	public function get viewport():ViewPort
+	public function set viewportWidth( p_nWidth:Number ):Void
 	{
-		return _viewport;
+		_viewport.w = p_nWidth;
+		_viewport.update();
+		_perspectiveChanged = true;
+		m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
 	}
+	
+	public function set viewportHeight( p_nHeight:Number ):Void
+	{
+		_viewport.h = p_nHeight;
+		_viewport.update();
+		_perspectiveChanged = true;
+		m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+	}
+		
 	
 	/**
 	 * Angle of view in degrees
@@ -129,35 +147,25 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		m_aVerticesList = m_aVerticesList.concat( p_aVertices );
 	}
 	
-	public function clearDisplayList( Void ):Void
-	{
-	    var l_oDisplayElt:Polygon;
-	    var i:Number;
-	    // --
-		for( i=0; l_oDisplayElt = m_aDisplayListCopy[i]; i++ )
-		{
-		   l_oDisplayElt.container.clear();
-		}
-
-	}
-	
 	public function renderDisplayList( Void ):Void
 	{
-	    var l_oDisplayElt:Polygon = null;
-	    var i:Number;
+	    var l_oDisplayElt:IDisplayable = null, i:Number = 0, l:Number = m_aDisplayList.length;
 	    // --
-		for( i=0; l_oDisplayElt = m_aDisplayList[i]; i++ )
+	    m_aDisplayList = m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
+	    // --
+		while( --l > -1 )
 		{
-		   l_oDisplayElt.render();
+		   m_aDisplayList[l].container.clear();
+		   m_aDisplayList[l].display();
+		   m_aDisplayList[l].container.swapDepths( i++ );
 		}
 		// --
-		m_aDisplayListCopy = m_aDisplayList.concat();
-		m_aDisplayList = [];
+		m_aDisplayList.splice(0);
 	}
 		
-	public function addToDisplayList( p_oPolygon:Polygon ):Void
+	public function addToDisplayList( p_oElement:IDisplayable ):Void
 	{
-		m_aDisplayList.push( p_oPolygon );
+		m_aDisplayList.push( p_oElement );
 	}
 	
 	public function project( Void ):Void
@@ -166,8 +174,6 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		var l_aPoints:Array = m_aVerticesList;
 		var l_nLength:Number = m_aVerticesList.length;
 		var l_nCste:Number;
-		var l_nOffx:Number = viewport.w2;
-		var l_nOffy:Number = viewport.h2;
 		var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
 		//
 		mp11 = _mp.n11; mp21 = _mp.n21; mp31 = _mp.n31; mp41 = _mp.n41;
@@ -177,15 +183,13 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		//
 		while( --l_nLength > -1 )
 		{
-			
 			l_oVertex = l_aPoints[l_nLength];
-
 			l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-			l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * l_nOffx + l_nOffx;
-			l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * l_nOffy + l_nOffy;
+			l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
+			l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
 		}
 		// --
-		m_aVerticesList = [];	
+		m_aVerticesList.splice(0);	
 	}
 
 	/**
@@ -202,12 +206,21 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 */
 	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
 	{
-		// --
-		updatePerspective();
-		updateTransform();
+		if( _perspectiveChanged ) updatePerspective();
 		super.update( p_oModelMatrix, p_bChanged );
+		// SHOULD BE DONE IN A FASTER WAY
+		m_oModelMatrixInv = Matrix4Math.getInverse(_oModelCacheMatrix);
 	}
-	
+
+	/**
+	 * Returns the model matrix from the camera, so inverted in comparison of the real model view matrix.
+	 * This allows to replace the elements in the correct camera frame before projection
+	 */
+	public function get modelMatrix():Matrix4
+	{
+		return m_oModelMatrixInv;
+	}
+			
 	/**
 	 * No cull is necessary for the Camera object. This method does nothing.
 	 */
@@ -233,19 +246,6 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	{
 		return _mpInv;
 	}
-
-	/*
-	public function applyTransform( p_oTrans:Transform3D ):Void
-	{
-		_vUp   = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vUp  );
-		_vSide = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vSide);
-		_vOut  = Matrix4Math.vectorMult3x3( p_oTrans.matrix, _vOut);
-		_p.x = p_oTrans.matrix.n14;
-		_p.y = p_oTrans.matrix.n24;
-		_p.z = p_oTrans.matrix.n34;
-		changed = true;
-	}
-	*/
 
 	public function getTransformationMatrixInverse():Matrix4
 	{
@@ -298,11 +298,9 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	public function setPerspectiveProjection(fovY:Number, aspectRatio:Number, zNear:Number, zFar:Number):Void
 	{
 		var cotan:Number, Q:Number;
-		
 		if( undefined == zNear ) fovY = _nFov;
 		if( undefined == zNear ) zNear = _nNear;
 		if( undefined == zFar )  zFar = _nFar;
-		
 		// --
 		frustrum.computePlanes(aspectRatio, zNear, zFar, fovY );
 		// --
@@ -318,36 +316,14 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 		_mp.n34 = -Q*zNear;
 		_mp.n43 = 1;
 
+		mp11 = _mp.n11; mp21 = _mp.n21; mp31 = _mp.n31; mp41 = _mp.n41;
+		mp12 = _mp.n12; mp22 = _mp.n22; mp32 = _mp.n32; mp42 = _mp.n42;
+		mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
+		mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;			
+		
 		changed = true;	
 	}
 		
-		
-	/**
-	 * Update the camera transformation
-	 */
-	public function updateTransform ( Void ):Void
-	{
-		if( changed )
-		{
-			var mt:Matrix4 = m_tmpMt;
-			mt.n11 = _vSide.x; 
-			mt.n12 = _vSide.y; 
-			mt.n13 = _vSide.z; 
-			mt.n14 = - VectorMath.dot( _vSide, _p );
-			
-			mt.n21 = _vUp.x; 
-			mt.n22 = _vUp.y; 
-			mt.n23 = _vUp.z; 
-			mt.n24 = - VectorMath.dot( _vUp, _p );
-			
-			mt.n31 = _vOut.x; 
-			mt.n32 = _vOut.y; 
-			mt.n33 = _vOut.z; 
-			mt.n34 = - VectorMath.dot( _vOut, _p );
-			
-			transform.matrix = mt;
-		}
-	}
 	
 	function updatePerspective( Void ):Void
 	{
@@ -374,11 +350,15 @@ class sandy.core.scenegraph.Camera3D extends ATransformable implements ITransfor
 	 */
 	private var _viewport:ViewPort;
 	private var m_aDisplayList:Array;
-	private var m_aDisplayListCopy:Array;
 	private var _perspectiveChanged:Boolean;
 	private var _nFov:Number;
 	private var _nFar:Number;
 	private var _nNear:Number;
 	private var m_aVerticesList:Array;
-
+	private var m_oModelMatrixInv:Matrix4;
+	private var mp11:Number, mp21:Number,mp31:Number,mp41:Number,
+				mp12:Number,mp22:Number,mp32:Number,mp42:Number,
+				mp13:Number,mp23:Number,mp33:Number,mp43:Number,
+				mp14:Number,mp24:Number,mp34:Number,mp44:Number,				
+				m_nOffx:Number, m_nOffy:Number;
 }

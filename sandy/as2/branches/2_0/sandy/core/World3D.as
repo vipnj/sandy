@@ -134,19 +134,16 @@ class sandy.core.World3D
 	 */
 	public function render( Void ):Void 
 	{
-		// we set a variable to remember the number of objects 
-		// and in the same time we strop if no objects are displayable
 		if( root && camera && _container )
 		{
 			_oEB.broadcastEvent( _eOnRender );
 			// --
 			root.update( null, false );
-			root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
+			root.cull( camera.frustrum, camera.modelMatrix, camera.changed );
 			root.render( camera );
 			// --
 			camera.project();
 			// -- clear the polygon's container and the projection vertices list
-            camera.clearDisplayList();
             camera.renderDisplayList();
 		}
 	} // end method

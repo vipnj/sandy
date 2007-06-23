@@ -92,7 +92,7 @@ class sandy.core.data.Vector
 	public function serialize(decPlaces:Number):String
 	{
 		if (decPlaces == undefined) {
-			decPlaces = .01
+			decPlaces = .01;
 		}
 		//returns x,y,x
 		return  (NumberUtil.roundTo(x, decPlaces) + "," + 

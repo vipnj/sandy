@@ -1,4 +1,6 @@
 
+import com.bourre.log.Logger;
+
 import sandy.bounds.BBox;
 import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
@@ -7,33 +9,80 @@ import sandy.core.face.Polygon;
 import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
 import sandy.core.scenegraph.Geometry3D;
+import sandy.core.scenegraph.IDisplayable;
 import sandy.core.scenegraph.ITransformable;
+import sandy.core.World3D;
 import sandy.materials.Appearance;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
 
-class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransformable
+class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransformable, IDisplayable
 { 
 	public var aPolygons:Array;
-	
-	// Default skin for every Shape3D object.	
-    public function Shape3D( p_sName:String, p_geometry:Geometry3D, p_oAppearance:Appearance )
+	// [READ-ONLY] Use this property very carefully. It shall be accessed in some very special cases, and basically never modified by the user code.
+	public var container:MovieClip;
+	// 	
+	public var depth:Number;
+	// 	
+    public function Shape3D( p_sName:String, p_geometry:Geometry3D, p_oAppearance:Appearance, p_bUseSingleContainer:Boolean )
     {
         super( p_sName );
+        // -- Add this graphical object to the World display list
+		container = World3D.getInstance().container.createEmptyMovieClip("shape_"+id.toString(), World3D.getInstance().container.getNextHighestDepth() );
+		// --
         geometry = p_geometry;
+		// -- HACK to make sure that the correct container system will be applied
+		p_bUseSingleContainer = (p_bUseSingleContainer)?p_bUseSingleContainer:true;
+		m_bUseSingleContainer = !p_bUseSingleContainer;
+		useSingleContainer = p_bUseSingleContainer;
         //
         m_bBackFaceCulling = true;
 		m_bEnableForcedDepth = false;
 		m_bEnableClipping = false;
 		m_bClipped = false;
-		m_nForcedDepth = 0;
+		m_nForcedDepth = depth = 0;
+		m_aVisiblePoly = new Array();
 		m_bEv = false;
 		// --
 		appearance = p_oAppearance;
 		// -- 
 		updateBoundingVolumes();
     }
-    
+	
+	
+	public function set useSingleContainer( p_bUseSingleContainer:Boolean ):Void
+    {
+    	var l_oFace:Polygon, l:Number = aPolygons.length;
+    	// --
+    	if( p_bUseSingleContainer == m_bUseSingleContainer ) return;
+    	// --
+    	if( p_bUseSingleContainer )
+    	{
+    		while( --l > -1 )
+    		{
+				l_oFace = aPolygons[l];
+				if( l_oFace.container ) l_oFace.container.removeMovieClip();
+				l_oFace.container = container;
+    		}
+    	}
+    	else
+    	{
+    		if( container )
+    		{
+    			container.removeMovieClip();
+    		}
+    		// --
+    		while( --l > -1 )
+    		{
+				l_oFace = aPolygons[l];
+				// we reset the polygon container to the original one, and add it to the world container
+				l_oFace.container.clear();
+				l_oFace.container = l_oFace.originalContainer;
+    		}
+    	}
+    	m_bUseSingleContainer = p_bUseSingleContainer;
+    }
+	       
     private function __destroy():Void
     {
     	if( aPolygons.length > 0 )
@@ -43,6 +92,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	    	{
 	    		Polygon( aPolygons[i] ).destroy();
 	    		broadcaster.removeChild( Polygon( aPolygons[i] ).broadcaster );
+	    		if( m_bUseSingleContainer == false ) aPolygons[i].container.removeMovieClip();
 	    	}
     	}
     }
@@ -57,6 +107,8 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     	{
     		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
     		// No need to link the broadcasters, they are alreay linked into the constructor
+    		if( m_bUseSingleContainer == true )
+	    			aPolygons[i].container = container;
     	}
     }
 
@@ -70,34 +122,6 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
         }
     }
  
- 	/**
-	 * This method shall be called to update the transform matrix of the current object/node
-	 * before being rendered.
-	 */
-	function updateTransform(Void):Void
-	{
-		if( changed )
-		{
-			var mt:Matrix4 = m_tmpMt;
-			mt.n11 = _vSide.x * _oScale.x; 
-			mt.n12 = _vUp.x; 
-			mt.n13 = _vOut.x; 
-			mt.n14 = _p.x;
-			
-			mt.n21 = _vSide.y; 
-			mt.n22 = _vUp.y * _oScale.y; 
-			mt.n23 = _vOut.y; 
-			mt.n24 = _p.y;
-			
-			mt.n31 = _vSide.z; 
-			mt.n32 = _vUp.z; 
-			mt.n33 = _vOut.z * _oScale.z;  
-			mt.n34 = _p.z;
-			
-			transform.matrix = mt;
-		}
-	}
-	
 	
  	/**
 	 * This method goal is to update the node. For node's with transformation, this method shall
@@ -133,34 +157,42 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 				return;
 			}
 		}
+		else if( culled == CullingState.OUTSIDE )
+		{
+			var l:Number = aPolygons.length;
+			// We clear it to avoid any ghost effect.
+			if( !m_bUseSingleContainer )
+		    {
+		    	while( --l > -1 )
+    			{
+					aPolygons[l].container.clear();
+		    	}
+		    }
+		    else
+		    {
+		    	container.clear();
+		    }
+		}
 		// --
 		m_bClipped = false;
 	}
 	
 	public function render( p_oCamera:Camera3D ):Void
 	{	
-		var l_nDepth:Number;
-		var l_oFace:Polygon;
-		var l_oVertex:Vertex;
-		var l_oNormal:Vertex;
-		var l_nLength:Number;
-		//--
-        var l_oMatrix:Matrix4 = _oViewCacheMatrix;
-       	// --
-       	var l_faces:Array = aPolygons;
-       	var l_oFrustum:Frustum = p_oCamera.frustrum;
+		var l_nDepth:Number = 0, l_oFace:Polygon, l_oVertex:Vertex, l_oNormal:Vertex, l_nLength:Number, l_oMatrix:Matrix4 = _oViewCacheMatrix,
+       		l_faces:Array = aPolygons, l_oFrustum:Frustum = p_oCamera.frustrum, l_aNormals:Array = m_oGeometry.aFacesNormals;
         // --
-        var m11:Number,m21:Number,m31:Number,m41:Number;
-        var m12:Number,m22:Number,m32:Number,m42:Number;
-        var m13:Number,m23:Number,m33:Number,m43:Number;
-        var m14:Number,m24:Number,m34:Number,m44:Number;
+        var m11:Number,m21:Number,m31:Number,m41:Number, 
+        	m12:Number,m22:Number,m32:Number,m42:Number, 
+        	m13:Number,m23:Number,m33:Number,m43:Number, 
+        	m14:Number,m24:Number,m34:Number,m44:Number;
+        // --	
         m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31; m41 = l_oMatrix.n41;
 		m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32; m42 = l_oMatrix.n42;
 		m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33; m43 = l_oMatrix.n43;
 		m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34; m44 = l_oMatrix.n44;
 		
-		// Now we can transform the objet vertices into the camera coordinates	
-	    var l_aNormals:Array = m_oGeometry.aFacesNormals;
+		// Now we can transform the objet vertices into the camera coordinates	   
 	    l_nLength = l_aNormals.length;
 		while( --l_nLength > -1 )
 		{
@@ -186,7 +218,8 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		/////////////////////////////////////////////////////
 
 		// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-		if( m_bClipped ) l_aPoints = [];
+		if( m_bClipped ) l_aPoints.splice(0);
+		m_aVisiblePoly.splice( 0 );
 		// --
 		l_nLength = l_faces.length;
 		while( --l_nLength > -1 )
@@ -195,25 +228,47 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		   	// --
 		    if ( l_oFace.visible || !m_bBackFaceCulling) 
 			{
-				
 				if( m_bClipped )
 					l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
 			    else
 			    	l_oFace.cvertices = l_oFace.vertices;
 			    // --
-				l_nDepth = l_oFace.getZAverage();
-				// -- if the object is set at a specific depth we cange it, but add a small value that makes the sorting more accurate
-				if(m_bEnableForcedDepth) l_nDepth = m_nForcedDepth + l_nDepth/1000;
-				// we set the polygon to this depth (multiplied by 1000 to avoid the problem of 2 polygons at the same depth
-				l_oFace.container.swapDepths( 10000000 - int(1000*l_nDepth) );
-				// --
-				p_oCamera.addToDisplayList( l_oFace );
+			    if( l_oFace.cvertices.length )
+			    {
+					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
+					if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
+					else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
+					// --
+					if( m_bUseSingleContainer )
+							m_aVisiblePoly.push( l_oFace );
+					else
+						p_oCamera.addToDisplayList( l_oFace );
+			    }
 			}
+			else if( !m_bUseSingleContainer ) l_oFace.container.clear();
+		}
+		// --
+		if( m_bUseSingleContainer )
+		{
+			if(m_bEnableForcedDepth) depth = m_nForcedDepth;
+			else 					 depth = l_nDepth/m_aVisiblePoly.length;
+			p_oCamera.addToDisplayList( this );
 		}
 		// -- We push the vertex to project onto the viewport.
 		p_oCamera.pushVerticesToRender( l_aPoints );
 	}
 
+	// Called only if the useSignelContainer property is enabled!
+	public function display():Void
+	{
+		var l:Number = m_aVisiblePoly.length;
+		m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
+		// --
+		while( --l > -1 )
+		{
+			m_aVisiblePoly[l].display();
+		}
+	}
 
 	public function set appearance( p_oApp:Appearance )
 	{
@@ -406,5 +461,10 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	private var m_nForcedDepth:Number;
 	/** Geometry of this object */
 	private var m_oGeometry:Geometry3D;
+
+	private var m_bUseSingleContainer:Boolean;
+
+	//protected va
+	private var m_aVisiblePoly:Array;
 	
 }

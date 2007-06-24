@@ -1,11 +1,12 @@
 package sandy.core.scenegraph
 {
-	import flash.display.Sprite;
+	import flash.display.DisplayObject;
+	
 	
 	public interface IDisplayable
 	{
-		function get container():Sprite;	
+		function get container():*;	
 		function get depth():Number;	
-		function display():void;
+		function display( p_oContainer:DisplayObject = null ):void;
 	}
 }

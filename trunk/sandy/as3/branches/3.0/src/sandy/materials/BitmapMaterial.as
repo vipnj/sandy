@@ -70,31 +70,20 @@ package sandy.materials
 		{
 			const l_points:Array = p_oPolygon.cvertices;
 			const l_graphics:Graphics = p_mcContainer.graphics;
+			// -- we prepare the texture
+			prepare( p_oPolygon );
 			// --
-			if( l_points.length == 1 )
-			{
-				//FIXME I don't like the way the perspective is applied here...
-				p_mcContainer.scaleX = p_mcContainer.scaleY = (10000 / l_points[0].wz);
-				p_mcContainer.x = l_points[0].sx - p_mcContainer.width / 2;
-				p_mcContainer.y = l_points[0].sy - p_mcContainer.height / 2;
-			}
-			else
-			{
-				// -- we prepare the texture
-				prepare( p_oPolygon );
-				// --
-				l_graphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
-				// --
-				if( lineAttributes )
-					l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
-				// --
-				l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
-				// --
-				for each( var l_oPoint:Vertex in l_points )
-					l_graphics.lineTo( l_oPoint.sx, l_oPoint.sy);
-				// --
-				l_graphics.endFill();
-			}
+			l_graphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
+			// --
+			if( lineAttributes )
+				l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+			// --
+			l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
+			// --
+			for each( var l_oPoint:Vertex in l_points )
+				l_graphics.lineTo( l_oPoint.sx, l_oPoint.sy);
+			// --
+			l_graphics.endFill();
 		}
 			
 		public function get texture():BitmapData
@@ -131,14 +120,7 @@ package sandy.materials
 		
 		public override function init( f:Polygon ):void
 		{
-			// The Sprite case
-			if( f.vertices.length == 1 )
-			{
-				// Small hack, which is enought for the moment
-				//f.container.addChild( new Bitmap(m_oTexture) );
-				//f.container.cacheAsBitmap = true;
-			}
-			else if( f.vertices.length >= 3 )
+			if( f.vertices.length >= 3 )
 			{
 				var m:Matrix = null;
 				// --

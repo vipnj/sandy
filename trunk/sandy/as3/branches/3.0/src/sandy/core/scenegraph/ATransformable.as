@@ -375,7 +375,30 @@ package sandy.core.scenegraph {
 		{
 			return _vRotation.z;
 		}
-		
+
+			
+		/**
+		 * roll - Rotation around the local Z axis of the camera frame
+		 * Range from -180 to +180 where 0 means the plane is aligned with the horizon, 
+		 * +180 = Full roll right and –180 = Full roll left. In both cases, when the roll is 180 and –180, 
+		 * the plane is flipped on its back.
+		 * @param nAngle Number The angle of rotation in degree.
+		 * @return
+		 */
+		public function set roll ( nAngle:Number ):void
+		{
+			changed = true;
+			var l_nAngle:Number = (nAngle + 360)%360 - _nRoll;
+			// --
+			var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
+			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			// --
+			_nRoll = l_nAngle;
+			transform.type = TransformType.ROTATION;
+		}	
+	
+			
 		/**
 		 * Tilt - Rotation around the local X axis of the camera frame
 		 * Range from -90 to +90 where 0 = Horizon, +90 = straight up and –90 = straight down.
@@ -435,28 +458,7 @@ package sandy.core.scenegraph {
 			transform.type = TransformType.ROTATION;
 			changed = true;
 		}
-			
-		/**
-		 * roll - Rotation around the local Z axis of the camera frame
-		 * Range from -180 to +180 where 0 means the plane is aligned with the horizon, 
-		 * +180 = Full roll right and –180 = Full roll left. In both cases, when the roll is 180 and –180, 
-		 * the plane is flipped on its back.
-		 * @param nAngle Number The angle of rotation in degree.
-		 * @return
-		 */
-		public function set roll ( nAngle:Number ):void
-		{
-			changed = true;
-			var l_nAngle:Number = (nAngle + 360)%360 - _nRoll;
-			// --
-			var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			// --
-			_nRoll = l_nAngle;
-			transform.type = TransformType.ROTATION;
-		}	
-	
+
 		public function get roll():Number{return _nRoll;}
 		
 		public function get tilt():Number{return _nTilt;}

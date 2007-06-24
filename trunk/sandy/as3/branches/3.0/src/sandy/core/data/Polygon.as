@@ -16,17 +16,16 @@ limitations under the License.
 
 package sandy.core.data 
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	
-	import sandy.core.World3D;
 	import sandy.core.scenegraph.Geometry3D;
+	import sandy.core.scenegraph.IDisplayable;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
-	import sandy.core.scenegraph.IDisplayable;
 	
 	/**
 	* Polygon
@@ -64,7 +63,6 @@ package sandy.core.data
 		private var m_bVisible:Boolean;
 		
 		protected var m_nDepth:Number;
-		protected var m_oOriginalContainer:Sprite;
 		protected var m_oContainer:Sprite;
 		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
@@ -76,8 +74,7 @@ package sandy.core.data
 			m_nDepth = 0;
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
-			m_oOriginalContainer = new Sprite();
-			m_oContainer = m_oOriginalContainer;
+			m_oContainer = new Sprite();;
 		}
 	
 		/**
@@ -157,19 +154,14 @@ package sandy.core.data
 			return m_nDepth;
 		}
 	
-		public function display():void
+		public function display( p_oContainer:DisplayObject = null ):void
 		{
-			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, m_oContainer );
-			else			m_oAppearance.backMaterial.renderPolygon( this, m_oContainer );
+			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite; 
+			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, lContainer );
+			else			m_oAppearance.backMaterial.renderPolygon( this, lContainer );
 		}
-		
-		public function set container( p_oContainer:Sprite ):void
-		{ 
-			if( p_oContainer == null ) m_oContainer = m_oOriginalContainer;
-			else	m_oContainer = p_oContainer; 
-		}
-		
-		public function get container():Sprite
+
+		public function get container():*
 		{return m_oContainer;}
 		
 		public function get depth():Number

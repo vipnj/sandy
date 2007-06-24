@@ -17,7 +17,6 @@ limitations under the License.
 package sandy.core.scenegraph 
 {
 	import flash.display.Sprite;
-	import flash.utils.Dictionary;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
@@ -33,7 +32,7 @@ package sandy.core.scenegraph
 	* @version		2.0
 	* @date 		12.07.2006
 	**/
-	public class Camera3D extends ATransformable implements ITransformable
+	public class Camera3D extends ATransformable
 	{
 		/**
 		 * The frustum of the camera. See {@see Frustum} class.
@@ -102,37 +101,25 @@ package sandy.core.scenegraph
 		}
 		
 		public function get fov():Number
-		{
-			return _nFov;
-		}
+		{return _nFov;}
 		
 		/**
 		 * Near plane distance for culling/clipping
 		 */
 		public function set near( pNear:Number ):void
-		{
-			_nNear = pNear;
-			_perspectiveChanged = true;
-		}
+		{_nNear = pNear;_perspectiveChanged = true;}
 		
 		public function get near():Number
-		{
-			return _nNear;
-		}
+		{return _nNear;}
 				
 		/**
 		 * Far plane distance for culling/clipping
 		 */
 		public function set far( pFar:Number ):void
-		{
-			_nFar = pFar;
-			_perspectiveChanged = true;
-		}
+		{_nFar = pFar;_perspectiveChanged = true;}
 		
 		public function get far():Number
-		{
-			return _nFar;
-		}
+		{return _nFar;}
 	
 		///////////////////////////////////////
 		//// GRAPHICAL ELEMENTS MANAGMENT /////
@@ -146,7 +133,6 @@ package sandy.core.scenegraph
 		    // --
 			for each( var l_oShape:IDisplayable in m_aDisplayList )
 			{
-				l_oShape.container.graphics.clear();
 				l_mcContainer.addChild( l_oShape.container );
 				l_oShape.display();
 			}
@@ -159,15 +145,22 @@ package sandy.core.scenegraph
 			m_aDisplayList.push( p_oShape );
 		}
 	
-		public function project( p_aList:Dictionary ):void
+		public function addToProjectionList( p_aList:Array ):void
+		{
+			m_aProjList = m_aProjList.concat( p_aList );
+		}
+		
+		public function project():void
 		{
 			var l_nCste:Number;
-			for each( var l_oVertex:Vertex in p_aList )
+			for each( var l_oVertex:Vertex in m_aProjList )
 			{
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
 			}	
+			//
+			m_aProjList.splice(0);
 		}
 		
 		/**
@@ -294,9 +287,7 @@ package sandy.core.scenegraph
 		private var _mpInv : Matrix4; // Inverse of the projection matrix 
 		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
 	
-		/**
-		 * The viewport associated to the camera
-		 */
+		private var m_aProjList:Array = new Array();
 		private var _viewport:ViewPort;
 		private var m_aDisplayList:Array;
 		private var _perspectiveChanged:Boolean;

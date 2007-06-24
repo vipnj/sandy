@@ -18,7 +18,6 @@ package sandy.core.scenegraph
 	import sandy.core.data.Matrix4;
 	import sandy.core.scenegraph.ATransformable;
 	import sandy.core.scenegraph.Camera3D;
-	import sandy.core.scenegraph.ITransformable;
 	import sandy.core.scenegraph.Node;
 	import sandy.math.VectorMath;
 	import sandy.view.CullingState;
@@ -29,7 +28,7 @@ package sandy.core.scenegraph
 	* @version		1.0
 	* @date 		16.05.2006
 	**/
-	public class TransformGroup extends ATransformable implements ITransformable
+	public class TransformGroup extends ATransformable
 	{
 		/**
 		* Create a new TransformGroup.

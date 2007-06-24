@@ -1,5 +1,6 @@
 package sandy.core.scenegraph 
 {    
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	
@@ -13,7 +14,7 @@ package sandy.core.scenegraph
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 
-	public class Shape3D extends ATransformable implements ITransformable, IDisplayable
+	public class Shape3D extends ATransformable implements IDisplayable
 	{ 
 		public var aPolygons:Dictionary;
 		
@@ -58,7 +59,6 @@ package sandy.core.scenegraph
 						l_oFace.container.graphics.clear();
 						World3D.getInstance().container.removeChild( l_oFace.container );
 					}
-					l_oFace.container = m_oContainer;
 	    		}
 	    	}
 	    	else
@@ -73,7 +73,6 @@ package sandy.core.scenegraph
 	    		{
 					// we reset the polygon container to the original one, and add it to the world container
 					l_oFace.container.graphics.clear();
-					l_oFace.container = null;
 	    		}
 	    	}
 	    	m_bUseSingleContainer = p_bUseSingleContainer;
@@ -155,7 +154,7 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly.splice(0);
-			var l_oToProject:Dictionary = new Dictionary(true);
+			m_aToProject.splice(0);
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
@@ -172,7 +171,7 @@ package sandy.core.scenegraph
 					{
 						// we add the vertices to the projection list
 						for each( var l_oV:Vertex in m_aTmp )
-							l_oToProject[l_oV] = l_oV;
+							if( m_aToProject.indexOf( l_oV ) == -1 ) m_aToProject.push( l_oV );
 						
 						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
 						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
@@ -195,23 +194,23 @@ package sandy.core.scenegraph
 				p_oCamera.addToDisplayList( this );
 			}
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.project( l_oToProject );	
-			// --
-			l_oToProject = undefined;
+			p_oCamera.addToProjectionList( m_aToProject );	
 		}
 	
 		// Called only if the useSignelContainer property is enabled!
-		public function display():void
+		public function display(  p_oContainer:DisplayObject = null ):void
 		{
+			m_oContainer.graphics.clear();
+			// --
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
 			for each( var l_oPoly:Polygon in m_aVisiblePoly )
 			{
-				l_oPoly.display();
+				l_oPoly.display( m_oContainer );
 			}
 		}
 		
-		public function get container():Sprite
+		public function get container():*
 		{return m_oContainer;}
 		
 		public function get depth():Number
@@ -413,8 +412,6 @@ package sandy.core.scenegraph
 	    	{
 	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
 	    		// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
-	    		if( m_bUseSingleContainer == true )
-	    			aPolygons[i].container = m_oContainer;
 	    		i++;
 	    	}
 	    }
@@ -435,7 +432,8 @@ package sandy.core.scenegraph
 		protected var m_bUseSingleContainer:Boolean;
 		protected var m_nDepth:Number;
 		protected var m_oContainer:Sprite;
-		//protected va
+
+		private var m_aToProject:Array = new Array();
 		private var m_aVisiblePoly:Array = new Array();		
 	}
 }

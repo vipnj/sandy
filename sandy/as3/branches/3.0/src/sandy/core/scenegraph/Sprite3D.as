@@ -1,3 +1,4 @@
+		
 /*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
@@ -13,20 +14,30 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.scenegraph {
+
+package sandy.core.scenegraph 
+{	
+	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	
+	import sandy.bounds.BSphere;
+	import sandy.core.World3D;
+	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.core.scenegraph.Camera3D;
-	import sandy.core.scenegraph.Sprite2D;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
-		
+	import sandy.view.CullingState;
+	import sandy.view.Frustum;
+	
 	/**
 	 * @author		Thomas Pfeiffer - kiroukou
-	 * @date 		28.02.2007
+	 * @version		1.0
+	 * @date 		20.05.2006
 	 **/
-	public class Sprite3D extends Sprite2D 
-	{
+	public class Sprite3D extends ATransformable implements IDisplayable
+	{	
 		/**
 		* A Sprite3D is in fact a special Sprite2D. A Sprite3D is batween a real Object3D and a Sprite2D.
 		* It has a skin which is a movie clip containing 360 frames (at least!). 
@@ -36,28 +47,127 @@ package sandy.core.scenegraph {
 		* 							isn't adapted to your needs. Default value is 1.0 which means unchanged. A value of 2.0 will make the object
 		* 							twice bigger and so on.
 		*/
-		public function Sprite3D( p_Name:String, pScale:Number, pOffset:Number ) 
+		// FIXME Create a Sprite as the spriteD container, and offer a method to attach a visual content as a child of the sprite
+		public function Sprite3D( p_name:String, p_oContent:MovieClip, p_opScale:Number=1, pOffset:Number=0 ) 
 		{
-			super(p_Name, pScale);
-			// -- we create a fictive normal vector
-			geometry.setVertex(1, 0, 0, -1);
-			geometry.setVertex(2, 0, 0, 1);
+			super(p_name);
+			m_oContainer = new Sprite();
+			World3D.getInstance().container.addChild( m_oContainer );
 			// --
-			_dir = geometry.aVertex[1];
-			_vView = geometry.aVertex[2];
+			_v = new Vertex();
+			_oBSphere 	= new BSphere();
+	        _oBBox 		= null;
+	        setBoundingSphereRadius( 30 );
+	        // --
+			_nScale = p_opScale;
+			// --
+			content = p_oContent;
+			// --
+			_dir = new Vector( 0, 0, -1 );
+			_vView = new Vector( 0, 0, 1 );
 			// -- set the offset
-			_nOffset = pOffset||0;
+			_nOffset = pOffset;
+		}
+
+
+		public function set content( p_container:MovieClip ):void
+		{
+			m_oContainer.addChildAt( p_container, 0 );
+			m_nW2 = m_oContainer.width / 2;
+			m_nH2 = m_oContainer.height / 2;
+		}
+		
+		public function get content():MovieClip
+		{
+			return m_oContainer.getChildAt(0);
+		}
+		
+		public function get container():Sprite
+		{return m_oContainer;}
+		
+		public function setBoundingSphereRadius( p_nRadius:Number ):void
+		{ _oBSphere.radius = p_nRadius; }
+	
+		/**
+		* getScale
+		* <p>Allows you to get the scale of the Sprite3D and later change it with setSCale.
+		* It is a number usefull to change the dimension of the sprite rapidly.
+		* </p>
+		* @param	void
+		* @return Number the scale value.
+		*/
+		public function get scale():Number
+		{ return _nScale; }
+	
+		/**
+		* Allows you to change the oject's scale.
+		* @param	n Number 	The scale. This value must be a Number. A value of 1 let the scale as the perspective one.
+		* 						A value of 2.0 will make the object twice bigger. 0 is a forbidden value
+		*/
+		public function set scale( n:Number ):void
+		{if( n )	_nScale = n; }
+
+		public function get depth():Number
+		{return m_nDepth;}
+		  
+		/**
+		 * This method test the current node on the frustum to get its visibility.
+		 * If the node and its children aren't in the frustum, the node is set to cull
+		 * and it would not be displayed.
+		 * This method is also updating the bounding volumes to process the more accurate culling system possible.
+		 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
+		 * precise culling.
+		 * [MANDATORY] The update method must be called first!
+		 */
+		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		{
+			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
+			// --
+			if( culled == CullingState.OUTSIDE ) 	container.visible = false;
+			else									container.visible = true;
 		}
 		
 	    public override function render( p_oCamera:Camera3D ):void
 		{
-	        super.render( p_oCamera );
+	       const 	l_oMatrix:Matrix4 = _oViewCacheMatrix,
+					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
+					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
+					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
+					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
+					
+	        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13 + m14;
+			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23 + m24;
+			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33 + m34;
+			
+			_v.wx = _v.x * m11 + _v.y * m12 + _v.z * m13 + m14;
+			_v.wy = _v.x * m21 + _v.y * m22 + _v.z * m23 + m24;
+			_v.wz = _v.x * m31 + _v.y * m32 + _v.z * m33 + m34;
+			
+			_vView.wx = _vView.x * m11 + _vView.y * m12 + _vView.z * m13 + m14;
+			_vView.wy = _vView.x * m21 + _vView.y * m22 + _vView.z * m23 + m24;
+			_vView.wz = _vView.x * m31 + _vView.y * m32 + _vView.z * m33 + m34;
+			
+			m_nDepth = _v.wz;
+			m_nPerspScale = _nScale * 100/m_nDepth;
+			// --
+			p_oCamera.addToDisplayList( this );
+			// -- We push the vertex to project onto the viewport.
+			p_oCamera.addToProjectionList( [_v] );	
 			// --
 	        var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );
-			if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
+			if( vNormale.x == 0 ) angle = Math.PI;
+			else if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
-			aPolygons[0].container.gotoAndStop( __frameFromAngle( angle ) );
+			m_oContainer.gotoAndStop( __frameFromAngle( angle ) );
+		}
+		// --
+		public function display( p_oContainer:Sprite = null ):void
+		{
+			//FIXME I don't like the way the perspective is applied here...
+			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
+			m_oContainer.x = _v.sx - m_nW2;
+			m_oContainer.y = _v.sy - m_nH2;
 		}
 		
 		
@@ -91,9 +201,15 @@ package sandy.core.scenegraph {
 		
 		// -- frames offset
 		private var _nOffset:Number;
-		private var _nScale:Number;
 		private var _vView:Vector;
 		private var _dir:Vertex;
-		
+				
+		private var m_nPerspScale:Number=0;
+		private var m_nW2:Number=0;
+		private var m_nH2:Number=0;
+		protected var _v:Vertex;
+		private var m_nDepth:Number;
+		private var _nScale:Number;
+		private var m_oContainer:MovieClip;
 	}
 }

@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.core.scenegraph 
 {	
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	
 	import sandy.bounds.BSphere;
 	import sandy.core.World3D;
@@ -40,34 +41,36 @@ package sandy.core.scenegraph
 		*/
 		
 		// FIXME Create a Sprite as the spriteD container, and offer a method to attach a visual content as a child of the sprite
-		public function Sprite2D( p_name:String, p_oContainer:DisplayObject, p_opScale:Number=1) 
+		public function Sprite2D( p_name:String, p_oContent:DisplayObject, p_opScale:Number=1) 
 		{
 			super(p_name);
-			// -- we create a fictive point
-			container = p_oContainer;
+			m_oContainer = new Sprite();
+			World3D.getInstance().container.addChild( m_oContainer );
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
 	        _oBBox 		= null;
-	        setBoundingSphereRadius( 50 );
+	        setBoundingSphereRadius( 30 );
 	        // --
 			_nScale = p_opScale;
+			// --
+			content = p_oContent;
 		}
 
 
-		public function set container( p_container:* ):void
+		public function set content( p_container:DisplayObject ):void
 		{
-			if( m_oContainer )
-			{
-				if( World3D.getInstance().container.contains( m_oContainer ) ) World3D.getInstance().container.removeChild( m_oContainer );
-			}
-			World3D.getInstance().container.addChild( p_container );
-			m_oContainer = p_container;
+			m_oContainer.addChildAt( p_container, 0 );
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
 		}
 		
-		public function get container():*
+		public function get content():DisplayObject
+		{
+			return m_oContainer.getChildAt(0);
+		}
+		
+		public function get container():Sprite
 		{return m_oContainer;}
 		
 		public function setBoundingSphereRadius( p_nRadius:Number ):void
@@ -125,7 +128,7 @@ package sandy.core.scenegraph
 			p_oCamera.addToProjectionList( [_v] );	
 		}
 		// --
-		public function display( p_oContainer:DisplayObject = null ):void
+		public function display( p_oContainer:Sprite = null ):void
 		{
 			//FIXME I don't like the way the perspective is applied here...
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
@@ -139,6 +142,6 @@ package sandy.core.scenegraph
 		protected var _v:Vertex;
 		private var m_nDepth:Number;
 		private var _nScale:Number;
-		private var m_oContainer:DisplayObject;
+		private var m_oContainer:Sprite;
 	}
 }

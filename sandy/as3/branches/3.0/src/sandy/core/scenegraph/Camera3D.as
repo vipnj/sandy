@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.core.scenegraph 
 {
 	import flash.display.Sprite;
+	import flash.geom.Rectangle;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
@@ -73,6 +74,7 @@ package sandy.core.scenegraph
 			_viewport = pVP;
 			_perspectiveChanged = true;
 			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
 		}
 		
 		public function set viewportWidth( p_nWidth:Number ):void
@@ -81,6 +83,7 @@ package sandy.core.scenegraph
 			_viewport.update();
 			_perspectiveChanged = true;
 			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
 		}
 		
 		public function set viewportHeight( p_nHeight:Number ):void
@@ -89,6 +92,7 @@ package sandy.core.scenegraph
 			_viewport.update();
 			_perspectiveChanged = true;
 			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
 		}
 				
 		/**

@@ -164,7 +164,7 @@ package sandy.view
 		
 		public function sphereInFrustum( p_oS:BSphere ):CullingState
 		{
-	        var p:Number = 0, c:int = 0, d:Number;
+	        var d:Number, c:Number;
 	        const x:Number=p_oS.m_oPosition.x, y:Number=p_oS.m_oPosition.y, z:Number=p_oS.m_oPosition.z, radius:Number = p_oS.m_nTRadius;
 	        // --
 	        for each( var plane:Plane in aPlanes ) 
@@ -173,7 +173,7 @@ package sandy.view
 	            if( d <= -radius ) 
 	                return Frustum.OUTSIDE; 
 	            if( d > radius ) 
-	                c++; 
+	                c++;
 	        } 
 	        // --
 	        return (c == 6) ? Frustum.INSIDE : Frustum.INTERSECT;
@@ -264,7 +264,7 @@ package sandy.view
 			var dist2:Number, dist1:Number = aDist[0];
 			var clipped:Boolean = false, inside:Boolean = (dist1 >= 0);
 			var curv:Number = 0;
-			for (i=1; i<= l; i++)
+			for (i=1; i <= l; i++)
 			{	 
 				var v2:Vertex = tmp[i%l];
 				dist2= aDist[i%l];

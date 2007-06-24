@@ -198,7 +198,7 @@ package sandy.core.scenegraph
 		}
 	
 		// Called only if the useSignelContainer property is enabled!
-		public function display(  p_oContainer:DisplayObject = null ):void
+		public function display(  p_oContainer:Sprite = null ):void
 		{
 			m_oContainer.graphics.clear();
 			// --
@@ -210,7 +210,7 @@ package sandy.core.scenegraph
 			}
 		}
 		
-		public function get container():*
+		public function get container():Sprite
 		{return m_oContainer;}
 		
 		public function get depth():Number

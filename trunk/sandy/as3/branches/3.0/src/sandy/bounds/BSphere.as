@@ -18,10 +18,9 @@ package sandy.bounds
 	import flash.utils.Dictionary;
 	
 	import sandy.core.data.Matrix4;
-	import sandy.math.Matrix4Math;
-	import sandy.math.VectorMath;
 	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;	
+	import sandy.core.data.Vertex;
+	import sandy.math.Matrix4Math;	
 	
 	/**
 	* Bounding Sphere object used to clip the object faster.
@@ -61,8 +60,8 @@ package sandy.bounds
 		*/ 	
 		public function BSphere()
 		{
-			center = new Vector();
-			m_oPosition = new Vector();
+			center = new Vector(0,0,0);
+			m_oPosition = new Vector(0,0,0);
 			radius = 1.0;
 		}
 		
@@ -72,7 +71,7 @@ package sandy.bounds
 	        //var l_ncale:Number = Math.sqrt( p_oMatrix.n11 * p_oMatrix.n11 + p_oMatrix.n22 * p_oMatrix.n22 + p_oMatrix.n33 * p_oMatrix.n33 );
 	        m_nTRadius = radius;// * l_ncale;
 	    }
-	    		
+	    
 		/**
 		* Get a String represntation of the {@code BSphere}.
 		* 

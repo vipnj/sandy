@@ -1,4 +1,5 @@
-package sandy.core.scenegraph {
+package sandy.core.scenegraph 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.scenegraph.Node;
@@ -308,15 +309,15 @@ package sandy.core.scenegraph {
 		 */
 		public function set rotateX ( nAngle:Number ):void
 		{
-			nAngle = (nAngle + 360)%360;
-			var l_nAngle:Number = nAngle - _vRotation.x;
+			var l_nAngle:Number = (nAngle - _vRotation.x);
+			if(l_nAngle == 0 ) return;
+			changed = true;
 			// --
 			var m:Matrix4 = Matrix4Math.rotationX( l_nAngle );
 			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
 			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 			// --
-			changed = true;
 			_vRotation.x = nAngle;
 			transform.type = TransformType.ROTATION;
 		}
@@ -333,8 +334,9 @@ package sandy.core.scenegraph {
 		 */
 		public function set rotateY ( nAngle:Number ):void
 		{
-			nAngle = (nAngle + 360)%360;
-			var l_nAngle:Number = nAngle - _vRotation.y;
+			var l_nAngle:Number = (nAngle - _vRotation.y);
+			if(l_nAngle == 0 ) return;
+			changed = true;
 			// --
 			var m:Matrix4 = Matrix4Math.rotationY ( l_nAngle );
 			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
@@ -342,7 +344,6 @@ package sandy.core.scenegraph {
 			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 			// --
 			_vRotation.y = nAngle;
-			changed = true;
 			transform.type = TransformType.ROTATION;
 		}
 		
@@ -358,9 +359,9 @@ package sandy.core.scenegraph {
 		 */
 		public function set rotateZ ( nAngle:Number ):void
 		{
+			var l_nAngle:Number = (nAngle - _vRotation.z );
+			if(l_nAngle == 0 ) return;
 			changed = true;
-			nAngle = (nAngle + 360)%360;
-			var l_nAngle:Number = nAngle - _vRotation.z;
 			// --
 			var m:Matrix4 = Matrix4Math.rotationZ ( l_nAngle );
 			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
@@ -387,14 +388,15 @@ package sandy.core.scenegraph {
 		 */
 		public function set roll ( nAngle:Number ):void
 		{
+			var l_nAngle:Number = (nAngle - _nRoll)
+			if(l_nAngle == 0 ) return;
 			changed = true;
-			var l_nAngle:Number = (nAngle + 360)%360 - _nRoll;
 			// --
 			var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
 			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
 			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 			// --
-			_nRoll = l_nAngle;
+			_nRoll = nAngle;
 			transform.type = TransformType.ROTATION;
 		}	
 	
@@ -407,14 +409,15 @@ package sandy.core.scenegraph {
 		 */
 		public function set tilt ( nAngle:Number ):void
 		{
+			var l_nAngle:Number = (nAngle - _nTilt);
+			if(l_nAngle == 0 ) return;
 			changed = true;
-			var l_nAngle:Number = (nAngle + 360)%360 - _nTilt;
 			// --
 			var m:Matrix4 = Matrix4Math.axisRotation ( _vSide.x, _vSide.y, _vSide.z, l_nAngle );
 			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
 			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 			// --
-			_nTilt = l_nAngle;
+			_nTilt = nAngle;
 			transform.type = TransformType.ROTATION;
 		}
 		
@@ -426,14 +429,15 @@ package sandy.core.scenegraph {
 		 */
 		public function set pan ( nAngle:Number ):void
 		{
+			var l_nAngle:Number = (nAngle - _nYaw);
+			if(l_nAngle == 0 ) return;
 			changed = true;
-			var l_nAngle:Number = (nAngle + 360)%360 - _nYaw;
 			// --
 			var m:Matrix4 = Matrix4Math.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
 			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
 			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
 			// --
-			_nYaw = l_nAngle;
+			_nYaw = nAngle;
 			transform.type = TransformType.ROTATION;
 		}
 	

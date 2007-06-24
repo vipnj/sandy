@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.math {
+package sandy.math 
+{
 	import sandy.core.data.Plane;
 	import sandy.core.data.Vector;
 	import sandy.math.VectorMath;
@@ -37,7 +38,8 @@ package sandy.math {
 		/**
 		 * Singleton Constructor
 		 */ 
-		public function PlaneMath(){
+		public function PlaneMath()
+		{
 			if ( !create )
 			{
 				throw new SingletonError();

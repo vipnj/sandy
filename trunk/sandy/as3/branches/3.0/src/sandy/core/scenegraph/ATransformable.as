@@ -2,7 +2,6 @@ package sandy.core.scenegraph
 {
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
-	import sandy.core.scenegraph.Node;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.transform.TransformType;
 	import sandy.math.Matrix4Math;
@@ -377,7 +376,19 @@ package sandy.core.scenegraph
 			return _vRotation.z;
 		}
 
-			
+		/* Test but may be useful later
+		private function _upateRotation():void
+		{
+			m_tmpMt = Matrix4Math.rotationX ( m_RotationOffset.x );
+			m_tmpMt = Matrix4Math.multiply3x3( m_tmpMt, Matrix4Math.rotationY( m_RotationOffset.y ) );
+			m_tmpMt = Matrix4Math.multiply3x3( m_tmpMt, Matrix4Math.rotationZ( m_RotationOffset.z ) );
+			// --
+			_vUp   = Matrix4Math.vectorMult3x3( m_tmpMt, _vUp  );
+			_vSide = Matrix4Math.vectorMult3x3( m_tmpMt, _vSide );
+			_vOut  = Matrix4Math.vectorMult3x3( m_tmpMt, _vOut );
+		}
+		*/
+		
 		/**
 		 * roll - Rotation around the local Z axis of the camera frame
 		 * Range from -180 to +180 where 0 means the plane is aligned with the horizon, 
@@ -566,7 +577,7 @@ package sandy.core.scenegraph
 		private var _nYaw:Number;
 		// current roll value
 		private var _nRoll:Number;
-		private var _vRotation:Vector;	
+		private var _vRotation:Vector;		
 		private var _vLookatDown:Vector; // Private absolute down vector
 		protected var _p:Vector;	
 		protected var _oScale:Vector;

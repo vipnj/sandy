@@ -199,7 +199,7 @@ package sandy.materials
 			return 'sandy.materials.BitmapMaterial' ;
 		}
 		
-		private var m_oTexture:BitmapData;
+		protected var m_oTexture:BitmapData;
 		private var m_nHeight:Number;
 		private var m_nWidth:Number;
 		private var m_oPolygonMatrixMap:Dictionary;

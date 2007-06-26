@@ -1,6 +1,5 @@
 package sandy.core.scenegraph 
 {    
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
 	
@@ -16,7 +15,7 @@ package sandy.core.scenegraph
 
 	public class Shape3D extends ATransformable implements IDisplayable
 	{ 
-		public var aPolygons:Dictionary;
+		public var aPolygons:Array = new Array();
 		
 		//private var m_oToProject:Dictionary = new Dictionary(true);
 		private var m_aTmp:Array = new Array();
@@ -405,7 +404,6 @@ package sandy.core.scenegraph
 	    }    
 	    private function __generatePolygons( p_oGeometry:Geometry3D ):void
 	    {
-	    	aPolygons = new Dictionary();
 	    	var i:int = 0;
 	    	//
 	    	for each ( var o:* in p_oGeometry.aFacesVertexID )

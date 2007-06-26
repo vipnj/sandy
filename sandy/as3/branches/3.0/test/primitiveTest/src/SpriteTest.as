@@ -26,7 +26,7 @@ package
 	{
 		internal static const SCREEN_WIDTH:int = 500;
 		internal static const SCREEN_HEIGHT:int = 500;
-		internal static const NUMBER:int = 600;
+		internal static const NUMBER:int = 60;
 		internal static const RADIUS:int = 1200;
 		
 		public const swfFile:String = "assets/texture.jpg";

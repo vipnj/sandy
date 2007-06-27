@@ -31,7 +31,7 @@ package sandy.core.scenegraph
 	 * @version		1.0
 	 * @date 		20.05.2006
 	 **/
-	public class Sprite2D extends ATransformable implements IDisplayable
+	final public class Sprite2D extends ATransformable implements IDisplayable
 	{	
 		/**
 		* Sprite2D constructor.

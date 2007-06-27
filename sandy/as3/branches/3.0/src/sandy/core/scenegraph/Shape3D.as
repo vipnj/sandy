@@ -129,9 +129,9 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_nDepth:Number=0, l_aPoints:Dictionary = m_oGeometry.aVertex;
+			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex;
 	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
-					l_aNormals:Dictionary = m_oGeometry.aFacesNormals,
+					l_aNormals:Array = m_oGeometry.aFacesNormals,
 					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
 					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
@@ -153,7 +153,7 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly.splice(0);
-			m_aToProject.splice(0);
+			//m_aToProject.splice(0);
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
@@ -169,8 +169,8 @@ package sandy.core.scenegraph
 					if( l_oFace.cvertices.length )
 					{
 						// we add the vertices to the projection list
-						for each( var l_oV:Vertex in m_aTmp )
-							if( m_aToProject.indexOf( l_oV ) == -1 ) m_aToProject.push( l_oV );
+						//for each( var l_oV:Vertex in m_aTmp )
+						//	if( m_aToProject.indexOf( l_oV ) == -1 ) m_aToProject.push( l_oV );
 						
 						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
 						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
@@ -193,7 +193,7 @@ package sandy.core.scenegraph
 				p_oCamera.addToDisplayList( this );
 			}
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( m_aToProject );	
+			p_oCamera.addToProjectionList( /*m_aToProject*/l_aPoints );	
 		}
 	
 		// Called only if the useSignelContainer property is enabled!

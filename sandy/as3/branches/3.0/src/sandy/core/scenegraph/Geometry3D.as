@@ -16,10 +16,10 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.utils.Dictionary;
+	//import flash.utils.Dictionary;
 	
-	import sandy.core.data.Vertex;
 	import sandy.core.data.UVCoord;
+	import sandy.core.data.Vertex;
 	
 	
 	/**
@@ -53,15 +53,15 @@ package sandy.core.scenegraph
 	// PUBLIC________________________________________________________	
 		
 		/** Array of vertex */
-		public var aVertex:Dictionary;
+		public var aVertex:Array = new Array();
 		/** Array of faces composed from vertices */
-		public var aFacesVertexID:Dictionary;
-		public var aFacesUVCoordsID:Dictionary;
+		public var aFacesVertexID:Array = new Array();
+		public var aFacesUVCoordsID:Array = new Array();
 		/** Normals */
-		public var aFacesNormals:Dictionary;
-		public var aVertexNormals:Dictionary;
+		public var aFacesNormals:Array = new Array();
+		public var aVertexNormals:Array = new Array();
 		/** UV Coords for faces */
-		public var aUVCoords:Dictionary;	
+		public var aUVCoords:Array = new Array();
 		
 		private var m_nLastVertexId:int = 0;
 		private var m_nLastNormalId:int = 0;
@@ -83,12 +83,13 @@ package sandy.core.scenegraph
 		
 		public function init():void
 		{
+			/*
 			aVertex = new Dictionary();
 			aFacesVertexID = new Dictionary();
 			aFacesNormals = new Dictionary();
 			aFacesUVCoordsID = new Dictionary();
 			aVertexNormals = new Dictionary();
-			aUVCoords = new Dictionary();
+			aUVCoords = new Dictionary();*/
 		}
 		
 		/**

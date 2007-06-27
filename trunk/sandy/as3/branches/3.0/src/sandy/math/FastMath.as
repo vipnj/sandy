@@ -11,17 +11,19 @@ package sandy.math
 	
 }
 
-import flash.utils.getTimer;
+
 
 class _FastMath_ 
 {
 	private static var instance:_FastMath_;
 	
 	/** Precission. The bigger, the more entries in lookup table so the more accurate results. */
-	public static var PRECISION:int = 0x100000;
-	public static var TWO_PI:Number = 2*Math.PI;
-	public static var HALF_PI:Number = Math.PI/2;
-	
+	public static const PRECISION:int = 0x100000;
+	public static const TWO_PI:Number = 2*Math.PI;
+	public static const HALF_PI:Number = Math.PI/2;
+	// OPTIMIZATION CONSTANTS
+	public static const PRECISION_S:int = PRECISION - 1;
+	public static const PRECISION_DIV_2PI:Number = PRECISION / TWO_PI;
 	/** Precalculated values with given precision */
 	private static var sinTable:Array = new Array(PRECISION);
 	private static var tanTable:Array = new Array(PRECISION);
@@ -38,22 +40,19 @@ class _FastMath_
 	
 	public function _FastMath_()
 	{
-		var timer:int = getTimer();
 		var rad:Number = 0;
 
-		for (var i:int = 0; i < PRECISION; i++) {
+		for (var i:int = 0; i < PRECISION; i++) 
+		{
 			rad = Number(i * RAD_SLICE);
 			sinTable[i] = Number(Math.sin(rad));
 			tanTable[i] = Number(Math.tan(rad));
 		}
-		
-		trace("FastMath initialization time: " + (getTimer() - timer)); 
-		
 	}
 
 	private function radToIndex(radians:Number):int 
 	{
-		return int( ((radians / TWO_PI) * PRECISION) & (PRECISION - 1) );
+		return int((radians * PRECISION_DIV_2PI ) & (PRECISION_S));
 	}
 
 	/**
@@ -64,7 +63,7 @@ class _FastMath_
 	 */
 	public function sin(radians:Number):Number 
 	{
-		return sinTable[ radToIndex(radians) ];
+		return sinTable[ int( radToIndex(radians) ) ];
 	}
 
 	/**
@@ -75,7 +74,7 @@ class _FastMath_
 	 */
 	public function cos(radians:Number ):Number 
 	{
-		return sinTable[radToIndex(HALF_PI-radians)];
+		return sinTable[ int( radToIndex(HALF_PI-radians) ) ];
 	}
 
 	/**
@@ -86,6 +85,6 @@ class _FastMath_
 	 */
 	public function tan(radians:Number):Number 
 	{
-		return tanTable[radToIndex(radians)];
+		return tanTable[int( radToIndex(radians) )];
 	}
 }

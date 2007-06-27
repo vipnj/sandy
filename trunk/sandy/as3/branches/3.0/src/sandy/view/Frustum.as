@@ -193,7 +193,7 @@ package sandy.view
 				// both inside and out of the frustum
 				for each( var v:Vector in p )
 				{
-					d = PlaneMath.distanceToPoint( plane, v ) ;
+					d = plane.a * p.x + plane.b * p.y + plane.c * p.z + plane.d;
 					// is the corner outside or inside
 					if ( d < 0 )
 						out++;

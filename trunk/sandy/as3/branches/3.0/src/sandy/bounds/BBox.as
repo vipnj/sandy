@@ -54,7 +54,7 @@ package sandy.bounds
 		 * Verry usefull for clipping and so performance !
 		 * 
 		 */	
-		public static function create( p_aPts:Dictionary ):BBox
+		public static function create( p_aPts:Array ):BBox
 		{
 			if(p_aPts.length == 0) return null;
 		   

@@ -45,7 +45,7 @@ package sandy.bounds
 		 * Verry usefull for clipping and so performance !
 		 * 
 		 */	
-		public static function create( p_aPts:Dictionary ):BSphere
+		public static function create( p_aPts:Array ):BSphere
 		{
 		    var l_sphere:BSphere = new BSphere();
 		    l_sphere.compute( p_aPts );
@@ -83,7 +83,7 @@ package sandy.bounds
 		}
 		
 				
-		public function compute( pPoints:Dictionary ):void
+		public function compute( pPoints:Array ):void
 		{
 			var x:Number, y:Number, z:Number, d:Number;
 			if(pPoints.length == 0) return;

@@ -28,7 +28,7 @@ package sandy.core.scenegraph
 	* @version		1.0
 	* @date 		16.05.2006
 	**/
-	public class TransformGroup extends ATransformable
+	final public class TransformGroup extends ATransformable
 	{
 		/**
 		* Create a new TransformGroup.
@@ -55,24 +55,24 @@ package sandy.core.scenegraph
 			// TODO
 			// Parse the children, take their bounding volume and merge it with the current node recurssively. 
 			// After that call the super cull method to get the correct cull value.		
-			changed = p_bChanged || changed;
-			var l_oNode:Node;
-			for each( l_oNode in _aChilds )
-			    l_oNode.cull( p_oFrustum, p_oViewMatrix, changed || l_oNode.changed );
+			const lChangedBoolean = p_bChanged || changed;
+			for each( var l_oNode:Node in _aChilds )
+			    l_oNode.cull( p_oFrustum, p_oViewMatrix, lChangedBoolean );
 			// --
-			super.cull( p_oFrustum, p_oViewMatrix, changed );
+			super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_oNode:Node;
-			for each( l_oNode in _aChilds )
+			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
+			// --
+			for each( var l_oNode:Node in _aChilds )
 			{
-			    if( l_oNode.culled != Frustum.OUTSIDE )
+			    if( l_oNode.culled != l_oCStateOut )
 			    	l_oNode.render( p_oCamera );
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
-			    l_oNode.culled = CullingState.INSIDE; // Default value is inside.
+			    l_oNode.culled = l_oCStateIn; // Default value is inside.
 			}
 		}
 		

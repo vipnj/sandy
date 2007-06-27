@@ -36,7 +36,7 @@ package sandy.core.scenegraph
 	 * @version		1.0
 	 * @date 		20.05.2006
 	 **/
-	public class Sprite3D extends ATransformable implements IDisplayable
+	final public class Sprite3D extends ATransformable implements IDisplayable
 	{	
 		/**
 		* A Sprite3D is in fact a special Sprite2D. A Sprite3D is batween a real Object3D and a Sprite2D.

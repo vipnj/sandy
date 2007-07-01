@@ -13,16 +13,14 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
-
 	
 import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vertex;
-import sandy.core.face.Polygon;
+import sandy.core.scenegraph.ATransformable;
 import sandy.core.scenegraph.Camera3D;
-import sandy.core.scenegraph.Geometry3D;
-import sandy.core.scenegraph.Shape3D;
+import sandy.core.scenegraph.IDisplayable;
+import sandy.core.World3D;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
 
@@ -31,30 +29,48 @@ import sandy.view.Frustum;
  * @version		1.0
  * @date 		20.05.2006
  **/
-class sandy.core.scenegraph.Sprite2D extends Shape3D 
-{
+class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplayable
+{	
+	
 	/**
 	* Sprite2D constructor.
 	* A sprite is a special Object3D because it's in fact a bitmap in a 3D space.
 	* The sprite is an element which always look at the camera, you'll always see the same face.
 	* @param	void
 	*/
-	public function Sprite2D( p_name:String, pScale:Number) 
+	
+	// FIXME Create a Sprite as the spriteD container, and offer a method to attach a visual content as a child of the sprite
+	public function Sprite2D( p_name:String, p_oContent:MovieClip, p_opScale:Number) 
 	{
 		super(p_name);
-		// -- we create a fictive point
-		geometry = new Geometry3D();
-		geometry.setVertex(0, 0, 0, 0);
-		_v = geometry.aVertex[0];
-		aPolygons.push( new Polygon(this, geometry, [0] ) );
+		//m_oContainer = World3D.getInstance().container.createEmptyMovieClip( p_name+"_"+this.id, World3D.getInstance().container.getNextHighestDepth() );
 		// --
+		_v = new Vertex();
 		_oBSphere 	= new BSphere();
         _oBBox 		= null;
-        setBoundingSphereRadius( 50 );
+        setBoundingSphereRadius( 30 );
         // --
-		_nScale = (pScale == null ) ? 1 : pScale;
+		_nScale = p_opScale || 1;
+		// --
+		m_oContainer = p_oContent;
 	}
 
+
+	public function set content( p_sContent:String ):Void
+	{
+		//m_oContainer.addChildAt( p_container, 0 );
+		m_nW2 = m_oContainer.width / 2;
+		m_nH2 = m_oContainer.height / 2;
+	}
+	
+	public function get content():MovieClip
+	{
+		return m_oContainer;
+	}
+	
+	public function get container():MovieClip
+	{return m_oContainer;}
+	
 	public function setBoundingSphereRadius( p_nRadius:Number ):Void
 	{ _oBSphere.radius = p_nRadius; }
 
@@ -74,19 +90,11 @@ class sandy.core.scenegraph.Sprite2D extends Shape3D
 	* @param	n Number 	The scale. This value must be a Number. A value of 1 let the scale as the perspective one.
 	* 						A value of 2.0 will make the object twice bigger. 0 is a forbidden value
 	*/
-	public function set scale( n:Number )
+	public function set scale( n:Number ):Void
 	{if( n )	_nScale = n; }
 
- 	/**
-	 * This method goal is to update the node. For node's with transformation, this method shall
-	 * update the transformation taking into account the matrix cache system.
-	 * FIXME: Transformable nodes shall upate their transform if necessary before calling this method.
-	 */
-	public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):Void
-	{
-		// -- we call the super update mthod
-		super.update( p_oModelMatrix, p_bChanged );
-	}
+	public function get depth():Number
+	{return m_nDepth;}
 	  
 	/**
 	 * This method test the current node on the frustum to get its visibility.
@@ -101,31 +109,38 @@ class sandy.core.scenegraph.Sprite2D extends Shape3D
 	{
 		super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 		// --
-		if( culled == CullingState.OUTSIDE ) 	aPolygons[0].container._visible = false;
-		else									aPolygons[0].container._visible = true;
+		if( culled == CullingState.OUTSIDE ) 	container.visible = false;
+		else									container.visible = true;
 	}
 	
     public function render( p_oCamera:Camera3D ):Void
 	{
-        // Now we consider the camera .Fixme consider the possible cache system for camera.
-        var l_oMatrix:Matrix4 = _oViewCacheMatrix;
-        // --
-        var v:Vertex = _v;
-        var i:Number;
-        v.wx = v.x * l_oMatrix.n11 + v.y * l_oMatrix.n12 + v.z * l_oMatrix.n13 + l_oMatrix.n14;
-		v.wy = v.x * l_oMatrix.n21 + v.y * l_oMatrix.n22 + v.z * l_oMatrix.n23 + l_oMatrix.n24;
-		v.wz = v.x * l_oMatrix.n31 + v.y * l_oMatrix.n32 + v.z * l_oMatrix.n33 + l_oMatrix.n34;
-        // --
-		aPolygons[0].container.swapDepths( 10000000 - int(1000*v.wz) );
-		// -- we override the value to realize the scaled effect
-		v.wz /= _nScale;
+        _v.wx = _v.x * _oViewCacheMatrix.n11 + _v.y * _oViewCacheMatrix.n12 + _v.z * _oViewCacheMatrix.n13 + _oViewCacheMatrix.n14;
+		_v.wy = _v.x * _oViewCacheMatrix.n21 + _v.y * _oViewCacheMatrix.n22 + _v.z * _oViewCacheMatrix.n23 + _oViewCacheMatrix.n24;
+		_v.wz = _v.x * _oViewCacheMatrix.n31 + _v.y * _oViewCacheMatrix.n32 + _v.z * _oViewCacheMatrix.n33 + _oViewCacheMatrix.n34;
+		m_nDepth = _v.wz;
+		m_nPerspScale = _nScale * 100/m_nDepth;
 		// --
-		p_oCamera.addToDisplayList( aPolygons[0] );
-		// --
-		p_oCamera.pushVerticesToRender( geometry.aVertex );
+		p_oCamera.addToDisplayList( this );
+		// -- We push the vertex to project onto the viewport.
+		p_oCamera.pushVerticesToRender( [_v] );	
 	}
 	// --
+	public function display( p_oContainer:MovieClip ):Void
+	{
+		//FIXME I don't like the way the perspective is applied here...
+		m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
+		m_oContainer.x = _v.sx - m_nW2;
+		m_oContainer.y = _v.sy - m_nH2;
+	}
 	
+	
+	private var m_sContent:String;
+	private var m_nPerspScale:Number=0;
+	private var m_nW2:Number=0;
+	private var m_nH2:Number=0;
 	private var _v:Vertex;
+	private var m_nDepth:Number;
 	private var _nScale:Number;
+	private var m_oContainer:MovieClip;
 }

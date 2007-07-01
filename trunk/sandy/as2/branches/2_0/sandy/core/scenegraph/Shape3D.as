@@ -61,7 +61,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     		while( --l > -1 )
     		{
 				l_oFace = aPolygons[l];
-				if( l_oFace.container ) l_oFace.container.removeMovieClip();
+				if( l_oFace.container ) l_oFace.container.clear();
 				l_oFace.container = container;
     		}
     	}
@@ -69,7 +69,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     	{
     		if( container )
     		{
-    			container.removeMovieClip();
+    			container.clear();
     		}
     		// --
     		while( --l > -1 )

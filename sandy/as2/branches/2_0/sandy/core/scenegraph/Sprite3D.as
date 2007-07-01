@@ -69,8 +69,8 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	public function set content( p_container:MovieClip )
 	{
 		m_oContainer = m_oContainer;
-		m_nW2 = m_oContainer.width / 2;
-		m_nH2 = m_oContainer.height / 2;
+		m_nW2 = m_oContainer._width / 2;
+		m_nH2 = m_oContainer._height / 2;
 	}
 	
 	public function get content():MovieClip
@@ -119,8 +119,8 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	{
 		super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 		// --
-		if( culled == CullingState.OUTSIDE ) 	container.visible = false;
-		else									container.visible = true;
+		if( culled == CullingState.OUTSIDE ) 	container._visible = false;
+		else									container._visible = true;
 	}
 	
     public function render( p_oCamera:Camera3D ):Void
@@ -158,7 +158,7 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	public function display( p_oContainer:MovieClip ):Void
 	{
 		//FIXME I don't like the way the perspective is applied here...
-		m_oContainer._xscale = m_oContainer._yscale = m_nPerspScale;
+		m_oContainer._xscale = m_oContainer._yscale = 100 * m_nPerspScale;
 		m_oContainer._x = _v.sx - m_nW2;
 		m_oContainer._y = _v.sy - m_nH2;
 	}

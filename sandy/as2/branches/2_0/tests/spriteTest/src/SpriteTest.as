@@ -20,6 +20,8 @@ import sandy.materials.LineAttributes;
 import sandy.materials.Material;
 import sandy.math.Matrix4Math;
 import sandy.util.BitmapUtil;
+import com.bourre.data.libs.LibStack;
+import com.bourre.data.libs.LibEvent;
 
 /**
  * @author thomaspfeiffer
@@ -44,43 +46,56 @@ class SpriteTest implements IFrameListener
 		_world = World3D.getInstance();
 		// -- FIRST THING TO INITIALIZE
 		_world.container = p_oMc;
+		Key.addListener( this );
 		_init();
 	}
 	
 	private function _init( Void ):Void
 	{
-		var gl:GraphicLib = new GraphicLib( _mc.createEmptyMovieClip("texture",0), 0, false );
-		gl.setName( "TEXTURE" );
-		gl.addEventListener( GraphicLib.onLoadInitEVENT, this, _onReady);
-		gl.load( "texture.jpg" );
-		gl.execute();
-		FPSBeacon.getInstance().addFrameListener( this );
+		var lStack:LibStack = new LibStack();
+
+		var lContainer:MovieClip = _mc.createEmptyMovieClip("texture",_mc.getNextHighestDepth());
+		var gl:GraphicLib = new GraphicLib( lContainer, 0, false );
+		lStack.enqueue( gl, "TEXTURE", "texture.jpg" );
+	
+		lStack.addEventListener( LibStack.onTimeOutEVENT, this, _onTimeout);
+		lStack.addEventListener( LibStack.onLoadCompleteEVENT, this, _onReady);
+		lStack.load();
+		Logger.LOG("init :: "+lStack);
 	}	
 	
-	private function _onReady( Void ):Void
+	private function _onTimeout( pEvt:LibEvent ):Void
 	{
+		Logger.LOG("timeout");
+	}
+	
+	private function _onReady( pEvt:LibEvent ):Void
+	{
+		Logger.LOG("loaded");
 		_world.root = _createScene();
 		_world.camera = new Camera3D( 500, 500 );
 		_world.root.addChild( _world.camera );
 		_world.container = _mc;
+		
+		FPSBeacon.getInstance().addFrameListener( this );
 	}
 	
 	private function _createScene( Void ):Group
 	{
 		// -- variables declaration
+		var gl:GraphicLib = GraphicLibLocator.getInstance().getGraphicLib("TEXTURE");
+		var lBmd:BitmapData = BitmapUtil.movieToBitmap( gl.getContent(), true );
 		var g:Group = new Group();
-		// -- creation of the materials and apperance
-		var b:BitmapData = BitmapUtil.movieToBitmap( GraphicLibLocator.getInstance().getGraphicLib("TEXTURE").getContent(), false );
-		var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( b ) ); 
 		// --
 		var l:Number = 100;
 		var slice:Number = Math.PI * 2 / l;
 		while( --l > -1 )
 		{
-			var l_oSprite:Sprite2D = new Sprite2D("sprite_"+l);
+			var lMc:MovieClip = _mc.createEmptyMovieClip( "sprite_"+l, _mc.getNextHighestDepth() );
+			lMc.attachBitmap( lBmd, 0 );
+			var l_oSprite:Sprite2D = new Sprite2D("sprite_"+l, lMc, 1 );
 			l_oSprite.x = 1000 * Math.cos( l*slice );
 			l_oSprite.z = 1000 * Math.sin( l*slice );
-			l_oSprite.appearance = l_oTextureAppearance;
 			// --
 			g.addChild( l_oSprite );
 		}
@@ -96,7 +111,11 @@ class SpriteTest implements IFrameListener
 		//if(Key.isDown(Key.END))    cam.moveForward(-5); 
 		if ( Key.isDown(Key.UP))   cam.moveForward(5);
 		if ( Key.isDown(Key.DOWN)) cam.moveForward(-5);
-		if(Key.isDown(Key.LEFT))   cam.rotateY += 1; 
+		if(Key.isDown(Key.LEFT))  
+		{
+			//Logger.LOG("camera rotate left");
+			cam.rotateY += 1; 
+		}
 		if(Key.isDown(Key.RIGHT))  cam.rotateY -= 1; 		
 		// --
 		_world.render();

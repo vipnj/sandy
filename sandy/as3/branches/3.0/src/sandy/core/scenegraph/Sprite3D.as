@@ -135,17 +135,13 @@ package sandy.core.scenegraph
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 					
-	        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13 + m14;
-			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23 + m24;
-			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33 + m34;
+	        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
+			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23;
+			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33;
 			
 			_v.wx = _v.x * m11 + _v.y * m12 + _v.z * m13 + m14;
 			_v.wy = _v.x * m21 + _v.y * m22 + _v.z * m23 + m24;
 			_v.wz = _v.x * m31 + _v.y * m32 + _v.z * m33 + m34;
-			
-			_vView.wx = _vView.x * m11 + _vView.y * m12 + _vView.z * m13 + m14;
-			_vView.wy = _vView.x * m21 + _vView.y * m22 + _vView.z * m23 + m24;
-			_vView.wz = _vView.x * m31 + _vView.y * m32 + _vView.z * m33 + m34;
 			
 			m_nDepth = _v.wz;
 			m_nPerspScale = _nScale * 100/m_nDepth;

@@ -14,6 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 	
+import com.bourre.log.Logger;
+
 import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vertex;
@@ -31,7 +33,8 @@ import sandy.view.Frustum;
  **/
 class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplayable
 {	
-	
+	// [READ ONLY]
+	public var depth:Number;	
 	/**
 	* Sprite2D constructor.
 	* A sprite is a special Object3D because it's in fact a bitmap in a 3D space.
@@ -56,11 +59,12 @@ class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplaya
 	}
 
 
-	public function set content( p_sContent:String ):Void
+	public function set content( p_oContent:MovieClip ):Void
 	{
 		//m_oContainer.addChildAt( p_container, 0 );
-		m_nW2 = m_oContainer.width / 2;
-		m_nH2 = m_oContainer.height / 2;
+		m_oContainer = p_oContent;
+		m_nW2 = m_oContainer._width / 2;
+		m_nH2 = m_oContainer._height / 2;
 	}
 	
 	public function get content():MovieClip
@@ -93,9 +97,7 @@ class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplaya
 	public function set scale( n:Number ):Void
 	{if( n )	_nScale = n; }
 
-	public function get depth():Number
-	{return m_nDepth;}
-	  
+	
 	/**
 	 * This method test the current node on the frustum to get its visibility.
 	 * If the node and its children aren't in the frustum, the node is set to cull
@@ -109,8 +111,8 @@ class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplaya
 	{
 		super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 		// --
-		if( culled == CullingState.OUTSIDE ) 	container.visible = false;
-		else									container.visible = true;
+		if( culled == CullingState.OUTSIDE ) 	m_oContainer._visible = false;
+		else									m_oContainer._visible = true;
 	}
 	
     public function render( p_oCamera:Camera3D ):Void
@@ -118,8 +120,8 @@ class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplaya
         _v.wx = _v.x * _oViewCacheMatrix.n11 + _v.y * _oViewCacheMatrix.n12 + _v.z * _oViewCacheMatrix.n13 + _oViewCacheMatrix.n14;
 		_v.wy = _v.x * _oViewCacheMatrix.n21 + _v.y * _oViewCacheMatrix.n22 + _v.z * _oViewCacheMatrix.n23 + _oViewCacheMatrix.n24;
 		_v.wz = _v.x * _oViewCacheMatrix.n31 + _v.y * _oViewCacheMatrix.n32 + _v.z * _oViewCacheMatrix.n33 + _oViewCacheMatrix.n34;
-		m_nDepth = _v.wz;
-		m_nPerspScale = _nScale * 100/m_nDepth;
+		depth = _v.wz;
+		m_nPerspScale = _nScale * 100/depth;
 		// --
 		p_oCamera.addToDisplayList( this );
 		// -- We push the vertex to project onto the viewport.
@@ -129,9 +131,9 @@ class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplaya
 	public function display( p_oContainer:MovieClip ):Void
 	{
 		//FIXME I don't like the way the perspective is applied here...
-		m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-		m_oContainer.x = _v.sx - m_nW2;
-		m_oContainer.y = _v.sy - m_nH2;
+		m_oContainer._xscale = m_oContainer._yscale = 100*m_nPerspScale;
+		m_oContainer._x = _v.sx - m_nW2;
+		m_oContainer._y = _v.sy - m_nH2;
 	}
 	
 	
@@ -140,7 +142,6 @@ class sandy.core.scenegraph.Sprite2D extends ATransformable implements IDisplaya
 	private var m_nW2:Number=0;
 	private var m_nH2:Number=0;
 	private var _v:Vertex;
-	private var m_nDepth:Number;
 	private var _nScale:Number;
 	private var m_oContainer:MovieClip;
 }

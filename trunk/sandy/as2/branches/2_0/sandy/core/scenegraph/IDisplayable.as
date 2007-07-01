@@ -8,5 +8,5 @@ interface sandy.core.scenegraph.IDisplayable
 		//As AS2 does not allow them into interface, they are commented, but should exist!
 		//function get container():MovieClip;	
 		//function get depth():Number;	
-		function display():Void;
+		function display( p_mcMovieClip:MovieClip ):Void;
 }

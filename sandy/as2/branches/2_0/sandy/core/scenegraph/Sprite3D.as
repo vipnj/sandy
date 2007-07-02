@@ -15,6 +15,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 	
+import com.bourre.log.Logger;
+
 import sandy.bounds.BSphere;
 import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
@@ -34,6 +36,8 @@ import sandy.view.Frustum;
  **/
 class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplayable
 {	
+	// [ReAd-ONLY]
+	public var depth:Number;
 	/**
 	* A Sprite3D is in fact a special Sprite2D. A Sprite3D is batween a real Object3D and a Sprite2D.
 	* It has a skin which is a movie clip containing 360 frames (at least!). 
@@ -69,6 +73,7 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	public function set content( p_container:MovieClip )
 	{
 		m_oContainer = m_oContainer;
+		m_oContainer.stop();
 		m_nW2 = m_oContainer._width / 2;
 		m_nH2 = m_oContainer._height / 2;
 	}
@@ -102,9 +107,6 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	*/
 	public function set scale( n:Number ):Void
 	{if( n )	_nScale = n; }
-
-	public function get depth():Number
-	{return m_nDepth;}
 	  
 	/**
 	 * This method test the current node on the frustum to get its visibility.
@@ -125,22 +127,23 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	
     public function render( p_oCamera:Camera3D ):Void
 	{
-       var 	l_oMatrix:Matrix4 = _oViewCacheMatrix,
-			m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
+       var 	l_oMatrix:Matrix4 = _oViewCacheMatrix;
+       var	m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
 			m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
 			m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 			m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 				
-        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
-		_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23;
-		_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33;
+        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13 + m14;
+		_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23 + m24;
+		_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33 + m34;
 		
 		_v.wx = _v.x * m11 + _v.y * m12 + _v.z * m13 + m14;
 		_v.wy = _v.x * m21 + _v.y * m22 + _v.z * m23 + m24;
 		_v.wz = _v.x * m31 + _v.y * m32 + _v.z * m33 + m34;
 		
-		m_nDepth = _v.wz;
-		m_nPerspScale = _nScale * 100/m_nDepth;
+		depth = _v.wz;
+		// 100 because scale is beteen 0 and 100 in AS2
+		m_nPerspScale = _nScale * 10000/depth;
 		// --
 		p_oCamera.addToDisplayList( this );
 		// -- We push the vertex to project onto the viewport.
@@ -158,7 +161,7 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	public function display( p_oContainer:MovieClip ):Void
 	{
 		//FIXME I don't like the way the perspective is applied here...
-		m_oContainer._xscale = m_oContainer._yscale = 100 * m_nPerspScale;
+		m_oContainer._xscale = m_oContainer._yscale = m_nPerspScale;
 		m_oContainer._x = _v.sx - m_nW2;
 		m_oContainer._y = _v.sy - m_nH2;
 	}
@@ -201,7 +204,6 @@ class sandy.core.scenegraph.Sprite3D extends ATransformable implements IDisplaya
 	private var m_nW2:Number;
 	private var m_nH2:Number;
 	private var _v:Vertex;
-	private var m_nDepth:Number;
 	private var _nScale:Number;
 	private var m_oContainer:MovieClip;
 }

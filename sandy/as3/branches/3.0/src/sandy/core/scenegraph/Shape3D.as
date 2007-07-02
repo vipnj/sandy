@@ -168,19 +168,18 @@ package sandy.core.scenegraph
 					// If the face is on screen, we manage some computations for a good display					
 					if( l_oFace.cvertices.length )
 					{
-						// we add the vertices to the projection list
-						//for each( var l_oV:Vertex in m_aTmp )
-						//	if( m_aToProject.indexOf( l_oV ) == -1 ) m_aToProject.push( l_oV );
-						
-						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
-						else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
-						
-						// -- we manage the display list depending on the mode choosen
-						if( m_bUseSingleContainer )
-							m_aVisiblePoly.push( l_oFace );
-						else
-							p_oCamera.addToDisplayList( l_oFace );
+						if( l_oFace.getZMinimum() > 0 )
+						{
+							// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
+							if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
+							else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
+							
+							// -- we manage the display list depending on the mode choosen
+							if( m_bUseSingleContainer )
+								m_aVisiblePoly.push( l_oFace );
+							else
+								p_oCamera.addToDisplayList( l_oFace );
+						}
 					}
 					else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
 				}

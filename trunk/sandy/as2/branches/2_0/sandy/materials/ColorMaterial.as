@@ -1,8 +1,7 @@
-﻿import com.bourre.log.Logger;
-
-import sandy.core.face.Polygon;
+﻿import sandy.core.face.Polygon;
 import sandy.materials.Material;
 import sandy.materials.MaterialType;
+import sandy.materials.LineAttributes;
 
 /**
  * @author thomaspfeiffer
@@ -12,11 +11,12 @@ class sandy.materials.ColorMaterial extends Material
 	private var m_nColor:Number;
 	private var m_nAlpha:Number;
 	// --
-	public function ColorMaterial( p_nColor:Number, p_nAlpha:Number )
+	public function ColorMaterial( p_nColor:Number, p_nAlpha:Number, p_oLineAttr:LineAttributes )
 	{
 		super();
 		m_nColor = p_nColor || 0xFF0000;
 		m_nAlpha = p_nAlpha || 100;
+		lineAttributes = p_oLineAttr;
 	}
 	
 	function renderPolygon( p_oPolygon:Polygon, p_mcContainer:MovieClip ):Void 

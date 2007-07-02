@@ -16,7 +16,6 @@ limitations under the License.
 
 package sandy.core.data 
 {
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -153,7 +152,18 @@ package sandy.core.data
 			m_nDepth /= cvertices.length;
 			return m_nDepth;
 		}
-	
+
+		public function getZMinimum():Number
+		{
+			var lMin:Number = Number.MAX_VALUE;
+			for each ( var v:Vertex in cvertices )
+			{
+				if( v.wz < lMin ) lMin = v.wz;
+			}
+			// -- We normalize the sum and return it
+			return lMin;
+		}
+			
 		public function display( p_oContainer:Sprite = null ):void
 		{
 			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite; 

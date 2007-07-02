@@ -46,7 +46,6 @@ class SpriteTest implements IFrameListener
 		_world = World3D.getInstance();
 		// -- FIRST THING TO INITIALIZE
 		_world.container = p_oMc;
-		Key.addListener( this );
 		_init();
 	}
 	

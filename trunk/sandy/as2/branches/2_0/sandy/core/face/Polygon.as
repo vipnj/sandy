@@ -16,6 +16,7 @@ limitations under the License.
 import com.bourre.commands.Delegate;
 import com.bourre.events.BubbleEventBroadcaster;
 import com.bourre.events.EventType;
+import com.bourre.log.Logger;
 
 import sandy.core.data.UVCoord;
 import sandy.core.data.Vector;
@@ -113,7 +114,7 @@ class sandy.core.face.Polygon implements IDisplayable
 		return vertices.concat( cvertices );
 	}
 
-	public function display():Void
+	public function display( p_mcContainer:MovieClip ):Void
 	{
 		if( m_bIsVisible )m_oAppearance.frontMaterial.renderPolygon( this, container );
 		else			m_oAppearance.backMaterial.renderPolygon( this, container );
@@ -165,17 +166,30 @@ class sandy.core.face.Polygon implements IDisplayable
 		// -- We normalize the sum and return it
 		var a:Array = cvertices;
 		var l:Number= a.length;
-		var d:Number = 0;
+		depth = 0;
 		// --
 		while( --l > -1 )
 		{
-			d += a[(l)].wz;
+			depth += a[(l)].wz;
 		}
 		// --
-		depth = d / a.length;
-		return depth;
+		return depth /= a.length;
 	}
 
+	public function getZMinimum():Number
+	{
+		var lMin:Number = Number.MAX_VALUE;
+		var a:Array = cvertices;
+		var l:Number= a.length;
+		// --
+		while( --l > -1 )
+		{
+			if( a[(l)].wz < lMin ) lMin = a[(l)].wz;
+		}
+		// -- We normalize the sum and return it
+		return lMin;
+	}
+		
 	
 	/**
 	 * Get a String representation of the {@code NFace3D}. 

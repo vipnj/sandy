@@ -15,6 +15,7 @@ import sandy.core.World3D;
 import sandy.materials.Appearance;
 import sandy.view.CullingState;
 import sandy.view.Frustum;
+import sandy.materials.ColorMaterial;
 
 class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransformable, IDisplayable
 { 
@@ -29,13 +30,12 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
         super( p_sName );
         // -- Add this graphical object to the World display list
 		container = World3D.getInstance().container.createEmptyMovieClip("shape_"+id.toString(), World3D.getInstance().container.getNextHighestDepth() );
-		// --
-        geometry = p_geometry;
 		// -- HACK to make sure that the correct container system will be applied
 		p_bUseSingleContainer = (p_bUseSingleContainer)?p_bUseSingleContainer:true;
 		m_bUseSingleContainer = !p_bUseSingleContainer;
 		useSingleContainer = p_bUseSingleContainer;
         //
+        aPolygons = null;
         m_bBackFaceCulling = true;
 		m_bEnableForcedDepth = false;
 		m_bEnableClipping = false;
@@ -43,10 +43,10 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		m_nForcedDepth = depth = 0;
 		m_aVisiblePoly = new Array();
 		m_bEv = false;
-		// --
-		appearance = p_oAppearance;
-		// -- 
-		updateBoundingVolumes();
+		// -- create the geometry and the bounding volumes
+        geometry = p_geometry;
+        // -- attach an appearance to the shape
+		appearance = (p_oAppearance == null) ? new Appearance( new ColorMaterial() ) : p_oAppearance;
     }
 	
 	
@@ -101,7 +101,9 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     {
     	var i:Number, l:Number;
     	//
+    	Logger.LOG("create from geometry, nomber of vertices :"+p_oGeometry.aFacesVertexID.length);
     	aPolygons = new Array( l = p_oGeometry.aFacesVertexID.length );
+    	Logger.LOG("aPolygons="+aPolygons+" "+aPolygons.length);
     	//
     	for( i=0; i<l; i++ )
     	{
@@ -235,14 +237,17 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 			    // --
 			    if( l_oFace.cvertices.length )
 			    {
-					// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-					if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
-					else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
-					// --
-					if( m_bUseSingleContainer )
-							m_aVisiblePoly.push( l_oFace );
-					else
-						p_oCamera.addToDisplayList( l_oFace );
+					if( l_oFace.getZMinimum() > 0 )
+					{
+						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
+						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
+						else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
+						// --
+						if( m_bUseSingleContainer )
+								m_aVisiblePoly.push( l_oFace );
+						else
+							p_oCamera.addToDisplayList( l_oFace );
+					}
 			    }
 			}
 			else if( !m_bUseSingleContainer ) l_oFace.container.clear();
@@ -259,14 +264,14 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 	}
 
 	// Called only if the useSignelContainer property is enabled!
-	public function display():Void
+	public function display( p_mcContainer:MovieClip ):Void
 	{
 		var l:Number = m_aVisiblePoly.length;
 		m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
 		// --
 		while( --l > -1 )
 		{
-			m_aVisiblePoly[l].display();
+			m_aVisiblePoly[l].display( container );
 		}
 	}
 
@@ -275,10 +280,15 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		// Now we register to the update event
 		m_oAppearance = p_oApp;
 		//
+		Logger.LOG("shape::set appearance : "+p_oApp+" "+m_oGeometry);
+		
 		if( m_oGeometry )
 		{
 			var l_faces:Array = aPolygons;
 			var l:Number = l_faces.length;
+			
+			Logger.LOG("shape::set appearance tableau: "+l_faces);
+			Logger.LOG("shape::set appearance taille: "+l);
 			while( --l > -1 )
 			{
 				l_faces[int(l)].appearance = m_oAppearance;

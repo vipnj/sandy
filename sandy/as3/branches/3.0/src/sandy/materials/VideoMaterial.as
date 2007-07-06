@@ -14,23 +14,26 @@ package sandy.materials
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.media.Video;
+	import flash.utils.Timer;
 	
-	import sandy.core.World3D;
 	import sandy.core.data.Polygon;
 	
 	public class VideoMaterial extends BitmapMaterial
 	{
-		
+		private var m_oTimer:Timer;
 		private var m_oVideo : Video;
 			
-		public function VideoMaterial( p_oVideo : Video )
+		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40 )
 		{
 			super( new BitmapData( p_oVideo.width, p_oVideo.height, false, 0xFF000000 ) );
 			m_oVideo = p_oVideo;
 			m_nType = MaterialType.VIDEO;
 			// --
-			World3D.getInstance().container.addEventListener( Event.ENTER_FRAME, _update );
+			m_oTimer = new Timer( p_nUpdateMS );
+			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
+			m_oTimer.start();
 		}
 		
 		public override function renderPolygon ( p_oPolygon:Polygon, p_mcContainer:Sprite ) : void
@@ -38,7 +41,7 @@ package sandy.materials
 			super.renderPolygon( p_oPolygon, p_mcContainer );
 		}
 		
-		private function _update( p_eEvent:Event ):void
+		private function _update( p_eEvent:TimerEvent ):void
 		{
 			//m_oTexture.dispose();
 			// --

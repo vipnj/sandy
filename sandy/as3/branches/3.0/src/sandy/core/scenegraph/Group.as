@@ -57,9 +57,9 @@ package sandy.core.scenegraph
 			// TODO
 			// Parse the children, take their bounding volume and merge it with the current node recurssively. 
 			// After that call the super cull method to get the correct cull value.		
-			const lChangedBoolean = p_bChanged || changed;
+			const lChanged:Boolean = p_bChanged || changed;
 			for each( var l_oNode:Node in _aChilds )
-			    l_oNode.cull( p_oFrustum, p_oViewMatrix, lChangedBoolean );
+			    l_oNode.cull( p_oFrustum, p_oViewMatrix, lChanged );
 			// --
 			super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}

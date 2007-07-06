@@ -1,23 +1,17 @@
 package
 {
 	import com.mir3.display.FPSMetter;
-	import com.mir3.utils.KeyManager;
 	
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.display.StageScaleMode;
 	import flash.events.*;
-	import flash.text.TextField;
-	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.*;
-	import sandy.math.*;
 	import sandy.core.scenegraph.*;
 	import sandy.materials.*;
+	import sandy.math.*;
 	import sandy.primitive.*;
 	
 	[SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate=120)] 
@@ -79,6 +73,8 @@ package
 			box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 			box.appearance = l_oTextureAppearance;
 			box.rotateZ = 45;
+			box.enableEvents =( true );
+			box.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver );
 			
 			hedra = new Hedra( "myHedra", 50, 50, 100 );
 			hedra.appearance = l_oTextureAppearance;
@@ -137,6 +133,11 @@ package
 			return g;
 		}
 	
+		private function _onBoxRollOver( pEvent:MouseEvent ):void
+		{
+			trace( pEvent );
+		}
+		
 		private function enterFrameHandler( event : Event ) : void
 		{
 			tgRotation.rotateX ++;

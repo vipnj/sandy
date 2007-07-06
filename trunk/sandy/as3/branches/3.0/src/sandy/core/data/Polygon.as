@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.core.data 
 {
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	import sandy.core.scenegraph.Geometry3D;
@@ -63,6 +64,8 @@ package sandy.core.data
 		
 		protected var m_nDepth:Number;
 		protected var m_oContainer:Sprite;
+		
+		public var broadcaster:Sprite = new Sprite();
 		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
 		{
@@ -195,25 +198,28 @@ package sandy.core.data
 		 */
 		public function enableEvents( b:Boolean ):void
 		{
-	       /*
 	        if( b && !mouseEvents )
 	        {
-	        	container.addEventListener(MouseEvent.CLICK, _onPress);
-	    		container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-	    		container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
-	    		container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+	        	container.addEventListener(MouseEvent.CLICK, _onInteraction);
+	    		container.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+	    		container.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+	    		container.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
 			}
 			else if( !b && mouseEvents )
 			{
-				container.addEventListener(MouseEvent.CLICK, _onPress);
+				container.removeEventListener(MouseEvent.CLICK, _onPress);
 				container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
 				container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
 				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 	    	}
 	    	mouseEvents = b;
-	    	*/
 		}
-	
+
+		protected function _onInteraction( p_oEvt:Event ):void
+		{
+			this.broadcaster.dispatchEvent(p_oEvt);
+		}
+		
 		/**
 		 * Create the normal vector of the face.
 		 * @return	The resulting {@code Vertex} corresponding to the normal.

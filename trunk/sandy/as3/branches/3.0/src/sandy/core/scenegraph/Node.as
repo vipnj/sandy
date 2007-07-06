@@ -16,9 +16,8 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.events.EventDispatcher;
+	import flash.display.Sprite;
 	
-	import sandy.core.data.Vector;
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
@@ -42,6 +41,8 @@ package sandy.core.scenegraph
 		public var changed:Boolean;
 		// This property represent the culling state of the current node
 		public var culled:CullingState;
+		
+		public var broadcaster:Sprite = new Sprite();
 		
 		/**
 		* Retuns the unique ID Number that represents the node.
@@ -108,6 +109,7 @@ package sandy.core.scenegraph
 			child.parent = this;
 			changed =  true ;
 			_aChilds.push( child );
+			broadcaster.addChild( child.broadcaster );
 		}	
 		
 		/**
@@ -119,7 +121,12 @@ package sandy.core.scenegraph
 		{
 			return _aChilds;
 		}
-	
+		
+		public function get children():Array
+		{
+			return _aChilds;
+		}
+		
 		/**
 		* Returns the child node with the specified ID
 		* @param	index Number The ID of the child you want to get
@@ -192,6 +199,7 @@ package sandy.core.scenegraph
 				if( _aChilds[int(i)].id == pId  )
 				{
 					_aChilds.splice( i, 1 );
+					broadcaster.removeChildAt(i);
 					changed = true;
 					found = true;
 				}
@@ -225,6 +233,7 @@ package sandy.core.scenegraph
 				if( _aChilds[int(i)].name == pName  )
 				{
 					_aChilds.splice( i, 1 );
+					broadcaster.removeChildAt(i);
 					changed = true;
 					found = true;
 				}
@@ -249,6 +258,7 @@ package sandy.core.scenegraph
 				_aChilds[int(l)] = null;	
 			}
 			_aChilds = null;
+			broadcaster = null;
 			
 			// the unlink this node to his parent
 			if( hasParent() == true ) parent.removeChildById( this._id );
@@ -271,6 +281,7 @@ package sandy.core.scenegraph
 				parent.addChild( _aChilds[int(l)] );
 			}
 			_aChilds = null;
+			broadcaster = null;
 			changed = true;
 		}
 	

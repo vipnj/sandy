@@ -1,7 +1,8 @@
 package sandy.core.scenegraph 
 {    
 	import flash.display.Sprite;
-	import flash.utils.Dictionary;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
@@ -57,6 +58,7 @@ package sandy.core.scenegraph
 					{
 						l_oFace.container.graphics.clear();
 						World3D.getInstance().container.removeChild( l_oFace.container );
+						this.broadcaster.removeChild( l_oFace.broadcaster );
 					}
 	    		}
 	    	}
@@ -70,6 +72,7 @@ package sandy.core.scenegraph
 	    		// --
 	    		for each( l_oFace in aPolygons )
 	    		{
+					this.broadcaster.addChild( l_oFace.broadcaster );
 					// we reset the polygon container to the original one, and add it to the world container
 					l_oFace.container.graphics.clear();
 	    		}
@@ -328,34 +331,47 @@ package sandy.core.scenegraph
 			{
 				if( !m_bEv )
 				{
-					/*
-	    			for each( var v:Polygon in aPolygons )
-					{
-	    			    l_faces[int(l)].enableEvents( true );
-						l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
-						l_faces[int(l)].container.addEventListener(MouseEvent.MOUSE_UP, _onPress); //MIGRATION GUIDE: onRelease & onReleaseOutside
-						l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OVER, _onRollOver);	
-						l_faces[int(l)].container.addEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+	    			if( m_bUseSingleContainer == false )
+	    			{
+		    			for each( var v:Polygon in aPolygons )
+						{
+		    			    v.enableEvents( true );
+		    			}
 	    			}
-	    			*/
+	    			else
+	    			{
+	    				container.addEventListener(MouseEvent.CLICK, _onInteraction);
+						container.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+						container.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+						container.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+	    			}
 				}
 			}
 			else if( !b && m_bEv )
 			{
-				/*
-				while( --l > -1 )
-	    		{
-	    	        l_faces[int(l)].enableEvents( false );
-					l_faces[int(l)].container.addEventListener(MouseEvent.CLICK, _onPress);
-					l_faces[int(l)].container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
-					l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
-					l_faces[int(l)].container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
-	    		}
-	    		*/
+				if( m_bUseSingleContainer == false )
+    			{
+	    			for each( var v:Polygon in aPolygons )
+					{
+	    			    v.enableEvents( false );
+	    			}
+    			}
+    			else
+    			{
+    				container.removeEventListener(MouseEvent.CLICK, _onInteraction);
+					container.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+					container.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+					container.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+    			}
 			}
 			m_bEv = b;
 		}
 	
+		protected function _onInteraction( p_oEvt:Event ):void
+		{
+			this.broadcaster.dispatchEvent(p_oEvt);
+		}
+		
 		/**
 		* This method allows you to change the backface culling side.
 		* For example when you want to display a cube, you are actually outside the cube, and you see its external faces.
@@ -378,11 +394,7 @@ package sandy.core.scenegraph
 			// 	FIXME Fix it - it should be more like 
 			//	geometry.destroy();
 			// --
-			for each( var v:Polygon in aPolygons )
-			{
-				v.destroy();
-				v = null;
-			}
+			__destroyPolygons();
 			// --
 			super.destroy();
 		}
@@ -395,6 +407,7 @@ package sandy.core.scenegraph
 	    		var i:int, l:int = aPolygons.length;
 	    		while( i<l )
 		    	{
+		    		this.broadcaster.removeChild( aPolygons[i].broadcaster );
 		    		Polygon( aPolygons[int(i)] ).destroy();
 		    		if( m_bUseSingleContainer == false ) World3D.getInstance().container.removeChild( aPolygons[i].container );
 		    		i++;
@@ -408,6 +421,7 @@ package sandy.core.scenegraph
 	    	for each ( var o:* in p_oGeometry.aFacesVertexID )
 	    	{
 	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+	    		this.broadcaster.addChild( aPolygons[i].broadcaster );
 	    		// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
 	    		i++;
 	    	}

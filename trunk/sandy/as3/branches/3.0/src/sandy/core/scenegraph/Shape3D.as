@@ -156,7 +156,7 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly.splice(0);
-			//m_aToProject.splice(0);
+			m_aToProject.splice(0);
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
@@ -167,6 +167,9 @@ package sandy.core.scenegraph
 						m_aTmp = l_oFace.clip( l_oFrustum );
 					else
 				    	m_aTmp = l_oFace.cvertices = l_oFace.vertices;		   
+					
+					for each( var lV:Vertex in m_aTmp )
+						if( m_aToProject.indexOf( lV ) ) m_aToProject.push( lV );
 					
 					// If the face is on screen, we manage some computations for a good display					
 					if( l_oFace.cvertices.length )
@@ -183,6 +186,10 @@ package sandy.core.scenegraph
 							else
 								p_oCamera.addToDisplayList( l_oFace );
 						}
+						else
+						{
+							trace("merde");
+						}
 					}
 					else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
 				}
@@ -195,7 +202,7 @@ package sandy.core.scenegraph
 				p_oCamera.addToDisplayList( this );
 			}
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( /*m_aToProject*/l_aPoints );	
+			p_oCamera.addToProjectionList( m_aToProject/*l_aPoints*/ );	
 		}
 	
 		// Called only if the useSignelContainer property is enabled!
@@ -327,13 +334,15 @@ package sandy.core.scenegraph
 		public function set enableEvents( b:Boolean ):void
 		{
 			// To use only when use Single container is disabled 
+			var v:Polygon = null;
+			
 			if( b )
 			{
 				if( !m_bEv )
 				{
 	    			if( m_bUseSingleContainer == false )
 	    			{
-		    			for each( var v:Polygon in aPolygons )
+		    			for each( v in aPolygons )
 						{
 		    			    v.enableEvents( true );
 		    			}
@@ -351,7 +360,7 @@ package sandy.core.scenegraph
 			{
 				if( m_bUseSingleContainer == false )
     			{
-	    			for each( var v:Polygon in aPolygons )
+	    			for each( v in aPolygons )
 					{
 	    			    v.enableEvents( false );
 	    			}

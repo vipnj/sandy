@@ -23,7 +23,6 @@ package sandy.view
 	import sandy.core.data.Vertex;
 	import sandy.math.PlaneMath;
 	import sandy.util.NumberUtil;
-	import sandy.view.CullingState;
 	
 	/**
 	* Frustum
@@ -181,8 +180,8 @@ package sandy.view
 	
 		public function boxInFrustum( box:BBox ):CullingState
 		{
-			var result:CullingState = Frustum.INSIDE, out:Number,iin:Number, k:int, d:Number;
-			const p:Array = box.aTCorners;
+			var result:CullingState = Frustum.INSIDE;
+			var out:Number, iin:Number, lDist:Number;
 			// for each plane do ...
 			for each( var plane:Plane in aPlanes )
 			{
@@ -191,11 +190,11 @@ package sandy.view
 				// for each corner of the box do ...
 				// get out of the cycle as soon as a box as corners
 				// both inside and out of the frustum
-				for each( var v:Vector in p )
+				for each( var v:Vector in box.aTCorners )
 				{
-					d = plane.a * p.x + plane.b * p.y + plane.c * p.z + plane.d;
+					lDist = plane.a * v.x + plane.b * v.y + plane.c * v.z + plane.d;
 					// is the corner outside or inside
-					if ( d < 0 )
+					if ( lDist < 0 )
 						out++;
 					else
 						iin++;
@@ -235,16 +234,16 @@ package sandy.view
 		{	
 			var allin:Boolean = true, allout:Boolean = true;
 			var v:Vertex;
-			var i:Number, l:Number = pts.length;
+			var i:Number, l:Number = pts.length, lDist:Number;
 			// -- If no points, we return null
-			var aDist:Array = new Array( pts.length );
+			var aDist:Array = new Array();
 			// -- otherwise we compute the distances to frustum plane
-			for ( i = 0; i < l; i++)
-			{	 
-				v = pts[i];
-				aDist[i] = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d;
-				if (aDist[i] < 0) allin = false;
-				if (aDist[i] >= 0) allout = false;			
+			for each( v in pts )
+			{
+				lDist = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d;
+				if (lDist < 0) allin = false;
+				if (lDist >= 0) allout = false;
+				aDist.push( lDist );		
 			}
 			
 			if (allin)

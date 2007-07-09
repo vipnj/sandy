@@ -67,9 +67,10 @@ package
 			// -- create scene
 			var g:Group = new Group();
 			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", 2 );
-			box.appearance = new Appearance(new ColorMaterial( 0xff00, 20, null/*new LineAttributes( 2, 0xFF0000, 100 )*/ ),
+			box.appearance = new Appearance(new ColorMaterial( 0xff00, 20, new LineAttributes( 2, 0xFF0000, 100 ) ),
 											new ColorMaterial( 0xFF, 50, null/*new LineAttributes( 2, 0xFF00, 100 )*/ ) );
 			box.enableBackFaceCulling = false;
+			box.enableClipping = true;
 			// --			
 			g.addChild( box );
 			world.root = g;

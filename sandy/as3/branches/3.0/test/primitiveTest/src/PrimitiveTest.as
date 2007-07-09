@@ -73,8 +73,8 @@ package
 			box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 			box.appearance = l_oTextureAppearance;
 			box.rotateZ = 45;
-			box.enableEvents =( true );
-			box.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver );
+			box.enableEvents = true;
+			g.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver, true );
 			
 			hedra = new Hedra( "myHedra", 50, 50, 100 );
 			hedra.appearance = l_oTextureAppearance;

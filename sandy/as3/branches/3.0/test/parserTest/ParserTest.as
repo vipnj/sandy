@@ -1,15 +1,8 @@
-package test.parserTest
+package
 {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.display.StageScaleMode;
 	import flash.events.*;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
-	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	
 	import sandy.core.World3D;
@@ -21,7 +14,6 @@ package test.parserTest
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
 	import sandy.primitive.*;
-	import sandy.parser.ColladaParser;
 	
 	[SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate=120)] 
 	/**
@@ -38,10 +30,10 @@ package test.parserTest
 		
 		private var fps: CustomFPS;
 		
-		[Embed(source="assets/texrin2.jpg")]
+		[Embed(source="/assets/texrin2.jpg")]
 		private var Texture:Class;
-		[Embed(source="assets/collada/multi-mesh-2texture.dae", mimeType="application/octet-stream")]
-		private var MyCollada:Class;
+		//[Embed(source="assets/collada/multi-mesh-2texture.dae", mimeType="application/octet-stream")]
+		//private var MyCollada:Class;
 //		[Embed(source="assets/Rhino.ASE", mimeType="application/octet-stream")]
 //		private var MyRhino:Class;
 		
@@ -65,16 +57,22 @@ package test.parserTest
 		
 		private function _init():void
 		{
-//			var l_iParser:IParser = Parser.create("assets/Rhino.ASE");
+			var l_iParser:IParser = Parser.create("assets/Rhino.ASE");
 //			var l_iParser:IParser = Parser.create( new MyRhino(), Parser.ASE );
 //			var l_iParser:IParser = Parser.create("assets/octopus.3ds", Parser.MAX_3DS );
-			var l_iParser:IParser = Parser.create( new MyCollada(), Parser.COLLADA );
-//			var l_iParser:IParser = Parser.create( "assets/collada/mycone.dae", Parser.COLLADA );
+			//var l_iParser:IParser = Parser.create( new MyCollada(), Parser.COLLADA );
+			//var l_iParser:IParser = Parser.create( "assets/collada/mycone.dae", Parser.COLLADA );
 			//var l_iParser:IParser = Parser.create( "assets/car07.3ds" );
 			l_iParser.addEventListener( ParserEvent.onInitEVENT, _createScene );
+			l_iParser.addEventListener( ParserEvent.onFailEVENT, _onError );
 //			l_iParser.RELATIVE_TEXTURE_PATH = "assets/collada";
-			ColladaParser( l_iParser ).RELATIVE_TEXTURE_PATH = "assets/collada";
+			//ColladaParser( l_iParser ).RELATIVE_TEXTURE_PATH = "assets/collada";
 			l_iParser.parse();
+		}
+		
+		private function _onError( pEvt:ParserEvent ):void
+		{
+			trace("erreur de chargement");
 		}
 		
 		private function _createScene( p_eEvent:ParserEvent ):void

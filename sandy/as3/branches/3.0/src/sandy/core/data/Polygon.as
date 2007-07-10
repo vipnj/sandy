@@ -147,6 +147,7 @@ package sandy.core.data
 		 */
 		public function getZAverage():Number
 		{
+			m_nDepth = 0;
 			for each ( var v:Vertex in cvertices )
 			{
 				m_nDepth += v.wz;

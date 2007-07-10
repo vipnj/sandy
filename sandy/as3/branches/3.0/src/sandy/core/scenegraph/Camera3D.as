@@ -18,6 +18,7 @@ package sandy.core.scenegraph
 {
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
@@ -149,22 +150,22 @@ package sandy.core.scenegraph
 			m_aDisplayList.push( p_oShape );
 		}
 	
-		public function addToProjectionList( p_aList:Array ):void
+		public function addToProjectionList( p_oVertex:Vertex ):void
 		{
-			m_aProjList = m_aProjList.concat( p_aList );
+			if( m_oProjList[p_oVertex] == null ) m_oProjList[p_oVertex] = p_oVertex;
 		}
 		
 		public function project():void
 		{
 			var l_nCste:Number;
-			for each( var l_oVertex:Vertex in m_aProjList )
+			for each( var l_oVertex:Vertex in m_oProjList )
 			{
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+				//
+				delete m_oProjList[l_oVertex];
 			}	
-			//
-			m_aProjList.splice(0);
 		}
 		
 		/**
@@ -291,7 +292,8 @@ package sandy.core.scenegraph
 		private var _mpInv : Matrix4; // Inverse of the projection matrix 
 		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
 	
-		private var m_aProjList:Array = new Array();
+		private var m_oProjList:Dictionary = new Dictionary(true);
+		
 		private var _viewport:ViewPort;
 		private var m_aDisplayList:Array;
 		private var _perspectiveChanged:Boolean;

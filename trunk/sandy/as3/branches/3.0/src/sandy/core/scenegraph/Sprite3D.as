@@ -148,7 +148,7 @@ package sandy.core.scenegraph
 			// --
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( [_v] );	
+			p_oCamera.addToProjectionList( _v );	
 			// --
 	        var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );

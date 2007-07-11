@@ -10,6 +10,7 @@ package
 	import sandy.core.World3D;
 	import sandy.core.data.*;
 	import sandy.core.scenegraph.*;
+	import sandy.events.BubbleEvent;
 	import sandy.materials.*;
 	import sandy.math.*;
 	import sandy.primitive.*;
@@ -74,7 +75,7 @@ package
 			box.appearance = l_oTextureAppearance;
 			box.rotateZ = 45;
 			box.enableEvents = true;
-			g.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver, true );
+			g.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver );
 			
 			hedra = new Hedra( "myHedra", 50, 50, 100 );
 			hedra.appearance = l_oTextureAppearance;
@@ -133,7 +134,7 @@ package
 			return g;
 		}
 	
-		private function _onBoxRollOver( pEvent:MouseEvent ):void
+		private function _onBoxRollOver( pEvent:BubbleEvent ):void
 		{
 			trace( pEvent );
 		}

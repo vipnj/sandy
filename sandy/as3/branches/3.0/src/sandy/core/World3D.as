@@ -123,7 +123,7 @@ package sandy.core
 				//root.cull( camera.frustrum, camera.transform.matrix, camera.changed );
 				root.render( camera );
 				// -- clear the polygon's container and the projection vertices list
-	            camera.project();
+	            //camera.project();
 	            camera.renderDisplayList();
 			}
 		} // end method

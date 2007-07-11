@@ -139,6 +139,7 @@ package sandy.core.scenegraph
 			for each( var l_oShape:IDisplayable in m_aDisplayList )
 			{
 				l_mcContainer.addChild( l_oShape.container );
+				l_oShape.clear();
 				l_oShape.display();
 			}
 			// --
@@ -150,9 +151,9 @@ package sandy.core.scenegraph
 			m_aDisplayList.push( p_oShape );
 		}
 	
-		public function addToProjectionList( p_oVertex:Vertex ):void
+		public function addToProjectionList( p_aList:Array ):void
 		{
-			if( m_oProjList[p_oVertex] == null ) m_oProjList[p_oVertex] = p_oVertex;
+			m_oProjList = m_oProjList.concat( p_aList );
 		}
 		
 		public function project():void
@@ -163,9 +164,26 @@ package sandy.core.scenegraph
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
-				//
-				delete m_oProjList[l_oVertex];
 			}	
+			m_oProjList.splice( 0 );
+		}
+
+		public function projectArray( p_oList:Array ):void
+		{
+			var l_nCste:Number;
+			for each( var l_oVertex:Vertex in p_oList )
+			{
+				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
+				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+			}
+		}
+				
+		public function projectVertex( p_oVertex:Vertex ):void
+		{
+			const l_nCste:Number = 	1 / ( p_oVertex.wx * mp41 + p_oVertex.wy * mp42 + p_oVertex.wz * mp43 + mp44 );
+			p_oVertex.sx =  l_nCste * ( p_oVertex.wx * mp11 + p_oVertex.wy * mp12 + p_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
+			p_oVertex.sy = -l_nCste * ( p_oVertex.wx * mp21 + p_oVertex.wy * mp22 + p_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
 		}
 		
 		/**
@@ -292,7 +310,7 @@ package sandy.core.scenegraph
 		private var _mpInv : Matrix4; // Inverse of the projection matrix 
 		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
 	
-		private var m_oProjList:Dictionary = new Dictionary(true);
+		private var m_oProjList:Array = new Array();
 		
 		private var _viewport:ViewPort;
 		private var m_aDisplayList:Array;

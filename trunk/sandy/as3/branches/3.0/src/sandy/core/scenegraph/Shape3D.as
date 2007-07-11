@@ -10,6 +10,7 @@ package sandy.core.scenegraph
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
+	import sandy.events.BubbleEvent;
 	import sandy.materials.Appearance;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
@@ -19,25 +20,24 @@ package sandy.core.scenegraph
 		public var aPolygons:Array = new Array();
 		
 		//private var m_oToProject:Dictionary = new Dictionary(true);
-		private var m_aTmp:Array = new Array();
+		//private var m_aTmp:Array = new Array();
 		
 	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
 	    {
 	        super( p_sName );
 	    	// -- Add this graphical object to the World display list
 			m_oContainer = new Sprite();
-			// -- HACK to make sure that the correct container system will be applied
-			m_bUseSingleContainer = !p_bUseSingleContainer;
-			useSingleContainer = p_bUseSingleContainer;
 			// --
 	        geometry = p_geometry;
+	        // -- HACK to make sure that the correct container system will be applied
+			m_bUseSingleContainer = !p_bUseSingleContainer;
+			useSingleContainer = p_bUseSingleContainer;
 	        // --
 	        m_bBackFaceCulling = true;
 			m_bEnableForcedDepth = false;
 			m_bEnableClipping = false;
 			m_bClipped = false;
 			m_nDepth = m_nForcedDepth = 0;
-			m_bEv = false;
 			// --
 			if( p_oAppearance ) appearance = p_oAppearance;
 			// -- 
@@ -132,7 +132,7 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
-			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex;
+			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
 	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
 					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
@@ -163,13 +163,15 @@ package sandy.core.scenegraph
 				{
 					// we manage the clipping
 					if( m_bClipped )
-						m_aTmp = l_oFace.clip( l_oFrustum );
+					{
+						l_aPoints = l_aPoints.concat( l_oFace.clip( l_oFrustum ) );
+					}
 					else
-				    	m_aTmp = l_oFace.cvertices = l_oFace.vertices;		   
-					
-					for each( var lV:Vertex in m_aTmp )
-						p_oCamera.addToProjectionList( lV );
-					
+					{
+				    	l_oFace.isClipped = false;
+				    	l_oFace.cvertices = l_oFace.vertices;
+				 	}
+				 			   
 					// If the face is on screen, we manage some computations for a good display					
 					if( l_oFace.cvertices.length )
 					{
@@ -185,13 +187,10 @@ package sandy.core.scenegraph
 							else
 								p_oCamera.addToDisplayList( l_oFace );
 						}
-						else
-						{
-							trace("merde");
-						}
 					}
 					else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
 				}
+				else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
 			}
 			// --
 			if( m_bUseSingleContainer )
@@ -200,15 +199,18 @@ package sandy.core.scenegraph
 				else 					m_nDepth = l_nDepth/m_aVisiblePoly.length;
 				p_oCamera.addToDisplayList( this );
 			}
-			// -- We push the vertex to project onto the viewport.
-			//p_oCamera.addToProjectionList( /*m_aToProject*/l_aPoints );	
+			// -- We project the vertices
+			p_oCamera.projectArray(l_aPoints );
 		}
 	
+		public function clear():void
+		{
+			m_oContainer.graphics.clear();
+		}
+		
 		// Called only if the useSignelContainer property is enabled!
 		public function display(  p_oContainer:Sprite = null ):void
 		{
-			m_oContainer.graphics.clear();
-			// --
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
 			for each( var l_oPoly:Polygon in m_aVisiblePoly )
@@ -348,10 +350,10 @@ package sandy.core.scenegraph
 	    			}
 	    			else
 	    			{
-	    				container.addEventListener(MouseEvent.CLICK, _onInteraction);
-						container.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
-						container.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
-						container.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+	    				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
+						m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+						m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+						m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
 	    			}
 				}
 			}
@@ -366,10 +368,10 @@ package sandy.core.scenegraph
     			}
     			else
     			{
-    				container.removeEventListener(MouseEvent.CLICK, _onInteraction);
-					container.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
-					container.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
-					container.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+    				m_oContainer.removeEventListener(MouseEvent.CLICK, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+					m_oContainer.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+					m_oContainer.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
     			}
 			}
 			m_bEv = b;
@@ -377,7 +379,7 @@ package sandy.core.scenegraph
 	
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			this.broadcaster.dispatchEvent(p_oEvt);
+			broadcaster.broadcastEvent( new BubbleEvent( p_oEvt.type, p_oEvt.target ) );
 		}
 		
 		/**
@@ -439,7 +441,7 @@ package sandy.core.scenegraph
 	// ______________
 	// [PRIVATE] DATA________________________________________________				
 		private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
-	    private var m_bEv:Boolean; // The event system state (enable or not)
+	    private var m_bEv:Boolean = false; // The event system state (enable or not)
 		private var m_bBackFaceCulling:Boolean;
 		private var m_bEnableClipping:Boolean;
 		private var m_bClipped:Boolean;

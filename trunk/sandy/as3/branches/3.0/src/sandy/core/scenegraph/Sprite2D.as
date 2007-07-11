@@ -125,8 +125,14 @@ package sandy.core.scenegraph
 			// --
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( _v );	
+			p_oCamera.addToProjectionList( [_v] );	
 		}
+		
+		public function clear():void
+		{
+			;//m_oContainer.graphics.clear();
+		}
+		
 		// --
 		public function display( p_oContainer:Sprite = null ):void
 		{

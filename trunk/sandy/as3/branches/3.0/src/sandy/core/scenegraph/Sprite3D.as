@@ -157,6 +157,12 @@ package sandy.core.scenegraph
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
 			m_oContainer.gotoAndStop( __frameFromAngle( angle ) );
 		}
+		
+		public function clear():void
+		{
+			;//m_oContainer.graphics.clear();
+		}
+		
 		// --
 		public function display( p_oContainer:Sprite = null ):void
 		{

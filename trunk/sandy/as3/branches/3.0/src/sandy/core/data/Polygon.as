@@ -23,6 +23,7 @@ package sandy.core.data
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.IDisplayable;
 	import sandy.core.scenegraph.Shape3D;
+	import sandy.events.BubbleEventBroadcaster;
 	import sandy.materials.Appearance;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
@@ -44,6 +45,7 @@ package sandy.core.data
 	// ______
 	// PUBLIC________________________________________________________		
 		public var owner:Shape3D;
+		public var isClipped:Boolean = false;
 		public var cvertices:Array;
 		public var vertices:Array;
 		public var normal:Vertex;
@@ -64,8 +66,9 @@ package sandy.core.data
 		
 		protected var m_nDepth:Number;
 		protected var m_oContainer:Sprite;
+		protected var m_oVisibilityRef:Vertex;
 		
-		public var broadcaster:Sprite = new Sprite();
+		public var broadcaster:BubbleEventBroadcaster = new BubbleEventBroadcaster();
 		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
 		{
@@ -88,17 +91,20 @@ package sandy.core.data
 		public function get visible(): Boolean
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
-			var a:Vertex = vertices[0];
-			var l_nDot:Number = ( a.wx * normal.wx + a.wy * normal.wy + a.wz * normal.wz );
+			var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
 			m_bVisible = (( backfaceCulling ) * (l_nDot) < 0);
 			return m_bVisible;
 		}
 		
+		/**
+		 * Returns an array of vertex containing the clip vertices
+		 */
 		public function clip( p_oFrustum:Frustum ):Array
 		{
+			isClipped = true;
 			cvertices = vertices.concat();
 			p_oFrustum.clipFrustum( cvertices );
-			return vertices.concat( cvertices );
+			return cvertices;
 		}
 	
 		
@@ -118,6 +124,7 @@ package sandy.core.data
 			}
 			// --
 			cvertices = vertices;
+			m_oVisibilityRef = vertices[0];
 			// -- every polygon does not have some texture coordinates
 			if( p_aUVCoordsID )
 			{
@@ -167,7 +174,12 @@ package sandy.core.data
 			// -- We normalize the sum and return it
 			return lMin;
 		}
-			
+		
+		public function clear():void
+		{
+			m_oContainer.graphics.clear();
+		}	
+		
 		public function display( p_oContainer:Sprite = null ):void
 		{
 			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite; 

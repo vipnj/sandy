@@ -16,11 +16,10 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.display.Sprite;
-	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
+	import sandy.events.BubbleEventBroadcaster;
 	import sandy.math.Matrix4Math;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
@@ -42,7 +41,7 @@ package sandy.core.scenegraph
 		// This property represent the culling state of the current node
 		public var culled:CullingState;
 		
-		public var broadcaster:Sprite = new Sprite();
+		public var broadcaster:BubbleEventBroadcaster = new BubbleEventBroadcaster();
 		
 		/**
 		* Retuns the unique ID Number that represents the node.
@@ -198,8 +197,8 @@ package sandy.core.scenegraph
 		    {
 				if( _aChilds[int(i)].id == pId  )
 				{
+					broadcaster.removeChild( _aChilds[int(i)].broadcaster);
 					_aChilds.splice( i, 1 );
-					broadcaster.removeChildAt(i);
 					changed = true;
 					found = true;
 				}
@@ -232,8 +231,8 @@ package sandy.core.scenegraph
 			{
 				if( _aChilds[int(i)].name == pName  )
 				{
+					broadcaster.removeChild( _aChilds[int(i)].broadcaster );
 					_aChilds.splice( i, 1 );
-					broadcaster.removeChildAt(i);
 					changed = true;
 					found = true;
 				}

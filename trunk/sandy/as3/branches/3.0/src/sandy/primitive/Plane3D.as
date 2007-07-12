@@ -33,7 +33,7 @@ package sandy.primitive
 	{
 		public static const XY_ALIGNED:String = "xy_aligned";
 		public static const YZ_ALIGNED:String = "yz_aligned";
-		public static const XZ_ALIGNED:String = "xz_aligned";
+		public static const ZX_ALIGNED:String = "zx_aligned";
 		//////////////////
 		///PRIVATE VARS///
 		//////////////////	
@@ -84,23 +84,23 @@ package sandy.primitive
 			var pasH:Number = _h/_qH;
 			var pasL:Number = _lg/_qV;
 			
-			for( var iL:Number = -l2; iL < l2; iL += pasL )
+			for( var iL:Number = -l2, iTL:Number = 0; iL < l2; iL += pasL, iTL += pasL )
 			{
-				for( var iH:Number = -h2; iH < h2; iH += pasH )
+				for( var iH:Number = -h2, iTH:Number = 0; iH < h2; iH += pasH, iTH += pasH )
 				{	
-					if( m_sType == Plane3D.XZ_ALIGNED )
+					if( m_sType == Plane3D.ZX_ALIGNED )
 					{
 						l_geometry.setVertex( l_geometry.getNextVertexID(), iL, 0, iH );
 					}
 					else if( m_sType == Plane3D.YZ_ALIGNED )
 					{
-						l_geometry.setVertex( l_geometry.getNextVertexID(), iL, iH, 0 );
+						l_geometry.setVertex( l_geometry.getNextVertexID(), 0, iL, iH );
 					}
 					else
 					{
-						l_geometry.setVertex( l_geometry.getNextVertexID(), 0, iL, iH );
+						l_geometry.setVertex( l_geometry.getNextVertexID(), iL, iH, 0 );
 					}
-					l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), iL/_lg, iH/_h );
+					l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), iTL/_lg, iTH/_h );
 				}
 			}
 			

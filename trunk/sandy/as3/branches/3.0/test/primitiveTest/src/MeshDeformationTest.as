@@ -2,6 +2,7 @@ package
 {
 	import com.mir3.display.FPSMetter;
 	
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
@@ -9,20 +10,15 @@ package
 	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
+	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.TransformGroup;
 	import sandy.materials.Appearance;
-	import sandy.materials.ColorMaterial;
-	import sandy.materials.LineAttributes;
-	import sandy.primitive.Box;
-	import sandy.core.data.Plane;
+	import sandy.materials.BitmapMaterial;
 	import sandy.primitive.Plane3D;
-	import sandy.core.data.Vertex;
-	import sandy.core.scenegraph.Geometry3D;
 	import sandy.primitive.PrimitiveMode;
-	import sandy.primitive.Primitive3D;
 
     [SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate="120")] 
     
@@ -30,6 +26,9 @@ package
 	{
 		internal static const SCREEN_WIDTH:int = 500;
 		internal static const SCREEN_HEIGHT:int = 500;
+		
+		[Embed(source="../assets/texture.jpg")]
+		private var Texture:Class;
 		
 		private var world : World3D;
 		private var camera : Camera3D;
@@ -70,28 +69,30 @@ package
 			var g:Group = new Group("root");
 			var tg:TransformGroup = new TransformGroup("translation");
 			
-			//mObj = new Plane3D("myPlane", 200, 200, 10, 10, Plane3D.XY_ALIGNED, PrimitiveMode.QUAD );
-			mObj = new Box("myBox", 100, 100, 100, "quad", 2 );
+			var pic:Bitmap = new Texture();
+			var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ); 
+			
+			mObj = new Plane3D("myPlane", 200, 200, 10, 10, Plane3D.YZ_ALIGNED, PrimitiveMode.TRI );
+			//mObj = new Box("myBox", 100, 100, 100, "quad", 2 );
 			
 			mObj.z = 400;
 			mObj.enableBackFaceCulling = false;
-			mObj.appearance = new Appearance( new ColorMaterial( 0xFF0000, 100, new LineAttributes()) ,
-											 	new ColorMaterial( 0x00FF, 100, new LineAttributes( 1, 0x00FF00)) );
+			//mObj.appearance = new Appearance( new ColorMaterial( 0xFF0000, 100, new LineAttributes()) ,
+			//								  new ColorMaterial( 0x00FF, 100, new LineAttributes( 1, 0x00FF00)) );
+			mObj.appearance = l_oTextureAppearance;
 			// --			
 			tg.addChild( mObj );
 			g.addChild( tg );
 			world.root = g;
 			world.root.addChild( world.camera );
 			
-			
-			var lGeometry:Geometry3D = mObj.geometry;
+
 			for each (var lVertex:Vertex in mObj.geometry.aVertex )
 			{
 				lVertex.x += Math.random()*10 - Math.random()*10;
 				lVertex.y += Math.random()*10 - Math.random()*10;
 				lVertex.z += Math.random()*10 - Math.random()*10;
 			}
-			mObj.geometry = lGeometry;
 			
 			// --
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );

@@ -129,16 +129,7 @@ package sandy.events
 			if ( !(m_oEventListener[ listener ] ) ) m_oEventListener[listener]= new Dictionary(true);
 			m_oEventListener[listener][type] = listener;
 		}
-		        
-/*	    
-	    public function broadcastEvent( pEvt:Event ):void 
-	    {
-	        for(var i:uint = 0; i < listeners.length; i++) 
-	        {
-	            listeners[i][pEvt.type].apply(listeners[i], pEvt);
-	        }
-	    } 
-*/
+
 		public function broadcastEvent( e : Event ) : void
 		{
 			if ( hasListenerCollection(e.type) ) 

@@ -1,6 +1,5 @@
 package
 {	
-	
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
 	import flash.events.*;
@@ -27,33 +26,28 @@ package
 		
 		public function init():void
 		{		
-			var lEB:EventBroadcaster = new EventBroadcaster();
-			var f:Function = Delegate.create( toString2, "je suis un test" );
-			
+			// Creation of the bubble event broadcaster instances
 			var lBubbling:BubbleEventBroadcaster = new BubbleEventBroadcaster();
 			var lBubbling2:BubbleEventBroadcaster = new BubbleEventBroadcaster();
-			
+			// We link the second one as a child of the first one
 			lBubbling.addChild( lBubbling2 );
-			
-			lBubbling.addEventListener( "TEST", onTest );
-			lBubbling2.addEventListener( "TEST", onTest );
-			
+			// They both listen a TEST type event, handled by onTest method, which can receive more parameters
+			lBubbling.addEventListener( "TEST", onTest, "toto", "tata" );
+			lBubbling2.addEventListener( "TEST", onTest, "age", 15, "titi" );
+			// The child broadcaster the test event
 			lBubbling2.broadcastEvent( new BubbleEvent("TEST", this) );
 			return;
 		}
 		
-		private function onTest( pEvt:BubbleEvent ):void
+		private function onTest( pEvt:BubbleEvent, ...args ):void
 		{
-			trace("reception d'un evennement");
+			trace("Event reception");
 			trace(pEvt );
 			trace("isBulling ? :"+pEvt.bubbles);
 			trace(pEvt.type);
+			trace(args);
 		}
-		
-		private function toString2( p_sContent:String ):String
-		{
-			return "LowraTest::"+p_sContent;
-		}
+
 	}
 }
 

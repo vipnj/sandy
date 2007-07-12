@@ -1,11 +1,5 @@
 package
 {	
-	import com.bourre.collection.Queue;
-	import com.bourre.collection.Stack;
-	import com.bourre.commands.Batch;
-	import com.bourre.commands.Delegate;
-	import com.bourre.events.BasicEvent;
-	import com.bourre.events.EventBroadcaster;
 	
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
@@ -13,6 +7,8 @@ package
 	
 	import sandy.events.BubbleEvent;
 	import sandy.events.BubbleEventBroadcaster;
+	import sandy.commands.Delegate;
+	import sandy.events.EventBroadcaster;
 	
 
     [SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate="120")] 
@@ -31,14 +27,8 @@ package
 		
 		public function init():void
 		{		
-			var lEB:EventBroadcaster = new EventBroadcaster( this );
+			var lEB:EventBroadcaster = new EventBroadcaster();
 			var f:Function = Delegate.create( toString2, "je suis un test" );
-			var lStack:Stack = new Stack();
-			//var lTweenMS:TweenMS = new TweenMS(this, "x", 100, 2, 2 );
-			var lEvent:BasicEvent = new BasicEvent("test");
-			var lBatch:Batch = new Batch();
-			
-			var lQueue:Queue = new Queue();
 			
 			var lBubbling:BubbleEventBroadcaster = new BubbleEventBroadcaster();
 			var lBubbling2:BubbleEventBroadcaster = new BubbleEventBroadcaster();

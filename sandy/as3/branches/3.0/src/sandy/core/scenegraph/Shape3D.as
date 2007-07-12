@@ -449,6 +449,7 @@ package sandy.core.scenegraph
 	    	for each ( var o:* in p_oGeometry.aFacesVertexID )
 	    	{
 	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+	    		if( m_oAppearance ) aPolygons[i].appearance = m_oAppearance;
 	    		this.broadcaster.addChild( aPolygons[i].broadcaster );
 	    		// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
 	    		i++;

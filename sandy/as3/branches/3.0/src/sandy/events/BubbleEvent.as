@@ -27,21 +27,11 @@
  
 package sandy.events
 {
-	import com.bourre.events.BasicEvent;
-	import com.bourre.log.PixlibStringifier;
+	import flash.events.Event;
 	
-	public class BubbleEvent extends BasicEvent
+	public class BubbleEvent extends Event
 	{
-		//-------------------------------------------------------------------------
-		// Public Properties
-		//-------------------------------------------------------------------------
-		
-		/** Indicates if the event will be passed to the parent object. **/
-		public var isBubbling:Boolean;
-		
-		/** Indicates if the event is still be propagated **/
-		public var isPropagating:Boolean;
-		
+		private var m_oTarget:*;
 		
 		//-------------------------------------------------------------------------
 		// Public API
@@ -61,13 +51,13 @@ package sandy.events
 		 * @param e an {@link EventType} instance (event name).
 		 * @param oT event target.
 		 */
-		public function BubbleEvent( e : String, oT ) 
+		public function BubbleEvent( e : String, oT:* ) 
 		{
-			super(e, oT);
-			isBubbling = true;
-			isPropagating = true;
+			super(e,true, true);
+			m_oTarget = oT;
 		}
-	
+		
+		
 		/**
 		 * Returns the string representation of this instance.
 		 * 
@@ -75,9 +65,7 @@ package sandy.events
 		 */
 		public override function toString() : String
 		{
-			return 		PixlibStringifier.stringify( this ) + ' : ' 
-						+ 'type:' + getType() + ', '						+ 'target:' + getTarget() +', '
-						+ 'isBubbling:' + isBubbling  +', '						+ 'isPropagating:' + isPropagating;
+			return 	'BubbleEvent';
 		}
 	}
 }

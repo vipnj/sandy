@@ -56,7 +56,7 @@ package
 		{
 			trace("reception d'un evennement");
 			trace(pEvt );
-			trace("isBulling ? :"+pEvt.isBubbling);
+			trace("isBulling ? :"+pEvt.bubbles);
 			trace(pEvt.type);
 		}
 		

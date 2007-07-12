@@ -61,7 +61,7 @@ package sandy.core.scenegraph
 			for each( var l_oNode:Node in _aChilds )
 			    l_oNode.cull( p_oFrustum, p_oViewMatrix, lChanged );
 			// --
-			super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
+			//super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
 		
 		public override function render( p_oCamera:Camera3D ):void

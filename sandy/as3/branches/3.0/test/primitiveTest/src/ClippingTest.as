@@ -6,15 +6,13 @@ package
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
 	import flash.events.*;
-	import flash.media.Video;
-	import flash.net.NetConnection;
-	import flash.net.NetStream;
 	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.core.scenegraph.Shape3D;
+	import sandy.core.scenegraph.TransformGroup;
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
@@ -62,15 +60,18 @@ package
 			world.camera.z = -300;
 			// -- create scen
 			var quality:uint = 3;
-			var g:Group = new Group();
+			var g:Group = new Group("root");
+			var tg:TransformGroup = new TransformGroup("translation");
 			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", quality );
+			box.z = 400;
 			box.enableBackFaceCulling = false;
 			box.enableClipping = true;
 			box.useSingleContainer = false;
 			box.appearance = new Appearance( new ColorMaterial( 0xFF0000, 100, new LineAttributes()) ,
 											 new ColorMaterial( 0x00FF, 100, new LineAttributes( 1, 0x00FF00)) );
 			// --			
-			g.addChild( box );
+			tg.addChild( box );
+			g.addChild( tg );
 			world.root = g;
 			world.root.addChild( world.camera );
 			// --

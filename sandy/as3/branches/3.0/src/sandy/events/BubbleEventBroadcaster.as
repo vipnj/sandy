@@ -1,8 +1,5 @@
 package sandy.events
 {
-	import com.bourre.collection.Collection;
-	import com.bourre.events.EventBroadcaster;
-	
 	import flash.events.Event;
 	
 
@@ -10,9 +7,9 @@ package sandy.events
 	{
 		private var m_oParent:BubbleEventBroadcaster = null;
 		
-		public function BubbleEventBroadcaster(target:*=null)
+		public function BubbleEventBroadcaster()
 		{
-			super(target);
+			super();
 		}
 		
 		public function set parent( pEB:BubbleEventBroadcaster ):void
@@ -46,17 +43,15 @@ package sandy.events
 		{
 			child.parent = null;
 		}
-		
+        
 		public override function broadcastEvent( e : Event ) : void
 		{
-			super.broadcastEvent( e );
 			if( e is BubbleEvent )
 			{
-				var lEvt:BubbleEvent = e as BubbleEvent;
-				// --
-				if ( lEvt.isBubbling && parent )
+				super.broadcastEvent( e );
+				if ( parent )
 				{
-					parent.broadcastEvent( lEvt );
+					parent.broadcastEvent( e );
 				}
 			}
 		}

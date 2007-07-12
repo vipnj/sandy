@@ -230,7 +230,7 @@ package sandy.core.data
 
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			this.broadcaster.dispatchEvent(p_oEvt);
+			this.broadcaster.broadcastEvent(p_oEvt);
 		}
 		
 		/**

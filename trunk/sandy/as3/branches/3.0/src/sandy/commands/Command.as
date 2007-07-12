@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bourre.commands 
+package sandy.commands
 {
 	import flash.events.Event;
 	

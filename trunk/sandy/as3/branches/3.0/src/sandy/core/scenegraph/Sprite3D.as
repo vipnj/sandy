@@ -122,6 +122,24 @@ package sandy.core.scenegraph
 		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
+			//
+			if( _oViewCacheMatrix )
+			{
+				/////////////////////////
+		        //// BOUNDING SPHERE ////
+		        /////////////////////////
+		        _oBSphere.transform( _oViewCacheMatrix );
+		        culled = p_oFrustum.sphereInFrustum( _oBSphere );
+				// --
+				if( culled == Frustum.INTERSECT && _oBBox )
+				{
+		            ////////////////////////
+		            ////  BOUNDING BOX  ////
+		            ////////////////////////
+		            _oBBox.transform( _oViewCacheMatrix );
+		            culled = p_oFrustum.boxInFrustum( _oBBox );
+				}
+			}
 			// --
 			if( culled == CullingState.OUTSIDE ) 	container.visible = false;
 			else									container.visible = true;

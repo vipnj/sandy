@@ -96,6 +96,7 @@ package sandy.materials
 			m_oTexture = p_oTexture;
 			m_nHeight = m_oTexture.height;
 			m_nWidth = m_oTexture.width;
+			m_oTexture.lock(); // not sure it is faster but it should....
 			// FIXME do the init for all the registered polygons
 		}
 	

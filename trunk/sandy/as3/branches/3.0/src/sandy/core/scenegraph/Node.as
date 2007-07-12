@@ -345,24 +345,6 @@ package sandy.core.scenegraph
 						_oViewCacheMatrix = (_oModelCacheMatrix) ? Matrix4Math.multiply4x3( p_oViewMatrix, _oModelCacheMatrix ) : p_oViewMatrix;
 					else
 						_oViewCacheMatrix = _oModelCacheMatrix;
-					
-					if( _oViewCacheMatrix )
-					{
-						/////////////////////////
-				        //// BOUNDING SPHERE ////
-				        /////////////////////////
-				        _oBSphere.transform( _oViewCacheMatrix );
-				        culled = p_oFrustum.sphereInFrustum( _oBSphere );
-						// --
-						if( culled == Frustum.INTERSECT && _oBBox )
-						{
-				            ////////////////////////
-				            ////  BOUNDING BOX  ////
-				            ////////////////////////
-				            _oBBox.transform( _oViewCacheMatrix );
-				            culled = p_oFrustum.boxInFrustum( _oBBox );
-						}
-					}
 				}
 			}
 		}

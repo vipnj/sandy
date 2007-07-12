@@ -138,9 +138,9 @@ package sandy.core.scenegraph
 		    // --
 			for each( var l_oShape:IDisplayable in m_aDisplayList )
 			{
-				l_mcContainer.addChild( l_oShape.container );
 				l_oShape.clear();
 				l_oShape.display();
+				l_mcContainer.addChild( l_oShape.container );
 			}
 			// --
 			m_aDisplayList.splice(0);

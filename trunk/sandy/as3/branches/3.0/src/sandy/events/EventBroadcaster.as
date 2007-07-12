@@ -5,7 +5,7 @@ package sandy.events
 	
 	import sandy.commands.Delegate;
 	
-	class EventBroadcaster 
+	public class EventBroadcaster 
 	{
 	    private var m_oAll:Dictionary = new Dictionary(true);
 	    private var m_oType:Dictionary = new Dictionary(true);
@@ -89,7 +89,7 @@ package sandy.events
 
 		public function hasListenerCollection( type : String ) : Boolean
 		{
-			return (m_oType[ type ] == null);
+			return ( m_oType[ type ] != null );
 		}
 		
 		public function removeEventListener( type : String, listener : Object ) : Boolean
@@ -141,8 +141,11 @@ package sandy.events
 */
 		public function broadcastEvent( e : Event ) : void
 		{
-			if ( hasListenerCollection(e.type) ) _broadcastEvent( getListenerCollection(e.type), e );
-			if ( ! (isDicoEmpty( m_oAll) ) ) _broadcastEvent( m_oAll, e );
+			if ( hasListenerCollection(e.type) ) 
+				_broadcastEvent( getListenerCollection(e.type), e );
+			//
+			if ( ! (isDicoEmpty( m_oAll) ) ) 
+				_broadcastEvent( m_oAll, e );
 		}
 
 		private function isDicoEmpty( pDico:Dictionary ):Boolean

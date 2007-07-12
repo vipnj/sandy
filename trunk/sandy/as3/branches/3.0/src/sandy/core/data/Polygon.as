@@ -27,6 +27,7 @@ package sandy.core.data
 	import sandy.materials.Appearance;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
+	import sandy.events.BubbleEvent;
 	
 	/**
 	* Polygon
@@ -51,7 +52,7 @@ package sandy.core.data
 		public var normal:Vertex;
 		public var aUVCoord:Array;
 		/** Boolean representing the state of the event activation */
-		private var mouseEvents:Boolean;
+		private var mouseEvents:Boolean = false;
 		/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
 		public var backfaceCulling:Number;
 	// _______
@@ -79,7 +80,7 @@ package sandy.core.data
 			m_nDepth = 0;
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
-			m_oContainer = new Sprite();;
+			m_oContainer = new Sprite();
 		}
 	
 		/**
@@ -230,7 +231,7 @@ package sandy.core.data
 
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			this.broadcaster.broadcastEvent(p_oEvt);
+			broadcaster.broadcastEvent( new BubbleEvent( p_oEvt.type, p_oEvt.target ) );
 		}
 		
 		/**
@@ -258,7 +259,7 @@ package sandy.core.data
 			}
 		}
 		
-		public function set appearance(p_oApp:Appearance):void
+		public function set appearance( p_oApp:Appearance ):void
 		{
 			m_oAppearance = p_oApp;
 			// --

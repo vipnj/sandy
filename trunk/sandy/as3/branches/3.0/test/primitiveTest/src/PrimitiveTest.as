@@ -74,6 +74,7 @@ package
 			box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 			box.appearance = l_oTextureAppearance;
 			box.rotateZ = 45;
+			box.useSingleContainer = false;
 			box.enableEvents = true;
 			g.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver );
 			

@@ -323,7 +323,7 @@ package sandy.parser
 		private function getAppearance( p_oNode : XML ) : Appearance
 		{
 			// -- local variables
-			var l_oAppearance : Appearance;
+			var l_oAppearance : Appearance = null;
 			
 			// -- Get this node's instance materials
 			for each( var l_oInstMat : XML in p_oNode..instance_material )
@@ -350,7 +350,7 @@ package sandy.parser
 					var l_sImageID : String = l_oEffect..newparam.( @sid == l_sSurfaceID ).surface.init_from;
 					// -- get image's location on the hard drive
 					
-					l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ l_sImageID ].bitmapData ) );
+					if( m_oMaterials[ l_sImageID ] ) l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ l_sImageID ].bitmapData ) );
 					if( l_oAppearance == null ) l_oAppearance = m_oStandardAppearance;
 				}
 				else if( l_oEffect..phong.length() > 0 )

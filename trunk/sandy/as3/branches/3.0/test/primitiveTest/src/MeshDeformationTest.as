@@ -46,7 +46,7 @@ package
 			addChild(new FPSMetter(false, 110, stage));
 			// -- INIT
 			keyPressed = [];
-			 init();
+			init();
 			// -- User interface
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);		
@@ -71,6 +71,7 @@ package
 			
 			var pic:Bitmap = new Texture();
 			var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ); 
+			l_oTextureAppearance.frontMaterial.lightingEnable = true;
 			
 			mObj = new Plane3D("myPlane", 200, 200, 10, 10, Plane3D.YZ_ALIGNED, PrimitiveMode.TRI );
 			//mObj = new Box("myBox", 100, 100, 100, "quad", 2 );

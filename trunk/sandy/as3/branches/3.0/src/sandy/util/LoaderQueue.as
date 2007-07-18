@@ -74,6 +74,8 @@ package sandy.util
 		{
 			m_nLoaders--;
 			m_bErrorOccurred = true;
+			// additio to fire the error. Otherwhise we don't send anything
+			dispatchEvent( new QueueEvent( QueueEvent.QUEUE_LOADER_ERROR ) );
 		}
 	}
 }

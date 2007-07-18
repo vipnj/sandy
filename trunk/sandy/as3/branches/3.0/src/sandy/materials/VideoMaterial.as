@@ -13,7 +13,6 @@ package sandy.materials
 {
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.media.Video;
 	import flash.utils.Timer;

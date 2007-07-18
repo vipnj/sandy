@@ -1,8 +1,9 @@
 package sandy.materials
 {
-	import sandy.core.data.Polygon;
-	import flash.display.Sprite;
 	import flash.display.Graphics;
+	import flash.display.Sprite;
+	
+	import sandy.core.data.Polygon;
 	
 	public final class WireFrameMaterial extends Material
 	{

@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.transform {
+package sandy.core.transform 
+{
 	/**
 	* Contains all the types of transformation that can be used in Sandy.
 	*  

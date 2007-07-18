@@ -16,13 +16,14 @@ limitations under the License.
 
 package sandy.util
 {
-	import flash.events.EventDispatcher;
 	import flash.display.Loader;
-	import flash.net.URLRequest;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
-	import sandy.events.SandyEvent;
+	import flash.net.URLRequest;
+	
 	import sandy.events.QueueEvent;
+	import sandy.events.SandyEvent;
 
 	[Event(name="queueComplete", type="sandy.events.SandyEvent")]
 	[Event(name="queueLoaderError", type="sandy.events.SandyEvent")]

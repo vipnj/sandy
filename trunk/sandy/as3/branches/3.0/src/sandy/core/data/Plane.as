@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
+package sandy.core.data 
+{
 	/**
 	* Plane representation in a 3D space. Used maily to represent the frustrum planes of the camera
 	* This class is not used yet in Sandy.

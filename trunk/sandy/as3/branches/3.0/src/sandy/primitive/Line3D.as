@@ -15,12 +15,8 @@ limitations under the License.
 */
 package sandy.primitive 
 {
-	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
-	import sandy.primitive.Primitive3D;
-	import sandy.core.data.Polygon;
-	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.Geometry3D;
+	import sandy.core.scenegraph.Shape3D;
 	
 	/**
 	* Line3D

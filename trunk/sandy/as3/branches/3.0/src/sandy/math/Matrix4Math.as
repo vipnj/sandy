@@ -19,9 +19,6 @@
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.util.NumberUtil;
-	import sandy.math.FastMath;
-	import sandy.errors.SingletonError;
-	import flash.geom.Matrix;
 	
 	/**
 	* Math functions for {@link Matrix4}.

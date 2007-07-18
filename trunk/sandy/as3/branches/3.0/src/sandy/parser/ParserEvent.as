@@ -1,6 +1,7 @@
 package sandy.parser
 {
 	import flash.events.Event;
+	
 	import sandy.core.scenegraph.Group;
 
 	public final class ParserEvent extends Event

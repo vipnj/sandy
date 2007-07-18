@@ -1,11 +1,6 @@
 package sandy.materials 
 {
-	import flash.display.BitmapData;
-	
 	import sandy.core.data.Polygon;
-	import sandy.materials.ColorMaterial;
-	import sandy.materials.LineAttributes;
-	import sandy.materials.Material;
 	/**
 	 * @author thomaspfeiffer
 	 */

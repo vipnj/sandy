@@ -15,8 +15,6 @@ limitations under the License.
 */
 package sandy.bounds 
 {
-	import flash.utils.Dictionary;
-	
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;

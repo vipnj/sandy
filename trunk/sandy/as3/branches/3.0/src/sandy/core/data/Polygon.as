@@ -23,11 +23,11 @@ package sandy.core.data
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.IDisplayable;
 	import sandy.core.scenegraph.Shape3D;
+	import sandy.events.BubbleEvent;
 	import sandy.events.BubbleEventBroadcaster;
 	import sandy.materials.Appearance;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
-	import sandy.events.BubbleEvent;
 	
 	/**
 	* Polygon

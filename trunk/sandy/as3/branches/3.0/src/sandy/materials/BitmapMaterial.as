@@ -15,7 +15,6 @@ limitations under the License.
 */
 package sandy.materials 
 {
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
@@ -23,7 +22,6 @@ package sandy.materials
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
-	import flash.utils.getTimer;
 	
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;

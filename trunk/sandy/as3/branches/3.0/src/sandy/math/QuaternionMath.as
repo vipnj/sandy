@@ -14,12 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.math {
+package sandy.math 
+{
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Quaternion;
 	import sandy.core.data.Vector;
-	import sandy.math.Matrix4Math;
-	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	
 	/**

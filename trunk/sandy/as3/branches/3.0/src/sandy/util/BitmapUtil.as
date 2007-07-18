@@ -13,10 +13,11 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.util {
+package sandy.util 
+{
 	import flash.display.BitmapData;
-	import flash.geom.*;
 	import flash.display.Sprite;
+	import flash.geom.*;
 	
 	/**
 	* Utilities for the BitmapData object

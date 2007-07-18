@@ -1,9 +1,6 @@
 package sandy.parser
 {
-	import sandy.parser.AParser;
-	import sandy.parser.ASEParser;
-	import sandy.parser.Parser3DS;
-	import sandy.parser.ColladaParser;
+	
 	
 	public final class Parser
 	{

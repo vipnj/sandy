@@ -11,11 +11,8 @@
 
 package sandy.materials
 {
-	import flash.display.BitmapData;
-	import flash.display.*;
-	import flash.events.Event;
+	iimport flash.display.*;
 	import flash.events.TimerEvent;
-	import flash.media.Video;
 	import flash.utils.Timer;
 	
 	import sandy.core.data.Polygon;

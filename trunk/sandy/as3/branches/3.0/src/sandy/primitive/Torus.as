@@ -1,8 +1,8 @@
-package sandy.primitive {
+package sandy.primitive 
+{
 	import sandy.core.data.Vector;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.primitive.Primitive3D;
 	
 	/**
 	 * Original code and credits goes to Tim Knip

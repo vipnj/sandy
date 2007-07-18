@@ -1,14 +1,13 @@
 package sandy.parser
 {
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
-	import flash.events.Event;
 	import flash.net.URLLoader;
-	import flash.net.URLRequest;
 	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
 	
 	import sandy.core.scenegraph.Group;
-	import sandy.parser.ParserEvent;
 	
 	internal class AParser extends EventDispatcher implements IParser
 	{

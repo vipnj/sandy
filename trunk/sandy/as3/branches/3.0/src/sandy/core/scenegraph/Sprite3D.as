@@ -17,7 +17,6 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {	
-	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	

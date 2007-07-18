@@ -1,27 +1,15 @@
 package sandy.parser
 {
-	import flash.display.Graphics;
-	import flash.display.Sprite;
 	import flash.events.*;
-	import flash.geom.Matrix;
-	import flash.net.FileReference;
-	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
-	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
-	import flash.utils.getTimer;
 	
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Quaternion;
 	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
-	import sandy.parser.ParserEvent;
-	import sandy.math.QuaternionMath;
-	import sandy.math.VectorMath;
-	import sandy.math.VertexMath;
-	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.Geometry3D;
+	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.WireFrameMaterial;

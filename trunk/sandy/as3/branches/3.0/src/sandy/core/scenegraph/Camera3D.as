@@ -18,7 +18,6 @@ package sandy.core.scenegraph
 {
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;

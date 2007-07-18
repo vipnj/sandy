@@ -1,4 +1,4 @@
-﻿
+
 /**
 * Sandy AS3 - VideoMaterial
 * Based on the AS2 class VideoSkin made by kiroukou and zeusprod
@@ -11,7 +11,7 @@
 
 package sandy.materials
 {
-	iimport flash.display.*;
+	import flash.display.*;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
@@ -19,7 +19,7 @@ package sandy.materials
 	
 	public class MovieMaterial extends BitmapMaterial
 	{
-		private var m_oTimer:Timer;
+		private var m_oTimer :Timer;
 		private var m_oMovie : MovieClip;
 			
 		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40 )

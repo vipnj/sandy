@@ -35,7 +35,7 @@ package sandy.core.data
 		* @param nU Number the x texture position  in the bitmap
 		* @param nV Number the y texture position in the bitmap.
 		*/ 
-		public function UVCoord( nU: Number, nV: Number )
+		public function UVCoord( nU: Number=0, nV: Number=0 )
 		{
 			u = nU;
 			v = nV;

@@ -62,7 +62,7 @@ package sandy.core.scenegraph
 			// --
 			content = p_oContent;
 			// --
-			_dir = new Vector( 0, 0, -1 );
+			_dir = new Vertex( 0, 0, -1 );
 			_vView = new Vector( 0, 0, 1 );
 			// -- set the offset
 			_nOffset = pOffset;
@@ -71,14 +71,16 @@ package sandy.core.scenegraph
 
 		public function set content( p_container:MovieClip ):void
 		{
-			m_oContainer.addChildAt( p_container, 0 );
+			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
+			m_oContent = p_container;
+			m_oContainer.addChildAt( m_oContent, 0 );
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
 		}
 		
-		public function get content():Sprite
+		public function get content():MovieClip
 		{
-			return m_oContainer.getChildAt(0);
+			return m_oContent;
 		}
 		
 		public function get container():Sprite
@@ -165,14 +167,14 @@ package sandy.core.scenegraph
 			// --
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( _v );	
+			p_oCamera.addToProjectionList( [_v] );	
 			// --
 	        var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );
 			if( vNormale.x == 0 ) angle = Math.PI;
 			else if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
-			m_oContainer.gotoAndStop( __frameFromAngle( angle ) );
+			m_oContent.gotoAndStop( __frameFromAngle( angle ) );
 		}
 		
 		public function clear():void
@@ -221,7 +223,7 @@ package sandy.core.scenegraph
 		// -- frames offset
 		private var _nOffset:Number;
 		private var _vView:Vector;
-		private var _dir:Vector;
+		private var _dir:Vertex;
 				
 		private var m_nPerspScale:Number=0;
 		private var m_nW2:Number=0;
@@ -230,5 +232,6 @@ package sandy.core.scenegraph
 		private var m_nDepth:Number;
 		private var _nScale:Number;
 		private var m_oContainer:Sprite;
+		private var m_oContent:MovieClip;
 	}
 }

@@ -2,6 +2,7 @@ package
 {
 	import com.mir3.display.FPSMetter;
 	
+	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
@@ -14,6 +15,7 @@ package
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.TransformGroup;
 	import sandy.materials.Appearance;
+	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
 	import sandy.primitive.Box;
@@ -28,6 +30,9 @@ package
 		private var world : World3D;
 		private var camera : Camera3D;
 		private var keyPressed:Array;
+		
+		[Embed(source="assets/texture.jpg")]
+		private var Texture:Class;
 		
 		public function ClippingTest()
 		{
@@ -67,7 +72,9 @@ package
 			box.enableBackFaceCulling = false;
 			box.enableClipping = true;
 			box.useSingleContainer = false;
-			box.appearance = new Appearance( new ColorMaterial( 0xFF0000, 100, new LineAttributes()) ,
+			
+			var pic:Bitmap = new Texture();
+			box.appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ,
 											 new ColorMaterial( 0x00FF, 100, new LineAttributes( 1, 0x00FF00)) );
 			// --			
 			tg.addChild( box );

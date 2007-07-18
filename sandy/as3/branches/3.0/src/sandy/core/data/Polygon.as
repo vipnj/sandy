@@ -51,6 +51,7 @@ package sandy.core.data
 		public var vertices:Array;
 		public var normal:Vertex;
 		public var aUVCoord:Array;
+		public var caUVCoord:Array;
 		/** Boolean representing the state of the event activation */
 		private var mouseEvents:Boolean = false;
 		/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
@@ -104,7 +105,8 @@ package sandy.core.data
 		{
 			isClipped = true;
 			cvertices = vertices.concat();
-			p_oFrustum.clipFrustum( cvertices );
+			caUVCoord = aUVCoord.concat();
+			p_oFrustum.clipFrustum( cvertices, caUVCoord );
 			return cvertices;
 		}
 	
@@ -124,7 +126,6 @@ package sandy.core.data
 				i++;
 			}
 			// --
-			cvertices = vertices;
 			m_oVisibilityRef = vertices[0];
 			// -- every polygon does not have some texture coordinates
 			if( p_aUVCoordsID )
@@ -155,20 +156,22 @@ package sandy.core.data
 		 */
 		public function getZAverage():Number
 		{
+			var l_aVert:Array = (isClipped) ? cvertices : vertices;
 			m_nDepth = 0;
-			for each ( var v:Vertex in cvertices )
+			for each ( var v:Vertex in l_aVert )
 			{
 				m_nDepth += v.wz;
 			}
 			// -- We normalize the sum and return it
-			m_nDepth /= cvertices.length;
+			m_nDepth /= l_aVert.length;
 			return m_nDepth;
 		}
 
 		public function getZMinimum():Number
 		{
+			var l_aVert:Array = (isClipped) ? cvertices : vertices;
 			var lMin:Number = Number.MAX_VALUE;
-			for each ( var v:Vertex in cvertices )
+			for each ( var v:Vertex in l_aVert )
 			{
 				if( v.wz < lMin ) lMin = v.wz;
 			}

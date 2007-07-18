@@ -76,7 +76,7 @@ package sandy.core.scenegraph
 			m_nH2 = m_oContainer.height / 2;
 		}
 		
-		public function get content():MovieClip
+		public function get content():Sprite
 		{
 			return m_oContainer.getChildAt(0);
 		}
@@ -221,7 +221,7 @@ package sandy.core.scenegraph
 		// -- frames offset
 		private var _nOffset:Number;
 		private var _vView:Vector;
-		private var _dir:Vertex;
+		private var _dir:Vector;
 				
 		private var m_nPerspScale:Number=0;
 		private var m_nW2:Number=0;
@@ -229,6 +229,6 @@ package sandy.core.scenegraph
 		protected var _v:Vertex;
 		private var m_nDepth:Number;
 		private var _nScale:Number;
-		private var m_oContainer:MovieClip;
+		private var m_oContainer:Sprite;
 	}
 }

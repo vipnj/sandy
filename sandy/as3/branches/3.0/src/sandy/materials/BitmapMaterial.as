@@ -61,7 +61,6 @@ package sandy.materials
 			smooth = false;
 			// --
 			matrix = new Matrix();
-			m_oPoint = new Point(0, 0);
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
 		}
@@ -136,7 +135,7 @@ package sandy.materials
 							v1: Number = l_aUV[1].v * m_nHeight,
 							u2: Number = l_aUV[2].u * m_nWidth,
 							v2: Number = l_aUV[2].v * m_nHeight;
-						// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
+						// -- Fix perpendicular projections. This will certainly solve the freeze problem.
 						if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 						{
 							u0 -= (u0 > 0.05)? 0.05 : -0.05;
@@ -164,7 +163,7 @@ package sandy.materials
 		private function prepare( f:Polygon ):void
 		{
 			const m:Matrix = m_oPolygonMatrixMap[f],
-				x0: Number = f.vertices[0].sx, y0: Number = f.vertices[0].sy,			
+				x0:Number = f.vertices[0].sx, y0: Number = f.vertices[0].sy,			
 				a2:Number = f.vertices[1].sx - x0, b2:Number = f.vertices[1].sy - y0, 
 				c2:Number = f.vertices[2].sx - x0, d2:Number = f.vertices[2].sy - y0;
 			// --
@@ -177,7 +176,6 @@ package sandy.materials
 		}
 		
 		/**
-		 * 
 		 * @param
 		 * @return
 		 */
@@ -204,9 +202,7 @@ package sandy.materials
 		private var m_nHeight:Number;
 		private var m_nWidth:Number;
 		private var m_oPolygonMatrixMap:Dictionary;
-		private var m_oPoint:Point;
+		private var m_oPoint:Point = new Point();
 		private var m_oCmf:ColorMatrixFilter;
-		private var _texture:BitmapData;
-
 	}
 }

@@ -14,8 +14,15 @@ package sandy.parser
 		public static function create( p_sFile:*, p_sParserType:String=null, p_nScale:Number=1 ):IParser
 		{
 			var l_sExt:String,l_iParser:IParser = null;
-			if( p_sFile is String && p_sParserType == null )  l_sExt = (p_sFile.split('.')).reverse()[0];
-			else l_sExt = p_sParserType
+			// --
+			if( p_sFile is String && p_sParserType == null )
+			{
+				l_sExt = (p_sFile.split('.')).reverse()[0];
+			}  
+			else 
+			{
+				l_sExt = p_sParserType;
+			}
 			// --
 			switch( l_sExt.toUpperCase() )
 			{

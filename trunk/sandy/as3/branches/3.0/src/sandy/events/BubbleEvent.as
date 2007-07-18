@@ -53,7 +53,7 @@ package sandy.events
 		 */
 		public function BubbleEvent( e : String, oT:* ) 
 		{
-			super(e,true, true);
+			super(e, true, true);
 			m_oTarget = oT;
 		}
 		

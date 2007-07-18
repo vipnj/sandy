@@ -18,7 +18,7 @@ package sandy.materials
 
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			var l_points:Array = p_oPolygon.cvertices;
+			var l_points:Array = p_oPolygon.vertices;
 			var l_graphics:Graphics = p_mcContainer.graphics;
 			// --
 			l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );

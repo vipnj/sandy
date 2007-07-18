@@ -81,6 +81,7 @@ package
 			//mObj.appearance = new Appearance( new ColorMaterial( 0xFF0000, 100, new LineAttributes()) ,
 			//								  new ColorMaterial( 0x00FF, 100, new LineAttributes( 1, 0x00FF00)) );
 			mObj.appearance = l_oTextureAppearance;
+			mObj.appearance.frontMaterial.lightingEnable = true;
 			// --			
 			tg.addChild( mObj );
 			g.addChild( tg );

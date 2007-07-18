@@ -18,10 +18,7 @@ package sandy.core.scenegraph
 	public class Shape3D extends ATransformable implements IDisplayable
 	{ 
 		public var aPolygons:Array = new Array();
-		
-		//private var m_oToProject:Dictionary = new Dictionary(true);
-		//private var m_aTmp:Array = new Array();
-		
+
 	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
 	    {
 	        super( p_sName );
@@ -187,26 +184,22 @@ package sandy.core.scenegraph
 					else
 					{
 				    	l_oFace.isClipped = false;
-				    	l_oFace.cvertices = l_oFace.vertices;
 				 	}
 				 			   
 					// If the face is on screen, we manage some computations for a good display					
-					if( l_oFace.cvertices.length )
+					if( l_oFace.getZMinimum() > 0 )
 					{
-						if( l_oFace.getZMinimum() > 0 )
-						{
-							// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-							if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
-							else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
-							
-							// -- we manage the display list depending on the mode choosen
-							if( m_bUseSingleContainer )
-								m_aVisiblePoly.push( l_oFace );
-							else
-								p_oCamera.addToDisplayList( l_oFace );
-						}
+						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
+						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
+						else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
+						
+						// -- we manage the display list depending on the mode choosen
+						if( m_bUseSingleContainer )
+							m_aVisiblePoly.push( l_oFace );
+						else
+							p_oCamera.addToDisplayList( l_oFace );
 					}
-					else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
+
 				}
 				else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
 			}

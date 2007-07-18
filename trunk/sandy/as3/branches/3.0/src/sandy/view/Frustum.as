@@ -19,6 +19,7 @@ package sandy.view
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Plane;
+	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.math.PlaneMath;
@@ -215,22 +216,22 @@ package sandy.view
 			return result;
 		}
 	
-		public function clipFrustum( cvert: Array ):void
+		public function clipFrustum( cvert: Array, p_aUVCoords:Array ):void
 		{
 	        if( cvert.length <= 2 ) return;
-			clipPolygon( aPlanes[NEAR], cvert ); // near
+			clipPolygon( aPlanes[NEAR], cvert, p_aUVCoords ); // near
 			if( cvert.length <= 2 ) return;
-			clipPolygon( aPlanes[LEFT], cvert ); // left
+			clipPolygon( aPlanes[LEFT], cvert, p_aUVCoords ); // left
 			if( cvert.length <= 2 ) return;
-			clipPolygon( aPlanes[RIGHT], cvert ); // right
+			clipPolygon( aPlanes[RIGHT], cvert, p_aUVCoords ); // right
 			if( cvert.length <= 2 ) return;
-	        clipPolygon( aPlanes[BOTTOM], cvert ); // top
+	        clipPolygon( aPlanes[BOTTOM], cvert, p_aUVCoords ); // top
 			if( cvert.length <= 2 ) return;
-		    clipPolygon( aPlanes[TOP], cvert ); // bottom	
+		    clipPolygon( aPlanes[TOP], cvert, p_aUVCoords ); // bottom	
 		}
 	
 	    
-		public function clipPolygon( p:Plane, pts:Array ):void
+		public function clipPolygon( p:Plane, pts:Array, p_aUVCoords:Array ):void
 		{	
 			var allin:Boolean = true, allout:Boolean = true;
 			var v:Vertex;
@@ -252,37 +253,49 @@ package sandy.view
 			{
 				// we return an empty array
 				pts.splice(0);
+				p_aUVCoords.splice(0);
 				return;
 			}
 			// Clip a polygon against a plane
 			var tmp:Array = pts.splice(0);
-			var v1:Vertex = tmp[0];
+			var l_aTmpUv:Array = p_aUVCoords.splice(0);
+			var l_oUV1:UVCoord = l_aTmpUv[0], l_oUV2:UVCoord = null, l_oUVTmp:UVCoord = null;
+			var v1:Vertex = tmp[0], v2:Vertex = null,  t:Vertex = null;
 			//
-			var d:Number;
-			var t:Vertex;
-			var dist2:Number, dist1:Number = aDist[0];
+			var d:Number, dist2:Number, dist1:Number = aDist[0];
 			var clipped:Boolean = false, inside:Boolean = (dist1 >= 0);
 			var curv:Number = 0;
 			for (i=1; i <= l; i++)
 			{	 
-				var v2:Vertex = tmp[i%l];
+				v2 = tmp[i%l];
+				l_oUV2 = l_aTmpUv[i%l];
+				//
 				dist2= aDist[i%l];
 				// Sutherland-hodgeman clipping
 				if ( inside && (dist2 >= 0) ) 
 				{
 					pts.push(v2);	// Both in
+					p_aUVCoords.push(l_oUV2);
 				}
 				else if ( (!inside) && (dist2>=0) )		// Coming in
 				{	 
 					clipped = inside = true;
+					//
 					t = new Vertex();
 					d = dist1/(dist1-dist2);
 					t.wx = (v1.wx+(v2.wx-v1.wx)*d);
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
 					t.wz = (v1.wz+(v2.wz-v1.wz)*d);
-	
+					//
 					pts.push( t );
 					pts.push( v2 );
+					//
+					l_oUVTmp = new UVCoord();
+					l_oUVTmp.u = (l_oUV1.u+(l_oUV2.u-l_oUV1.u)*d);
+					l_oUVTmp.v = (l_oUV1.v+(l_oUV2.v-l_oUV1.v)*d);
+					//
+					p_aUVCoords.push(l_oUVTmp);
+					p_aUVCoords.push(l_oUV2);
 				} 
 				else if ( inside && (dist2<0) )		// Going out
 				{	 
@@ -290,11 +303,16 @@ package sandy.view
 					inside=false;
 					t = new Vertex();
 					d = dist1/(dist1-dist2);
-					
+					//
 					t.wx = (v1.wx+(v2.wx-v1.wx)*d);
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
 					t.wz = (v1.wz+(v2.wz-v1.wz)*d);
-					
+					//
+					l_oUVTmp = new UVCoord();
+					l_oUVTmp.u = (l_oUV1.u+(l_oUV2.u-l_oUV1.u)*d);
+					l_oUVTmp.v = (l_oUV1.v+(l_oUV2.v-l_oUV1.v)*d);
+					//
+					p_aUVCoords.push(l_oUVTmp);
 					pts.push( t );
 				} 
 				else
@@ -303,6 +321,7 @@ package sandy.view
 				}
 				v1 = v2;
 				dist1 = dist2;
+				l_oUV1 = l_oUV2;
 			}
 			// we free the distance array
 			aDist = null;

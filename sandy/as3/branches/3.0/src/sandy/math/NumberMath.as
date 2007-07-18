@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.math {
+package sandy.math 
+{
 	/**
 	* Math functions for Numbers (angles).
 	*  

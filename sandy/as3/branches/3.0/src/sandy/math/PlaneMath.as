@@ -18,7 +18,6 @@ package sandy.math
 {
 	import sandy.core.data.Plane;
 	import sandy.core.data.Vector;
-	import sandy.math.VectorMath;
 	import sandy.errors.SingletonError;
 	
 	/**

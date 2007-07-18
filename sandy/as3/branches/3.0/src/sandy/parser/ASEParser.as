@@ -1,21 +1,10 @@
 package sandy.parser
 {
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IOErrorEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLLoaderDataFormat;
-	import flash.net.URLRequest;
 	import flash.utils.unescapeMultiByte;
-
-	import sandy.parser.Parser;
-	import sandy.parser.AParser;
-	import sandy.parser.IParser;
-	import sandy.parser.ParserEvent;
+	
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.core.scenegraph.Group;
-	import sandy.materials.ColorMaterial;
 	import sandy.materials.Appearance;
 	import sandy.materials.WireFrameMaterial;
 

@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
+package sandy.core.data 
+{
 	/**
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @since		0.3

@@ -1,5 +1,6 @@
-package sandy.primitive {
-	import sandy.primitive.Cylinder;
+package sandy.primitive 
+{
+	
 	
 	/**
 	 * All credits go to Tim Knipt from suite75.net who did the AS2 implementation.

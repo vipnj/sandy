@@ -3,11 +3,11 @@ package sandy.materials
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	
-	import sandy.core.data.Polygon;
-	import sandy.core.data.Vertex;
-	import sandy.core.data.Vector;
-	import sandy.core.light.Light3D;
 	import sandy.core.World3D;
+	import sandy.core.data.Polygon;
+	import sandy.core.data.Vector;
+	import sandy.core.data.Vertex;
+	import sandy.core.light.Light3D;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	

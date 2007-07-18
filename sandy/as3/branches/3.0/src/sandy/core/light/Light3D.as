@@ -14,12 +14,13 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.light {
+package sandy.core.light 
+{
 	import flash.events.EventDispatcher;
 	
 	import sandy.core.data.Vector;
-	import sandy.util.NumberUtil;
 	import sandy.events.SandyEvent;
+	import sandy.util.NumberUtil;
 		
 	[Event(name="lightUpdated", type="sandy.core.SandyEvent")]
 	

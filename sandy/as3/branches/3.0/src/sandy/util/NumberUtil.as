@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.util {
+package sandy.util 
+{
 	/**
 	* NumberUtil
 	*  

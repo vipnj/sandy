@@ -14,10 +14,9 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
-	import sandy.core.data.Vector;
+package sandy.core.data 
+{
 	import sandy.util.BezierUtil;
-	
 	
 	/**
 	* A 3D path interpolated with Bezier equations
@@ -50,7 +49,7 @@ package sandy.core.data {
 		* @param	pnId
 		* @return	Array array containing the segment's bezierCurve points [startPoint, controlPoint, endPoint]
 		*/
-		public function getSegment( pnId:Number ):Array
+		public function getSegment( pnId:uint ):Array
 		{
 			if( pnId >= 0 && pnId < _nNbSegments )
 			{
@@ -144,7 +143,7 @@ package sandy.core.data {
 		* @param	void
 		* @return Number the number of segments
 		*/
-		public function getNumberOfSegments():Number
+		public function getNumberOfSegments():uint
 		{
 			return _nNbSegments;
 		}
@@ -173,17 +172,17 @@ package sandy.core.data {
 		/**
 		* current segment id
 		*/
-		private var _nCrtSegment:Number;
+		private var _nCrtSegment:uint;
 		
 		/**
 		* The number of segments of the path
 		*/
-		private var _nNbSegments:Number;
+		private var _nNbSegments:uint;
 		
 		/**
 		* The number of points of the path
 		*/
-		private var _nNbPoints:Number;
+		private var _nNbPoints:uint;
 		
 		/**
 		* Boolean set to true is the path has to be closed, false otherwise. default is false

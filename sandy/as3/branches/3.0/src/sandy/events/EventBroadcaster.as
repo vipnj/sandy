@@ -77,7 +77,9 @@ package sandy.events
 			{
 				if ( !(m_oType[type]) ) 
 					m_oType[type] = new Dictionary(true);
-				if ( getListenerCollection(type)[ listener ] = listener ) 
+				// --
+				var lDico:Dictionary = getListenerCollection(type);
+				if ( listener == lDico[ listener ] ) 
 				{
 					_storeRef( type, listener );
 					return true;

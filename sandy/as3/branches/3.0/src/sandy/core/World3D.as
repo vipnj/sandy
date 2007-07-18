@@ -19,14 +19,12 @@ package sandy.core
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	
-	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.light.Light3D;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.errors.SingletonError;
 	import sandy.events.SandyEvent;
-	import flash.utils.getTimer;
 	
 	[Event(name="containerCreated", type="sandy.core.SandyEvent")]
 	[Event(name="lightAdded", type="sandy.core.SandyEvent")]

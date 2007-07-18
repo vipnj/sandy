@@ -1,29 +1,24 @@
 package sandy.parser
 {
 	import flash.display.Bitmap;
-	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.net.URLRequest;
-	import flash.xml.XMLNode;
 	
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Node;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.core.scenegraph.TransformGroup;
 	import sandy.core.transform.Transform3D;
 	import sandy.core.transform.TransformType;
-	import sandy.events.SandyEvent;
+	import sandy.events.QueueEvent;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
-	import sandy.materials.WireFrameMaterial;
 	import sandy.math.Matrix4Math;
 	import sandy.util.LoaderQueue;
-	import sandy.events.QueueEvent;
 	import sandy.util.NumberUtil;
 	
 	public class ColladaParser extends AParser implements IParser

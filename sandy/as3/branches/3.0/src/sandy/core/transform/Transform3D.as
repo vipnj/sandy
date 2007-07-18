@@ -13,9 +13,9 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.core.transform {
+package sandy.core.transform 
+{
 	import sandy.core.data.Matrix4;
-	import sandy.core.transform.TransformType;
 	
 	/**
 	* Transform3D

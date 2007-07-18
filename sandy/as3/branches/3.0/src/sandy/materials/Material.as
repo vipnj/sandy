@@ -15,13 +15,9 @@ limitations under the License.
 */
 package sandy.materials 
 {
-	import flash.display.BitmapData;
-	import flash.geom.Matrix;
 	import flash.display.Sprite;
 	
 	import sandy.core.data.Polygon;
-	import sandy.materials.LineAttributes;
-	import sandy.materials.MaterialType;
 	
 	/**
 	 * ABSTRACT CLASS

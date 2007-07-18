@@ -16,10 +16,6 @@ limitations under the License.
 package sandy.core.scenegraph 
 {
 	import sandy.core.data.Matrix4;
-	import sandy.core.scenegraph.ATransformable;
-	import sandy.core.scenegraph.Camera3D;
-	import sandy.core.scenegraph.Node;
-	import sandy.math.VectorMath;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	

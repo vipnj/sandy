@@ -14,7 +14,8 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data {
+package sandy.core.data 
+{
 	/**
 	* UVCoord
 	* <p>The UVCoord class is a data structure class. It represents the position of a vertex in the Bitmap.

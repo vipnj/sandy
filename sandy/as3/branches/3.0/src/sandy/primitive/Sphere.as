@@ -13,13 +13,10 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive {
-	import sandy.core.data.UVCoord;
-	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
+package sandy.primitive 
+{
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.primitive.Primitive3D;
 	
 	
 	/**

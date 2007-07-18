@@ -13,7 +13,8 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.util {
+package sandy.util 
+{
 	import sandy.core.data.Vector;
 	import sandy.math.VectorMath;
 	/**

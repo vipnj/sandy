@@ -7,7 +7,6 @@ package sandy.commands
 	 * @version 1.0
 	 */
 	import flash.events.Event;
-	import flash.utils.getQualifiedClassName;
 	
 	public class Delegate 
 		implements Command

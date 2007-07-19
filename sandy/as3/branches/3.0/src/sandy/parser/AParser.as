@@ -8,6 +8,9 @@ package sandy.parser
 	import flash.net.URLRequest;
 	
 	import sandy.core.scenegraph.Group;
+	import sandy.materials.Appearance;
+	import sandy.materials.ColorMaterial;
+	import sandy.materials.LineAttributes;
 	
 	internal class AParser extends EventDispatcher implements IParser
 	{
@@ -19,6 +22,8 @@ package sandy.parser
 		private var m_sUrl:String;
 		protected var m_sDataFormat:String;
 		protected var m_nScale:Number;
+		
+		protected var m_oStandardAppearance : Appearance;
 		
 		public function AParser( p_sFile:*, p_nScale:Number )
 		{ 
@@ -34,6 +39,13 @@ package sandy.parser
 			{
 				m_oFile = p_sFile;
 			}
+			
+			standardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
+		}
+		
+		public function set standardAppearance( p_oAppearance:Appearance ):void
+		{
+			m_oStandardAppearance = p_oAppearance;
 		}
 		
 		/**

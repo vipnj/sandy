@@ -50,7 +50,7 @@ package sandy.parser
 						//var num: Number =  Number(line.split( ' ' )[1]);
 						if( l_oGeometry )
 						{
-							l_oShape = new Shape3D( null, l_oGeometry, new Appearance( new WireFrameMaterial() ) );
+							l_oShape = new Shape3D( null, l_oGeometry, m_oStandardAppearance );
 							m_oGroup.addChild( l_oShape );
 						}
 						// -
@@ -121,7 +121,7 @@ package sandy.parser
 				}
 			}
 			// -- 
-			l_oShape = new Shape3D( null, l_oGeometry, new Appearance( new WireFrameMaterial() ) );
+			l_oShape = new Shape3D( null, l_oGeometry, m_oStandardAppearance );
 			m_oGroup.addChild( l_oShape );
 			// -- Parsing is finished
 			var l_eOnInit:ParserEvent = new ParserEvent( ParserEvent.onInitEVENT );

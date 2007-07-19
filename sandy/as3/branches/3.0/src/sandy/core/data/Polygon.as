@@ -187,8 +187,8 @@ package sandy.core.data
 		public function display( p_oContainer:Sprite = null ):void
 		{
 			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite; 
-			if( m_bVisible )m_oAppearance.frontMaterial.renderPolygon( this, lContainer );
-			else			m_oAppearance.backMaterial.renderPolygon( this, lContainer );
+			if( m_bVisible ) m_oAppearance.frontMaterial.renderPolygon( this, lContainer );
+			else			 m_oAppearance.backMaterial.renderPolygon( this, lContainer );
 		}
 
 		public function get container():Sprite

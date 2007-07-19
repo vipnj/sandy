@@ -23,7 +23,7 @@ package sandy.core.data
 	* @version		0.1
 	* @date 		22.02.2006
 	*/
-	public class Plane
+	final public class Plane
 	{
 		public var a:Number;
 		public var b:Number;

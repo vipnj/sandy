@@ -107,17 +107,11 @@ package sandy.math
 		
 		public static function computePlaneFromPoints( pA:Vector, pB:Vector, pC:Vector ):Plane
 		{
-			var p:Plane = new Plane();
 			var n:Vector = VectorMath.cross( VectorMath.sub( pA, pB), VectorMath.sub( pA, pC) );
 			VectorMath.normalize( n );
 			var d:Number = VectorMath.dot( pA, n);
 			// --
-			p.a = n.x;
-			p.b = n.y;
-			p.c = n.z;
-			p.d = d;
-			// --
-			return p;
+			return new Plane( n.x, n.y, n.z, d);
 		}
 		
 		public static function createFromNormalAndPoint( pNormal:Vector, pD:Number ):Plane

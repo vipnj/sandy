@@ -53,7 +53,7 @@ package sandy.parser
 			var ad:Array = new Array();
 			var pi180:Number = 180 / Math.PI;
 			// --
-			var l_oAppearance:Appearance = null;
+			var l_oAppearance:Appearance = m_oStandardAppearance;
 			var l_oGeometry:Geometry3D = null;
 			var l_oShape:Shape3D = null;
 			// --
@@ -97,7 +97,7 @@ package sandy.parser
 					    var str:String = readString();
 					    currentObjectName = str;
 					    l_oGeometry = new Geometry3D();
-					    l_oAppearance = new Appearance( new WireFrameMaterial() );
+					    l_oAppearance = l_oAppearance;
 			         	break;
 			         	
 					case Parser3DSChunkTypes.OBJ_TRIMESH:

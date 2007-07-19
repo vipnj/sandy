@@ -25,7 +25,7 @@ package sandy.parser
 	{
 		private var m_oCollada : XML;
 		private var m_bYUp : Boolean; 
-		private var m_oStandardAppearance : Appearance;
+		
 		private var m_oMaterials : Object;
 		
 		public var RELATIVE_TEXTURE_PATH : String;
@@ -33,8 +33,6 @@ package sandy.parser
 		public function ColladaParser( p_sUrl:*, p_nScale:Number )
 		{
 			super( p_sUrl, p_nScale );
-
-			m_oStandardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 		}
 		
 		protected override function parseData( e:Event=null ) : void
@@ -85,7 +83,7 @@ package sandy.parser
 				var l_oShape:Shape3D;
 				var l_oNodes : XMLList;
 				var l_nNodeLen : int;
-				var l_oAppearance : Appearance;
+				var l_oAppearance : Appearance = m_oStandardAppearance;
 				var l_oTransformGroup : TransformGroup;
 				var l_oScale : Transform3D;
 				
@@ -177,7 +175,7 @@ package sandy.parser
 				l_oOutpGeom.setVertex( 
 					i, 
 					l_oVertex.x * m_nScale, 
-					-l_oVertex.z * m_nScale,
+					l_oVertex.z * m_nScale,
 					l_oVertex.y * m_nScale
 				);
 			} 
@@ -235,8 +233,8 @@ package sandy.parser
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
 
-				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
-				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
+				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
+				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
 
 			}
 
@@ -333,7 +331,7 @@ package sandy.parser
 					: m_oCollada.library_effects.effect.( @id == l_sEffectID )[ 0 ];
 				
 				// -- no textures here or colors defined 
-				if( l_oEffect..texture.length() == 0 && l_oEffect..phong.length() == 0 ) return null;
+				if( l_oEffect..texture.length() == 0 && l_oEffect..phong.length() == 0 ) return m_oStandardAppearance;
 				
 				if( l_oEffect..texture.length() > 0 )
 				{
@@ -363,7 +361,9 @@ package sandy.parser
 					l_oAppearance = new Appearance( new ColorMaterial( l_nColor, l_aColors[ 3 ] * 100 ) );
 				}				
 			}
-			return l_oAppearance;
+			
+			if( l_oAppearance == null ) return m_oStandardAppearance;
+			else return l_oAppearance;
 		}
 		
 		private function loadImages( p_oLibImages : XMLList ) : Object

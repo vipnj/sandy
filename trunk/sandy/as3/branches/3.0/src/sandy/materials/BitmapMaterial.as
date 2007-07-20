@@ -78,9 +78,26 @@ package sandy.materials
 				if( !l_points.length ) return;
 				const l_graphics:Graphics = p_mcContainer.graphics;
 				// -- we prepare the texture
-				prepare( p_oPolygon.vertices, m_oPolygonMatrixMap[p_oPolygon] );
+				//prepare( p_oPolygon.vertices, m_oPolygonMatrixMap[p_oPolygon] );
+				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
+				const 	x0:Number = l_points[0].sx, y0: Number = l_points[0].sy,			
+						x1:Number = l_points[1].sx, y1:Number = l_points[1].sy, 
+						x2:Number = l_points[2].sx, y2:Number = l_points[2].sy;
+				m_oTmp.a = x1 - x0;
+				m_oTmp.b = y1 - y0;
+				m_oTmp.c = x2 - x0;
+				m_oTmp.d = y2 - y0;
+				m_oTmp.tx = x0;
+				m_oTmp.ty = y0;
+				matrix.a = lUv.a;
+				matrix.b = lUv.b;
+				matrix.c = lUv.c;
+				matrix.d = lUv.d;
+				matrix.tx = lUv.tx;
+				matrix.ty = lUv.ty;
+				matrix.concat( m_oTmp );
 				// --
-				l_graphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
+				l_graphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
 				// --
 				if( lineAttributes )
 					l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
@@ -114,7 +131,7 @@ package sandy.materials
 			// -- we prepare the texture
 			prepare( l_points, m );
 			//
-			p_oGraphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
+			p_oGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
 			// --
 			if( lineAttributes )
 				p_oGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
@@ -255,5 +272,6 @@ package sandy.materials
 		private var m_oPolygonMatrixMap:Dictionary;
 		private var m_oPoint:Point = new Point();
 		private var m_oCmf:ColorMatrixFilter;
+		private var m_oTmp:Matrix = new Matrix();
 	}
 }

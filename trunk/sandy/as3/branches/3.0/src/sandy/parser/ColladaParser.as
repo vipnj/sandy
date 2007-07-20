@@ -232,9 +232,10 @@ package sandy.parser
 			{
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
+				var l_aUVs : Array = l_aTriangles[ i ].TEXCOORD;
 
 				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
-				l_oOutpGeom.setFaceUVCoordsIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
+				l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 1 ], l_aUVs[ 2 ] );
 
 			}
 

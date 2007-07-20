@@ -1,29 +1,29 @@
 package
 {
+	import flash.display.Bitmap;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import sandy.parser.Parser;
-	import sandy.parser.IParser;
-	import sandy.parser.ParserEvent;
+	import flash.display.StageScaleMode;
+	import flash.events.Event;
+	
+	import sandy.core.World3D;
+	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
-	import sandy.materials.ColorMaterial;
-	import flash.events.Event;
-	import sandy.core.scenegraph.Camera3D;
-	import flash.display.MovieClip;
-	import sandy.core.World3D;
-	import flash.display.StageScaleMode;
 	import sandy.materials.BitmapMaterial;
-	import flash.display.Bitmap;
+	import sandy.parser.IParser;
+	import sandy.parser.Parser;
+	import sandy.parser.ParserEvent;
 	
-	[SWF(width="1000", height="600", backgroundColor="#FFFFFF", frameRate="120")] 
+	[SWF(width="600", height="600", backgroundColor="#FFFFFF", frameRate="120")] 
 	
 	public class ColladaTest extends Sprite
 	{
-		internal static const SCREEN_WIDTH:int = 1000;
+		internal static const SCREEN_WIDTH:int = 600;
 		internal static const SCREEN_HEIGHT:int = 600;    
 		
-		internal static const SCREEN_WIDTH2:int = 500;
+		internal static const SCREEN_WIDTH2:int = 300;
 		internal static const SCREEN_HEIGHT2:int = 300;    
 		
 		private var world : World3D;
@@ -37,6 +37,8 @@ package
 		[Embed(source="assets/ball_texture.png")]
 		private var BallTexture:Class;
 		
+		private var fps: CustomFPS;
+		private var ball:Shape3D;
 		//[Embed(source="assets/ball.dae", mimeType="application/octet-stream")]
 		//private var MyCollada:Class;
 		
@@ -44,6 +46,9 @@ package
 		{
 			stage.quality = "MEDIUM";
 			stage.scaleMode = StageScaleMode.NO_SCALE ;
+			fps = new CustomFPS();
+			fps.y = 12;
+			addChild( fps );
 			_init();
 			_createScene();
 		}
@@ -59,8 +64,7 @@ package
 			world.container = container;
 			// --
 			camera = world.camera = new Camera3D( SCREEN_WIDTH, SCREEN_HEIGHT );
-			camera.z = -100;
-			camera.y = 100;
+			camera.z = 140;
 	
 			world.root = new Group();
 			world.root.addChild( camera  );
@@ -69,15 +73,13 @@ package
 		
 		private function _createScene():void
 		{
+			var lPic:Bitmap = new BallTexture();
+			var ballAppearance:Appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );			
 			var lParser:IParser = Parser.create( "assets/ball.dae"/*new MyCollada()*/, Parser.COLLADA, 1 );
 			lParser.addEventListener( ParserEvent.onInitEVENT, _initRender );
 			lParser.addEventListener( ParserEvent.onFailEVENT, _failInit );
+			lParser.standardAppearance = ballAppearance;
 			lParser.parse();
-			
-			var lParser2:IParser = Parser.create( "assets/plane.dae"/*new MyCollada()*/, Parser.COLLADA, 1 );
-			lParser2.addEventListener( ParserEvent.onInitEVENT, _initRender );
-			lParser2.addEventListener( ParserEvent.onFailEVENT, _failInit );
-			lParser2.parse();
 		}
 		
 		private function _failInit( pEvt:ParserEvent ):void
@@ -88,20 +90,41 @@ package
 		private function _initRender( pEvt:ParserEvent ):void
 		{
 			var lGroup:Group = Group( pEvt.group );
-			world.root.addChild( lGroup.getChildList()[0].getChildList()[0] );
+			var lShape:Shape3D = lGroup.getChildList()[0].getChildList()[0];
+			world.root.addChild( lShape );
 
-			if( ++nLoaded == 2 )
+			++nLoaded;
+			
+			if( nLoaded == 2 )
+			{
 				addEventListener( Event.ENTER_FRAME, enterFrameHandler );
+			}
+			else
+			{
+				lShape.y += 40;
+				ball = lShape;
+				//
+				var lPic:Bitmap = new PlaneTexture();
+				var planeAppearance:Appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
+				var lParser2:IParser = Parser.create( "assets/plane.dae"/*new MyCollada()*/, Parser.COLLADA, 1 );
+				lParser2.addEventListener( ParserEvent.onInitEVENT, _initRender );
+				lParser2.addEventListener( ParserEvent.onFailEVENT, _failInit );
+				lParser2.standardAppearance = planeAppearance;
+				lParser2.parse();
+			}
 		}
 
 		private function enterFrameHandler( event : Event ) : void
 		{
-			camera.x += ((container.mouseX - SCREEN_WIDTH2)* 30 - camera.x) / 40;
-			camera.z += ((container.mouseY - SCREEN_HEIGHT2)* 30 - camera.z) / 40;
+			camera.x += ((container.mouseX - SCREEN_WIDTH2)* 4 - camera.x) / 10;
+			camera.y += ((container.mouseY - SCREEN_HEIGHT2)* 4 - camera.y) / 10;
 			// --
-			camera.lookAt( 0, 0, 0 );
+			camera.lookAt( 0, 40, 0 );
+			// --
+			ball.rotateY++;
 			// --
 			world.render();	
+			fps.nextFrame();
 		}
 		
 	}

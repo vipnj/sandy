@@ -341,10 +341,8 @@ package sandy.core.scenegraph
 			{
 				if( p_bChanged || changed )
 				{
-					if(p_oViewMatrix)
-						_oViewCacheMatrix = (_oModelCacheMatrix) ? Matrix4Math.multiply4x3( p_oViewMatrix, _oModelCacheMatrix ) : p_oViewMatrix;
-					else
-						_oViewCacheMatrix = _oModelCacheMatrix;
+					_oViewCacheMatrix.copy( p_oViewMatrix );
+					_oViewCacheMatrix.multiply4x3( _oModelCacheMatrix );
 				}
 			}
 		}
@@ -392,8 +390,8 @@ package sandy.core.scenegraph
 			_oBBox = new BBox();
 			_oBSphere = new BSphere();
 			// -- 
-			_oModelCacheMatrix = null;
-			_oViewCacheMatrix = null;
+			_oModelCacheMatrix = new Matrix4();
+			_oViewCacheMatrix = new Matrix4();
 			//
 			culled = CullingState.INSIDE;
 		}

@@ -9,14 +9,10 @@ package sandy.parser
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Node;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.core.scenegraph.TransformGroup;
-	import sandy.core.transform.Transform3D;
-	import sandy.core.transform.TransformType;
 	import sandy.events.QueueEvent;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
-	import sandy.materials.LineAttributes;
 	import sandy.math.Matrix4Math;
 	import sandy.util.LoaderQueue;
 	import sandy.util.NumberUtil;
@@ -77,27 +73,24 @@ package sandy.parser
 
 			if( p_oNode.child( "instance_geometry" ).length() != 0 )
 			{
-				var l_oMatrix : Matrix4 = Matrix4.createIdentity();
+				var l_oMatrix : Matrix4 = new Matrix4();
 				var l_aGeomArray:Array;
 				var l_sGeometryID : String;
 				var l_oShape:Shape3D;
 				var l_oNodes : XMLList;
 				var l_nNodeLen : int;
 				var l_oAppearance : Appearance = m_oStandardAppearance;
-				var l_oTransformGroup : TransformGroup;
-				var l_oScale : Transform3D;
+				//var l_oScale : Transform3D;
 				
 				// -- scale
 				if( p_oNode.scale.length() > 0 ) {
-					l_oMatrix = Matrix4Math.multiply( 
-						l_oMatrix, 
+					l_oMatrix.multiply( 
 						Matrix4Math.scaleVector( stringToVector( p_oNode.scale ) )
 					);
 				}
 				// -- translation
 				if( p_oNode.translate.length() > 0 ) {
-					l_oMatrix = Matrix4Math.multiply( 
-						l_oMatrix, 
+					l_oMatrix.multiply( 
 						Matrix4Math.translationVector( stringToVector( p_oNode.translate ) )
 					);
 				}
@@ -131,18 +124,11 @@ package sandy.parser
 //				l_oShape.appearance = l_oAppearance;//;new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 
 				// -- doesn't work yet
-				l_oTransformGroup = new TransformGroup( "transform" );
-				l_oScale = new Transform3D();
-				l_oScale.matrix = l_oMatrix;
-				l_oTransformGroup.transform.type = TransformType.SCALE;
-				l_oTransformGroup.transform = l_oScale;
-				
-				l_oTransformGroup.changed = true;
-				l_oTransformGroup.updateTransform();
-				l_oTransformGroup.addChild( l_oShape );
-
-				return l_oTransformGroup;
-			} else {
+				l_oShape.matrix = l_oMatrix;
+				return l_oShape;
+			} 
+			else 
+			{
 				return null;
 			}
 		}

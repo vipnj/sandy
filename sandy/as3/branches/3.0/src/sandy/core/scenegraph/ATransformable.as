@@ -2,26 +2,23 @@ package sandy.core.scenegraph
 {
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
-	import sandy.core.transform.Transform3D;
-	import sandy.core.transform.TransformType;
-	import sandy.math.Matrix4Math;
-	import sandy.math.VectorMath;
 	
 	/**
 	 * @author thomaspfeiffer
 	 */
 	public class ATransformable extends Node
 	{
-		public var transform:Transform3D;
+		private var m_oMatrix:Matrix4;
 	
 		public function ATransformable ( p_sName:String="" )
 		{
 			super( p_sName );
+			// --
+			initFrame();
+			// --
 			_p 		= new Vector();
 			_oScale = new Vector( 1, 1, 1 );
 			_vRotation = new Vector(0,0,0);
-			// --
-			initFrame();
 			// --
 			_vLookatDown = new Vector(0.00000000001, -1, 0);// value to avoid some colinearity problems.;
 			// --
@@ -29,8 +26,8 @@ package sandy.core.scenegraph
 			_nTilt 	= 0;
 			_nYaw  	= 0;
 			// --
-			m_tmpMt = Matrix4.createIdentity();
-			transform = new Transform3D();
+			m_tmpMt = new Matrix4();
+			m_oMatrix = new Matrix4();
 		}
 	    
 	    public function initFrame():void
@@ -39,6 +36,21 @@ package sandy.core.scenegraph
 			_vUp 	= new Vector( 0, 1 ,0 );
 			_vOut 	= new Vector( 0, 0, 1 );
 	    }
+	    
+	    public function get matrix():Matrix4
+	    {
+	    	return m_oMatrix;
+	    }
+	    
+	    public function set matrix( p_oMatrix:Matrix4 ):void
+	    {
+	    	m_oMatrix = p_oMatrix;
+	    	//
+	    	m_oMatrix.vectorMult3x3(_vSide);
+	    	m_oMatrix.vectorMult3x3(_vUp);
+	    	m_oMatrix.vectorMult3x3(_vOut);
+	    }
+
 	    
 	    public override function toString():String
 	    {
@@ -52,7 +64,6 @@ package sandy.core.scenegraph
 		{
 			_p.x = px;
 			changed = true;
-			transform.type = TransformType.TRANSLATION;
 		}
 		
 		public function get x():Number
@@ -67,7 +78,6 @@ package sandy.core.scenegraph
 		{
 			_p.y = py;
 			changed = true;
-			transform.type = TransformType.TRANSLATION;	
 		}
 		
 		public function get y():Number
@@ -82,7 +92,6 @@ package sandy.core.scenegraph
 		{
 			_p.z = pz;
 			changed = true;
-			transform.type = TransformType.TRANSLATION;
 		}
 		
 		public function get z():Number
@@ -114,7 +123,6 @@ package sandy.core.scenegraph
 		{
 			_oScale.x = p_scaleX;
 			changed = true;
-			transform.type = TransformType.SCALE;	
 		}
 					
 		public function get scaleX():Number
@@ -132,7 +140,6 @@ package sandy.core.scenegraph
 		{
 			_oScale.y = p_scaleY;
 			changed = true;
-			transform.type = TransformType.SCALE;	
 		}
 					
 		public function get scaleY():Number
@@ -150,7 +157,6 @@ package sandy.core.scenegraph
 		{
 			_oScale.z = p_scaleZ;
 			changed = true;
-			transform.type = TransformType.SCALE;	
 		}
 					
 		public function get scaleZ():Number
@@ -169,7 +175,6 @@ package sandy.core.scenegraph
 			_p.x += _vSide.x * d;
 			_p.y += _vSide.y * d;
 			_p.z += _vSide.z * d;
-			transform.type = TransformType.TRANSLATION;	
 		}
 		
 		/**
@@ -183,7 +188,6 @@ package sandy.core.scenegraph
 			_p.x += _vUp.x * d;
 			_p.y += _vUp.y * d;
 			_p.z += _vUp.z * d;
-			transform.type = TransformType.TRANSLATION;	
 		}
 		
 		/**
@@ -198,7 +202,6 @@ package sandy.core.scenegraph
 			_p.x += _vOut.x * d;
 			_p.y += _vOut.y * d;
 			_p.z += _vOut.z * d;
-			transform.type = TransformType.TRANSLATION;	
 		}
 	 
 		/**
@@ -212,7 +215,6 @@ package sandy.core.scenegraph
 			changed = true;
 			_p.x += _vOut.x * d;
 			_p.z += _vOut.z * d;	
-			transform.type = TransformType.TRANSLATION;	
 		}
 		
 		/**
@@ -224,7 +226,6 @@ package sandy.core.scenegraph
 		{
 			changed = true;
 			_p.y += d;	
-			transform.type = TransformType.TRANSLATION;		
 		}
 		
 		 /**
@@ -236,8 +237,7 @@ package sandy.core.scenegraph
 		public function moveLateraly( d:Number ) : void
 		{
 			changed = true;
-			_p.x += d;
-			transform.type = TransformType.TRANSLATION;		
+			_p.x += d;	
 		}
 			
 		/**
@@ -253,7 +253,6 @@ package sandy.core.scenegraph
 			_p.x += px;
 			_p.y += py;
 			_p.z += pz;	
-			transform.type = TransformType.TRANSLATION;
 		}
 		
 		
@@ -270,11 +269,12 @@ package sandy.core.scenegraph
 			changed = true;
 			nAngle = (nAngle + 360)%360;
 			var n:Number = Math.sqrt( ax*ax + ay*ay + az*az );
-			var m : Matrix4 = Matrix4Math.axisRotation( ax/n, ay/n, az/n, nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
-			transform.type = TransformType.ROTATION;
+			// --
+			m_tmpMt.axisRotation( ax/n, ay/n, az/n, nAngle );
+			//
+			m_tmpMt.vectorMult3x3(_vSide);
+	    	m_tmpMt.vectorMult3x3(_vUp);
+	    	m_tmpMt.vectorMult3x3(_vOut);
 		}
 	 
 	
@@ -292,13 +292,19 @@ package sandy.core.scenegraph
 		public function lookAt( px:Number, py:Number, pz:Number ):void
 		{
 			changed = true;
-			_vOut = VectorMath.sub( new Vector(px, py, pz), _p );
-			VectorMath.normalize( _vOut );
+			//
+			_vOut.x = px; _vOut.y = py; _vOut.z = pz;
+			//
+			_vOut.sub( _p );
+			_vOut.normalize();
 			// -- the vOut vector should not be colinear with the reference down vector!
-			_vSide = VectorMath.cross( _vOut, _vLookatDown );
-			VectorMath.normalize( _vSide );
-			_vUp = VectorMath.cross( _vOut, _vSide );
-			VectorMath.normalize( _vUp );
+			_vSide = null;
+			_vSide = _vOut.cross( _vLookatDown );
+			_vSide.normalize();
+			//
+			_vUp = null;
+			_vUp = _vOut.cross(_vSide );
+			_vUp.normalize();
 		}
 	 
 		/**
@@ -312,13 +318,12 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			var m:Matrix4 = Matrix4Math.rotationX( l_nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+			m_tmpMt.rotationX( l_nAngle );			
+			m_tmpMt.vectorMult3x3(_vSide);
+	    	m_tmpMt.vectorMult3x3(_vUp);
+	    	m_tmpMt.vectorMult3x3(_vOut);
 			// --
 			_vRotation.x = nAngle;
-			transform.type = TransformType.ROTATION;
 		}
 		
 		public function get rotateX():Number
@@ -337,13 +342,12 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			var m:Matrix4 = Matrix4Math.rotationY ( l_nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+			m_tmpMt.rotationY( l_nAngle );			
+			m_tmpMt.vectorMult3x3(_vSide);
+	    	m_tmpMt.vectorMult3x3(_vUp);
+	    	m_tmpMt.vectorMult3x3(_vOut);
 			// --
 			_vRotation.y = nAngle;
-			transform.type = TransformType.ROTATION;
 		}
 		
 		public function get rotateY():Number
@@ -362,13 +366,12 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			var m:Matrix4 = Matrix4Math.rotationZ ( l_nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+			m_tmpMt.rotationZ( l_nAngle );			
+			m_tmpMt.vectorMult3x3(_vSide);
+	    	m_tmpMt.vectorMult3x3(_vUp);
+	    	m_tmpMt.vectorMult3x3(_vOut);
 			// --
 			_vRotation.z = nAngle;
-			transform.type = TransformType.ROTATION;
 		}	
 		
 		public function get rotateZ():Number
@@ -402,13 +405,12 @@ package sandy.core.scenegraph
 			var l_nAngle:Number = (nAngle - _nRoll)
 			if(l_nAngle == 0 ) return;
 			changed = true;
-			// --
-			var m:Matrix4 = Matrix4Math.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
+			// --		
+			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
+			m_tmpMt.vectorMult3x3(_vSide);
+	    	m_tmpMt.vectorMult3x3(_vUp);
 			// --
 			_nRoll = nAngle;
-			transform.type = TransformType.ROTATION;
 		}	
 	
 			
@@ -424,12 +426,11 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			var m:Matrix4 = Matrix4Math.axisRotation ( _vSide.x, _vSide.y, _vSide.z, l_nAngle );
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+			m_tmpMt.axisRotation ( _vSide.x, _vSide.y, _vSide.z, l_nAngle );
+			m_tmpMt.vectorMult3x3(_vOut);
+	    	m_tmpMt.vectorMult3x3(_vUp);
 			// --
 			_nTilt = nAngle;
-			transform.type = TransformType.ROTATION;
 		}
 		
 		/**
@@ -444,12 +445,11 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			var m:Matrix4 = Matrix4Math.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
+			m_tmpMt.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
+			m_tmpMt.vectorMult3x3(_vOut);
+	    	m_tmpMt.vectorMult3x3(_vSide);
 			// --
 			_nYaw = nAngle;
-			transform.type = TransformType.ROTATION;
 		}
 	
 		/**
@@ -462,15 +462,11 @@ package sandy.core.scenegraph
 		{
 			var angle:Number = ( pAngle + 360 ) % 360;
 			// --
-			var m:Matrix4 = Matrix4Math.translation ( ref.x, ref.y, ref.z );
-			m = Matrix4Math.multiply4x3 ( m, Matrix4Math.axisRotation( axis.x, axis.y, axis.z, angle ));
-			m = Matrix4Math.multiply4x3 ( m, Matrix4Math.translation ( -ref.x, -ref.y, -ref.z ));
+			m_tmpMt.axisRotationWithReference( axis, ref, angle );
+			m_tmpMt.vectorMult3x3( _vUp  );
+			m_tmpMt.vectorMult3x3( _vSide);
+			m_tmpMt.vectorMult3x3( _vOut );
 			// --
-			_vUp   = Matrix4Math.vectorMult3x3( m, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m, _vSide);
-			_vOut  = Matrix4Math.vectorMult3x3( m, _vOut );
-			// --
-			transform.type = TransformType.ROTATION;
 			changed = true;
 		}
 
@@ -493,7 +489,6 @@ package sandy.core.scenegraph
 			_p.x = x;
 			_p.y = y;
 			_p.z = z;	
-			transform.type = TransformType.TRANSLATION;
 		}
 		
 	
@@ -508,9 +503,14 @@ package sandy.core.scenegraph
 			if( p_bChanged || changed )
 			{
 				 if( p_oModelMatrix )
-				 	_oModelCacheMatrix = (transform.matrix) ? Matrix4Math.multiply4x3( p_oModelMatrix, transform.matrix ) : p_oModelMatrix;
+				 {
+				 	_oModelCacheMatrix.copy(p_oModelMatrix);
+				 	_oModelCacheMatrix.multiply4x3( m_oMatrix );
+				 }
 				 else
-				 	_oModelCacheMatrix = transform.matrix;
+				 {
+				 	_oModelCacheMatrix.copy( m_oMatrix );
+				 }
 			}
 			//
 			super.update( _oModelCacheMatrix, p_bChanged );
@@ -524,23 +524,23 @@ package sandy.core.scenegraph
 		{
 			if( changed )
 			{
-				var mt:Matrix4 = m_tmpMt;
-				mt.n11 = _vSide.x * _oScale.x; 
-				mt.n12 = _vUp.x; 
-				mt.n13 = _vOut.x; 
-				mt.n14 = _p.x;
+				m_oMatrix.n11 = _vSide.x * _oScale.x; 
+				m_oMatrix.n12 = _vUp.x; 
+				m_oMatrix.n13 = _vOut.x; 
+				m_oMatrix.n14 = _p.x;
 				
-				mt.n21 = _vSide.y; 
-				mt.n22 = _vUp.y * _oScale.y; 
-				mt.n23 = _vOut.y; 
-				mt.n24 = _p.y;
+				m_oMatrix.n21 = _vSide.y; 
+				m_oMatrix.n22 = _vUp.y * _oScale.y; 
+				m_oMatrix.n23 = _vOut.y; 
+				m_oMatrix.n24 = _p.y;
 				
-				mt.n31 = _vSide.z; 
-				mt.n32 = _vUp.z; 
-				mt.n33 = _vOut.z * _oScale.z;  
-				mt.n34 = _p.z;
+				m_oMatrix.n31 = _vSide.z; 
+				m_oMatrix.n32 = _vUp.z; 
+				m_oMatrix.n33 = _vOut.z * _oScale.z;  
+				m_oMatrix.n34 = _p.z;
 				
-				transform.matrix = mt;
+				m_oMatrix.n41 = m_oMatrix.n42 = m_oMatrix.n43 = 0;
+				m_oMatrix.n44 = 1;
 			}
 		}
 			
@@ -552,7 +552,7 @@ package sandy.core.scenegraph
 		* Default value is "local"
 		* @return the position of the element as a Vector
 		*/
-		public function getPosition( p_sMode:String ):Vector
+		public function getPosition( p_sMode:String = "local" ):Vector
 		{
 			var l_oPos:Vector;
 			switch( p_sMode )

@@ -26,6 +26,7 @@ package sandy.core.scenegraph
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
+	import flash.geom.Matrix;
 	
 	/**
 	* Camera3D
@@ -202,7 +203,8 @@ package sandy.core.scenegraph
 			if( _perspectiveChanged ) updatePerspective();
 			super.update( p_oModelMatrix, p_bChanged );
 			// SHOULD BE DONE IN A FASTER WAY
-			m_oModelMatrixInv = Matrix4Math.getInverse(_oModelCacheMatrix);
+			m_oModelMatrixInv.copy( _oModelCacheMatrix );
+			m_oModelMatrixInv.inverse();
 			/*new Matrix4( 	_oModelCacheMatrix.n11,
 												_oModelCacheMatrix.n21,
 												_oModelCacheMatrix.n31,
@@ -275,7 +277,7 @@ package sandy.core.scenegraph
 			cotan = 1 / Math.tan(fovY / 2);
 			Q = zFar/(zFar - zNear);
 			
-			_mp = Matrix4.createZero();
+			_mp.zero();
 	
 			_mp.n11 = cotan / aspectRatio;
 			_mp.n22 = cotan;
@@ -305,7 +307,7 @@ package sandy.core.scenegraph
 		/// PRIVATE PROPERTIES ///
 		//////////////////////////
 		
-		private var _mp : Matrix4; // projection Matrix4
+		private var _mp : Matrix4 = new Matrix4(); // projection Matrix4
 		private var _mpInv : Matrix4; // Inverse of the projection matrix 
 		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
 	
@@ -317,7 +319,7 @@ package sandy.core.scenegraph
 		private var _nFov:Number;
 		private var _nFar:Number;
 		private var _nNear:Number;
-		private var m_oModelMatrixInv:Matrix4;
+		private var m_oModelMatrixInv:Matrix4 = new Matrix4();
 		private var mp11:Number, mp21:Number,mp31:Number,mp41:Number,
 					mp12:Number,mp22:Number,mp32:Number,mp42:Number,
 					mp13:Number,mp23:Number,mp33:Number,mp43:Number,

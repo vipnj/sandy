@@ -134,14 +134,14 @@ package sandy.bounds
 			    maxx = max.x;    maxy = max.y;    maxz = max.z;
 			}
 			// --
-			aCorners[0] = new Vector((minx), (maxy), (maxz));
-			aCorners[1] = new Vector((maxx), (maxy), (maxz));
-			aCorners[2] = new Vector((maxx), (miny), (maxz));
-			aCorners[3] = new Vector((minx), (miny), (maxz));
-			aCorners[4] = new Vector((minx), (maxy), (minz));
-			aCorners[5] = new Vector((maxx), (maxy), (minz));
-			aCorners[6] = new Vector((maxx), (miny), (minz));
-			aCorners[7] = new Vector((minx), (miny), (minz));
+			aTCorners[0] = new Vector(); aCorners[0] = new Vector((minx), (maxy), (maxz));
+			aTCorners[1] = new Vector(); aCorners[1] = new Vector((maxx), (maxy), (maxz));
+			aTCorners[2] = new Vector(); aCorners[2] = new Vector((maxx), (miny), (maxz));
+			aTCorners[3] = new Vector(); aCorners[3] = new Vector((minx), (miny), (maxz));
+			aTCorners[4] = new Vector(); aCorners[4] = new Vector((minx), (maxy), (minz));
+			aTCorners[5] = new Vector(); aCorners[5] = new Vector((maxx), (maxy), (minz));
+			aTCorners[6] = new Vector(); aCorners[6] = new Vector((maxx), (miny), (minz));
+			aTCorners[7] = new Vector(); aCorners[7] = new Vector((minx), (miny), (minz));
 			// --
 			return aCorners;
 		}	
@@ -151,15 +151,18 @@ package sandy.bounds
 	    {
 		    var lVector:Vector;
 		    // --
+		    
 		    for( var lId:uint = 0; lId < 8; lId ++ )
 		    {
-		        aTCorners[lId] = Matrix4Math.vectorMult( p_oMatrix, aCorners[lId] );
+		        aTCorners[lId].copy( aCorners[lId] )
+		        p_oMatrix.vectorMult( aTCorners[lId] );
 		    }
+		    
 		    // --
 		    m_oTMin.x = Number.MAX_VALUE;m_oTMax.x = Number.MIN_VALUE;
 			m_oTMin.y = Number.MAX_VALUE;m_oTMax.y = Number.MIN_VALUE;
 			m_oTMin.z = Number.MAX_VALUE;m_oTMax.z = Number.MIN_VALUE;
-		    for each ( lVector  in aTCorners )
+		    for each ( lVector in aTCorners )
 			{
 				if( lVector.x < m_oTMin.x )		m_oTMin.x = lVector.x;
 				else if( lVector.x > m_oTMax.x )	m_oTMax.x = lVector.x;

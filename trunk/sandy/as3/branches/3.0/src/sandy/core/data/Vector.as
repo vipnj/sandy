@@ -65,6 +65,150 @@ package sandy.core.data
 			y = p_oVector.y;
 			z = p_oVector.z;
 		}
+	
+		/**
+		 * Compute the norm of the {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @return the norm of the {@code Vector}.
+		 */
+		public function getNorm():Number
+		{
+			return Math.sqrt( x*x + y*y + z*z );
+		}
+		
+		/**
+		 * Compute the oposite of the {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @return a {@code Vector}.
+		 */
+		public function negate( v:Vector ): Vector
+		{
+			return new Vector( - x, - y, - z );
+		}
+		
+		/**
+		 * Compute the addition of the two {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @param {@code w} a {@code Vector}.
+		 * @return nothing
+		 */
+		public function add( v:Vector ):void
+		{
+			x += v.x;
+			y += v.y;
+			z += v.z;
+		}
+		
+		/**
+		 * Compute the substraction of the two {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @param {@code w} a {@code Vector}.
+		 * @return The resulting {@code Vector}.
+		 */
+		public function sub( v:Vector ):void
+		{
+			x -= v.x;
+			y -= v.y;
+			z -= v.z;
+		}
+		
+		/**
+		 * Compute the power of the current vector
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @param {@code pow} a {@code Number}.
+		 * @return The resulting {@code Vector}.
+		 */
+		public function pow( pow:Number ):void
+		{
+			x = Math.pow( x, pow );
+	        y = Math.pow( y, pow );
+	        z = Math.pow( z, pow );
+		}
+		/**
+		 * Compute the multiplication of the {@code Vector} and the scalar.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @param {@code n a {@code Number}.
+		 * @return The resulting {@code Vector}.
+		 */
+		public function scale( n:Number ):void
+		{
+			x *= n;
+			y *= n;
+			z *= n;
+		}
+		
+		/**
+		 * Compute the dot product of the two {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @param {@code w} a {@code Vector}.
+		 * @return the dot procuct of the 2 {@code Vector}.
+		 */
+		public function dot( w: Vector):Number
+		{
+			return ( x * w.x + y * w.y + z * w.z );
+		}
+		
+		/**
+		 * Compute the cross product of the two {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @param {@code w} a {@code Vector}.
+		 * @return the {@code Vector} resulting of the cross product.
+		 */
+		public function cross( v:Vector):Vector
+		{
+			// cross product vector that will be returned
+	        // calculate the components of the cross product
+			return new Vector( 	(y * v.z) - (z * v.y) ,
+	                            (z * v.x) - (x * v.z) ,
+	                            (x * v.y) - (y * v.x));
+		}
+		
+		/**
+		 * Normalize the {@code Vector}.
+		 *
+		 * @param {@code v} a {@code Vector}.
+		 * @return a Boolean true for success, false for mistake.
+		 */	
+		public function normalize():void
+		{
+			// -- We get the norm of the vector
+			var norm:Number = getNorm();
+			// -- We escape the process is norm is null or equal to 1
+			if( norm == 0 || norm == 1) return;
+			x /= norm;
+			y /= norm;
+			z /= norm;
+		}
+		
+		/**
+		* Returns the angle in radian between the two 3D vectors. The formula used here is very simple.
+		* It comes from the definition of the dot product between two vectors.
+		* @param	v	Vector	The first Vector
+		* @param	w	Vector	The second vector
+		* @return 	Number	The angle in radian between the two vectors.
+		*/
+		public function getAngle ( w:Vector ):Number
+		{
+			var ncos:Number = dot( w ) / ( getNorm() * w.getNorm() );
+			var sin2:Number = 1 - ncos * ncos;
+			if (sin2<0)
+			{
+				trace(" wrong "+ncos);
+				sin2 = 0;
+			}
+			//I took long time to find this bug. Who can guess that (1-cos*cos) is negative ?!
+			//sqrt returns a NaN for a negative value !
+			return  Math.atan2( Math.sqrt(sin2), ncos );
+		}
+		
 		
 		/**
 		* Get a String represntation of the {@code Vector}.
@@ -73,7 +217,8 @@ package sandy.core.data
 		*/ 	
 		public function toString(decPlaces:Number=0):String
 		{
-			if (decPlaces == 0) {
+			if (decPlaces == 0) 
+			{
 				decPlaces = 0.01;
 			}
 			// Round display to two decimals places
@@ -91,7 +236,8 @@ package sandy.core.data
 		// Useful for XML output
 		public function serialize(decPlaces:Number=0):String
 		{
-			if (decPlaces == 0) {
+			if (decPlaces == 0) 
+			{
 				decPlaces = .01
 			}
 			//returns x,y,x
@@ -101,13 +247,17 @@ package sandy.core.data
 		}
 		
 		// Useful for XML output
-		public static function deserialize(convertFrom:String):Vector
+		public function deserialize(convertFrom:String):void
 		{
 			var tmp:Array = convertFrom.split(",");
-			if (tmp.length != 3) {
+			if (tmp.length != 3) 
+			{
 				trace ("Unexpected length of string to deserialize into a vector " + convertFrom);
 			}
-			return  new Vector (tmp[0], tmp[1], tmp[2]);
+			
+			x = tmp[0];
+			y = tmp[1];
+			z = tmp[2];
 		}
 	}
 }

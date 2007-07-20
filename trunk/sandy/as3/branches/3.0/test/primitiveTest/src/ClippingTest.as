@@ -64,14 +64,14 @@ package
 			world.camera = new Camera3D( SCREEN_WIDTH, SCREEN_HEIGHT );
 			world.camera.z = -300;
 			// -- create scen
-			var quality:uint = 3;
+			var quality:uint = 1;
 			var g:Group = new Group("root");
 			var tg:TransformGroup = new TransformGroup("translation");
 			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", quality );
 			box.z = 400;
 			box.enableBackFaceCulling = false;
 			box.enableClipping = true;
-			box.useSingleContainer = false;
+			box.useSingleContainer = true;
 			
 			var pic:Bitmap = new Texture();
 			box.appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ,

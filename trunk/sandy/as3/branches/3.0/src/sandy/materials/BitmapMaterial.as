@@ -67,47 +67,41 @@ package sandy.materials
 	
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
+			const lGraphics:Graphics = p_mcContainer.graphics;
+			//
 			if( p_oPolygon.isClipped && enableAccurateClipping )
 			{
 				if( p_oPolygon.cvertices.length )
-					_drawPolygon( p_oPolygon.cvertices, p_oPolygon.caUVCoord, p_mcContainer.graphics );
+					_drawPolygon( p_oPolygon.cvertices, p_oPolygon.caUVCoord, lGraphics );
 			}
 			else
 			{
 				const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 				if( !l_points.length ) return;
-				const l_graphics:Graphics = p_mcContainer.graphics;
 				// -- we prepare the texture
-				//prepare( p_oPolygon.vertices, m_oPolygonMatrixMap[p_oPolygon] );
 				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
-				const 	x0:Number = l_points[0].sx, y0: Number = l_points[0].sy,			
-						x1:Number = l_points[1].sx, y1:Number = l_points[1].sy, 
-						x2:Number = l_points[2].sx, y2:Number = l_points[2].sy;
-				m_oTmp.a = x1 - x0;
-				m_oTmp.b = y1 - y0;
-				m_oTmp.c = x2 - x0;
-				m_oTmp.d = y2 - y0;
-				m_oTmp.tx = x0;
-				m_oTmp.ty = y0;
-				matrix.a = lUv.a;
-				matrix.b = lUv.b;
-				matrix.c = lUv.c;
-				matrix.d = lUv.d;
-				matrix.tx = lUv.tx;
-				matrix.ty = lUv.ty;
-				matrix.concat( m_oTmp );
+				const x0:Number = l_points[0].sx, y0: Number = l_points[0].sy,			
+					  a2:Number = l_points[1].sx - x0, b2:Number = l_points[1].sy - y0, 
+					  c2:Number = l_points[2].sx - x0, d2:Number = l_points[2].sy - y0;
 				// --
-				l_graphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
+				matrix.a = lUv.a*a2 + lUv.b*c2;
+				matrix.b = lUv.a*b2 + lUv.b*d2;
+				matrix.c = lUv.c*a2 + lUv.d*c2;
+				matrix.d = lUv.c*b2 + lUv.d*d2;
+				matrix.tx = lUv.tx*a2 + lUv.ty*c2 + x0;
+				matrix.ty = lUv.tx*b2 + lUv.ty*d2 + y0;
+				// --
+				lGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
 				// --
 				if( lineAttributes )
-					l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+					lGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 				// --
-				l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
+				lGraphics.moveTo( l_points[0].sx, l_points[0].sy );
 				// --
 				for each( var l_oPoint:Vertex in l_points )
-					l_graphics.lineTo( l_oPoint.sx, l_oPoint.sy);
+					lGraphics.lineTo( l_oPoint.sx, l_oPoint.sy );
 				//	
-				l_graphics.endFill();
+				lGraphics.endFill();
 			}
 		}
 		
@@ -127,9 +121,18 @@ package sandy.materials
 				_drawPolygon( p_aPoints, p_aUv, p_oGraphics );
 			}
 
-			const m:Matrix = _createTextureMatrix( l_uv );
+			const lUv:Matrix = _createTextureMatrix( l_uv );
 			// -- we prepare the texture
-			prepare( l_points, m );
+			const x0:Number = l_points[0].sx, y0: Number = l_points[0].sy,			
+				  a2:Number = l_points[1].sx - x0, b2:Number = l_points[1].sy - y0, 
+				  c2:Number = l_points[2].sx - x0, d2:Number = l_points[2].sy - y0;
+			// --
+			matrix.a = lUv.a*a2 + lUv.b*c2;
+			matrix.b = lUv.a*b2 + lUv.b*d2;
+			matrix.c = lUv.c*a2 + lUv.d*c2;
+			matrix.d = lUv.c*b2 + lUv.d*d2;
+			matrix.tx = lUv.tx*a2 + lUv.ty*c2 + x0;
+			matrix.ty = lUv.tx*b2 + lUv.ty*d2 + y0;
 			//
 			p_oGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
 			// --

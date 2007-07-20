@@ -88,8 +88,8 @@ package sandy.math
 		public static function pow( v:Vector, pow:Number ): Vector
 		{
 			return new Vector(	Math.pow( v.x, pow ) ,
-	                            Math.pow( v.x, pow ) ,
-	                            Math.pow( v.x, pow ) );
+	                            Math.pow( v.y, pow ) ,
+	                            Math.pow( v.z, pow ) );
 		}
 		/**
 		 * Compute the multiplication of the {@code Vector} and the scalar.

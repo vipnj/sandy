@@ -33,10 +33,10 @@
 		public static var USE_FAST_MATH:Boolean = false;
 		
 		/**
-		 * Compute the multiplication of 2 {@code Matrix4} but as they were 3x3 matrix.
+		 * Compute the multiplication of 2 {@code Matrix4} but as they were 3x3 Matrix4.
 		 *
-		 * @param {@code m1} a {@code Matrix}.
-		 * @param {@code m2} a {@code Matrix}.
+		 * @param {@code m1} a {@code Matrix4}.
+		 * @param {@code m2} a {@code Matrix4}.
 		 * @return The result of computation : a {@code Matrix4}.
 		 */
 		public static function multiply3x3(m1:Matrix4, m2:Matrix4) : Matrix4 
@@ -107,8 +107,8 @@
 		/**
 		 * Compute the multiplication of 2 {@code Matrix4}.
 		 *
-		 * @param {@code m1} a {@code Matrix}.
-		 * @param {@code m2} a {@code Matrix}.
+		 * @param {@code m1} a {@code Matrix4}.
+		 * @param {@code m2} a {@code Matrix4}.
 		 * @return The result of computation : a {@code Matrix4}.
 		 */
 		public static function multiply(m1:Matrix4, m2:Matrix4) : Matrix4 
@@ -149,11 +149,11 @@
 		/**
 		 * Compute an addition {@code Matrix4}.
 		 *
-		 * @param {@code m1} Matrix to add.
-		 * @param {@code m2} Matrix to add.
+		 * @param {@code m1} Matrix4 to add.
+		 * @param {@code m2} Matrix4 to add.
 		 * @return The result of computation : a {@code Matrix4}.
 		 */
-		public static function addMatrix(m1:Matrix4, m2:Matrix4): Matrix4
+		public static function addMatrix4(m1:Matrix4, m2:Matrix4): Matrix4
 		{
 			return new Matrix4
 			(
@@ -167,7 +167,7 @@
 		/**
 		 * Compute a clonage {@code Matrix4}.
 		 *
-		 * @param {@code m1} Matrix to clone.
+		 * @param {@code m1} Matrix4 to clone.
 		 * @return The result of clonage : a {@code Matrix4}.
 		 */
 		public static function clone(m:Matrix4):Matrix4
@@ -180,7 +180,7 @@
 		}
 		
 		/**
-		 * Compute a multiplication of a vertex and the matrix{@code Matrix4}.
+		 * Compute a multiplication of a vertex and the Matrix4{@code Matrix4}.
 		 *
 		 * @param {@code m} Matrix4.
 		 * @param {@code v} Vertex
@@ -195,7 +195,7 @@
 		}
 	
 		/**
-		 * Compute a multiplication of a vector and the matrix{@code Matrix4} 
+		 * Compute a multiplication of a vector and the Matrix4{@code Matrix4} 
 		 *    as there were of 3 dimensions.
 		 *
 		 * @param {@code m} Matrix4.
@@ -220,7 +220,7 @@
 		 */
 		public static function eulerRotation ( ax:Number, ay:Number, az:Number ) : Matrix4
 		{
-			var m:Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4();
 			ax = NumberUtil.toRadian(ax);
 			ay = NumberUtil.toRadian(ay);
 			az = NumberUtil.toRadian(az);
@@ -250,11 +250,11 @@
 		/**
 		 * 
 		 * @param angle Number angle of rotation in degrees
-		 * @return the computed matrix
+		 * @return the computed Matrix4
 		 */
 		public static function rotationX ( angle:Number ):Matrix4
 		{
-			var m:Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4();
 			angle = NumberUtil.toRadian(angle);
 			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
 			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
@@ -269,11 +269,11 @@
 		/**
 		 * 
 		 * @param angle Number angle of rotation in degrees
-		 * @return the computed matrix
+		 * @return the computed Matrix4
 		 */
 		public static function rotationY ( angle:Number ):Matrix4
 		{
-			var m:Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4()
 			angle = NumberUtil.toRadian(angle);
 			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
 			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
@@ -288,11 +288,11 @@
 		/**
 		 * 
 		 * @param angle Number angle of rotation in degrees
-		 * @return the computed matrix
+		 * @return the computed Matrix4
 		 */
 		public static function rotationZ ( angle:Number ):Matrix4
 		{
-			var m:Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4()
 			angle = NumberUtil.toRadian(angle);
 			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
 			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
@@ -327,7 +327,7 @@
 		 */
 		public static function axisRotation ( u:Number, v:Number, w:Number, angle:Number ) : Matrix4
 		{
-			var m:Matrix4 	= Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4()
 			angle = NumberUtil.toRadian( angle );
 			// -- modification pour verifier qu'il n'y ai pas un probleme de precision avec la camera
 			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
@@ -373,7 +373,7 @@
 		 */
 		public static function translation(nTx:Number, nTy:Number, nTz:Number) : Matrix4 
 		{
-			var m : Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4()
 			m.n14 = nTx;
 			m.n24 = nTy;
 			m.n34 = nTz;
@@ -395,7 +395,7 @@
 		 */
 		public static function translationVector( v:Vector ) : Matrix4 
 		{
-			var m : Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4()
 			m.n14 = v.x;
 			m.n24 = v.y;
 			m.n34 = v.z;
@@ -415,11 +415,11 @@
 		 * @param {@code nRotX} translation X.
 		 * @param {@code nRotY} translation Y.
 		 * @param {@code nRotZ} translation Z.
-		 * @return The result of computation : a {@code Matrix}.
+		 * @return The result of computation : a {@code Matrix4}.
 		 */
 		public static function scale(nXScale:Number, nYScale:Number, nZScale:Number) : Matrix4 
 		{
-			var matScale : Matrix4 = Matrix4.createIdentity();
+			var matScale : Matrix4 = new Matrix4();
 			matScale.n11 = nXScale;
 			matScale.n22 = nYScale;
 			matScale.n33 = nZScale;
@@ -437,11 +437,11 @@
 		 * </pre>
 		 *
 		 * @param {@code Vector} The vector containing the scale values
-		 * @return The result of computation : a {@code Matrix}.
+		 * @return The result of computation : a {@code Matrix4}.
 		 */
 		public static function scaleVector( v:Vector) : Matrix4 
 		{
-			var matScale : Matrix4 = Matrix4.createIdentity();
+			var matScale : Matrix4 = new Matrix4();
 			matScale.n11 = v.x;
 			matScale.n22 = v.y;
 			matScale.n33 = v.z;
@@ -449,7 +449,7 @@
 		}
 			
 		/**
-		* Compute the determinant of the 4x4 square matrix
+		* Compute the determinant of the 4x4 square Matrix4
 		* @param m a Matrix4
 		* @return Number the determinant
 		*/
@@ -467,8 +467,8 @@
 		}
 	
 		/**
-		 * Computes the trace of the matrix.
-		 * @param m Matrix4 The matrix we want to compute the trace
+		 * Computes the trace of the Matrix4.
+		 * @param m Matrix4 The Matrix4 we want to compute the trace
 		 * @return The trace value which is the sum of the element on the diagonal
 		 */
 		public static function getTrace( m:Matrix4 ):Number
@@ -477,8 +477,8 @@
 		}
 		
 		/**
-		* Return the inverse of the matrix passed in parameter.
-		* @param m The matrix4 to inverse
+		* Return the inverse of the Matrix4 passed in parameter.
+		* @param m The Matrix4 to inverse
 		* @return Matrix4 The inverse Matrix4
 		*/
 		public static function getInverse( m:Matrix4 ):Matrix4
@@ -487,7 +487,7 @@
 			var d:Number = Matrix4Math.det( m );
 			if( Math.abs(d) < 0.001 )
 			{
-				//We cannot invert a matrix with a null determinant
+				//We cannot invert a Matrix4 with a null determinant
 				return null;
 			}
 			//We use Cramer formula, so we need to devide by the determinant. We prefer multiply by the inverse

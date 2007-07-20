@@ -58,14 +58,15 @@ package sandy.bounds
 		*/ 	
 		public function BSphere()
 		{
-			center = new Vector(0,0,0);
-			m_oPosition = new Vector(0,0,0);
+			center = new Vector();
+			m_oPosition = new Vector();
 			radius = 1.0;
 		}
 		
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-	        m_oPosition = Matrix4Math.vectorMult( p_oMatrix, center );
+	        m_oPosition.copy( center );
+	        p_oMatrix.vectorMult( m_oPosition );
 	        //var l_ncale:Number = Math.sqrt( p_oMatrix.n11 * p_oMatrix.n11 + p_oMatrix.n22 * p_oMatrix.n22 + p_oMatrix.n33 * p_oMatrix.n33 );
 	        m_nTRadius = radius;// * l_ncale;
 	    }

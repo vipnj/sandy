@@ -146,6 +146,7 @@ package sandy.core.scenegraph
 		
 		public override function render( p_oCamera:Camera3D ):void
 		{
+			var l_bVisible:Boolean;
 			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
 	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
@@ -173,7 +174,8 @@ package sandy.core.scenegraph
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
-				if ( l_oFace.visible || !m_bBackFaceCulling) 
+				l_bVisible = l_oFace.visible;
+				if ( l_bVisible || !m_bBackFaceCulling) 
 				{
 					// we manage the clipping
 					if( m_bClipped )
@@ -433,6 +435,7 @@ package sandy.core.scenegraph
 		    		i++;
 		    	}
 	    	}
+	    	aPolygons.splice(0);
 	    }    
 	    private function __generatePolygons( p_oGeometry:Geometry3D ):void
 	    {

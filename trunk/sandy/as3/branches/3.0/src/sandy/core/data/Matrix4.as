@@ -304,8 +304,7 @@ package sandy.core.data
 				m132:Number = n32, m232:Number = m2.n32,
 				m113:Number = n13, m213:Number = m2.n13,
 				m123:Number = n23, m223:Number = m2.n23,
-				m133:Number = n33, m233:Number = m2.n33,
-				m214:Number = n14, m224:Number = m2.n24,	m234:Number = m2.n34;
+				m133:Number = n33, m233:Number = m2.n33, m214:Number = m2.n14, m224:Number = m2.n24, m234:Number = m2.n34;
 			
 			n11 = m111 * m211 + m112 * m221 + m113 * m231;
 			n12 = m111 * m212 + m112 * m222 + m113 * m232;

@@ -68,14 +68,15 @@ package
 			var g:Group = new Group("root");
 			var tg:TransformGroup = new TransformGroup("translation");
 			var box:Shape3D = new Box( "box", 100, 100, 100, "tri", quality );
-			box.z = 400;
+			box.z = 50;
 			box.enableBackFaceCulling = false;
 			box.enableClipping = true;
-			box.useSingleContainer = true;
+			box.useSingleContainer = false;
 			
 			var pic:Bitmap = new Texture();
 			box.appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ,
 											 new ColorMaterial( 0x00FF, 100, new LineAttributes( 1, 0x00FF00)) );
+			BitmapMaterial(box.appearance.frontMaterial).enableAccurateClipping = true;
 			// --			
 			tg.addChild( box );
 			g.addChild( tg );
@@ -83,7 +84,7 @@ package
 			world.root.addChild( world.camera );
 			// --
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
-			
+			//world.render();
 			
 			return;
 		}
@@ -122,9 +123,9 @@ package
 			// --
 			if( !keyPressed[Keyboard.SPACE] )
 			{
-				Shape3D(world.root.getChildByName("box", true)).rotateX += 1;
-				world.render();	
-			}
+				//Shape3D(world.root.getChildByName("box", true)).rotateX += 1;
+				world.render();
+			}	
 		}
 	}
 }

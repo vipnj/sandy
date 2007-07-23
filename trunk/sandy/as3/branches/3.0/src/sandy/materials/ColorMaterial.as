@@ -45,7 +45,7 @@ package sandy.materials
 				// --
 				var r:Number = ( l_nCol >> 16 )& 0xFF;
 				var g:Number = ( l_nCol >> 8 ) & 0xFF;
-				var b:Number = ( l_nCol ) 		& 0xFF;
+				var b:Number = ( l_nCol ) 	   & 0xFF;
 				// --
 				var dot:Number =  - ( VectorMath.dot( vl, vn ) );
 				r = NumberUtil.constrain( r*(dot+lp), 0, 255 );
@@ -54,7 +54,6 @@ package sandy.materials
 				// --
 				l_nCol =  r << 16 | g << 8 |  b;
 			}
-			
 			// --
 			l_graphics.beginFill( l_nCol, m_nAlpha );
 			// --
@@ -66,7 +65,7 @@ package sandy.materials
 			for each (var l_oVertex:Vertex in l_points )
 			{
 				l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-			}			
+			}
 			// --
 			l_graphics.endFill();
 		}

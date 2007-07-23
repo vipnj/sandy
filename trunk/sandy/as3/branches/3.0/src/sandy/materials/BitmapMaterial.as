@@ -39,9 +39,9 @@ package sandy.materials
 	 **/
 	public class BitmapMaterial extends Material
 	{
-		public var matrix:Matrix;
+		public var matrix:Matrix = new Matrix();
 		// --
-		public var smooth:Boolean;
+		public var smooth:Boolean = false;
 		
 		public var enableAccurateClipping:Boolean = false;
 	
@@ -58,9 +58,7 @@ package sandy.materials
 			lineAttributes = p_oLineAttr;
 			// --
 			texture = t;
-			smooth = false;
 			// --
-			matrix = new Matrix();
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
 		}
@@ -80,9 +78,9 @@ package sandy.materials
 				if( !l_points.length ) return;
 				// -- we prepare the texture
 				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
-				const x0:Number = l_points[0].sx, y0: Number = l_points[0].sy,			
-					  a2:Number = l_points[1].sx - x0, b2:Number = l_points[1].sy - y0, 
-					  c2:Number = l_points[2].sx - x0, d2:Number = l_points[2].sy - y0;
+				const x0:Number = p_oPolygon.vertices[0].sx, y0: Number = p_oPolygon.vertices[0].sy,			
+					  a2:Number = p_oPolygon.vertices[1].sx - x0, b2:Number = p_oPolygon.vertices[1].sy - y0, 
+					  c2:Number = p_oPolygon.vertices[2].sx - x0, d2:Number = p_oPolygon.vertices[2].sy - y0;
 				// --
 				matrix.a = lUv.a*a2 + lUv.b*c2;
 				matrix.b = lUv.a*b2 + lUv.b*d2;
@@ -143,6 +141,8 @@ package sandy.materials
 			// --
 			for each( var l_oPoint:Vertex in l_points )
 				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);
+			//	
+			p_oGraphics.endFill();
 		}	
 
 		

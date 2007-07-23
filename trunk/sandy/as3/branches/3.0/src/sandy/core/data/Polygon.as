@@ -64,7 +64,7 @@ package sandy.core.data
 		private var m_oAppearance:Appearance;
 		/** array of ID of uv coordinates in geometry object */
 		private var m_aUVCoords:Array;
-		private var m_bVisible:Boolean;
+		private var m_bVisible:Boolean = false;
 		
 		protected var m_nDepth:Number;
 		protected var m_oContainer:Sprite;
@@ -187,8 +187,15 @@ package sandy.core.data
 		public function display( p_oContainer:Sprite = null ):void
 		{
 			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite; 
-			if( m_bVisible ) m_oAppearance.frontMaterial.renderPolygon( this, lContainer );
-			else			 m_oAppearance.backMaterial.renderPolygon( this, lContainer );
+			// --
+			if( m_bVisible ) 
+			{
+				m_oAppearance.frontMaterial.renderPolygon( this, lContainer );
+			}
+			else
+			{
+				m_oAppearance.backMaterial.renderPolygon( this, lContainer );
+			}
 		}
 
 		public function get container():Sprite

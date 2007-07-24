@@ -31,7 +31,7 @@ package sandy.util
 		
 		/**
 		* @method getPointsOnQuadCurve
-		* @description Returns a point on a quadratic bezier curve with Robert Penner's optimization 
+		* Returns a point on a quadratic bezier curve with Robert Penner's optimization 
 		*				of the standard equation.
 		* @param p (Number) A percentage between [0-1]
 		* @param p1 (Vector)
@@ -77,7 +77,6 @@ package sandy.util
 		
 		/**
 		* @method getQuadControlPoints
-		* @description
 		* @param start Vector	The starting point
 		* @param middle Vector	The point where the curve goes throught
 		* @param end Vector 	The end point of the curve
@@ -95,7 +94,7 @@ package sandy.util
 		
 		/**
 		* @method getCubicControlPoints
-		* @description 	if anybody finds a generic method to compute control points 
+		* If anybody finds a generic method to compute control points 
 		* 				for bezier curves with n control points, 
 		* 				if only the points on the curve are given, please let us know!
 		* @param start (Vector)

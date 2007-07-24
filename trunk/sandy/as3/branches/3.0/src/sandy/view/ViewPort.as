@@ -5,8 +5,8 @@ package sandy.view
 	    /**
 		* Create a new ViewPort.
 		*
-		* @param: w a Number giving the width of the rendered screen
-		* @param: h a Number giving the height of the rendered screen
+		* @param w a Number giving the width of the rendered screen
+		* @param h a Number giving the height of the rendered screen
 		**/
 		public function ViewPort ( p_w:Number, p_h:Number )
 		{

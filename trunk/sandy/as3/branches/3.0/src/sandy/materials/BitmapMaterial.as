@@ -30,8 +30,7 @@ package sandy.materials
 	/**
 	 * BitmapMaterial
 	 * <p>
-	 * This class use a texturing method found on Papervision3D. See the original implementation of Face3D.as on Papervision3D library.
-	 * Basically its method unroll the concatenation of the matrix with an initial preparation to make sure the matrix is invertible.
+	 * This class goals is to display a bitmap onto the 3D shape polygons.
 	 * </p>
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		2.0
@@ -78,27 +77,28 @@ package sandy.materials
 				if( !l_points.length ) return;
 				// -- we prepare the texture
 				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
-				const x0:Number = p_oPolygon.vertices[0].sx, y0: Number = p_oPolygon.vertices[0].sy,			
-					  a2:Number = p_oPolygon.vertices[1].sx - x0, b2:Number = p_oPolygon.vertices[1].sy - y0, 
-					  c2:Number = p_oPolygon.vertices[2].sx - x0, d2:Number = p_oPolygon.vertices[2].sy - y0;
+				const x0:Number = l_points[0].sx, y0:Number = l_points[0].sy;
+				//--
+				m_oTmp.a = l_points[1].sx - x0;
+				m_oTmp.b = l_points[1].sy - y0;
+				m_oTmp.c = l_points[2].sx - x0;
+				m_oTmp.d = l_points[2].sy - y0;
+				m_oTmp.tx = x0;
+				m_oTmp.ty = y0;
 				// --
-				matrix.a = lUv.a*a2 + lUv.b*c2;
-				matrix.b = lUv.a*b2 + lUv.b*d2;
-				matrix.c = lUv.c*a2 + lUv.d*c2;
-				matrix.d = lUv.c*b2 + lUv.d*d2;
-				matrix.tx = lUv.tx*a2 + lUv.ty*c2 + x0;
-				matrix.ty = lUv.tx*b2 + lUv.ty*d2 + y0;
+				matrix = lUv.clone();
+				matrix.concat(m_oTmp);
 				// --
 				lGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
 				// --
 				if( lineAttributes )
 					lGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 				// --
-				lGraphics.moveTo( l_points[0].sx, l_points[0].sy );
+				lGraphics.moveTo( x0, y0 );
 				// --
 				for each( var l_oPoint:Vertex in l_points )
 					lGraphics.lineTo( l_oPoint.sx, l_oPoint.sy );
-				//	
+				//	--
 				lGraphics.endFill();
 			}
 		}
@@ -121,23 +121,24 @@ package sandy.materials
 
 			const lUv:Matrix = _createTextureMatrix( l_uv );
 			// -- we prepare the texture
-			const x0:Number = l_points[0].sx, y0: Number = l_points[0].sy,			
-				  a2:Number = l_points[1].sx - x0, b2:Number = l_points[1].sy - y0, 
-				  c2:Number = l_points[2].sx - x0, d2:Number = l_points[2].sy - y0;
+			const x0:Number = l_points[0].sx, y0:Number = l_points[0].sy;
+			//--
+			m_oTmp.a = l_points[1].sx - x0;
+			m_oTmp.b = l_points[1].sy - y0;
+			m_oTmp.c = l_points[2].sx - x0;
+			m_oTmp.d = l_points[2].sy - y0;
+			m_oTmp.tx = x0;
+			m_oTmp.ty = y0;
 			// --
-			matrix.a = lUv.a*a2 + lUv.b*c2;
-			matrix.b = lUv.a*b2 + lUv.b*d2;
-			matrix.c = lUv.c*a2 + lUv.d*c2;
-			matrix.d = lUv.c*b2 + lUv.d*d2;
-			matrix.tx = lUv.tx*a2 + lUv.ty*c2 + x0;
-			matrix.ty = lUv.tx*b2 + lUv.ty*d2 + y0;
+			matrix = lUv.clone();
+			matrix.concat(m_oTmp);
 			//
 			p_oGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
 			// --
 			if( lineAttributes )
 				p_oGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 			// --
-			p_oGraphics.moveTo( l_points[0].sx, l_points[0].sy );
+			p_oGraphics.moveTo( x0, y0 );
 			// --
 			for each( var l_oPoint:Vertex in l_points )
 				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);

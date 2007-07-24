@@ -60,6 +60,8 @@ package sandy.primitive
 		private var radius:Number;
 		private var height:Number;
 		
+		private var m_bIsTopExcluded:Boolean;
+		private var m_bIsBottomExcluded:Boolean;
 		/**
 		* Create a new Cylinder object.
 		* <p/>
@@ -79,7 +81,7 @@ package sandy.primitive
 		* <p/>
 		* If extra is not an object, it is ignored. All properties of the extra field are copied into the new instance. The properties specified with extra are publicly available.
 		*/
-		function Cylinder( p_sName:String, p_nRadius:Number, p_nHeight:Number, p_nSegmentsW:Number, p_nSegmentsH:Number, p_nTopRadius:Number )
+		function Cylinder( p_sName:String, p_nRadius:Number, p_nHeight:Number, p_nSegmentsW:Number, p_nSegmentsH:Number, p_nTopRadius:Number,p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false )
 		{
 			super( p_sName );
 	
@@ -90,6 +92,8 @@ package sandy.primitive
 			topRadius = (p_nTopRadius==0) ? radius : p_nTopRadius;
 	
 			var scale :Number = DEFAULT_SCALE;
+			m_bIsBottomExcluded = p_bExcludeBottom;
+			m_bIsTopExcluded = p_bExludeTop;
 			
 			geometry = generate();
 		}
@@ -162,7 +166,7 @@ package sandy.primitive
 						l_oGeometry3D.setFaceUVCoordsIds( nF, aP1uv, aP3uv, aP4uv );
 					}
 				}
-				if (j==0||j==(iVerNum-1)) 
+				if ((j==0 && !m_bIsTopExcluded) || ( j==(iVerNum-1) && !m_bIsBottomExcluded ) ) 
 				{
 					for (i=0;i<(iHorNum-2);i++) 
 					{

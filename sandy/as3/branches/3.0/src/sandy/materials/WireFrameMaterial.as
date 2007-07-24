@@ -18,40 +18,17 @@ package sandy.materials
 
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			var l_points:Array = p_oPolygon.vertices;
+			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			var l_graphics:Graphics = p_mcContainer.graphics;
 			// --
 			l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 			// --
 			l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
 			// --
-			switch( l_points.length )
+			for each (var l_oVertex:Vertex in l_points )
 			{
-				case 1 :
-					l_graphics.lineTo( l_points[0].sx+1, l_points[0].sy+1 );
-					break;
-				case 2 :
-					l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
-					break;
-				case 3 :
-					l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
-					l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
-					break;
-				case 4 :
-					l_graphics.lineTo( l_points[1].sx, l_points[1].sy );
-					l_graphics.lineTo( l_points[2].sx, l_points[2].sy );
-					l_graphics.lineTo( l_points[3].sx, l_points[3].sy );
-					break;
-				default :
-					var l:int = l_points.length;
-					while( --l > 0 )
-					{
-						l_graphics.lineTo( l_points[int(l)].sx, l_points[int(l)].sy);
-					}
-					break;
+				l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
 			}
-
-			l_graphics.lineTo( l_points[0].sx, l_points[0].sy );
 		}
 
 	}

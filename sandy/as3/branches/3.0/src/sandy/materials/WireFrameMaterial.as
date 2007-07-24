@@ -2,7 +2,7 @@ package sandy.materials
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-	
+	import sandy.core.data.Vertex;
 	import sandy.core.data.Polygon;
 	
 	public final class WireFrameMaterial extends Material

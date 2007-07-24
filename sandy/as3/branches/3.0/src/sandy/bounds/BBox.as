@@ -18,7 +18,6 @@ package sandy.bounds
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.math.Matrix4Math;
 	
 	/**
 	* BoundingBox object used to clip the object faster.

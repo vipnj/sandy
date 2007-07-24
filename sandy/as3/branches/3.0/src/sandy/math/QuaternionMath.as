@@ -185,7 +185,7 @@ package sandy.math
 			zz = q.z*q.z;
 			zw = q.z*q.w;
 	
-			var m:Matrix4 = Matrix4.createIdentity();
+			var m:Matrix4 = new Matrix4();
 	
 			m.n11  = 1 - 2 * ( yy + zz )	 	;
 			m.n12  = 	2 * ( xy + zw ) 		;
@@ -206,7 +206,7 @@ package sandy.math
 		public static function setByMatrix( m:Matrix4 ):Quaternion
 		{
 			var q:Quaternion = new Quaternion();
-			var t:Number = Matrix4Math.getTrace( m );
+			var t:Number = m.getTrace();
 			var m0:Number = m.n11; var m5:Number = m.n22; var m10:Number = m.n33;
 			var s:Number;
 			if( t > 0.0000001 )
@@ -248,7 +248,7 @@ package sandy.math
 	
 		public static function setAxisAngle( axe:Vector, angle:Number):Quaternion
 		{
-			VectorMath.normalize( axe );
+			axe.normalize();
 			var a2:Number = angle * 0.5;
 			var sa:Number = Math.sin( a2 ) ;
 			var q:Quaternion = new Quaternion();

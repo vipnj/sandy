@@ -147,7 +147,7 @@ package sandy.core.scenegraph
 		public override function render( p_oCamera:Camera3D ):void
 		{
 			var l_bVisible:Boolean;
-			var l_nDepth:Number=0, l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
+			var l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
 	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
 					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
@@ -171,6 +171,7 @@ package sandy.core.scenegraph
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly.splice(0);
+			m_nDepth = 0;
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
@@ -191,8 +192,8 @@ package sandy.core.scenegraph
 					if( l_oFace.getZMinimum() > 0 )
 					{
 						// -- if the object is set at a specific depth we change it, but add a small value that makes the sorting more accurate
-						if( !m_bEnableForcedDepth ) l_nDepth += l_oFace.getZAverage();
-						else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
+						if( !m_bEnableForcedDepth ) m_nDepth += l_oFace.getZAverage();
+						//else if( m_bUseSingleContainer ) l_oFace.depth = m_nForcedDepth;
 						
 						// -- we manage the display list depending on the mode choosen
 						if( m_bUseSingleContainer )
@@ -208,7 +209,7 @@ package sandy.core.scenegraph
 			if( m_bUseSingleContainer )
 			{
 				if(m_bEnableForcedDepth)m_nDepth = m_nForcedDepth;
-				else 					m_nDepth = l_nDepth/m_aVisiblePoly.length;
+				else 					m_nDepth /= m_aVisiblePoly.length;
 				p_oCamera.addToDisplayList( this );
 			}
 			// -- We project the vertices

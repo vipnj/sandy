@@ -77,12 +77,12 @@ package sandy.materials
 				if( !l_points.length ) return;
 				// -- we prepare the texture
 				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
-				const x0:Number = l_points[0].sx, y0:Number = l_points[0].sy;
+				const x0:Number = p_oPolygon.vertices[0].sx, y0:Number = p_oPolygon.vertices[0].sy;
 				//--
-				m_oTmp.a = l_points[1].sx - x0;
-				m_oTmp.b = l_points[1].sy - y0;
-				m_oTmp.c = l_points[2].sx - x0;
-				m_oTmp.d = l_points[2].sy - y0;
+				m_oTmp.a = p_oPolygon.vertices[1].sx - x0;
+				m_oTmp.b = p_oPolygon.vertices[1].sy - y0;
+				m_oTmp.c = p_oPolygon.vertices[2].sx - x0;
+				m_oTmp.d = p_oPolygon.vertices[2].sy - y0;
 				m_oTmp.tx = x0;
 				m_oTmp.ty = y0;
 				// --
@@ -94,7 +94,7 @@ package sandy.materials
 				if( lineAttributes )
 					lGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 				// --
-				lGraphics.moveTo( x0, y0 );
+				lGraphics.moveTo( l_points[0].sx, l_points[0].sy );
 				// --
 				for each( var l_oPoint:Vertex in l_points )
 					lGraphics.lineTo( l_oPoint.sx, l_oPoint.sy );
@@ -171,28 +171,7 @@ package sandy.materials
 			m.invert();
 			return m;
 		}
-		
-		/**
-		 * Start the rendering of the Skin
-		 * @param f	The face which is being rendered
-		 */
-		private function prepare( p_aVertices:Array, m:Matrix ):void
-		{
-			const l_aVertices:Array = p_aVertices;
-			// --
-			const 	x0:Number = l_aVertices[0].sx, y0: Number = l_aVertices[0].sy,			
-					a2:Number = l_aVertices[1].sx - x0, b2:Number = l_aVertices[1].sy - y0, 
-					c2:Number = l_aVertices[2].sx - x0, d2:Number = l_aVertices[2].sy - y0;
-			// --
-			matrix.a = m.a*a2 + m.b*c2;
-			matrix.b = m.a*b2 + m.b*d2;
-			matrix.c = m.c*a2 + m.d*c2;
-			matrix.d = m.c*b2 + m.d*d2;
-			matrix.tx = m.tx*a2 + m.ty*c2 + x0;
-			matrix.ty = m.tx*b2 + m.ty*d2 + y0;
-		}
-
-		
+				
 		public function get texture():BitmapData
 		{
 			return m_oTexture;

@@ -33,7 +33,8 @@ package sandy.materials
 		
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			const l_points:Array = p_oPolygon.vertices;
+			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
+			if( !l_points.length ) return;
 			const l_graphics:Graphics = p_mcContainer.graphics;
 			var l_nCol:uint = m_nColor;
 			if( _useLight )

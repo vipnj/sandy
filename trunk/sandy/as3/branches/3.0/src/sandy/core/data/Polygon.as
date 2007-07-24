@@ -156,7 +156,7 @@ package sandy.core.data
 		 */
 		public function getZAverage():Number
 		{
-			var l_aVert:Array = (isClipped) ? cvertices : vertices;
+			var l_aVert:Array = vertices;
 			m_nDepth = 0;
 			for each ( var v:Vertex in l_aVert )
 			{

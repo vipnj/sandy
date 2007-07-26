@@ -21,78 +21,79 @@ package sandy.primitive
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
 	
-	/**
-	* Box
-	*
-	* <p>Box is a primitiv Object3D, to easy build a Cube/Box.</p>
-	* 
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		12.07.2006
-	**/
+       	/**
+	 * Box is a primitive class for creating a cube or box ( cuboid ).
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 *
+	 * @example To create a rectilinear box with ( z, y, z ) dimensions ( 50, 100, 150 ),
+	 * created in 'tri' mode and a with a quality of 2, here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var myBox:Box = new Box( "theBox", 50, 100, 150, PrimitiveMode.TRI, 2 );
+	 *  </listing>
+	 */
 	public class Box extends Shape3D implements Primitive3D
 	{
 		/**
-		* height of the Box
-		*/ 
+		 * height of the Box
+		 */ 
 		private var _h	: Number;
 		/**
-		* depth of the Box
-		*/ 
+		 * depth of the Box
+		 */ 
 		private var _lg : Number;
 		/**
-		* wide of the Box
-		*/ 
-		private var _radius : Number ;
+		 * width of the Box
+		 */ 
+		private var _radius : Number;
+		/**
+		 * creation quality
+		 */ 		
 		private var _q:Number;
-		
-		/*
-		 * Mode with 3 or 4 points per face
+		/**
+		 * creation mode - number of vertices per face
 		 */
 		 private var _mode : String;
 	
 		
 		/**
-		* Constructor
-		*
-		* <p>This is the constructor to call when you nedd to create a Box primitiv.</p>
-		*
-		* <p>This method will create a complete object with vertex,
-		*    normales, texture coords and the faces.
-		*    So it allows to have a custom 3D object easily</p>
-		*
-		* @param rad a Number represent the wide of the Box
-		* @param h a Number represent the height of the Box
-		* @param lg a Number represent the depth of the Box
-		* @param mode String represent the two available modes to generates the faces.
-		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
-		*/
-		public function Box ( p_sName:String, rad:Number, h:Number = 6, lg:Number = 6, mode:String = "tri", quality:Number=1)
+		 * Creates a Box primitive.
+		 *
+		 * <p>The constructor will create a complete object with vertices,
+		 * normals, texture coordinates and faces.<br/>
+		 * By default, the Box is created centered at the origin of the world coordinate system,
+		 * and with its edges parallel to world coordinate axes.</p>
+		 *
+		 * @param name		a string identifier for this object
+		 * @param width 	width of the Box  ( x direction )
+		 * @param height	height of the Box ( y direction ) 
+		 * @param depth		depth of the Box  ( z direction )
+		 * @param mode 		one of two available face generation modes: 
+		 *                      "tri" generates faces with 3 vertices, 
+		 * 			"quad" generates faces with 4 vertices.
+		 */
+		public function Box ( name:String, width:Number=6, height:Number = 6, depth:Number = 6, mode:String = "tri", quality:Number=1)
 		{
-			super ( p_sName );
+			super ( name );
 			//
-			_h = h;
-			_lg = lg;
-			_radius = rad;
+			_h = height;
+			_lg = depth;
+			_radius = width;
 			_q = (quality <= 0 || quality > 10) ?  1 : quality ;
 			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
 			geometry = generate();
 		}
 		
 		/**
-		* generate
-		* 
-		* <p>Generate all is needed to construct the Object3D : </p>
-		* <ul>
-		* 	<li>{@link Vertex}</li>
-		* 	<li>{@link UVCoords}</li>
-		* 	<li>{@link TriFace3D}</li>
-		* </ul>
-		* <p>It can construct dynamically the object, taking care of your preferences given in arguments. <br/>
-		*    Note in Sandy 0.1 all faces have only three points.
-		*    This will change in the future version, 
-		*    and give to you the possibility to choose n points per faces</p> 
-		*/
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate (... arguments) :Geometry3D
 		{
 			// initialisation

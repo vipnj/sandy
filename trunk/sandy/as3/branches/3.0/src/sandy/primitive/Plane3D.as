@@ -72,17 +72,16 @@ package sandy.primitive
 		*/
 		public function generate( ...arguments ):Geometry3D
 		{
-			var l_geometry:Geometry3D = new Geometry3D();
+				var l_geometry:Geometry3D = new Geometry3D();
 			//Creation of the points
-			var uv1:int, uv2:int, uv3:int, uv4:int;
 			var h2:Number = _h/2;
 			var l2:Number = _lg/2;
-			var pasH:Number = _h/_qH;
-			var pasL:Number = _lg/_qV;
+			var pasH:Number = _h/_qV;
+			var pasL:Number = _lg/_qH;
 			
-			for( var iL:Number = -l2, iTL:Number = 0; iL < l2; iL += pasL, iTL += pasL )
+			for( var iH:Number = -h2, iTH:Number = 0; iH <= h2; iH += pasH, iTH += pasH )
 			{
-				for( var iH:Number = -h2, iTH:Number = 0; iH < h2; iH += pasH, iTH += pasH )
+				for( var iL:Number = -l2, iTL:Number = 0; iL <= l2; iL += pasL, iTL += pasL )
 				{	
 					if( m_sType == Plane3D.ZX_ALIGNED )
 					{
@@ -101,23 +100,23 @@ package sandy.primitive
 			}
 			
 				
-			for( var i:uint = 0; i < _qV-1; i++ )
+			for( var i:uint = 0; i < _qV; i++ )
 			{
-				for( var j:uint = 0; j < _qH-1; j++ )
+				for( var j:uint = 0; j < _qH; j++ )
 				{
 					//Face creation
 					if( _mode == PrimitiveMode.TRI )
 					{
-						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), (i*_qH)+j, (i*_qH)+j+1, (i+1)*_qH+j );
-						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), (i*_qH)+j, (i*_qH)+j+1, (i+1)*_qH+j );
-						
-						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), (i*_qH)+j+1, (i+1)*_qH+j+1, (i+1)*_qH+j );
-						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), (i*_qH)+j+1, (i+1)*_qH+j+1, (i+1)*_qH+j );
+						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), (i*(_qH+1))+j, (i*(_qH+1))+j+1, (i+1)*(_qH+1)+j );
+						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), (i*(_qH+1))+j, (i*(_qH+1))+j+1, (i+1)*(_qH+1)+j );
+						 
+						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), (i*(_qH+1))+j+1, (i+1)*(_qH+1)+j+1, (i+1)*(_qH+1)+j );
+						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), (i*(_qH+1))+j+1, (i+1)*(_qH+1)+j+1, (i+1)*(_qH+1)+j );
 					}
 					else if( _mode == PrimitiveMode.QUAD )
 					{
-						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), (i*_qH)+j, (i*_qH)+j+1, (i+1)*_qH+j+1, (i+1)*_qH+j );
-						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), (i*_qH)+j, (i*_qH)+j+1, (i+1)*_qH+j+1, (i+1)*_qH+j );
+						l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), (i*(_qH+1))+j, (i*(_qH+1))+j+1, (i+1)*(_qH+1)+j+1, (i+1)*(_qH+1)+j );
+						l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), (i*(_qH+1))+j, (i*(_qH+1))+j+1, (i+1)*(_qH+1)+j+1, (i+1)*(_qH+1)+j );
 					}
 				}
 			}

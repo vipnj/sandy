@@ -87,12 +87,13 @@ package
 			// -- create scen
 			var g:Group = new Group("root");
 
-			var lPlane:Plane3D = new Plane3D( "myPlane", 3500, 3500, 2, 2, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
-			lPlane.swapCulling();
+			var lPlane:Plane3D = new Plane3D( "myPlane", 1500, 1500, 2, 2, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
+			//lPlane.swapCulling();
+			lPlane.enableBackFaceCulling = false;
 			lPlane.enableClipping = true;
 			lPlane.appearance = new Appearance( new ColorMaterial( 0xd27e02) );
-			lPlane.x = 1000;
-			lPlane.z = 1000;
+			//lPlane.x = 1000;
+			//lPlane.z = 1000;
 			lPlane.enableForcedDepth = true;
 			lPlane.forcedDepth = 5000000;
 			

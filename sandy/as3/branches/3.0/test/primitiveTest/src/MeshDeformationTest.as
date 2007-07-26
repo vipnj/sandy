@@ -19,6 +19,7 @@ package
 	import sandy.materials.BitmapMaterial;
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.PrimitiveMode;
+	import sandy.materials.LineAttributes;
 
     [SWF(width="500", height="500", backgroundColor="#FFFFFF", frameRate="120")] 
     
@@ -70,10 +71,10 @@ package
 			var tg:TransformGroup = new TransformGroup("translation");
 			
 			var pic:Bitmap = new Texture();
-			var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData ) ); 
+			var l_oTextureAppearance:Appearance = new Appearance( new BitmapMaterial( pic.bitmapData, new LineAttributes() ) ); 
 			l_oTextureAppearance.frontMaterial.lightingEnable = true;
 			
-			mObj = new Plane3D("myPlane", 200, 200, 10, 10, Plane3D.YZ_ALIGNED, PrimitiveMode.TRI );
+			mObj = new Plane3D("myPlane", 200, 200, 2, 1, Plane3D.YZ_ALIGNED, PrimitiveMode.TRI );
 			//mObj = new Box("myBox", 100, 100, 100, "quad", 2 );
 			
 			mObj.z = 400;

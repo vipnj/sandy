@@ -422,6 +422,13 @@ package sandy.core.scenegraph
 			super.destroy();
 		}
 
+		/**
+		 * This method returns a clone of the Shape3D object
+		 */
+		public function clone( p_sName:String="" ):Shape3D
+		{
+			return new Shape3D( p_sName, geometry.clone(), appearance, m_bUseSingleContainer );
+		}
 	
 	    private function __destroyPolygons():void
 	    {

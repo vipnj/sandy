@@ -289,7 +289,7 @@ package sandy.core.scenegraph
 			
 			// Normals
 			i = 0;
-			for each( l_oVertex in aVertex )
+			for each( l_oVertex in aFacesNormals )
 			{
 				l_result.aFacesNormals[i] = l_oVertex.clone();
 				i++;

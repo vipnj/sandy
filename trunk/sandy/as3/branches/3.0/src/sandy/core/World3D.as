@@ -26,9 +26,9 @@ package sandy.core
 	import sandy.errors.SingletonError;
 	import sandy.events.SandyEvent;
 	
-	[Event(name="containerCreated", type="sandy.core.SandyEvent")]
-	[Event(name="lightAdded", type="sandy.core.SandyEvent")]
-	[Event(name="render", type="sandy.core.SandyEvent")]
+	[Event(name="containerCreated", type="sandy.events.SandyEvent")]
+	[Event(name="lightAdded", type="sandy.events.SandyEvent")]
+	[Event(name="render", type="sandy.events.SandyEvent")]
 		
 	/**
 	* The 3D world for displaying the Objects.

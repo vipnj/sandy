@@ -22,7 +22,7 @@ package sandy.core.light
 	import sandy.events.SandyEvent;
 	import sandy.util.NumberUtil;
 		
-	[Event(name="lightUpdated", type="sandy.core.SandyEvent")]
+	[Event(name="lightUpdated", type="sandy.events.SandyEvent")]
 	
 	/**
 	* @author		Thomas Pfeiffer - kiroukou

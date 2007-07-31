@@ -18,14 +18,24 @@ package sandy.primitive
 {
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-		
-	/**
-	* Hedra
-	*
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		2.0
-	* @date 		20.04.2007 
-	**/
+	
+	
+       	/**
+	 * The Hedra class is used for creating a hedra.
+	 * 
+	 * <p>A hedra can be seen as two pyramids joined at their bases</p>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 *
+	 * @example To create a hedra with ( y, x, z ) dimensions ( 100, 60, 80 ),
+	 * here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var myHedra:Hedra = new Hedra( "theObj", 100, 60, 80 );
+	 *  </listing>
+	 */
 	public class Hedra extends Shape3D implements Primitive3D
 	{
 		//////////////////
@@ -36,30 +46,32 @@ package sandy.primitive
 		private var _radius:Number ;
 
 		/**
-		* This is the constructor to call when you nedd to create an Hedra primitive.
-		* <p>This method will create a complete object with vertex, normales, texture coords and the faces.
-		*    So it allows to have a custom 3D object easily </p>
-		* <p>{@code h} represents the height of the Hedra, {@code lg} represent its length and {@code rad} its radius </p>
-		* @param 	h	Number
-		* @param 	lg	Number
-		* @param 	rad Number
-		*/	
-		public function Hedra ( p_sName:String, p_nH : Number, p_nLg : Number, p_nRad : Number )
+		 * Creates a Hedra primitive.
+		 *
+		 * <p>The Hedra is created centered at the origin of the world coordinate system,
+		 * and with its edges parallel to world coordinate axes.</p>
+		 *
+		 * @param	p_sName		A string identifier for this object
+		 * @param 	p_nHeight	Height ( y-direction )
+		 * @param 	p_nWidth	Width  ( x-direction )
+		 * @param 	p_nDepth	Depth  ( z-direction )
+		 */	
+		public function Hedra ( p_sName:String, p_nHeight : Number = 100, p_nWidth : Number = 100, p_nDepth : Number = 100 )
 		{
 			super (p_sName);
-			_radius = (p_nRad)?p_nRad:100;
-			_h = (p_nH)?p_nH:6 ;
-			_lg = (p_nLg)?p_nLg:6;
+			_radius = (p_nDepth)?p_nDepth:100;
+			_h = (p_nHeight)?p_nHeight:100 ;
+			_lg = (p_nWidth)?p_nWidth:100;
 			geometry = generate ();
 		}
 		
 		/**
-		* generate all is needed to construct the object. Vertex, UVCoords, Faces
-		* 
-		* <p>Generate the points, normales and faces of this primitive depending of tha parameters given</p>
-		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
-		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
-		*/ 
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate (... arguments):Geometry3D
 		{
 			var l_oGeometry3D:Geometry3D = new Geometry3D();
@@ -118,5 +130,9 @@ package sandy.primitive
 			return l_oGeometry3D;
 
 		}
+		public override function toString():String
+		{
+			return "sandy.primitive.Hedra";
+		}		
 	}
 }

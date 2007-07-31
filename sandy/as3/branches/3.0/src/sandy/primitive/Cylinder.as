@@ -4,9 +4,28 @@ package sandy.primitive
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
 	
-	/**
-	 * All credits goes to Tim Knip
-	 * Original source code is avialable at : http://suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Cylinder.as
+       	/**
+	 *
+	 * The Cylinder class is used for creating a cylinder primitive or a truncated cone.
+	 * All credits go to Tim Knipt from suite75.net who did the AS2 implementation.
+	 * Original sources available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Cone.as
+	 * 
+	 * @author		Thomas Pfeiffer
+	 * @author		Tim Knipt
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 *
+	 * @example To create a cylinder with a base radius of 150 and a height of 300,
+	 * with default number of faces, here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var cyl:Cylinder = new Cylinder( "theCylinder", 150, 300 );
+	 *  </listing>
+	 * To create a truncated cone, you pass a top radius value to the constructor
+	 * <listing version="3.0">
+	 *     var tCone:Cylinder = new Cylinder( "trunkCone", 150, 300, 0, 0, 40 );
+	 *  </listing>
+	 * You can exclude the top or bottom surfaces, by passing true values in the last two parameters.
 	 */
 	public class Cylinder extends Shape3D implements Primitive3D
 	{
@@ -21,37 +40,37 @@ package sandy.primitive
 		public var segmentsH :Number;
 	
 		/**
-		* Default radius of Cylinder if not defined.
+		* Default radius
 		*/
 		static public var DEFAULT_RADIUS :Number = 100;
 	
 		/**
-		* Default height if not defined.
+		* Default height
 		*/
 		static public var DEFAULT_HEIGHT :Number = 100;
 	
 		/**
-		* Default scale of Cylinder texture if not defined.
+		* Default scale of Cylinder texture
 		*/
 		static public var DEFAULT_SCALE :Number = 1;
 	
 		/**
-		* Default value of gridX if not defined.
+		* Default value for number of segments hoizontally
 		*/
 		static public var DEFAULT_SEGMENTSW :Number = 8;
 	
 		/**
-		* Default value of gridY if not defined.
+		* Default for number of segments vertically
 		*/
 		static public var DEFAULT_SEGMENTSH :Number = 6;
 	
 		/**
-		* Minimum value of gridX.
+		* Minimum value for number of segments hoizontally
 		*/
 		static public var MIN_SEGMENTSW :Number = 3;
 	
 		/**
-		* Minimum value of gridY.
+		* Minimum value for number of segments hoizontally
 		*/
 		static public var MIN_SEGMENTSH :Number = 2;
 	
@@ -62,26 +81,28 @@ package sandy.primitive
 		
 		private var m_bIsTopExcluded:Boolean;
 		private var m_bIsBottomExcluded:Boolean;
+
 		/**
-		* Create a new Cylinder object.
-		* <p/>
-		* @param	p_sName The name of the object
-		* <p/>
-		* @param	radius		[optional] - Desired radius.
-		* <p/>
+		* Creates a Cylinder primitive or truncated cone.
+		*
+		* <p>The cylinder is created at the origin of the world coordinate system, with its axis
+		* along the y axis, and with the bottom and top surfaces paralell to the zx plane</p>
+		*
+		* <p>Most arguments to the constructor have default values. If you pass in a top radius, 
+		* that is different from the bottom radius, a truncated cone is created.</br>
+		* By passing true values to one or both of p_bExcludeBottom and p_bExludeTop, 
+		* you exclude the bottom and/or top surfaces from being created.</p>
+		* 
+		* @param	p_sName 	A String identifier of this object
+		* @param	radius		[optional] - Desired radius. Defaults to 100
+		* @param	p_nHeight	[optional] - Desired height. Defaults to 100		
 		* @param	segmentsW	[optional] - Number of segments horizontally. Defaults to 8.
-		* <p/>
 		* @param	segmentsH	[optional] - Number of segments vertically. Defaults to 6.
-		* <p/>
-		* @param	topRadius	[optional] - An optional parameter for con- or diverging cylinders
-		* <p/>
-		* @param	initObject	[optional] - An object that contains user defined properties with which to populate the newly created GeometryObject3D.
-		* <p/>
-		* It includes x, y, z, rotationX, rotationY, rotationZ, scaleX, scaleY scaleZ and a user defined extra object.
-		* <p/>
-		* If extra is not an object, it is ignored. All properties of the extra field are copied into the new instance. The properties specified with extra are publicly available.
+		* @param	topRadius	[optional] - An optional parameter for cone- or diverging cylinders
+		* @param	p_bExcludeBottom[optional] - Exclude the creation of the bottom surface. Default false
+		* @param	p_bExludeTop	[optional] - Exclude the creation of the top surface. Default false
 		*/
-		function Cylinder( p_sName:String, p_nRadius:Number, p_nHeight:Number, p_nSegmentsW:Number, p_nSegmentsH:Number, p_nTopRadius:Number,p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false )
+		function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false )
 		{
 			super( p_sName );
 	
@@ -97,7 +118,14 @@ package sandy.primitive
 			
 			geometry = generate();
 		}
-	
+		
+		/**
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate(... arguments):Geometry3D
 		{
 			var l_oGeometry3D:Geometry3D = new Geometry3D();
@@ -205,5 +233,9 @@ package sandy.primitive
 			// --
 			return l_oGeometry3D;
 		}
+		public override function toString():String
+		{
+			return "sandy.primitive.Cylinder";
+		}		
 	}
 }

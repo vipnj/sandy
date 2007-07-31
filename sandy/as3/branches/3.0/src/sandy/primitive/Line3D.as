@@ -18,32 +18,37 @@ package sandy.primitive
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
 	
-	/**
-	* Line3D
-	* <p>Line3D, or how to create a simple line in Sandy</p>
-	* 
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		2.0
-	* @date 		20.04.2007 
-	**/
+       	/**
+	 * The Line3D class is used for creating a line in 3D space
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 *
+	 * @example To create a line between ( x0, y0, z0 ), ( x1, y1, z1 ), ( x2, y2, z3 ),
+	 * here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var myLine:Line3D = new Line3D( "aLine", new Vector(x0, y0, z0), new Vector( x1, y1, z1 ), new Vector( x2, y2, z3 ));
+	 *  </listing>
+	 */
 	public class Line3D extends Shape3D implements Primitive3D
 	{
 		/**
-		* Constructor
+		* Creates a Line3D primitive
 		*
-		* <p>This is the constructor to call when you nedd to create a Line3D primitiv.</p>
+		* <p>A line is drawn between points in the order they are passed. 
+		* You can pass as many points as you want, with a minimum of two.</p>
 		*
-		* <p>This method will create a complete object with vertex,
-		*    and the faces.</p>
-		*
-		* @param As many parameters as needed points can be passed. However a minimum of 2 vector instance must be given.
+		* @param p_sName	A string identifier for this object
+		* @param p_V1 ... p_Vn  A comma argumentlist delimited list of Vector objects
 		*/
 		public function Line3D ( p_sName:String, ...rest )
 		{
 			super ( p_sName );
 			if( rest.length < 2 )
 			{
-				trace('Line3D::Number of arguments to low');
+				trace('Line3D::Too few arguments');
 			}
 			else
 			{
@@ -53,10 +58,12 @@ package sandy.primitive
 		}
 		
 		/**
-		* generate
-		* 
-		* <p>Generate all is needed to construct the Line3D : </p>
-		*/
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate ( ... arguments ) : Geometry3D
 		{
 			var l_oGeometry:Geometry3D = new Geometry3D();

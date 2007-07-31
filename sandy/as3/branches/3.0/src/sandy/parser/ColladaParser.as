@@ -16,6 +16,7 @@ package sandy.parser
 	import sandy.math.Matrix4Math;
 	import sandy.util.LoaderQueue;
 	import sandy.util.NumberUtil;
+	import sandy.core.data.Vertex;
 	
 	public class ColladaParser extends AParser implements IParser
 	{
@@ -185,7 +186,7 @@ package sandy.parser
 					);		
 				}
 			}
-			/*
+			
 			// -- get normals float array 		
 			var l_sNormalsID : String = l_oTriangles.input.( @semantic == "NORMAL" ).@source.split("#")[1];
 			var l_aNormalFloats : Array = getFloatArray( l_sNormalsID, l_oGeometry );
@@ -196,16 +197,13 @@ package sandy.parser
 			{
 				var l_oNormal:Object = l_aNormalFloats[ i ];
 				
-				l_oOutpGeom.setVertexNormal( 
-					i, 
+				l_oOutpGeom.aVertexNormals[ i ] = new Vertex( 
 					l_oNormal.x, 
-					l_oNormal.y,
-					l_oNormal.z
+					l_oNormal.z,
+					l_oNormal.y
 				);
 			} 
 			
-			
-			*/
 			l_aTriangles = convertTriangleArray( l_oTriangles.input, l_aTriangles, l_nCount );
 			var l_nTriangeLength : int = l_aTriangles.length;
 			

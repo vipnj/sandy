@@ -22,7 +22,7 @@ package sandy.primitive
 	import sandy.core.scenegraph.Shape3D;
 	
        	/**
-	 * Box is a primitive class for creating a cube or box ( cuboid ).
+	 * The Box class is used for creating a cube or box primitive ( cuboid ).
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
@@ -56,34 +56,32 @@ package sandy.primitive
 		/**
 		 * creation mode - number of vertices per face
 		 */
-		 private var _mode : String;
+		private var _mode : String;
 	
 		
 		/**
 		 * Creates a Box primitive.
 		 *
-		 * <p>The constructor will create a complete object with vertices,
-		 * normals, texture coordinates and faces.<br/>
-		 * By default, the Box is created centered at the origin of the world coordinate system,
+		 * <p>The Box is created centered at the origin of the world coordinate system,
 		 * and with its edges parallel to world coordinate axes.</p>
 		 *
-		 * @param name		a string identifier for this object
-		 * @param width 	width of the Box  ( x direction )
-		 * @param height	height of the Box ( y direction ) 
-		 * @param depth		depth of the Box  ( z direction )
-		 * @param mode 		one of two available face generation modes: 
+		 * @param p_sName	A string identifier for this object
+		 * @param p_nWidth 	Width of the Box  ( x direction ) - Default 6
+		 * @param p_nHeight	Height of the Box ( y direction ) - Default 6 
+		 * @param p_nDepth	Depth of the Box  ( z direction ) - Default 6
+		 * @param p_sMode	One of two available face generation modes: 
 		 *                      "tri" generates faces with 3 vertices, 
 		 * 			"quad" generates faces with 4 vertices.
 		 */
-		public function Box ( name:String, width:Number=6, height:Number = 6, depth:Number = 6, mode:String = "tri", quality:Number=1)
+		public function Box ( p_sName:String = null, p_nWidth:Number=6, p_nHeight:Number = 6, p_nDepth:Number = 6, p_sMode:String = "tri", p_nQuality:Number=1)
 		{
-			super ( name );
+			super ( p_sName );
 			//
-			_h = height;
-			_lg = depth;
-			_radius = width;
-			_q = (quality <= 0 || quality > 10) ?  1 : quality ;
-			_mode = ( mode != 'tri' && mode != 'quad' ) ? 'tri' : mode;
+			_h = p_nHeight;
+			_lg = p_nDepth;
+			_radius = p_nWidth;
+			_q = (p_nQuality <= 0 || p_nQuality > 10) ?  1 : p_nQuality ;
+			_mode = ( p_sMode != 'tri' && p_sMode != 'quad' ) ? 'tri' : p_sMode;
 			geometry = generate();
 		}
 		
@@ -172,9 +170,9 @@ package sandy.primitive
 		}
 		
 		private function __tesselate( 	p_geometry:Geometry3D,
-										p0:Number, p1:Number, p2:Number, p3:Number,
-										uv0:Number, uv1:Number, uv2:Number, uv3:Number,
-										level:Number):void
+						p0:Number, p1:Number, p2:Number, p3:Number,
+						uv0:Number, uv1:Number, uv2:Number, uv3:Number,
+						level:Number):void
 		{
 			var l_geometry:Geometry3D = p_geometry;
 			
@@ -269,5 +267,9 @@ package sandy.primitive
 				
 			}
 		}
+		public override function toString():String
+		{
+			return "sandy.primitive.Box";
+		}		
 	}
 }

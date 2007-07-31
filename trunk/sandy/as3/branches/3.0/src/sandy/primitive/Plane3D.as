@@ -19,12 +19,23 @@ package sandy.primitive
 	import sandy.core.scenegraph.Shape3D;
 
 	/**
-	* Plane3D
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		2
-	* @date 		12.01.2006 
-	**/
+	 * The Plane3D is used for creating a plane primitive
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		2
+	 * @date 		12.01.2006 
+	 *
+	 * @example To create a plane 100 by 100, with default number of faces,
+	 * and the default quality and alignment here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var plane:Plane3D = new Plane3D( "thePlane", 100, 100 );
+	 *  </listing>
+	 * To create the same plane aligned paralell to the zx-plane use:
+	 * <listing version="3.0">
+	 *     var plane:Plane3D = new Plane3D( "thePlane", 100, 100, 1, 1, Plane3D.XY_ALIGNED );
+	 *  </listing>
+	 */
 	public class Plane3D extends Shape3D implements Primitive3D
 	{
 		public static const XY_ALIGNED:String = "xy_aligned";
@@ -41,35 +52,40 @@ package sandy.primitive
 		private var _mode : String;
 		
 		/**
-		* This is the constructor to call when you nedd to create an Vertical Plane primitive.
-		* <p>This method will create a complete object with vertex, normales, texture coords and the faces.
-		*    So it allows to have a custom 3D object easily </p>
-		* <p>{@code h} represents the height of the Plane, {@code lg} represent its length and {@code q} the quality, so the number of parts the surface will be sliced on. The plane will be located at z coordinate set to 0</p>
-		* @param 	w 	Number
-		* @param 	lg 	Number
-		* @param 	q 	Number Between 1 and 10
-		* @param 	mode String represent the two available modes to generates the faces.
-		* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
-		*/
-		public function Plane3D( p_Name:String=null, h:Number = 100, lg:Number = 100, qH:uint = 1, qV:uint=1, p_sType:String = Plane3D.XY_ALIGNED, mode:String = PrimitiveMode.TRI )
+		 * Creates a Plane primitive.
+		 * 
+		 * <p>The plane is vreated with its center in the origin of the global coordinate system, 
+		 * and paralell to one of the global coordinate planes in accordance with the alignment parameter<br/>
+		 * The plane is divided in rectangular or triangular polygons</p> 
+		 *
+		 * @param 	p_nHeight	
+		 * @param 	p_nWidth
+		 * @param 	p_nQualityH 	Number of segments horizontally
+		 * @param	p_nQualityV	Number of segments vertically
+		 * @param	p_sType		Alignment of the plane, one of XY_ALIGNED ( default ), YZ_ALIGNED or ZX_ALIGNED
+		 * @param 	p_sMode 	One of two available face generation modes: 
+		 *    	                  	"tri" generates faces with 3 vertices, 
+		 * 				"quad" generates faces with 4 vertices.
+		 */
+		public function Plane3D( p_sName:String=null, p_nHeight:Number = 100, p_nWidth:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint=1, p_sType:String = Plane3D.XY_ALIGNED, p_sMode:String = PrimitiveMode.TRI )
 		{
-			super( p_Name ) ;
-			_h = h;
-			_lg = lg;
-			_qV = qV;
-			_qH = qH;
-			_mode = ( mode != PrimitiveMode.TRI && mode != PrimitiveMode.QUAD ) ? PrimitiveMode.TRI : mode;
+			super( p_sName ) ;
+			_h = p_nHeight;
+			_lg = p_nWidth;
+			_qV = p_nQualityV;
+			_qH = p_nQualityH;
+			_mode = ( p_sMode != PrimitiveMode.TRI && p_sMode != PrimitiveMode.QUAD ) ? PrimitiveMode.TRI : p_sMode;
 			m_sType = p_sType;
 			geometry = generate() ;
 		}
 
 		/**
-		* generate all is needed to construct the object. Vertex, UVCoords, Faces
-		* 
-		* <p>Generate the points, normales and faces of this primitive depending of tha parameters given</p>
-		* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
-		*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
-		*/
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate( ...arguments ):Geometry3D
 		{
 				var l_geometry:Geometry3D = new Geometry3D();

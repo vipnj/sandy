@@ -110,7 +110,7 @@ package sandy.primitive
 			this.segmentsH = Math.max( MIN_SEGMENTSH, p_nSegmentsH || DEFAULT_SEGMENTSH); // Defaults to 6
 			radius = (p_nRadius==0) ? DEFAULT_RADIUS : p_nRadius; // Defaults to 100
 			height = (p_nHeight==0) ? DEFAULT_HEIGHT : p_nHeight; // Defaults to 100
-			topRadius = (p_nTopRadius==0) ? radius : p_nTopRadius;
+			topRadius = (p_nTopRadius==undefined) ? radius : p_nTopRadius;
 	
 			var scale :Number = DEFAULT_SCALE;
 			m_bIsBottomExcluded = p_bExcludeBottom;

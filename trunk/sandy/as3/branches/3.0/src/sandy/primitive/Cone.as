@@ -6,10 +6,10 @@ package sandy.primitive
 	 * 
 	 * <p>This class is a special case of the Cylinder class, with an top radius of 0</p>
 	 *
-	 * <p>All credits go to Tim Knipt from suite75.net who did the AS2 implementation.
+	 * <p>All credits go to Tim Knipt from suite75.net who created the AS2 implementation.
 	 * Original sources available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Cone.as</p>
 	 *
-	 * @author		Thomas Pfeiffer
+	 * @author		Thomas Pfeiffer ( adaption for Sandy )
 	 * @author		Tim Knipt
 	 * @version		3.0
 	 * @date 		26.07.2007

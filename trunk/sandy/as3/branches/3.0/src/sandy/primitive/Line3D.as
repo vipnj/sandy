@@ -19,7 +19,11 @@ package sandy.primitive
 	import sandy.core.scenegraph.Shape3D;
 	
        	/**
-	 * The Line3D class is used for creating a line in 3D space
+	 * The Line3D class is used for creating a line in 3D space.
+	 *
+	 * <p>The line is created by passing a comma delimited argument list
+	 * containing points in space as vectors.<br/>
+	 * A Line3D object can only use the WireFrameMaterial[?]</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
@@ -35,14 +39,14 @@ package sandy.primitive
 	public class Line3D extends Shape3D implements Primitive3D
 	{
 		/**
-		* Creates a Line3D primitive
-		*
-		* <p>A line is drawn between points in the order they are passed. 
-		* You can pass as many points as you want, with a minimum of two.</p>
-		*
-		* @param p_sName	A string identifier for this object
-		* @param p_V1 ... p_Vn  A comma argumentlist delimited list of Vector objects
-		*/
+		 * Creates a Line3D primitive
+		 *
+		 * <p>A line is drawn between points in the order they are passed.<br/> 
+		 * You can pass as many points as you want, with a minimum of two.</p>
+		 *
+		 * @param p_sName	A string identifier for this object
+		 * @param ...rest 	p_V1 ... p_Vn  A comma delimited list of Vector objects
+		 */
 		public function Line3D ( p_sName:String, ...rest )
 		{
 			super ( p_sName );

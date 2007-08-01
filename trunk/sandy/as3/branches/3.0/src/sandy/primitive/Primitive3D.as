@@ -15,17 +15,26 @@ limitations under the License.
 */
 package sandy.primitive 
 {
+	import sandy.core.scenegraph.Geometry3D;
+	
 	/**
-	* Primitive3D
-	* <p>This is only an interface, to be sure all primitives Object have implements needed methods</p>
+	* An interface implemented by all 3D primitive classes.
+	*
+	* <p>This is to ensure that all primitives classes implements the necessary method(s)</p>
+	*
 	* @author		Thomas Pfeiffer - kiroukou
 	* @version		3.0
 	* @date 		10/05/2007 
-	**/
-	import sandy.core.scenegraph.Geometry3D;
-	
+	**/	
 	public interface Primitive3D
 	{
+		/**
+		 * Generates the geometry for this Shape3D.
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */	
 		function generate(... arguments):Geometry3D;
 	}
 }

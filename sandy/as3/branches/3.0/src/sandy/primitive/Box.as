@@ -267,6 +267,7 @@ package sandy.primitive
 				
 			}
 		}
+		
 		public override function toString():String
 		{
 			return "sandy.primitive.Box";

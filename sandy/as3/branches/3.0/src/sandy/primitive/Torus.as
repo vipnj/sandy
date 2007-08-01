@@ -4,21 +4,34 @@ package sandy.primitive
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
 	
-	/**
-	 * Original code and credits goes to Tim Knip
-	 * Original code available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Torus.as
+       	/**
+	 * The Torus class is used for creating a torus primitive.
+	 *
+	 * <p>All credits go to Tim Knipt from suite75.net who created the AS2 implementation.
+	 * Original sources available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Torus.as</p>
 	 * 
-	 * @author adapted by thomas pfeiffer to the sandy engine
+	 * @author		Thomas Pfeiffer ( adaption for Sandy )
+	 * @author		Tim Knipt
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 *
+	 * @example To create a torus with a large radius of 250, a small radius of 80,
+	 * and with default settings for the horizontal and vertical number of segments, 
+	 * here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var torus:Torus = new Torus( "theTorus", 250, 80 );
+	 *  </listing>
 	 */
 	public class Torus extends Shape3D implements Primitive3D 
 	{
 		/**
-		 * large radius
+		 * Large radius. Defaults to 100
 		 */
 		public var largeRadius:Number;
 		
 		/**
-		 * small radius
+		 * Small radius. Defaults to 50
 		 */
 		public var smallRadius:Number;
 		
@@ -38,42 +51,55 @@ package sandy.primitive
 		public var segmentsH :Number;
 	
 		/**
-		* Default large radius of Torus if not defined.
+		* Default large radius of Torus
 		*/
 		static public var DEFAULT_LARGE_RADIUS :Number = 100;
 	
 		/**
-		* Default small radius of Torus if not defined.
+		* Default small radius of Torus
 		*/
 		static public var DEFAULT_SMALL_RADIUS :Number = 50;
 	
 		/**
-		* Default scale of Torus texture if not defined.
+		* Default scale of Torus texture
 		*/
 		static public var DEFAULT_SCALE :Number = 1;
 	
 		/**
-		* Default value of gridX if not defined.
+		* Default value for number of segments horizontally
 		*/
 		static public var DEFAULT_SEGMENTSW :Number = 12;
 	
 		/**
-		* Default value of gridY if not defined.
+		* Default value for number of segments vertically
 		*/
 		static public var DEFAULT_SEGMENTSH :Number = 8;
 	
 		/**
-		* Minimum value of gridX.
+		* Minimum value for number of segments horizontally
 		*/
 		static public var MIN_SEGMENTSW :Number = 3;
 	
 		/**
-		* Minimum value of gridY.
+		* Minimum value for number of segments vertically
 		*/
 		static public var MIN_SEGMENTSH :Number = 2;
 	
-		
-		public function Torus( p_sName : String, p_nLargeRadius:Number, p_nSmallRadius:Number, p_nSegmentsW:Number, p_nSegmentsH:Number )
+		/**
+		 * Creates a Torus primitive ( a donut )
+		 *
+		 * <p>The Torus is created centered at the origin of the world coordinate system, 
+		 * with its axis along the y axis. </p>
+		 *
+		 * <p>All arguments to the constructor have default values.</p>
+		 * 
+		 * @param	p_sName 	A String identifier of this object
+		 * @param	p_nLargeRadius	[optional] - Large radius ( center circle ). Defaults to 100
+		 * @param	p_nSmallRadius	[optional] - Small radius ( generating circle ). Defaults to 50
+		 * @param	p_nSegmentsW	[optional] - Number of segments horizontally. Defaults to 8.
+		 * @param	p_nSegmentsH	[optional] - Number of segments vertically. Defaults to 6.
+		 */
+		public function Torus( p_sName : String=null, p_nLargeRadius:Number=100, p_nSmallRadius:Number=50, p_nSegmentsW:Number=12, p_nSegmentsH:Number=8 )
 		{
 			super(p_sName);
 			// --
@@ -84,7 +110,14 @@ package sandy.primitive
 			// --
 			geometry = generate();
 		}
-	
+
+		/**
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate(... arguments) : Geometry3D 
 		{
 			var l_oGeometry:Geometry3D = new Geometry3D();
@@ -186,5 +219,9 @@ package sandy.primitive
 			
 			return [v, n];
 		}
+		public override function toString():String
+		{
+			return "sandy.primitive.Torus";
+		}				
 	}
 }

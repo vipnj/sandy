@@ -17,6 +17,20 @@ package sandy.primitive
 {
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
+       	/**
+	 * The Sphere class is used for creating a sphere primitive
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 *
+	 * @example To create a sphere with radius 150 and with default settings
+	 * for the horizontal and vertical number of segments, here is the statement:
+	 *
+	 * <listing version="3.0">
+	 *     var mySphere:Sphere = new Sphere( "theSphere", 150);
+	 *  </listing>
+	 */
 	
 	
 	/**
@@ -41,44 +55,47 @@ package sandy.primitive
 		public var segmentsH :Number;
 	
 		/**
-		* Default radius of Sphere if not defined.
+		* Default radius
 		*/
 		static public var DEFAULT_RADIUS :Number = 100;
 	
 		/**
-		* Default scale of Sphere texture if not defined.
+		* Default scale
 		*/
 		static public var DEFAULT_SCALE :Number = 1;
 	
 		/**
-		* Default value of gridX if not defined.
+		* Default value for number of segments horizontally
 		*/
 		static public var DEFAULT_SEGMENTSW :Number = 8;
 	
 		/**
-		* Default value of gridY if not defined.
+		* Default value for number of segments vertically
 		*/
 		static public var DEFAULT_SEGMENTSH :Number = 6;
 	
 		/**
-		* Minimum value of gridX.
+		* Minimum value for number of segments horizontally
 		*/
 		static public var MIN_SEGMENTSW :Number = 3;
 	
 		/**
-		* Minimum value of gridY.
+		* Minimum value for number of segments vertically
 		*/
 		static public var MIN_SEGMENTSH :Number = 2;
 	
 		/**
-		* Create a new Sphere object.
-		* @param	radius		[optional] - Desired radius.
-		* <p/>
-		* @param	segmentsW	[optional] - Number of segments horizontally. Defaults to 8.
-		* <p/>
-		* @param	segmentsH	[optional] - Number of segments vertically. Defaults to 6.
+		* Creates a Sphere primitive.
+		*
+		* <p>The sphere is created centered at the origin of the world coordinate system, 
+		* with its poles on the y axis</p>
+		*
+		* @param	p_sName 	A String identifier of this object
+		* @param	p_nRadius	[optional] - Desired radius.
+		* @param	p_nSegmentsW	[optional] - Number of segments horizontally. Defaults to 8.
+		* @param	p_nSegmentsH	[optional] - Number of segments vertically. Defaults to 6.
 		*/
-		function Sphere( p_sName:String , p_nRadius:Number, p_nSegmentsW:Number, p_nSegmentsH:Number )
+		function Sphere( p_sName:String=null , p_nRadius:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6 )
 		{
 			super( p_sName );
 			// --
@@ -90,7 +107,15 @@ package sandy.primitive
 			// --
 			geometry = generate();
 		}
-	
+
+
+		/**
+		 * Generates the geometry for this Shape3D
+		 *
+		 * @see sandy.core.data.Vertex
+		 * @see sandy.core.data.UVCoord
+		 * @see sandy.core.data.Polygon
+		 */
 		public function generate(... arguments):Geometry3D
 		{
 			var l_oGeometry:Geometry3D = new Geometry3D();
@@ -168,5 +193,10 @@ package sandy.primitive
 			// --
 			return l_oGeometry;
 		}
+		public override function toString():String
+		{
+			return "sandy.primitive.Sphere";
+		}		
+
 	}
 }

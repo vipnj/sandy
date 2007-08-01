@@ -27,7 +27,7 @@ package
 		internal static const SCREEN_WIDTH:int = 500;
 		internal static const SCREEN_HEIGHT:int = 500;
 		internal static const NUMBER:int = 60;
-		internal static const RADIUS:int = 1200;
+		internal static const RADIUS:int = 200;
 		
 		public const swfFile:String = "assets/texture.jpg";
 
@@ -96,12 +96,12 @@ package
         {
             var g:Group = new Group();
             var loader:URLLoader = URLLoader(event.target);
-            //var lStep:Number = 2*Math.PI / NUMBER;
+            var lStep:Number = 2*Math.PI / NUMBER;
 			for( var i:int = 0; i < NUMBER; i++ )
 			{
 				var lSprite:Sprite2D = createSprite( loader );
-				lSprite.x = Math.random() * 4000 * (Math.random()-0.5);//Math.cos( i * lStep ) * RADIUS;
-				lSprite.z = Math.random() * 4000 * (Math.random()-0.5);//Math.sin( i * lStep ) * RADIUS;
+				lSprite.x = /*Math.random() * 4000 * (Math.random()-0.5);*/Math.cos( i * lStep ) * RADIUS;
+				lSprite.z = /*Math.random() * 4000 * (Math.random()-0.5);*/Math.sin( i * lStep ) * RADIUS;
 				g.addChild( lSprite );
 			}
 			// --

@@ -30,8 +30,8 @@ import sandy.primitive.Primitive3D;
 * @author		Nicolas Coevoet - [ NikO ]
 * @author		Bruce Epstein 	- zeusprod
 * @since		0.1
-* @version		1.2.1
-* @date 		12.04.2007 
+* @version		1.2.2
+* @date 		02.08.2007 
 **/
 
 class sandy.primitive.Plane3D extends Object3D implements Primitive3D
@@ -47,6 +47,8 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	 */
 	private var _mode : String;
 	
+	private var _mirror : Boolean; // If true, mirror the image, as was the case in old versions of Sandy 1.2 (defaults to false)
+	
 	/**
 	* This is the constructor to call when you nedd to create an Vertical Plane primitive.
 	* <p>This method will create a complete object with vertex, normales, texture coords and the faces.
@@ -58,13 +60,15 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	* @param 	mode String represent the two available modes to generates the faces.
 	* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 	*/
-	public function Plane3D(h:Number,lg:Number,q:Number, mode:String)
+	public function Plane3D(h:Number,lg:Number,q:Number, mode:String, mirror:Boolean)
 	{
 		super( ) ;
 		_h = (undefined == h) ? 6 : Number(h) ;
 		_lg =  (undefined == lg) ?  6 : Number(lg) ;
 		_q = (undefined == q || q <= 0 || q > 10) ?  1 : Number(q) ;
 		_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
+		_mirror = ( undefined == mirror ) ? false : mirror;
+	
 		generate() ;
 	}
 
@@ -72,8 +76,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	* generate all is needed to construct the object. Vertex, UVCoords, Faces
 	* 
 	* <p>Generate the points, normales and faces of this primitive depending of tha parameters given</p>
-	* <p>It can construct dynamically the object, taking care of your preferences givent in parameters. Note that for now all the faces have only three points.
-	*    This point will certainly change in the future, and give to you the possibility to choose 3 or 4 points per faces</p>
+	* <p>It can construct dynamically the object, taking care of your preferences givent in parameters.</p>
 	*/
 	public function generate(Void):Void
 	{
@@ -94,15 +97,27 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 			var j:Number = -l2;
 			do
 			{
-				p = new Vertex(j,0,i); id1 = aPoints.push (p) - 1;
-				p = new Vertex(j+pasL,0,i); id2 = aPoints.push (p) - 1;
-				p = new Vertex(j+pasL,0,i+pasH); id3 = aPoints.push (p) - 1;
-				p = new Vertex(j,0,i+pasH); id4 = aPoints.push (p) - 1;
-				//We add the texture coordinates
-				uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
-				uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
-				uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
-				uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+				if (_mirror) {
+					p = new Vertex(j,0,i); id1 = aPoints.push (p) - 1;
+					p = new Vertex(j+pasL,0,i); id2 = aPoints.push (p) - 1;
+					p = new Vertex(j+pasL,0,i+pasH); id3 = aPoints.push (p) - 1;
+					p = new Vertex(j,0,i+pasH); id4 = aPoints.push (p) - 1;
+					//We add the texture coordinates
+					uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
+					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
+					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
+					uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+				} else {
+					p = new Vertex(-(j+pasL),0,i); id3 = aPoints.push (p) - 1;
+					p = new Vertex(-j,0,i); id4 = aPoints.push (p) - 1;
+					p = new Vertex(-j,0,i+pasH); id1 = aPoints.push (p) - 1;
+					p = new Vertex(-(j+pasL),0,i+pasH); id2 = aPoints.push (p) - 1;
+					
+					uv1 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
+					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
+					uv4 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
+				}
 				//Face creation
 				if( _mode == 'tri' )
 				{
@@ -135,6 +150,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 					if(!created)
 					{
 						n = f.createNormale ();
+						
 						aNormals.push (n );
 						created = true;
 					}
@@ -144,6 +160,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 					}
 				}
 			} while( (j += pasL) < (l2-1) );
+			
 		} while( (i += pasH) < (h2-1) );
 		// Can't understand why I must compute -1 with 3 in quality to have the correct value!
 	}

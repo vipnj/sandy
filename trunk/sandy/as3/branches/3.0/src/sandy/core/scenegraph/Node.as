@@ -1,4 +1,4 @@
-﻿/*
+/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -25,13 +25,13 @@ package sandy.core.scenegraph
 	import sandy.view.Frustum;
 	
 	/**
-	 * ABSTRACT CLASS
-	 * <p>
-	 * This class is the basis of all the group and Leaf one.
-	 * It allows all the basic operations you might want to do about trees node.
-	 * </p>
+	 * ABSTRACT CLASS - Base class for all nodes in the object tree.
+	 * 
+	 * <p>Node is the base class for all Group and object nodes, 
+	 * and handles all basic operations on a tree node.</p>
+	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
-	 * @version		2.0
+	 * @version		3.0
 	 * @date 		16.03.2007
 	 **/
 	public class Node
@@ -42,341 +42,16 @@ package sandy.core.scenegraph
 		public var culled:CullingState;
 		
 		public var broadcaster:BubbleEventBroadcaster = new BubbleEventBroadcaster();
+
+		// The class should not be instatiated, but AS3 doesn't allow private constructors
 		
 		/**
-		* Retuns the unique ID Number that represents the node.
-		* This value is very usefull to retrieve a specific Node.
-		* This method is FINAL, IT MUST NOT BE OVERLOADED.
-		* @param	void
-		* @return	Number the node ID.
-		*/
-		public function get id():Number
-		{
-			return _id;
-		}
-			
-		/**
-		* Say is the node is the parent of the current node.
-		* @param	n The Node you are going to test the patternity
-		* @return Boolean  True is the node in argument if the father of the current one, false otherwise.
-		*/
-		public function isParent( n:Node ):Boolean
-		{
-			return (_parent == n && n != null);
-		}
-		
-		/**
-		* Set the parent of a node
-		* @param	void
-		*/
-		public function set parent( n:Node ):void
-		{
-			if( n )
-			{
-				_parent = n;
-				changed = true;
-			}
-		}
-		
-		/**
-		* Returns the parent node reference
-		* @param	void
-		* @return Node The parent node reference, which is null if no parents (for exemple for a root object).
-		*/
-		public function get parent():Node
-		{
-			return _parent;
-		}
-		
-		/**
-		* Allows the user to know if the current node have a parent or not.
-		* @param	void
-		* @return Boolean. True is the node has a parent, False otherwise
-		*/
-		public function hasParent():Boolean
-		{
-			return ( _parent != null );
-		}	
-		
-		/**
-		* Add a new child to this group. a basicGroup can have several childs, and when you add a child to a group, 
-		* the child is automatically conencted to it's parent thanks to its parent property.
-		* @param	child
-		*/
-		public function addChild( child:Node ):void 
-		{
-			child.parent = this;
-			changed =  true ;
-			_aChilds.push( child );
-			broadcaster.addChild( child.broadcaster );
-		}	
-		
-		/**
-		 * Returns all the childs of the current group in an array
-		 * @param void
-		 * @return Array The array containing all the childs node of this group
-		 */
-		public function getChildList():Array
-		{
-			return _aChilds;
-		}
-		
-		public function get children():Array
-		{
-			return _aChilds;
-		}
-		
-		/**
-		* Returns the child node with the specified ID
-		* @param	index Number The ID of the child you want to get
-		* @return 	Node The desired Node or null is no child with this ID has been found
-		*/
-		public function getChildFromId( id:Number, p_recurs:Boolean=false ):Node 
-		{
-			var l_oNode:Node, l_oNode2:Node;
-			for each( l_oNode in _aChilds )
-			{
-				if( l_oNode.id == id )
-				{
-					return l_oNode;
-				}
-			}
-			if( p_recurs )
-			{
-				for each( l_oNode in _aChilds )
-				{
-					l_oNode2 = l_oNode.getChildFromId( id, p_recurs );
-					if( l_oNode2 != null ) return l_oNode2;
-				}
-			}
-			return null;
-		}
-	
-		/**
-		* Returns the child node with the specified name
-		* @param	index Number The name of the child you want to get
-		* @return 	Node The desired Node or null is no child with this name has been found
-		*/
-		public function getChildByName( pName:String, p_recurs:Boolean=false ):Node 
-		{
-			var l_oNode:Node, l_oNode2:Node;
-			for each( l_oNode in _aChilds )
-			{
-				if( l_oNode.name == pName )
-				{
-					return l_oNode;
-				}
-			}
-			if( p_recurs )
-			{
-				var node:Node = null;
-				for each( l_oNode in _aChilds )
-				{
-					node = l_oNode.getChildByName( pName, p_recurs );
-					if( node != null ) return node;
-				}
-			}
-			return null;
-		}
-	
-		
-		/**
-		* Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
-		* All the children of the node you want to remove are lost. The link between them and the rest of the tree is broken.
-		* They will not be rendered anymore!
-		* But the object itself and his children are still in memory! If you want to free them completely, use child.destroy();
-		* @param	child Node The node you want to remove.
-		* @return Boolean True if the node has been removed from the list, false otherwise.
-		*/
-		public function removeChildById( pId:Number ):Boolean 
-		{
-			var found:Boolean = false;
-			var i:int, l:int = _aChilds.length;
-	
-			while( i < l && !found )
-		    {
-				if( _aChilds[int(i)].id == pId  )
-				{
-					broadcaster.removeChild( _aChilds[int(i)].broadcaster);
-					_aChilds.splice( i, 1 );
-					changed = true;
-					found = true;
-				}
-				i++;
-			}
-			return found;
-		}
-		
-		
-		public function swapParent( p_oNewParent:Node ):void
-		{
-			if( parent.removeChildById( this.id ) );
-				p_oNewParent.addChild( this );
-		}
-		
-		/**
-		* Remove the child given in arguments. Returns true if the node has been removed, and false otherwise.
-		* All the children of the node you want to remove are lost. The link between them and the rest of the tree is broken.
-		* They will not be rendered anymore!
-		* But the object itself and his children are still in memory! If you want to free them completely, use child.destroy();
-		* @param	child Node The name of the node you want to remove.
-		* @return Boolean True if the node has been removed from the list, false otherwise.
-		*/
-		public function removeChildByName( pName:String ):Boolean 
-		{
-			var found:Boolean = false;
-			var i:int;
-			var l:int = _aChilds.length;
-			while( i < l && !found )
-			{
-				if( _aChilds[int(i)].name == pName  )
-				{
-					broadcaster.removeChild( _aChilds[int(i)].broadcaster );
-					_aChilds.splice( i, 1 );
-					changed = true;
-					found = true;
-				}
-				i++;
-			}
-			
-			return found;
-		}
-	
-	
-		/**
-		 * Delete all the childs of this node, and also the datas it is actually storing.
-		 * Do a recurssive call to child's destroy method.
-		 */
-		public function destroy():void 
-		{			
-			// should we kill all the childs, or just make them childs of current node parent ?
-			var l:int = _aChilds.length;
-			while( --l > -1 )
-			{
-				_aChilds[int(l)].destroy();
-				_aChilds[int(l)] = null;	
-			}
-			_aChilds = null;
-			broadcaster = null;
-			
-			// the unlink this node to his parent
-			if( hasParent() == true ) parent.removeChildById( this._id );
-		}
-	
-		/**
-		 * Remove the current node on the tree.
-		 * It makes current node children the children of the current parent node.
-		 * The interest of this paramater is that it allows you to update the World3D only once during your destroy/remove call!
-		 */
-		public function remove() :void 
-		{
-			var l:int = _aChilds.length;
-			// first we remove this node as a child of its parent
-			// we do not update rigth now, but a little bit later ;)
-			parent.removeChildById( this.id );
-			// now we make current node children the current parent's node children
-			while( --l > -1 )
-			{
-				parent.addChild( _aChilds[int(l)] );
-			}
-			_aChilds = null;
-			broadcaster = null;
-			changed = true;
-		}
-	
-		/**
-		 * Hide (false) or make visible( true)  the current object.
-		 * The default state is visible (true)
-		 */
-		public function set visible( b:Boolean ):void
-		{
-			_visible = b;
-			changed = true;
-		}
-		
-		/**
-		 * Get the visibility of the current node.
-		 * @return true if node is visible, false otherwise.
-		 */
-		public function get visible():Boolean
-		{
-			return _visible;
-		}
-			
-		public function toString():String
-		{
-			return "sandy.core.scenegraph.Node";
-		}
-	
-		/**
-		 * This method goal is to update the node. For node's with transformation, this method shall
-		 * update the transformation taking into account the matrix cache system.
-		 */
-		public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
-		{
-			/* Shall be overriden */
-			changed = changed || p_bChanged;
-			var l_oNode:Node;
-			for each( l_oNode in _aChilds )
-				l_oNode.update( p_oModelMatrix, changed );
-		}
-	
-		
-		/**
-		 * This method test the current node on the frustum to get its visibility.
-		 * If the node and its children aren't in the frustum, the node is set to cull
-		 * and it would not be displayed.
-		 * This method is also updating the bounding volumes to process the more accurate culling system possible.
-		 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
-		 * precise culling.
-		 * [MANDATORY] The update method must be called first!
-		 */
-		public function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
-		{
-			if( _visible == false )
-			{
-				culled = CullingState.OUTSIDE;
-			}
-			else
-			{
-				if( p_bChanged || changed )
-				{
-					_oViewCacheMatrix.copy( p_oViewMatrix );
-					_oViewCacheMatrix.multiply4x3( _oModelCacheMatrix );
-				}
-			}
-		}
-		
-		public function render( p_oCamera:Camera3D ):void
-		{
-			;/* TO OVERRIDE */
-		}
-	
-		/**
-		* Returns  bounds of the object. [ minimum  value; maximum  value]
-		* @param	void
-		* @return Return the array containing the minimum  value and maximum  value of the object in the world coordinate.
-		*/
-		public function getBBox():BBox
-		{
-			return _oBBox;
-		}
-	
-		/**
-		* Returns  bounding sphere of the object. [ minimum  value; maximum  value]
-		* @param	void
-		* @return Return the bounding sphere
-		*/
-		public function getBSphere():BSphere
-		{
-			return _oBSphere;
-		}
-			
-		////////////////////
-		//// PRIVATE PART
-		////////////////////
-		
-		// TODO: private function in original implementation
+		 * Creates a node in the object tree of the world.
+		 *
+		 * <p>This constructor should normally not be called directly - only via its sub classes.</p>
+		 *
+		 * @param p_sName	A string identifier for this object.
+		 */	
 		public function Node( p_sName:String = "" ) 
 		{
 			parent = null;
@@ -395,12 +70,393 @@ package sandy.core.scenegraph
 			//
 			culled = CullingState.INSIDE;
 		}
-	    		
+		
+		// This is a FINAL method, IT CAN NOT BE OVERLOADED.
+		
+		/**
+		 * The unique id of this node in the node graph.
+		 *
+		 * <p>This value is very useful to retrieve a specific Node.</p>
+		 */
+		final public function get id():Number
+		{
+			return _id;
+		}
+			
+		/**
+		 * Tests if the node passed in the argument is parent of this node.
+		 *
+		 * @param p_oNode 	The Node you are testing
+		 * @return		true if the node in the argument is the parent of this node, false otherwise.
+		 */
+		public function isParent( p_oNode:Node ):Boolean
+		{
+			return (_parent == p_oNode && p_oNode != null);
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set parent( p_oNode:Node ):void
+		{
+			if( p_oNode )
+			{
+				_parent = p_oNode;
+				changed = true;
+			}
+		}
+		
+		/**
+		 * The parent node of this node.
+		 *
+		 * <p>The reference is null this nod has no parent (for exemple for a root node).
+		 */
+		public function get parent():Node
+		{
+			return _parent;
+		}
+		
+		/**
+		 * Tests if this node has a parent.
+		 * 
+		 * @return 	true if this node has a parent, false otherwise.
+		 */
+		public function hasParent():Boolean
+		{
+			return ( _parent != null );
+		}	
+		
+		/**
+		 * Adds a new child to this node.
+		 *
+		 * <p>A node can have several children, and when you add a child to a node, 
+		 * it is automatically connected to it's parent through its parent property.</p>
+		 *
+		 * @param p_oChild	The child node to add
+		 */
+		public function addChild( p_oChild:Node ):void 
+		{
+			p_oChild.parent = this;
+			changed =  true ;
+			_aChilds.push( p_oChild );
+			broadcaster.addChild( p_oChild.broadcaster );
+		}	
+		
+		/**
+		 * Returns an array with all child nodes of this node.
+		 * 
+		 * @return 	The array of childs nodes
+		 */
+		public function getChildList():Array
+		{
+			return _aChilds;
+		}
+
+		/**
+		 * The child nodes array of this node
+		 */	
+		public function get children():Array
+		{
+			return _aChilds;
+		}
+		
+		/**
+		 * Returns the child node with the specified id.
+		 *
+		 * <p>[<b>Todo</b>: Explain the rational of the recursive variant ]</p>
+		 * 
+		 * @param p_nId 		The id of the child you want to retrieve
+		 * @param p_bRecurs 	Set to true if you want to get the child tree
+		 *
+		 * @return 		The requested node or null if no child with this is was found
+		 */
+		public function getChildFromId( p_nId:Number, p_bRecurs:Boolean=false ):Node 
+		{
+			var l_oNode:Node, l_oNode2:Node;
+			for each( l_oNode in _aChilds )
+			{
+				if( l_oNode.id == p_nId )
+				{
+					return l_oNode;
+				}
+			}
+			if( p_bRecurs )
+			{
+				for each( l_oNode in _aChilds )
+				{
+					l_oNode2 = l_oNode.getChildFromId( p_nId, p_bRecurs );
+					if( l_oNode2 != null ) return l_oNode2;
+				}
+			}
+			return null;
+		}
+	
+		/**
+		 * Returns the child node with the specified name.
+		 *
+		 * @param p_sName	The name of the child you want to retrieve
+		 * @param p_bRecurs 	Set to true if you want to get the child tree
+		 *
+		 * @return		The requested node or null if no child with this name was found
+		 */
+		public function getChildByName( p_sName:String, p_bRecurs:Boolean=false ):Node 
+		{
+			var l_oNode:Node, l_oNode2:Node;
+			for each( l_oNode in _aChilds )
+			{
+				if( l_oNode.name == p_sName )
+				{
+					return l_oNode;
+				}
+			}
+			if( p_bRecurs )
+			{
+				var node:Node = null;
+				for each( l_oNode in _aChilds )
+				{
+					node = l_oNode.getChildByName( p_sName, p_bRecurs );
+					if( node != null ) return node;
+				}
+			}
+			return null;
+		}
+	
+		
+		/**
+		 * Removes the child node with the specified id. 
+		 * 
+		 * 
+		 * <p>All the children of the node you want to remove are lost.<br/>
+		 * The link between them and the rest of the tree is broken, and they will not be rendered anymore!</p>
+		 * <p>The object itself and its children are still in memory! <br/>
+		 * If you want to free them completely, call child.destroy()</p>
+		 * 
+		 * @param p_nId 	The id of the child you want to remove
+		 * @return 		true if the node was removed from node tree, false otherwise.
+		 */
+		public function removeChildById( p_nId:Number ):Boolean 
+		{
+			var found:Boolean = false;
+			var i:int, l:int = _aChilds.length;
+	
+			while( i < l && !found )
+		    {
+				if( _aChilds[int(i)].id == p_nId  )
+				{
+					broadcaster.removeChild( _aChilds[int(i)].broadcaster);
+					_aChilds.splice( i, 1 );
+					changed = true;
+					found = true;
+				}
+				i++;
+			}
+			return found;
+		}
+		
+		/**
+		 * Moves this node to another parent node.
+		 *
+		 * <p>This node is removed from its current parent node, and added as a child of the passed node</p>
+		 *
+		 * @param p_oNewParent	The node to become parent of this node
+		 */
+		public function swapParent( p_oNewParent:Node ):void
+		{
+			if( parent.removeChildById( this.id ) );
+				p_oNewParent.addChild( this );
+		}
+		
+		/**
+		 * Removes the child nodes with the pecified name.
+		 *
+		 * <p>All the children of the node you want to remove are lost.<br/>
+		 * The link between them and the rest of the tree is broken, and they will not be rendered anymore!</p>
+		 * <p>The object itself and its children are still in memory!<br/>
+		 * If you want to free them completely, call child.destroy()</p>
+		 * 
+		 * @param p_sName	The name of the node you want to remove.
+		 * @return 		true if the node was removed from node tree, false otherwise.
+		 */
+		public function removeChildByName( p_sName:String ):Boolean 
+		{
+			var found:Boolean = false;
+			var i:int;
+			var l:int = _aChilds.length;
+			while( i < l && !found )
+			{
+				if( _aChilds[int(i)].name == p_sName  )
+				{
+					broadcaster.removeChild( _aChilds[int(i)].broadcaster );
+					_aChilds.splice( i, 1 );
+					changed = true;
+					found = true;
+				}
+				i++;
+			}
+			
+			return found;
+		}
+	
+	
+		/**
+		 * Delete all the child nodes of this node.
+		 *
+		 * <p>All children of this node are deleted, including all data they are storing.<br/>
+		 * The method makes recursive calls to the destroy method of the child nodes.
+		 */
+		public function destroy():void 
+		{			
+			// should we kill all the childs, or just make them childs of current node parent ?
+			var l:int = _aChilds.length;
+			while( --l > -1 )
+			{
+				_aChilds[int(l)].destroy();
+				_aChilds[int(l)] = null;	
+			}
+			_aChilds = null;
+			broadcaster = null;
+			
+			// the unlink this node to his parent
+			if( hasParent() == true ) parent.removeChildById( this._id );
+		}
+	
+		/**
+		 * Removes this node from the node tree.
+		 * 
+		 * <p>The child nodes of this node becomes child nodes of this node's parent.</p>
+		 */
+		public function remove() :void 
+		{
+			var l:int = _aChilds.length;
+			// first we remove this node as a child of its parent
+			// we do not update rigth now, but a little bit later ;)
+			parent.removeChildById( this.id );
+			// now we make current node children the current parent's node children
+			while( --l > -1 )
+			{
+				parent.addChild( _aChilds[int(l)] );
+			}
+			_aChilds = null;
+			broadcaster = null;
+			changed = true;
+		}
+	
+		/**
+		 * @private
+		 */
+		public function set visible( b:Boolean ):void
+		{
+			_visible = b;
+			changed = true;
+		}
+		/**
+		 * Visibility of this node ( associated object ).
+		 *
+		 * <p>A true value ( the default ) means that the object is visible<br/>
+		 * false that it is hidden</p>
+		 */	
+		public function get visible():Boolean
+		{
+			return _visible;
+		}
+			
+	
+		/**
+		 * Updates this node. 
+		 * 
+		 * <p>For a node with transformation, this method must update the transformation taking into account the matrix cache system.</p>
+		 *
+		 * <p>[<b>ToDo</b> : Explain the parameters and what the do ]</p>
+		 * @param p_oModelMatrix
+		 * @param p_bChanged
+		 */
+		public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
+		{
+			/* Shall be overriden */
+			changed = changed || p_bChanged;
+			var l_oNode:Node;
+			for each( l_oNode in _aChilds )
+				l_oNode.update( p_oModelMatrix, changed );
+		}
+	
+		
+		/**
+		 * Tests this node against the frustum volume to get its visibility.
+		 *
+		 * <p>If the node and its children aren't in the frustum, the node is set to cull
+		 * and will not be displayed.<br/>
+		 * <p>The method also updates the bounding volumes to make a more accurate culling system possible.<br/>
+		 * First the bounding sphere is updated, and if intersecting, the bounding box is updated to perform a more
+		 * precise culling.</p>
+		 * <b>[MANDATORY] The update method must be called first!</b>
+		 *
+		 * @param p_oFrustum	The frustum of the current camera
+		 * @param p_oViewMatrix	<b>[ToDo: explain]</b>
+		 * @param p_bChanged	<b>[ToDo: explain]</b>
+		 *
+		 */
+		public function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		{
+			if( _visible == false )
+			{
+				culled = CullingState.OUTSIDE;
+			}
+			else
+			{
+				if( p_bChanged || changed )
+				{
+					_oViewCacheMatrix.copy( p_oViewMatrix );
+					_oViewCacheMatrix.multiply4x3( _oModelCacheMatrix );
+				}
+			}
+		}
+		/**
+		 * Renders this node.
+		 *
+		 * <p>Implemented in sub classes</p>
+		 *
+		 * @param  p_oCamera	The camera of the world
+		 */
+		public function render( p_oCamera:Camera3D ):void
+		{
+			;/* TO OVERRIDE */
+		}
+	
+		/**
+		 * Returns the bounding box of this object - [ minimum  value; maximum  value].
+		 * 
+		 * @return 	An array containing the minimum and maximum values of the object in world coordinates.
+		 */
+		public function getBBox():BBox
+		{
+			return _oBBox;
+		}
+	
+		/**
+		 * Returns the bounding sphere of this object - [ minimum  value; maximum  value].
+		 *
+		 * @return  The bounding sphere
+		 */
+		public function getBSphere():BSphere
+		{
+			return _oBSphere;
+		}
+
+
+		public function toString():String
+		{
+			return "sandy.core.scenegraph.Node";
+		}
+			
+		////////////////////
+		//// PRIVATE PART
+		////////////////////
+			    		
 		private static var _ID_:Number = 0;
 		private var _id:Number;
 		private var _parent:Node;
 		private var _visible : Boolean;	
-		public var name:String;
+		public 	var name:String;
 		protected var _aChilds:Array;
 		// Cached matrix corresponding to the transformation to the 0,0,0 frame system
 		protected var _oModelCacheMatrix:Matrix4;

@@ -158,7 +158,7 @@ package sandy.core.scenegraph
 			else
 			{ 
 				aVertexNormals[p_nNormalID] = new Vertex(p_nX, p_nY, p_nZ); 
-				return ++m_nLastNormalId - 1;  
+				return ++m_nLastVertexNormalId - 1;  
 			}
 		}
 		

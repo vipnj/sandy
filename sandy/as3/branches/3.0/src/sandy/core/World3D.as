@@ -31,22 +31,41 @@ package sandy.core
 	[Event(name="render", type="sandy.events.SandyEvent")]
 		
 	/**
-	* The 3D world for displaying the Objects.
-	* <p>World3D is a singleton class, it's the central point of Sandy :
-	* <br/>You can have only one World3D, which contain Groups, Cameras and Lights</p>
-	*
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @see			sandy.core.Object3D
-	**/
+	 * The Sandy 3D world.
+	 *
+	 * <p>The World3D object is the central point of Sandy.<br/>
+	 * World3D is a singleton class, which means that you can have only one World3D instance.<br/>
+	 * It contains the object tree with groups, a camera, a light source and a canvas to draw on</p>
+	 *
+	 * @example	To create the world instance, you call the getInstance() class method.<br/>
+	 * To make the world visible, you add a canvas to draw on ( normally a Sprite ), and add a camera.<br/>
+	 * The rendering of the world is driven by a "heart beat", which may be a Timer or the Event.ENTER_FRAME event.
+	 *
+	 * <listing version="3.0">
+	 *     	var world:World3D = World3D.getInstance();
+	 *	world.container = this; // The document calss is a Sprite or MovieClip
+	 *	world.camera = new Camera3D( 200, 200 );
+	 *	world.root.addChild( world.camera );
+	 *	// Go on to create the 3D objects and transforms
+	 *	world.root = createScene();
+	 *	// Listen for the ENTER-FRAME event. 
+	 *	//The handler calls the world.render() method to render the world for each frame.
+	 *	addEventListener( Event.ENTER_FRAME, enterFrameHandler );
+	 *  </listing>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007	 
+	 **/
 	public class World3D extends EventDispatcher
 	{
 		public var root:Group;
 		public var camera:Camera3D;
 		public var container:Sprite;
 		/**
-		 * Constructor.
-		 * <p>You can have only one World3D</p>
+		 * Creates a single instance of World3D.
+		 *
+		 * <p>You can have only one World3D instance in a Flash movie.</p>
 		 * 
 		 */
 		public function World3D ()
@@ -64,8 +83,9 @@ package sandy.core
 		}
 		
 		/**
-		 * Get the Singleton instance of World3D.
-		 * @return World3D, the only one instance possible
+		 * Returns an instance of World3D.
+		 * 
+		 * @return	The single World3D instance
 		 */
 		public static function getInstance() : World3D
 		{
@@ -81,9 +101,7 @@ package sandy.core
 		
 
 		/**
-		 * We set the unique ligth of the 3D world.
-		 * @param	l	Light3D		The light instance
-		 * @return	void	nothing
+		 * @private
 		 */
 		public function set light ( l:Light3D ):void
 		{
@@ -94,19 +112,22 @@ package sandy.core
 		}
 		
 		/**
-		 * Returns the world light reference.
-		 * @param void	Nothing
-		 * @return	Light3D	The light reference
+		 * The simple light of this world.
+		 *
+		 * @see sandy.core.light.Light3D
 		 */
 		public function get light():Light3D
 		{
 			return _light;
 		}
-	
+
+		// Developer comments go here ...	
 		/**
-		 * Call the recurssive rendering of all the children of this branchGroup.
-		 * This is the most important method in all the engine, because the mojority of the computations are done here.
-		 * This method is making the points transformations and 2D projections.
+		 * Renders all visible objects in the object tree of the world.
+		 * 
+		 * <p>This is the most important method in all the engine, 
+		 * because the majority of the computations are done here.<br/>
+		 * It takes care of all transformations and 2D projections.</p>
 		 */
 		public function render():void 
 		{

@@ -1,15 +1,43 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK ******/
+
 package sandy.core.scenegraph 
 {
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
-	
+
 	/**
-	 * @author thomaspfeiffer
-	 */
+	 * ABSTRACT CLASS - super class for all movable objects in the object tree.
+	 * 
+	 * <p> This class should not be directly instatiated, but sub classed.<br/>
+	 * The Atransformable class is resposible for scaling, rotation and translation of its sub class</p>
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		16.03.2007
+	 **/
 	public class ATransformable extends Node
 	{
-		private var m_oMatrix:Matrix4;
-	
+		
+		/**
+		 * Creates a transformable node in the object tree of the world.
+		 *
+		 * <p>This constructor should normally not be called directly - only via its sub classes.</p>
+		 *
+		 * @param p_sName	A string identifier for this object
+		 */	
 		public function ATransformable ( p_sName:String="" )
 		{
 			super( p_sName );
@@ -29,271 +57,329 @@ package sandy.core.scenegraph
 			m_tmpMt = new Matrix4();
 			m_oMatrix = new Matrix4();
 		}
-	    
-	    public function initFrame():void
-	    {
-	    	_vSide 	= new Vector( 1, 0, 0 );
+		/**
+		 * Initiates the local coordinate system for this object.
+		 *
+		 * <p>The local coordinate system for this object is set parallell to the global system.</p>
+		 */
+		public function initFrame():void
+		{
+			_vSide 	= new Vector( 1, 0, 0 );
 			_vUp 	= new Vector( 0, 1 ,0 );
 			_vOut 	= new Vector( 0, 0, 1 );
-	    }
-	    
-	    public function get matrix():Matrix4
-	    {
-	    	return m_oMatrix;
-	    }
-	    
-	    public function set matrix( p_oMatrix:Matrix4 ):void
-	    {
-	    	m_oMatrix = p_oMatrix;
-	    	//
-	    	m_oMatrix.vectorMult3x3(_vSide);
-	    	m_oMatrix.vectorMult3x3(_vUp);
-	    	m_oMatrix.vectorMult3x3(_vOut);
-	    }
-
-	    
-	    public override function toString():String
-	    {
-	    	return "sandy.core.scenegraph.ATransformable";
-	    }
-	    
+		}
 		/**
-		 * X position of the node
-		 */
-		public function set x( px:Number ):void
+		* The matrix of this object.
+		*
+		* <p>[<b>Todo</b>: Explain the use of this matrix better ]</p>
+		*/
+		public function get matrix():Matrix4
 		{
-			_p.x = px;
-			changed = true;
+		    	return m_oMatrix;
 		}
 		
+		/**
+		 * @private
+		 */
+		public function set matrix( p_oMatrix:Matrix4 ):void
+		{
+			m_oMatrix = p_oMatrix;
+		    	//
+		    	m_oMatrix.vectorMult3x3(_vSide);
+		    	m_oMatrix.vectorMult3x3(_vUp);
+		    	m_oMatrix.vectorMult3x3(_vOut);
+		}
+		
+		/**
+		 * @private
+		 */   		
+		public function set x( p_nX:Number ):void
+		{
+			_p.x = p_nX;
+			changed = true;
+		}
+		/**
+		 * X position of this object.
+		 */
 		public function get x():Number
 		{
 			return _p.x;
 		}
-		
+
 		/**
-		 * Y position of the node
-		 */
-		public function set y( py:Number ):void
+		 * @private
+		 */   					
+		public function set y( p_nY:Number ):void
 		{
-			_p.y = py;
+			_p.y = p_nY;
 			changed = true;
 		}
-		
+
+		/**
+		 * Y position of this object.
+		 */
 		public function get y():Number
 		{
 			return _p.y;
 		}
-		
+
 		/**
-		 * Z position of the node
-		 */
-		public function set z( pz:Number ):void
+		 * @private
+		 */   					
+		public function set z( p_nZ:Number ):void
 		{
-			_p.z = pz;
+			_p.z = p_nZ;
 			changed = true;
 		}
-		
+
+		/**
+		 * Z position of the node.
+		 */
 		public function get z():Number
 		{
 			return _p.z;
 		}				
-	
+
+		/**
+		 * Forward direction ( local z ) in world coordinates.
+		 */
 		public function get out():Vector
 		{
 			return _vOut;
 		}
+		
+		/**
+		 * Side direction ( local x ) in world coordinates.
+		 */
 		public function get side():Vector
 		{
 			return _vSide;
 		}
-		
+
+		/**
+		 * Up direction ( local y ) in world coordinates.
+		 */
 		public function get up():Vector
 		{
 			return _vUp;
 		}
 		
 		/**
-		 * sx correspond in the scale value in the local obejct frame axis
-		 * @param p_scaleX Number the number you ant to scale your object. A value of 1 scale to the original value, 2 makes
-		 * the object seems twice bigger on the X axis.
-		 * NOTE : This value does not affect the camera object.
+		 * @private
 		 */
-		public function set scaleX( p_scaleX:Number ):void
+		public function set scaleX( p_nScaleX:Number ):void
 		{
-			_oScale.x = p_scaleX;
+			_oScale.x = p_nScaleX;
 			changed = true;
 		}
-					
+		
+		/**
+		 * X scale of this object.
+		 *
+		 * <p>A value of 1 scales to the original x scale, a value of 2 doubles the x scale.<br/>
+		 * NOTE : This value does not affect the camera object.</p>
+		 */
 		public function get scaleX():Number
 		{
 			return _oScale.x;
 		}
-	
+		
 		/**
-		 * sy correspond in the scale value in the local obejct frame axis
-		 * @param p_scaleY Number the number you ant to scale your object. A value of 1 scale to the original value, 2 makes
-		 * the object seems twice bigger on the Y axis.
-		 * NOTE : This value does not affect the camera object.
+		 * @private
 		 */
 		public function set scaleY( p_scaleY:Number ):void
 		{
 			_oScale.y = p_scaleY;
 			changed = true;
 		}
-					
+		
+		/**
+		 * Y scale of this object.
+		 *
+		 * <p>A value of 1 scales to the original y scale, a value of 2 doubles the y scale.<br/>
+		 * NOTE : This value does not affect the camera object.</p>
+		 */
 		public function get scaleY():Number
 		{
 			return _oScale.y;
 		}
 		
 		/**
-		 * sz correspond in the scale value in the local obejct frame axis
-		 * @param p_scaleZ Number the number you ant to scale your object. A value of 1 scale to the original value, 2 makes
-		 * the object seems twice bigger on the Z axis.
-		 * NOTE : This value does not affect the camera object.
+		 * @private
 		 */
 		public function set scaleZ( p_scaleZ:Number ):void
 		{
 			_oScale.z = p_scaleZ;
 			changed = true;
 		}
-					
+		
+		/**
+		 * Z scale of this object.
+		 *
+		 * <p>A value of 1 scales to the original z scale, a value of 2 doubles the z scale.<br/>
+		 * NOTE : This value does not affect the camera object.</p>
+		 */
 		public function get scaleZ():Number
 		{
 			return _oScale.z;
 		}	
-	    
+
 		/**
-		 * Allow the camera to translate along its side vector. 
-		 * If you imagine yourself in a game, it would be a step on your right or on your left
-		 * @param	d	Number	Move the camera along its side vector
+		 * Translates this object along its side vector ( local x ).
+		 * 
+		 * <p>If you imagine yourself in the world, it would be a step to your right or to your left</p>
+		 *
+		 * @param p_nD	How far to move
 		 */
-		public function moveSideways( d : Number ) : void
+		public function moveSideways( p_nD : Number ) : void
 		{
 			changed = true;
-			_p.x += _vSide.x * d;
-			_p.y += _vSide.y * d;
-			_p.z += _vSide.z * d;
+			_p.x += _vSide.x * p_nD;
+			_p.y += _vSide.y * p_nD;
+			_p.z += _vSide.z * p_nD;
 		}
-		
+
 		/**
-		 * Allow the camera to translate along its up vector. 
-		 * If you imagine yourself in a game, it would be a jump on the direction of your body (so not always the vertical!)
-		 * @param	d	Number	Move the camera along its up vector
+		 * Translates this object along its up vector ( local y ).
+		 * 
+		 * <p>If you imagine yourself in the world, it would be a step up or down<br/>
+		 * in the direction of your body, not always vertically!</p>
+		 *
+		 * @param p_nD	How far to move
 		 */
-		public function moveUpwards( d : Number ) : void
+		public function moveUpwards( p_nD : Number ) : void
 		{
 			changed = true;
-			_p.x += _vUp.x * d;
-			_p.y += _vUp.y * d;
-			_p.z += _vUp.z * d;
+			_p.x += _vUp.x * p_nD;
+			_p.y += _vUp.y * p_nD;
+			_p.z += _vUp.z * p_nD;
 		}
-		
+
 		/**
-		 * Allow the camera to translate along its view vector. 
-		 * If you imagine yourself in a game, it would be a step in the direction you look at. If you look the sky
-		 * you will translate upwards ! So be careful with its use.
-		 * @param	d	Number	Move the camera along its viw vector
+		 * Translates this object along its forward vector ( local z ).
+		 * 
+		 * <p>If you imagine yourself in the world, it would be a step forward<br/>
+		 * in the direction you look, not always horizontally!</p>
+		 *
+		 * @param p_nD	How far to move
 		 */
-		public function moveForward( d : Number ) : void
+		public function moveForward( p_nD : Number ) : void
 		{
 			changed = true;
-			_p.x += _vOut.x * d;
-			_p.y += _vOut.y * d;
-			_p.z += _vOut.z * d;
+			_p.x += _vOut.x * p_nD;
+			_p.y += _vOut.y * p_nD;
+			_p.z += _vOut.z * p_nD;
 		}
-	 
+
 		/**
-		 * Allow the camera to translate horizontally
-		 * If you imagine yourself in a game, it would be a step in the direction you look at but without changing 
-		 * your altitude.
-		 * @param	d	Number	Move the camera horizontally
+		 * Translates this object horizontally in its forward direction.
+		 * 
+		 * <p>If you imagine yourself in the world, it would be a step in the forward direction, 
+		 * but without changing your altitude ( constant global z ).</p>
+		 *
+		 * @param p_nD	How far to move
 		 */	
-		public function moveHorizontally( d:Number ) : void
+		public function moveHorizontally( p_nD:Number ) : void
 		{
 			changed = true;
-			_p.x += _vOut.x * d;
-			_p.z += _vOut.z * d;	
+			_p.x += _vOut.x * p_nD;
+			_p.z += _vOut.z * p_nD;	
 		}
-		
+
 		/**
-		 * Allow the camera to translate vertically
-		 * If you imagine yourself in a game, it would be a jump strictly vertical.
-		 * @param	d	Number	Move the camera vertically
+		 * Translates this object vertically.
+		 * 
+		 * <p>If you imagine yourself in the world, it would be a strictly vertical step,
+		 * ( in the global y direction )</p>
+		 *
+		 * @param p_nD	How far to move
 		 */	
-		public function moveVertically( d:Number ) : void
+		public function moveVertically( p_nD:Number ) : void
 		{
 			changed = true;
-			_p.y += d;	
+			_p.y += p_nD;	
 		}
-		
-		 /**
-		 * Allow the camera to translate lateraly
-		 * If you imagine yourself in a game, it would be a step on the right with a positiv parameter and to the left
-		 * with a negative parameter
-		 * @param	d	Number	Move the camera lateraly
+
+		/**
+		 * Translates this object laterally.
+		 * 
+		 * <p>This is a translation paralell to the zx plane in the global x direction</p>
+		 *
+		 * @param p_nD	How far to move
 		 */	
-		public function moveLateraly( d:Number ) : void
+		public function moveLateraly( p_nD:Number ) : void
 		{
 			changed = true;
-			_p.x += d;	
+			_p.x += p_nD;	
 		}
-			
+
 		/**
-		* Translate the camera from it's actual position with the offset values pased in parameters
-		* 
-		* @param px x offset that will be added to the x coordinate of the camera
-		* @param py y offset that will be added to the y coordinate position of the camera
-		* @param pz z offset that will be added to the z coordinate position of the camera
-		*/
-		public function translate( px:Number, py:Number, pz:Number ) : void
-		{
-			changed = true;
-			_p.x += px;
-			_p.y += py;
-			_p.z += pz;	
-		}
-		
-		
-		/**
-		 * Rotate the camera around a specific axis by an angle passed in parameter
-		 * NOTE : The axis will be normalized automatically.
-		 * @param	ax	Number	The x coordinate of the axis
-		 * @param	ay	Number	The y coordinate of the axis
-		 * @param	az	Number	The z coordinate of the axis
-		 * @param	nAngle	Number	The amount of rotation. This angle is in degrees.
+		 * Translate this object from it's current position with the specified offset.
+		 * 
+		 * @param p_nX 	Offset that will be added to the x coordinate of the object
+		 * @param p_nY 	Offset that will be added to the y coordinate of the object
+		 * @param p_nZ 	Offset that will be added to the z coordinate of the object
 		 */
-		public function rotateAxis( ax : Number, ay : Number, az : Number, nAngle : Number ):void
+		public function translate( p_nX:Number, p_nY:Number, p_nZ:Number ) : void
 		{
 			changed = true;
-			nAngle = (nAngle + 360)%360;
-			var n:Number = Math.sqrt( ax*ax + ay*ay + az*az );
+			_p.x += p_nX;
+			_p.y += p_nY;
+			_p.z += p_nZ;	
+		}
+
+
+		/**
+		 * Rotate this object around the specified axis by the specified angle.
+		 * 
+		 * <p>NOTE : The axis will be normalized automatically.</p>
+		 *
+		 * @param p_nX		The x coordinate of the axis
+		 * @param p_nY		The y coordinate of the axis
+		 * @param p_nZ		The z coordinate of the axis
+		 * @param p_nAngle	The angle of rotation in degrees.
+		 */
+		public function rotateAxis( p_nX : Number, p_nY : Number, p_nZ : Number, p_nAngle : Number ):void
+		{
+			changed = true;
+			p_nAngle = (p_nAngle + 360)%360;
+			var n:Number = Math.sqrt( p_nX*p_nX + p_nY*p_nY + p_nZ*p_nZ );
 			// --
-			m_tmpMt.axisRotation( ax/n, ay/n, az/n, nAngle );
+			m_tmpMt.axisRotation( p_nX/n, p_nY/n, p_nZ/n, p_nAngle );
 			//
 			m_tmpMt.vectorMult3x3(_vSide);
-	    	m_tmpMt.vectorMult3x3(_vUp);
-	    	m_tmpMt.vectorMult3x3(_vOut);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
 		}
-	 
-	
+
+		/**
+		 * Make this object "look at" the specified position. 
+		 *
+		 * <p>Useful for following a moving object or a static object while this object is moving.<br/>
+		 * Normally used when this object is a camera</p>
+		 *
+		 * @param p_oTarget The point in global space  position to look at
+		 */
 		public function set target( p_oTarget:Vector ):void
 		{
 			lookAt( p_oTarget.x, p_oTarget.y, p_oTarget.z) ;
 		}
 		
 		/**
-		 * Make the camera look at a specific position. Useful to follow a moving object or a static object while the camera is moving.
-		 * @param	px	Number	The x position to look at
-		 * @param	py	Number	The y position to look at
-		 * @param	pz	Number	The z position to look at
+		 * Make this object "look at" the specified position. 
+		 *
+		 * <p>Useful for following a moving object or a static object while this object is moving.<br/>
+		 * Normally used when this object is a camera</p>
+		 *
+		 * @param	p_nX	Number	The x position to look at
+		 * @param	p_nY	Number	The y position to look at
+		 * @param	p_nZ	Number	The z position to look at
 		 */
-		public function lookAt( px:Number, py:Number, pz:Number ):void
+		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number ):void
 		{
 			changed = true;
 			//
-			_vOut.x = px; _vOut.y = py; _vOut.z = pz;
+			_vOut.x = p_nX; _vOut.y = p_nY; _vOut.z = p_nZ;
 			//
 			_vOut.sub( _p );
 			_vOut.normalize();
@@ -306,74 +392,86 @@ package sandy.core.scenegraph
 			_vUp = _vOut.cross(_vSide );
 			_vUp.normalize();
 		}
-	 
+
 		/**
-		 * RotateX - Rotation around the global X axis of the camera frame
-		 * @param nAngle Number The angle of rotation in degree.
-		 * @return void
+		 * Rotates this object around an axis paralell to the global x axis.
+		 * 
+		 * <p>The object rotates a specified angle ( degrees ) around an axis through the 
+		 * objects reference point, paralell to the global x axis.</p>
 		 */
-		public function set rotateX ( nAngle:Number ):void
+		public function set rotateX ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (nAngle - _vRotation.x);
+			var l_nAngle:Number = (p_nAngle - _vRotation.x);
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
 			m_tmpMt.rotationX( l_nAngle );			
 			m_tmpMt.vectorMult3x3(_vSide);
-	    	m_tmpMt.vectorMult3x3(_vUp);
-	    	m_tmpMt.vectorMult3x3(_vOut);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
 			// --
-			_vRotation.x = nAngle;
+			_vRotation.x = p_nAngle;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function get rotateX():Number
 		{
 			return _vRotation.x;
 		}
-		
+
 		/**
-		 * rotateY - Rotation around the global Y axis of the camera frame
-		 * @param nAngle Number The angle of rotation in degree.
-		 * @return void
+		 * Rotates this object around an axis paralell to the global y axis.
+		 * 
+		 * <p>The object rotates a specified angle ( degrees ) around an axis through the 
+		 * objects reference point, paralell to the global y axis.</p>
 		 */
-		public function set rotateY ( nAngle:Number ):void
+		public function set rotateY ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (nAngle - _vRotation.y);
+			var l_nAngle:Number = (p_nAngle - _vRotation.y);
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
 			m_tmpMt.rotationY( l_nAngle );			
 			m_tmpMt.vectorMult3x3(_vSide);
-	    	m_tmpMt.vectorMult3x3(_vUp);
-	    	m_tmpMt.vectorMult3x3(_vOut);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
 			// --
-			_vRotation.y = nAngle;
+			_vRotation.y = p_nAngle;
 		}
-		
+
+		/**
+		 * @private
+		 */
 		public function get rotateY():Number
 		{
 			return _vRotation.y;
 		}
-		
+
 		/**
-		 * rotateZ - Rotation around the global Z axis of the camera frame
-		 * @param nAngle Number The angle of rotation in degree between : [ -180; 180 ].
-		 * @return
+		 * Rotates this object around an axis paralell to the global z axis.
+		 * 
+		 * <p>The object rotates a specified angle ( degrees ) around an axis through the 
+		 * objects reference point, paralell to the global z axis.</p>
 		 */
-		public function set rotateZ ( nAngle:Number ):void
+		public function set rotateZ ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (nAngle - _vRotation.z );
+			var l_nAngle:Number = (p_nAngle - _vRotation.z );
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
 			m_tmpMt.rotationZ( l_nAngle );			
 			m_tmpMt.vectorMult3x3(_vSide);
-	    	m_tmpMt.vectorMult3x3(_vUp);
-	    	m_tmpMt.vectorMult3x3(_vOut);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
 			// --
-			_vRotation.z = nAngle;
+			_vRotation.z = p_nAngle;
 		}	
-		
+
+		/**
+		 * @private
+		 */
 		public function get rotateZ():Number
 		{
 			return _vRotation.z;
@@ -391,78 +489,111 @@ package sandy.core.scenegraph
 			_vOut  = Matrix4Math.vectorMult3x3( m_tmpMt, _vOut );
 		}
 		*/
-		
+
 		/**
-		 * roll - Rotation around the local Z axis of the camera frame
-		 * Range from -180 to +180 where 0 means the plane is aligned with the horizon, 
-		 * +180 = Full roll right and –180 = Full roll left. In both cases, when the roll is 180 and –180, 
-		 * the plane is flipped on its back.
-		 * @param nAngle Number The angle of rotation in degree.
-		 * @return
+		 * Rolls this object around the local z axis.
+		 *
+		 * <p>The roll angle interval is -180 to +180 degrees<br/> 
+		 * At 0 degrees the local x axis is aligned with the horizon<br/>
+		 * Full roll right = 180 and full roll left = -180 degrees ( upside down ).</p>
+		 *
+		 * @param p_nAngle 	The roll angle in degrees.
 		 */
-		public function set roll ( nAngle:Number ):void
+		public function set roll ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (nAngle - _nRoll)
+			var l_nAngle:Number = (p_nAngle - _nRoll)
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --		
 			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
-	    	m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vUp);
 			// --
-			_nRoll = nAngle;
+			_nRoll = p_nAngle;
 		}	
-	
-			
+
 		/**
-		 * Tilt - Rotation around the local X axis of the camera frame
-		 * Range from -90 to +90 where 0 = Horizon, +90 = straight up and –90 = straight down.
-		 * @param nAngle Number The angle of rotation in degree.
-		 * @return void
+		 * @private
 		 */
-		public function set tilt ( nAngle:Number ):void
+		public function get roll():Number
 		{
-			var l_nAngle:Number = (nAngle - _nTilt);
+			return _nRoll;
+		}
+
+		/**
+		 * Tilts this object around the local x axis.
+		 *
+		 * <p>The tilt angle interval is -90 to +90 degrees<br/> 
+		 * At 0 degrees the local z axis is paralell to the global zx plane<br/>
+		 * Stright up = +90 and stright down = -90 degrees.</p>
+		 * 
+		 * @param p_nAngle 	The tilt angle in degrees.
+		 */
+		public function set tilt ( p_nAngle:Number ):void
+		{
+			var l_nAngle:Number = (p_nAngle - _nTilt);
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
 			m_tmpMt.axisRotation ( _vSide.x, _vSide.y, _vSide.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vOut);
-	    	m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vUp);
 			// --
-			_nTilt = nAngle;
+			_nTilt = p_nAngle;
+		}
+
+		/**
+		 * @private
+		 */
+		public function get tilt():Number
+		{
+			return _nTilt;
 		}
 		
 		/**
-		 * Pan - Rotation around the local Y axis of the camera frame
-		 * Range from 0 to 360 where 0=North, 90=East, 180=South and 270=West.
-		 * @param nAngle Number The angle of rotation in degree.
-		 * @return void
+		 * Pans this object around the local y axis.
+		 *
+		 * <p>The tilt angle interval is 0 to 360 degrees<br/> 
+		 * North = 0, East = 90, South = 180 nad West = 270 degrees.</p>
+		 * 
+		 * @param p_nAngle 	The pan angle in degrees.
 		 */
-		public function set pan ( nAngle:Number ):void
+		public function set pan ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (nAngle - _nYaw);
+			var l_nAngle:Number = (p_nAngle - _nYaw);
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
 			m_tmpMt.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vOut);
-	    	m_tmpMt.vectorMult3x3(_vSide);
+			m_tmpMt.vectorMult3x3(_vSide);
 			// --
-			_nYaw = nAngle;
+			_nYaw = p_nAngle;
 		}
-	
+
 		/**
-		 * Realize a rotation around a specific axis (the axis must be normalized!) and from an pangle degrees and around a specific position.
-		 * @param pAxis A 3D Vector representing the axis of rtation. Must be normalized !!
-		 * @param ref Vector The center of rotation as a 3D point.
-		 * @param pAngle Number The angle of rotation in degrees.
+		 * @private
 		 */
-		public function rotAxisWithReference( axis:Vector, ref:Vector, pAngle:Number ):void
+		public function get pan():Number
 		{
-			var angle:Number = ( pAngle + 360 ) % 360;
+			return _nYaw;
+		}
+		
+		/**
+		 * Rotates this object around a specified axis trough a global reference point.
+		 *
+		 * <p>The axis is given as a Vector in global coordinates and must be normalized.<br/>
+		 * The reference point is given as a Vector in global coordinates.<br/>
+		 * 
+		 * @param p_oAxis 	The axis of rotation. <b>Must be normalized !!</b>
+		 * @param p_oRef 	The global reference point
+		 * @param p_nAngle 	The angle of rotation in degrees.
+		 */
+		public function rotAxisWithReference( p_oAxis:Vector, p_oRef:Vector, p_nAngle:Number ):void
+		{
+			var angle:Number = ( p_nAngle + 360 ) % 360;
 			// --
-			m_tmpMt.axisRotationWithReference( axis, ref, angle );
+			m_tmpMt.axisRotationWithReference( p_oAxis, p_oRef, p_nAngle );
 			m_tmpMt.vectorMult3x3( _vUp  );
 			m_tmpMt.vectorMult3x3( _vSide);
 			m_tmpMt.vectorMult3x3( _vOut );
@@ -470,32 +601,34 @@ package sandy.core.scenegraph
 			changed = true;
 		}
 
-		public function get roll():Number{return _nRoll;}
-		
-		public function get tilt():Number{return _nTilt;}
-		
-		public function get pan():Number{return _nYaw;}
-		
+
+
+
 		/**
-		* Set the position of the camera. Basically apply a translation.
-		* @param x x position of the camera
-		* @param y y position of the camera
-		* @param z z position of the camera
-		*/
-		public function setPosition( x:Number, y:Number, z:Number ):void
+		 * Sets the global position of this object.
+		 *
+		 * @param p_nX 	The x coordinate
+		 * @param p_nY 	The y coordiante
+		 * @param p_nZ 	The z coordiante
+		 */
+		public function setPosition( p_nX:Number, p_nY:Number, p_nZ:Number ):void
 		{
 			changed = true;
 			// we must consider the screen y-axis inversion
-			_p.x = x;
-			_p.y = y;
+			_p.x = p_nX;
+			_p.y = p_nY;
 			_p.z = z;	
 		}
-		
-	
+
+
 		/**
-		 * This method goal is to update the node. For node's with transformation, this method shall
-		 * update the transformation taking into account the matrix cache system.
-		 * FIXME: Transformable nodes shall upate their transform if necessary before calling this method.
+		 * Updates this node or object. 
+		 * 
+		 * <p>For node's with transformation, this method updates the transformation taking into account the matrix cache system.<br/>
+		 * <b>FIXME<b>: Transformable nodes shall upate their transform if necessary before calling this method.</p>
+		 *
+		 * @param p_oModelMatrix [<b>ToDo</b>: Explain the parameters]
+		 * @param p_bChanged
 		 */
 		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
@@ -504,21 +637,20 @@ package sandy.core.scenegraph
 			{
 				 if( p_oModelMatrix )
 				 {
-				 	_oModelCacheMatrix.copy(p_oModelMatrix);
-				 	_oModelCacheMatrix.multiply4x3( m_oMatrix );
+					_oModelCacheMatrix.copy(p_oModelMatrix);
+					_oModelCacheMatrix.multiply4x3( m_oMatrix );
 				 }
 				 else
 				 {
-				 	_oModelCacheMatrix.copy( m_oMatrix );
+					_oModelCacheMatrix.copy( m_oMatrix );
 				 }
 			}
 			//
 			super.update( _oModelCacheMatrix, p_bChanged );
 		}
-	
-	 	/**
-		 * This method shall be called to update the transform matrix of the current object/node
-		 * before being rendered.
+
+		/**
+		 * Updates the transform matrix of the current object/node before it is rendered.
 		 */
 		public function updateTransform():void
 		{
@@ -528,30 +660,34 @@ package sandy.core.scenegraph
 				m_oMatrix.n12 = _vUp.x; 
 				m_oMatrix.n13 = _vOut.x; 
 				m_oMatrix.n14 = _p.x;
-				
+
 				m_oMatrix.n21 = _vSide.y; 
 				m_oMatrix.n22 = _vUp.y * _oScale.y; 
 				m_oMatrix.n23 = _vOut.y; 
 				m_oMatrix.n24 = _p.y;
-				
+
 				m_oMatrix.n31 = _vSide.z; 
 				m_oMatrix.n32 = _vUp.z; 
 				m_oMatrix.n33 = _vOut.z * _oScale.z;  
 				m_oMatrix.n34 = _p.z;
-				
+
 				m_oMatrix.n41 = m_oMatrix.n42 = m_oMatrix.n43 = 0;
 				m_oMatrix.n44 = 1;
 			}
 		}
-			
+
 		/**
-		* Get the position of the element.
-		* If the parameter equals "local" the function returns a vector container the position relative to the parent frame.
-		* If the parameter equals "absolute" the function returns the absolute position in the world frame.
-		* If the parameter equals "camera" the function returns the absolute position in the camera frame.
-		* Default value is "local"
-		* @return the position of the element as a Vector
-		*/
+		 * Returns the position of this group or object.
+		 *
+		 * <p>Choose which coordinate system the returned position refers to, by passing a mode string:<br/>
+		 * The position is returned as a vector in one of the following:<br/>
+		 * If "local", the position is relative to the parent frame.
+		 * If "absolute" the position is in world coordinates
+		 * If "camera" the position is relative to the camera's coordinate system.
+		 * Default value is "local"
+		 *
+		 * @return 	The position of the group or object
+		 */
 		public function getPosition( p_sMode:String = "local" ):Vector
 		{
 			var l_oPos:Vector;
@@ -564,7 +700,13 @@ package sandy.core.scenegraph
 			}
 			return l_oPos;
 		}
-	
+
+		public override function toString():String
+		{
+		    	return "sandy.core.scenegraph.ATransformable";
+		}
+		// 
+		private var m_oMatrix:Matrix4;		
 		// Side Orientation Vector
 		protected var _vSide:Vector;
 		// view Orientation Vector
@@ -582,5 +724,5 @@ package sandy.core.scenegraph
 		protected var _p:Vector;	
 		protected var _oScale:Vector;
 		protected var m_tmpMt:Matrix4; // temporary transform matrix used at updateTransform
-	}
+	}	
 }

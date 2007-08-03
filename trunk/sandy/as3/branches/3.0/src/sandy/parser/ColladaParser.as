@@ -4,19 +4,13 @@ package sandy.parser
 	import flash.events.Event;
 	import flash.net.URLRequest;
 	
-	import sandy.core.data.Matrix4;
-	import sandy.core.data.Vector;
-	import sandy.core.scenegraph.Geometry3D;
-	import sandy.core.scenegraph.Node;
-	import sandy.core.scenegraph.Shape3D;
+	import sandy.core.data.*;
+	import sandy.core.scenegraph.*;
 	import sandy.events.QueueEvent;
-	import sandy.materials.Appearance;
-	import sandy.materials.BitmapMaterial;
-	import sandy.materials.ColorMaterial;
-	import sandy.math.Matrix4Math;
+	import sandy.materials.*;
 	import sandy.util.LoaderQueue;
 	import sandy.util.NumberUtil;
-	import sandy.core.data.Vertex;
+	import sandy.math.Matrix4Math;
 	
 	public class ColladaParser extends AParser implements IParser
 	{
@@ -81,26 +75,11 @@ package sandy.parser
 				var l_oNodes : XMLList;
 				var l_nNodeLen : int;
 				var l_oAppearance : Appearance = m_oStandardAppearance;
+				var l_oVector : Vector;
 				//var l_oScale : Transform3D;
 				
-				// -- scale
-				if( p_oNode.scale.length() > 0 ) {
-					l_oMatrix.multiply( 
-						Matrix4Math.scaleVector( stringToVector( p_oNode.scale ) )
-					);
-				}
-				// -- translation
-				if( p_oNode.translate.length() > 0 ) {
-					l_oMatrix.multiply( 
-						Matrix4Math.translationVector( stringToVector( p_oNode.translate ) )
-					);
-				}
-				
 				l_oGeometry = new Geometry3D();
-				//l_oAppearance = m_oStandardAppearance;//getAppearance( p_oNode );
 				l_oAppearance = getAppearance( p_oNode );
-				//l_oMaterials = getMaterials( p_oNode );
-				//l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ "D__Dev_FlexProjects_Papervision3DTutorial_assets_borobudur-java-indonesia_png" ].bitmapData ) );
 				
 				l_aGeomArray = p_oNode.instance_geometry.@url.split( "#" );
 				l_sGeometryID = l_aGeomArray[ 1 ];
@@ -109,6 +88,47 @@ package sandy.parser
 				
 				// -- create the new shape
 				l_oShape = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
+
+				// -- scale
+				if( p_oNode.scale.length() > 0 ) {
+					/* l_oMatrix.multiply( 
+						Matrix4Math.scaleVector( stringToVector( p_oNode.scale ) )
+					); */
+					l_oVector = stringToVector( p_oNode.scale );
+					l_oShape.scaleX = l_oVector.x;
+					l_oShape.scaleY = l_oVector.z;
+					l_oShape.scaleZ = l_oVector.y;
+				}
+				// -- translation
+				if( p_oNode.translate.length() > 0 ) {
+					/* l_oMatrix.multiply( 
+						Matrix4Math.translationVector( stringToVector( p_oNode.translate ) )
+					); */
+					l_oVector = stringToVector( p_oNode.translate );
+					l_oShape.setPosition( l_oVector.x, l_oVector.z, l_oVector.y );
+
+				}
+				// -- rotate
+				if( p_oNode.rotate.length() > 0 ) {
+					var l_oRotations : Array = stringToArray( p_oNode.rotate );
+					l_oMatrix.multiply( 
+						Matrix4Math.axisRotation( 
+							l_oRotations[ 0 ],
+							l_oRotations[ 2 ],
+							l_oRotations[ 1 ],
+							l_oRotations[ 3 ] )
+					);
+				}
+				// -- baked matrix
+				if( p_oNode.matrix.length() > 0 ) {
+					l_oMatrix.multiply(
+						stringToMatrix( p_oNode.matrix ) 
+					);
+					l_oShape.setPosition( l_oMatrix.n14, l_oMatrix.n34, l_oMatrix.n24 );
+					l_oShape.scaleX = l_oMatrix.n11;
+					l_oShape.scaleY = l_oMatrix.n33;
+					l_oShape.scaleZ = l_oMatrix.n22;
+				}
 
 				// -- loop through subnodes
 				l_oNodes = p_oNode.node;
@@ -121,11 +141,9 @@ package sandy.parser
 					if( l_oNode != null )
 						l_oShape.addChild( l_oNode );
 				}
-
-//				l_oShape.appearance = l_oAppearance;//;new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
-
 				// -- doesn't work yet
-				l_oShape.matrix = l_oMatrix;
+				//l_oShape.matrix = l_oMatrix;
+				
 				return l_oShape;
 			} 
 			else 
@@ -293,10 +311,28 @@ package sandy.parser
 			var l_nValues : int = l_aValues.length;
 			
 			if( l_nValues != 3 )
-				throw new Error( "A vector must have 3 values" );
+				throw new Error( "ColladaParser.stringToVector(): A vector must have 3 values" );
 			
 			return new Vector( l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ] );
-	}
+		}
+		
+		private function stringToMatrix( p_sValues : String ) : Matrix4
+		{
+			var l_aValues : Array = p_sValues.split(" ");
+			var l_nValues : int = l_aValues.length;
+			
+			if( l_nValues != 16 )
+				throw new Error( "ColladaParser.stringToMatrix(): A vector must have 16 values" );
+
+			var l_oMatrix4 : Matrix4 = new Matrix4(
+				l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ], l_aValues[ 3 ],
+				l_aValues[ 4 ], l_aValues[ 5 ], l_aValues[ 6 ], l_aValues[ 7 ],
+				l_aValues[ 8 ], l_aValues[ 9 ], l_aValues[ 10 ], l_aValues[ 11 ],
+				l_aValues[ 12 ], l_aValues[ 13 ], l_aValues[ 14 ], l_aValues[ 15 ]
+			);
+
+			return l_oMatrix4;
+		}
 		
 		private function getAppearance( p_oNode : XML ) : Appearance
 		{
@@ -368,8 +404,6 @@ package sandy.parser
 					l_oImage.@id,
 					new URLRequest( RELATIVE_TEXTURE_PATH + "/" + l_oImages[ l_oImage.@id ].fileName )
 				);
-					
-				trace(l_oImages[ l_oImage.@id ].fileName);
 			}
 			l_oQueue.addEventListener( QueueEvent.QUEUE_COMPLETE, imageQueueCompleteHandler );
 			l_oQueue.addEventListener( QueueEvent.QUEUE_LOADER_ERROR, imageQueueLoaderErrorHandler );

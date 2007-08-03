@@ -109,7 +109,7 @@ package sandy.core.scenegraph
 		/**
 		 * The parent node of this node.
 		 *
-		 * <p>The reference is null this nod has no parent (for exemple for a root node).
+		 * <p>The reference is null this nod has no parent (for exemple for a root node).</p>
 		 */
 		public function get parent():Node
 		{
@@ -388,7 +388,7 @@ package sandy.core.scenegraph
 		 * <p>The method also updates the bounding volumes to make a more accurate culling system possible.<br/>
 		 * First the bounding sphere is updated, and if intersecting, the bounding box is updated to perform a more
 		 * precise culling.</p>
-		 * <b>[MANDATORY] The update method must be called first!</b>
+		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
 		 * @param p_oFrustum	The frustum of the current camera
 		 * @param p_oViewMatrix	<b>[ToDo: explain]</b>

@@ -1,4 +1,3 @@
-		
 /*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
@@ -31,44 +30,59 @@ package sandy.core.scenegraph
 	import sandy.view.Frustum;
 	
 	/**
+	 * The Sprite3D class is use to create a 3D sprite.
+	 *
+	 * <p>A Sprite3D can be seen as a special Sprite2D.<br/>
+	 * It has an appearance that is a movie clip containing 360 frames (at least!) with texture.</p>
+	 * 
+	 * <p>Depending on the camera position, a different frame of the clip is shown, givin a 3D effect.<p/>
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		1.0
 	 * @date 		20.05.2006
 	 **/
 	final public class Sprite3D extends ATransformable implements IDisplayable
 	{	
-		/**
-		* A Sprite3D is in fact a special Sprite2D. A Sprite3D is batween a real Object3D and a Sprite2D.
-		* It has a skin which is a movie clip containing 360 frames (at least!). 
-		* Depending on the camera position, the _currentframe of the Clip3D will change, to give a 3D effect.
-		* @param	pOffset Number 	A number between [0-360] to give an offset in the 3D representation.
-		* @param 	pScale Number 	A number used to change the scale of the displayed object. In case that the object projected dimension
-		* 							isn't adapted to your needs. Default value is 1.0 which means unchanged. A value of 2.0 will make the object
-		* 							twice bigger and so on.
-		*/
-		// FIXME Create a Sprite as the spriteD container, and offer a method to attach a visual content as a child of the sprite
-		public function Sprite3D( p_name:String, p_oContent:MovieClip, p_opScale:Number=1, pOffset:Number=0 ) 
+		// FIXME Create a Sprite as the spriteD container, 
+		// and offer a method to attach a visual content as a child of the sprite
+		
+		 /**
+	 	 * Creates a Sprite3D
+		 *
+		 * @param p_sName 	A string identifier for this object
+		 * @param p_oContent	The Movieclip containing the textures
+		 * @param p_nScale 	A number used to change the scale of the displayed object.
+		 * 			In case that the object projected dimension
+		 *			isn't adapted to your needs. 
+		 *			Default value is 1.0 which means unchanged. 
+		 * 			A value of 2.0 will make the object will double the size
+		 * 		 
+		 * @param p_nOffset 	A number between [0-360] to give a frame offset into the clip.
+		 */
+		public function Sprite3D( p_sName:String, p_oContent:MovieClip, p_nScale:Number=1, p_nOffset:Number=0 ) 
 		{
-			super(p_name);
+			super(p_sName);
 			m_oContainer = new Sprite();
 			World3D.getInstance().container.addChild( m_oContainer );
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
-	        _oBBox 		= null;
-	        setBoundingSphereRadius( 30 );
-	        // --
-			_nScale = p_opScale;
+	        	_oBBox 		= null;
+	        	setBoundingSphereRadius( 30 );
+	        	// --
+			_nScale = p_nScale;
 			// --
 			content = p_oContent;
 			// --
 			_dir = new Vertex( 0, 0, -1 );
 			_vView = new Vector( 0, 0, 1 );
 			// -- set the offset
-			_nOffset = pOffset;
+			_nOffset = p_nOffset;
 		}
 
-
+		/**
+		 * The MovieClip containg the texture for this sprite
+		 */
 		public function set content( p_container:MovieClip ):void
 		{
 			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
@@ -78,47 +92,70 @@ package sandy.core.scenegraph
 			m_nH2 = m_oContainer.height / 2;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function get content():MovieClip
 		{
 			return m_oContent;
 		}
 		
+		/**
+		 * The container of this sprite ( canvas )
+		 */
 		public function get container():Sprite
-		{return m_oContainer;}
+		{
+			return m_oContainer;
+		}
 		
+		/**
+		 * Sets the radius of bounding sphere for this sprite.
+		 *
+		 * @param p_nRadius	The radius
+		 */
 		public function setBoundingSphereRadius( p_nRadius:Number ):void
-		{ _oBSphere.radius = p_nRadius; }
+		{
+			_oBSphere.radius = p_nRadius; 
+		}
 	
 		/**
-		* getScale
-		* <p>Allows you to get the scale of the Sprite3D and later change it with setSCale.
-		* It is a number usefull to change the dimension of the sprite rapidly.
-		* </p>
-		* @param	void
-		* @return Number the scale value.
-		*/
+		 * The scale of this sprite.
+		 *
+		 * <p>Using scale, you can change the dimension of the sprite rapidly.</p>
+		 */
 		public function get scale():Number
 		{ return _nScale; }
 	
 		/**
-		* Allows you to change the oject's scale.
-		* @param	n Number 	The scale. This value must be a Number. A value of 1 let the scale as the perspective one.
-		* 						A value of 2.0 will make the object twice bigger. 0 is a forbidden value
-		*/
+		 * @private
+		 */
 		public function set scale( n:Number ):void
-		{if( n )	_nScale = n; }
+		{
+			if( n )	_nScale = n; 
+		}
 
+		/**
+		 * The depth to draw this sprite at.
+		 * <p>[<b>ToDo</b>: Explain ]</p>
+		 */
 		public function get depth():Number
-		{return m_nDepth;}
+		{
+			return m_nDepth;
+		}
 		  
 		/**
-		 * This method test the current node on the frustum to get its visibility.
-		 * If the node and its children aren't in the frustum, the node is set to cull
-		 * and it would not be displayed.
-		 * This method is also updating the bounding volumes to process the more accurate culling system possible.
-		 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
-		 * precise culling.
-		 * [MANDATORY] The update method must be called first!
+		 * Tests this node against the camera frustum to get its visibility.
+		 *
+		 * <p>If this node and its children are not within the frustum, 
+		 * the node is set to cull and it would not be displayed.<p/>
+		 * <p>The method also updates the bounding volumes to make the more accurate culling system possible.<br/>
+		 * First the bounding sphere is updated, and if intersecting, 
+		 * the bounding box is updated to perform the more precise culling.</p>
+		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
+		 *
+		 * @param p_oFrustum	The frustum of the current camera
+		 * @param p_oViewMatrix	The view martix of the curren camera
+		 * @param p_bChanged
 		 */
 		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
@@ -142,19 +179,24 @@ package sandy.core.scenegraph
 				}
 			}
 			// --
-			if( culled == CullingState.OUTSIDE ) 	container.visible = false;
-			else									container.visible = true;
+			if( culled == CullingState.OUTSIDE )  container.visible = false;
+			else container.visible = true;
 		}
 		
-	    public override function render( p_oCamera:Camera3D ):void
+		/**
+		 * Renders this 3D sprite
+		 *
+		 * @param p_oCamera	The current camera
+		 */
+	    	public override function render( p_oCamera:Camera3D ):void
 		{
-	       const 	l_oMatrix:Matrix4 = _oViewCacheMatrix,
-					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
-					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
-					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
-					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
+	       		const l_oMatrix:Matrix4 = _oViewCacheMatrix,
+			m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
+			m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
+			m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
+			m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 					
-	        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
+	        	_dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
 			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23;
 			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33;
 			
@@ -169,7 +211,7 @@ package sandy.core.scenegraph
 			// -- We push the vertex to project onto the viewport.
 			p_oCamera.addToProjectionList( [_v] );	
 			// --
-	        var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
+	        	var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );
 			if( vNormale.x == 0 ) angle = Math.PI;
 			else if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
@@ -177,12 +219,24 @@ package sandy.core.scenegraph
 			m_oContent.gotoAndStop( __frameFromAngle( angle ) );
 		}
 		
+		/**
+		 * Clears the graphics object of this object's container.
+		 *
+		 * <p>The the graphics that were drawn on the Graphics object is erased, 
+		 * and the fill and line style settings are reset.</p>
+		 */
 		public function clear():void
 		{
 			;//m_oContainer.graphics.clear();
 		}
 		
-		// --
+		/**
+		 * Displays this sprite xxx.
+		 *
+		 * <p>[<b>ToDo</b>: We have a FIXME label here, so it may not work as expected ]</p>
+		 *
+		 * @param p_oContainer	The container to draw on
+		 */
 		public function display( p_oContainer:Sprite = null ):void
 		{
 			//FIXME I don't like the way the perspective is applied here...
@@ -191,7 +245,7 @@ package sandy.core.scenegraph
 			m_oContainer.y = _v.sy - m_nH2;
 		}
 		
-		
+		// Returns the frame to show at the current camera angle
 		private function __frameFromAngle(a:Number):Number
 		{
 			a = NumberUtil.toDegree( a );
@@ -201,10 +255,7 @@ package sandy.core.scenegraph
 				
 	
 		/**
-		* getOffset
-		* Ollows you to get the offset of the Clip3D and later change it with setOffset if you need.
-		* @param	void
-		* @return
+		* The frame offset into the content MovieClip
 		*/
 		public function getOffset():Number
 		{
@@ -212,9 +263,8 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		* Allows you to change the oject offset.
-		* @param	n Number The offset. This value must be between 0 and 360.
-		*/
+		 * @private
+		 */
 		public function setOffset( n:Number ):void
 		{
 			_nOffset = n;

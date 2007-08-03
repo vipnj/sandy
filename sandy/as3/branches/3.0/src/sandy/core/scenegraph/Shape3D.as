@@ -1,3 +1,19 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
 package sandy.core.scenegraph 
 {    
 	import flash.display.Sprite;
@@ -15,22 +31,47 @@ package sandy.core.scenegraph
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 
+	/**
+	 * The Shape3D class is the base class of all true 3D shapes.
+	 *
+	 * <p>It represents a node in the object tree of the world.<br/>
+	 * A Shape3D is a leaf node and can not have any child nodes.<br/>
+	 * It must be the child of a branch group or a transform group, 
+	 * but transformations can be applied to the Shape directly. 
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class Shape3D extends ATransformable implements IDisplayable
 	{ 
+		/**
+		 * The array of polygons building this object.
+		 */		
 		public var aPolygons:Array = new Array();
 
-	    public function Shape3D( p_sName:String="", p_geometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
-	    {
-	        super( p_sName );
-	    	// -- Add this graphical object to the World display list
+		/**
+		 * Creates a 3D object
+		 *
+		 * <p>[<b>Todo</b>: some more explanations]</p>
+		 *
+		 * @param p_sName		A string identifier for this object
+		 * @param p_oGeometry		The geometry of this object
+		 * @param p_oAppearance		The appearance of this objec
+		 * @param p_bUseSingleContainer	Whether tis object should use a single container to draw on
+		 */	
+		public function Shape3D( p_sName:String="", p_oGeometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
+		{
+			super( p_sName );
+			// -- Add this graphical object to the World display list
 			m_oContainer = new Sprite();
 			// --
-	        geometry = p_geometry;
-	        // -- HACK to make sure that the correct container system will be applied
+	        	geometry = p_oGeometry;
+	        	// -- HACK to make sure that the correct container system will be applied
 			m_bUseSingleContainer = !p_bUseSingleContainer;
 			useSingleContainer = p_bUseSingleContainer;
-	        // --
-	        m_bBackFaceCulling = true;
+	        	// --
+	        	m_bBackFaceCulling = true;
 			m_bEnableForcedDepth = false;
 			m_bEnableClipping = false;
 			m_bClipped = false;
@@ -39,82 +80,92 @@ package sandy.core.scenegraph
 			if( p_oAppearance ) appearance = p_oAppearance;
 			// -- 
 			updateBoundingVolumes();
-	    }
-	    
-	    public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
-	    {
-	    	var l_oFace:Polygon;
-	    	// --
-	    	if( p_bUseSingleContainer == m_bUseSingleContainer ) return;
-	    	// --
-	    	if( p_bUseSingleContainer )
-	    	{
-	    		for each( l_oFace in aPolygons )
-	    		{
-					if( World3D.getInstance().container.contains( l_oFace.container ) ) 
-					{
-						l_oFace.container.graphics.clear();
-						World3D.getInstance().container.removeChild( l_oFace.container );
-						this.broadcaster.removeChild( l_oFace.broadcaster );
-					}
-	    		}
 	    	}
-	    	else
+	    	/**
+	    	 * Should this object use a slinge container to draw on?.
+	    	 *
+	    	 * <p>If true, this object renders itself on a single container ( Sprite ),<br/>
+	    	 * if false, each polygon is rendered on its own container.</p>
+	    	 */
+	    	public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
 	    	{
-	    		if( World3D.getInstance().container.contains(m_oContainer) )
-	    		{
-	    			m_oContainer.graphics.clear();
-	    			World3D.getInstance().container.removeChild( m_oContainer );
-	    		}
+	    		var l_oFace:Polygon;
 	    		// --
-	    		for each( l_oFace in aPolygons )
+	    		if( p_bUseSingleContainer == m_bUseSingleContainer ) return;
+	    		// --
+	    		if( p_bUseSingleContainer )
 	    		{
+	    			for each( l_oFace in aPolygons )
+	    			{
+						if( World3D.getInstance().container.contains( l_oFace.container ) ) 
+						{
+							l_oFace.container.graphics.clear();
+							World3D.getInstance().container.removeChild( l_oFace.container );
+							this.broadcaster.removeChild( l_oFace.broadcaster );
+						}
+	    			}
+	    		}
+	    		else
+	    		{
+	    			if( World3D.getInstance().container.contains(m_oContainer) )
+	    			{
+	    				m_oContainer.graphics.clear();
+	    				World3D.getInstance().container.removeChild( m_oContainer );
+	    			}
+	    			// --
+	    			for each( l_oFace in aPolygons )
+	    			{
 					this.broadcaster.addChild( l_oFace.broadcaster );
 					// we reset the polygon container to the original one, and add it to the world container
 					l_oFace.container.graphics.clear();
+	    			}
 	    		}
+	    		m_bUseSingleContainer = p_bUseSingleContainer;
 	    	}
-	    	m_bUseSingleContainer = p_bUseSingleContainer;
-	    }
-
-	
-	            
-	    public function updateBoundingVolumes():void
-	    {
-	        if( m_oGeometry )
-	        {
-	            _oBSphere 	= BSphere.create( m_oGeometry.aVertex );
-	            _oBBox 		= BBox.create( m_oGeometry.aVertex );
-	        }
-	    }
+		/**
+		 * Updates the bounding volumes of this object.
+		 */
+	    	public function updateBoundingVolumes():void
+	    	{
+	    	    if( m_oGeometry )
+	    	    {
+	    	        _oBSphere 	= BSphere.create( m_oGeometry.aVertex );
+	    	        _oBBox 		= BBox.create( m_oGeometry.aVertex );
+	    	    }
+	    	}
 		  
 		/**
-		 * This method test the current node on the frustum to get its visibility.
-		 * If the node and its children aren't in the frustum, the node is set to cull
-		 * and it would not be displayed.
-		 * This method is also updating the bounding volumes to process the more accurate culling system possible.
-		 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
-		 * precise culling.
-		 * [MANDATORY] The update method must be called first!
+		 * Tests this node against the camera frustum to get its visibility.
+		 *
+		 * <p>If this node and its children are not within the frustum, 
+		 * the node is set to cull and it would not be displayed.<p/>
+		 * <p>The method also updates the bounding volumes to make the more accurate culling system possible.<br/>
+		 * First the bounding sphere is updated, and if intersecting, 
+		 * the bounding box is updated to perform the more precise culling.</p>
+		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
+		 *
+		 * @param p_oFrustum	The frustum of the current camera
+		 * @param p_oViewMatrix	The view martix of the curren camera
+		 * @param p_bChanged
 		 */
 		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 
 			/////////////////////////
-	        //// BOUNDING SPHERE ////
-	        /////////////////////////
-	        _oBSphere.transform( _oViewCacheMatrix );
-	        culled = p_oFrustum.sphereInFrustum( _oBSphere );
+	        	//// BOUNDING SPHERE ////
+	        	/////////////////////////
+	        	_oBSphere.transform( _oViewCacheMatrix );
+	        	culled = p_oFrustum.sphereInFrustum( _oBSphere );
 			// --
 			
 			if( culled == Frustum.INTERSECT && _oBBox )
 			{
-	            ////////////////////////
-	            ////  BOUNDING BOX  ////
-	            ////////////////////////
-	            _oBBox.transform( _oViewCacheMatrix );
-	            culled = p_oFrustum.boxInFrustum( _oBBox );
+				////////////////////////
+				////  BOUNDING BOX  ////
+				////////////////////////
+				_oBBox.transform( _oViewCacheMatrix );
+				culled = p_oFrustum.boxInFrustum( _oBBox );
 			}
 			
 			// -- We update the clipped property if necessary and requested by the user.
@@ -131,29 +182,34 @@ package sandy.core.scenegraph
 			{
 				// We clear it to avoid any ghost effect.
 				if( !m_bUseSingleContainer )
-		    	{
-		    		for each( var l_oFace:Polygon in aPolygons )
 		    		{
+		    			for each( var l_oFace:Polygon in aPolygons )
+		    			{
 						l_oFace.container.graphics.clear();
+		    			}
 		    		}
-		    	}
-		    	else
-		    	{
-		    		m_oContainer.graphics.clear();
-		    	}
+		    		else
+		    		{
+		    			m_oContainer.graphics.clear();
+		    		}
 			}
 		}
 		
+		/**
+		 * Renders this 3D object.
+		 *
+		 * @param p_oCamera	The current camera
+		 */		
 		public override function render( p_oCamera:Camera3D ):void
 		{
 			var l_bVisible:Boolean;
 			var l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
-	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
-					l_aNormals:Array = m_oGeometry.aFacesNormals,
-					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
-					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
-					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
-					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
+	        	const l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
+			l_aNormals:Array = m_oGeometry.aFacesNormals,
+			m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
+			m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
+			m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
+			m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 			
 			// -- Now we transform the normals.
 			for each( var l_oNormal:Vertex in l_aNormals )
@@ -215,13 +271,26 @@ package sandy.core.scenegraph
 			// -- We project the vertices
 			p_oCamera.projectArray(l_aPoints );
 		}
-	
+		
+		/**
+		* Clears the graphics object of this object's container.
+		*
+		* <p>The the graphics that were drawn on the Graphics object is erased, 
+		* and the fill and line style settings are reset.</p>
+		*/
 		public function clear():void
 		{
 			m_oContainer.graphics.clear();
 		}
 		
-		// Called only if the useSignelContainer property is enabled!
+		/**
+		 * Performs a z-sorting and renders the objects visible polygons.
+		 *
+		 * <p>The method is called only if the object renders on a single container<br/> 
+		 * - ( useSignelContainer = true ).</p>
+		 *
+		 * @param p_oContainer	The container to draw on
+		 */
 		public function display(  p_oContainer:Sprite = null ):void
 		{
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
@@ -231,13 +300,26 @@ package sandy.core.scenegraph
 				l_oPoly.display( m_oContainer );
 			}
 		}
-		
+
+		/**
+		 * The contianer for this object.
+		 *
+		 * [<b>Todo</b>: Explain when and how]
+		 */
 		public function get container():Sprite
 		{return m_oContainer;}
 		
+		/**
+		 * The depth of this object.
+		 *
+		 * [<b>Todo</b>: Explain when and how]
+		 */
 		public function get depth():Number
 		{return m_nDepth;}
-		
+
+		/**
+		 * The appearance of this object.
+		 */
 		public function set appearance( p_oApp:Appearance ):void
 		{
 			// Now we register to the update event
@@ -250,11 +332,17 @@ package sandy.core.scenegraph
 			}
 		}
 		
-	
+		/**
+		 * @private
+		 */
 		public function get appearance():Appearance 
-		{return m_oAppearance;}
+		{
+			return m_oAppearance;
+		}
 		       
-		
+		/**
+		 * The geometry of this object.
+		 */
 		public function set geometry( p_geometry:Geometry3D ):void
 		{
 			if( p_geometry == null ) return;
@@ -266,19 +354,38 @@ package sandy.core.scenegraph
 			__generatePolygons( m_oGeometry );
 		}
 		
+		/**
+		 * @private
+		 */
 		public function get geometry():Geometry3D
-		{return m_oGeometry;}
+		{
+			return m_oGeometry;
+		}
 		
+		/**
+		 * Should this object be clipped?.
+		 *
+		 * <p>Determins if this object should be clipped against the camrea frustum and the near and far planes.</p>
+		 */
 		public function set enableClipping( b:Boolean ):void
-		{m_bEnableClipping = b;}
+		{
+			m_bEnableClipping = b;
+		}
 	
+		/**
+		 * @private
+		 */
 		public function get enableClipping():Boolean
-		{return m_bEnableClipping;}
+		{
+			return m_bEnableClipping;
+		}
 			
 		/**
-		 * Enable (true) or disable (false) the object forced depth.
-		 * Enable this feature makes the object drawn at a specific depth.
-		 * When correctly used, this feature allows you to avoid some Z-sorting problems.
+		 * Should forced depth be enable for this object?.
+		 *
+		 * <p>If true it is possible to force this object to be drawn at a specific depth,<br/>
+		 * if false the normal Z-sorting algorithm is applied.</p>
+		 * <p>When correctly used, this feature allows you to avoid some Z-sorting problems.</p>
 		 */
 		public function	set enableForcedDepth( b:Boolean ):void
 		{
@@ -290,30 +397,39 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * Returns a boolean value specifying if the depth is forced or not
+		 * @private
 		 */
 		public function	get enableForcedDepth():Boolean
-		{return m_bEnableForcedDepth;}
+		{
+			return m_bEnableForcedDepth;
+		}
 		
 		/**
-		 * Set a forced depth for this object.
-		 * To make this feature working you must enable the ForcedDepth system too.
-		 * The higher the depth is, the sooner the more far the object will be represented.
+		 * The forced depth for this object.
+		 *
+		 * <p>To make this feature work, you must enable the ForcedDepth system too.<br/>
+		 * The higher the depth is, the sooner the more far the object will be represented.</p>
+		 * <p>[<b>ToDo</b>: clarify this a bit]</p>
 		 */
 		public function set forcedDepth( pDepth:Number ):void
-		{m_nForcedDepth = pDepth; changed = true;}
+		{
+			m_nForcedDepth = pDepth; 
+			changed = true;
+		}
 		
 		/**
-		 * Allows you to retrieve the forced depth value.
-		 * The default value is 0.
+		 * @private
 		 */
 		public function get forcedDepth():Number
-		{return m_nForcedDepth;}
+		{
+			return m_nForcedDepth;
+		}
 	
 		/**
-		 * If set to {@code false}, all Face3D of the Object3D will be draw.
-		 * A true value is equivalent to enable the backface culling algorithm.
-		 * Default {@code true}
+		 * Should back face culling be enabled for this object?.
+		 *
+		 * <p>If set to false all faces of this object are drawn.<br/>
+		 * A true value enables the back face culling algorithm - Default true</p>
 		 */
 		public function set enableBackFaceCulling( b:Boolean ):void
 		{
@@ -323,28 +439,24 @@ package sandy.core.scenegraph
 				changed = true;
 			}
 		}
+		
+		/**
+		 * @private
+		 */
 		public function get enableBackFaceCulling():Boolean
-		{return m_bBackFaceCulling;}
-			
-						
-		/**
-		* Represents the Object3D into a String.
-		* @return	A String representing the Object3D
-		*/
-		public override function toString ():String
 		{
-			return "sandy.core.scenegraph.Shape3D" + " " +  m_oGeometry.toString();
-		}	
-	
+			return m_bBackFaceCulling;
+		}
+				
 		/**
-		* Allows to enable the event system with onPress, onRollOver and onRollOut events.
-		* Once this feature is enable this feature, the animation is more CPU intensive.
-		* The default value is false.
-		* This method set the argument value to all the faces of the objet.
-		* As the Face object has also a enableEvents( Boolean ) method, you have the possibility to enable only
-		* the faces that are interessting for you.
-		* @param	b Boolean true to enable event system, false otherwise
-		*/
+		 * Enables the event system for mouse events.
+		 *
+		 * <p>When set to true, the onPress, onRollOver and onRollOut events are broadcast.<br/>
+		 * The event system is enabled or disabled for all faces of this object.<br/>
+		 * As an alternative, you have the possibility to enable events only for specific faces.</p>
+		 *
+		 * <p>Once this feature is enabled, the animation is more CPU intensive.</p>
+		 */
 		public function set enableEvents( b:Boolean ):void
 		{
 			// To use only when use Single container is disabled 
@@ -364,9 +476,9 @@ package sandy.core.scenegraph
 	    			else
 	    			{
 	    				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
-						m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
-						m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
-						m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+					m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+					m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+					m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
 	    			}
 				}
 			}
@@ -396,12 +508,20 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		* This method allows you to change the backface culling side.
-		* For example when you want to display a cube, you are actually outside the cube, and you see its external faces.
-		* But in the case you are inside the cube, by default Sandy's engine make the faces invisible (because you should not be in there).
-		* Now if you need to be only inside the cube, you can call the method, and after that the bue faces will be visible only from the interior of the cube.
-		* The last possibility could be to make the faces visile from inside and oustside the cube. This is really easy to do, you just have to change the enableBackFaceCulling value and set it to false.
-		*/
+		 * Changes the backface culling side.
+		 *
+		 * <p>When you want to display a cube and you are the cube, you see its external faces.<br/>
+		 * The internal faces are not drawn due to back face culling</p>
+		 *
+		 * <p>In case you are inside the cube, by default Sandy's engine still doesn't draw the internal faces
+		 * (because you should not be in there).</p> 
+		 *
+		 * <p>If you need to be only inside the cube, you can call this method to change which side is culled.<br/>
+		 * The faces will be visible only from the interior of the cube.</p>
+		 *
+		 * <p>If you want to be both on the inside and the outside, you want to make the faces visible from on both sides.<br/>
+		 * In that case you just have to set enableBackFaceCulling to false.</p>
+		 */
 		public function swapCulling():void
 		{
 			for each( var v:Polygon in aPolygons )
@@ -411,7 +531,10 @@ package sandy.core.scenegraph
 			changed = true;
 		}
 		
-					
+		/**
+		 * Destroy this object and all its faces
+		 * [<b>ToDo</b>: the method has a FIXME label and may not work as expected]
+		 */
 		public override function destroy():void
 		{
 			// 	FIXME Fix it - it should be more like 
@@ -423,43 +546,59 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * This method returns a clone of the Shape3D object
+		 * This method returns a clone of this object
+		 *
+		 * @return 	The clone
 		 */
 		public function clone( p_sName:String="" ):Shape3D
 		{
 			return new Shape3D( p_sName, geometry.clone(), appearance, m_bUseSingleContainer );
 		}
-	
-	    private function __destroyPolygons():void
-	    {
-	    	if( aPolygons != null && aPolygons.length > 0 )
-	    	{
-	    		var i:int, l:int = aPolygons.length;
-	    		while( i<l )
-		    	{
-		    		this.broadcaster.removeChild( aPolygons[i].broadcaster );
-		    		Polygon( aPolygons[int(i)] ).destroy();
-		    		if( m_bUseSingleContainer == false ) World3D.getInstance().container.removeChild( aPolygons[i].container );
-		    		i++;
-		    	}
-	    	}
-	    	aPolygons.splice(0);
-	    }    
-	    private function __generatePolygons( p_oGeometry:Geometry3D ):void
-	    {
-	    	var i:int = 0;
-	    	//
-	    	for each ( var o:* in p_oGeometry.aFacesVertexID )
-	    	{
-	    		aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
-	    		if( m_oAppearance ) aPolygons[i].appearance = m_oAppearance;
-	    		this.broadcaster.addChild( aPolygons[i].broadcaster );
-	    		// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
-	    		i++;
-	    	}
-	    }
-	    	
-	
+		
+		/**
+		 * Returns a string representation of this object
+		 *
+		 * @return	The fully qualified name of this object and its geometry
+		 */
+		public override function toString ():String
+		{
+			return "sandy.core.scenegraph.Shape3D" + " " +  m_oGeometry.toString();
+		}
+
+		///////////////////
+		///// PRIVATE /////
+		///////////////////
+		
+		private function __destroyPolygons():void
+		{
+	    		if( aPolygons != null && aPolygons.length > 0 )
+			{
+				var i:int, l:int = aPolygons.length;
+				while( i<l )
+				{
+					this.broadcaster.removeChild( aPolygons[i].broadcaster );
+					Polygon( aPolygons[int(i)] ).destroy();
+					if( m_bUseSingleContainer == false ) World3D.getInstance().container.removeChild( aPolygons[i].container );
+						i++;
+				}
+			}
+			aPolygons.splice(0);
+		}
+		
+		private function __generatePolygons( p_oGeometry:Geometry3D ):void
+		{
+			var i:int = 0;
+			//
+			for each ( var o:* in p_oGeometry.aFacesVertexID )
+			{
+				aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+				if( m_oAppearance ) aPolygons[i].appearance = m_oAppearance;
+					this.broadcaster.addChild( aPolygons[i].broadcaster );
+				// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
+				i++;
+			}
+		}
+	    		
 	// ______________
 	// [PRIVATE] DATA________________________________________________				
 		private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		

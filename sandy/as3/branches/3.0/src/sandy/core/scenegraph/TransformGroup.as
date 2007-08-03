@@ -20,17 +20,23 @@ package sandy.core.scenegraph
 	import sandy.view.Frustum;
 	
 	/**
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		16.05.2006
-	**/
+	 * The TransformGroup class is used to create transform group.
+	 *
+	 * <p>It represents a node in the object tree of the world.<br/> 
+	 * Transformations performed on this group are applied to all its children.</p>
+	 * <p>The class is final, i.e. it can not be subclassed.
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	final public class TransformGroup extends ATransformable
 	{
 		/**
-		* Create a new TransformGroup.
-		* This class is one of the most important because it represents a node in the tree scene representation in Sandy.
-		* It has a matrix which is in fact its Transform3D property matrix.
-		*/ 	
+		 * Creates a transform group.
+		 *
+		 * @param  p_sName	A string identifier for this object
+		 */ 	
 		public function TransformGroup( p_sName:String="" )
 		{
 			super( p_sName );
@@ -38,13 +44,18 @@ package sandy.core.scenegraph
 	
 		
 		/**
-		 * This method test the current node on the frustum to get its visibility.
-		 * If the node and its children aren't in the frustum, the node is set to cull
-		 * and it would not be displayed.
-		 * This method is also updating the bounding volumes to process the more accurate culling system possible.
-		 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
-		 * precise culling.
-		 * [MANDATORY] The update method must be called first!
+		 * Tests this node against the camera frustum to get its visibility.
+		 *
+		 * <p>If this node and its children are not within the frustum, 
+		 * the node is set to cull and it would not be displayed.<p/>
+		 * <p>The method also updates the bounding volumes to make the more accurate culling system possible.<br/>
+		 * First the bounding sphere is updated, and if intersecting, 
+		 * the bounding box is updated to perform the more precise culling.</p>
+		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
+		 *
+		 * @param p_oFrustum	The frustum of the current camera
+		 * @param p_oViewMatrix	The view martix of the curren camera
+		 * @param p_bChanged
 		 */
 		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
@@ -58,6 +69,11 @@ package sandy.core.scenegraph
 			//super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
 		
+		/**
+		 * Renders all children of this transformgroup.
+		 *
+		 * @param p_oCamera	The current camera
+		 */
 		public override function render( p_oCamera:Camera3D ):void
 		{
 			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
@@ -74,10 +90,10 @@ package sandy.core.scenegraph
 		
 	
 		/**
-		* Get a String representation of the {@code TransformGroup}.
-		* 
-		* @return	A String representing the {@code TransformGroup}.
-		*/ 
+		 * Returns a string representation of the TransformGroup.
+		 * 
+		 * @return	The fully qualified name.
+		 */ 
 		public override function toString():String
 		{
 			return "sandy.core.scenegraph.TransformGroup";

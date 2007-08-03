@@ -21,34 +21,43 @@ package sandy.core.scenegraph
 	import sandy.view.Frustum;
 	
 	/**
-	 * Class implementing the Abstract class Node.
-	 * It's the basic class for all the classes used to represent the Groups in Sandy.
-	 * It is used as a node in the tree scene structure in Sandy, a node without associated transformation in oposition of TransfromGroup.
+	 * The Group class is used for branch nodes in the Sandy object tree.
+	 *
+	 * <p>This class is fianl, and can not be sub classed</p>
+	 * <p>This group binds together, but can not transform its children.<br/>
+	 * To transform collections of objects, you should add them to a transform group.</p>
+	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		1.0
 	 * @date 		28.03.2006
-	 **/
+	 *
+	 * @see sandy.core.scenegraph.TransformGroup
+	 */
 	final public class Group extends Node
 	{
 		/**
-		* Constructor of Group class.
-		* Group is a concrete node object, and it represents a structure of object.
-		* 
-		* @param	parent
-		*/
+		 * Creates a branch group.
+		 *
+		 * @param p_sName	A string identifier for this object
+		 */
 		public function Group( p_sName:String = "" ) 
 		{
 			super( p_sName );
 		}
 		
 		/**
-		 * This method test the current node on the frustum to get its visibility.
-		 * If the node and its children aren't in the frustum, the node is set to cull
-		 * and it would not be displayed.
-		 * This method is also updating the bounding volumes to process the more accurate culling system possible.
-		 * First the bounding sphere are updated, and if intersecting, the bounding box are updated to perform a more
-		 * precise culling.
-		 * [MANDATORY] The update method must be called first!
+		 * Tests this node against the camera frustum to get its visibility.
+		 *
+		 * <p>If this node and its children are not within the frustum, 
+		 * the node is culled and will not be displayed.<p/>
+		 * <p>This method also updates the bounding volumes to make the more accurate culling system possible.<br/>
+		 * First the bounding sphere is updated, and if intersecting, 
+		 * the bounding box is updated to perform the more precise culling.</p>
+		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
+		 *
+		 * @param p_oFrustum	The frustum of the current camera
+		 * @param p_oViewMatrix	The view martix of the curren camera
+		 * @param p_bChanged
 		 */
 		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
@@ -61,7 +70,11 @@ package sandy.core.scenegraph
 			// --
 			//super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
-		
+		/**
+		 * Renders all children of this group.
+		 *
+		 * @param p_oCamera	The current camera
+		 */	
 		public override function render( p_oCamera:Camera3D ):void
 		{
 			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;

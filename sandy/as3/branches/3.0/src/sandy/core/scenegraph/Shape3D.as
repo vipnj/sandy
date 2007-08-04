@@ -35,9 +35,9 @@ package sandy.core.scenegraph
 	 * The Shape3D class is the base class of all true 3D shapes.
 	 *
 	 * <p>It represents a node in the object tree of the world.<br/>
-	 * A Shape3D is a leaf node and can not have any child nodes.<br/>
-	 * It must be the child of a branch group or a transform group, 
-	 * but transformations can be applied to the Shape directly. 
+	 * A Shape3D is a leaf node and can not have any child nodes.</p>
+	 * <p>It must be the child of a branch group or a transform group, 
+	 * but transformations can be applied to the Shape directly.</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0

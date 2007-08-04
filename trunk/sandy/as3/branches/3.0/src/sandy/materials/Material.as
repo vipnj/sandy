@@ -32,7 +32,7 @@ package sandy.materials
 	public class Material
 	{
 		/**
-		 * The line attributes of this material
+		 * The line attributes of this material.
 		 */
 		public var lineAttributes:LineAttributes;
 		
@@ -104,7 +104,7 @@ package sandy.materials
 		}
 		
 		/**
-		 * The array of filters for this material
+		 * The array of filters for this material.
 		 * 
 		 * <p>You use this property to add an array of filters you want to apply to this material<br>
 		 * To remove the filters, just assign an empty array.</p>

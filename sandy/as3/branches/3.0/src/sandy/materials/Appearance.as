@@ -30,7 +30,7 @@ package sandy.materials
 	public class Appearance 
 	{
 		/**
-		 * Creates an appearance with front and back materials
+		 * Creates an appearance with front and back materials.
 		 *
 		 * <p>If no material is passed, the default material for back and front is a default ColorMaterial.<br/>
 		 * If only a front material is passed, it will be used as back material as well.</p>
@@ -57,7 +57,7 @@ package sandy.materials
 		/**
 		 * The line attributes which is visible from the camera.
 		 *
-		 * <p>If the camera looks at the front page, this is the line attributes for the front material,<br>
+		 * <p>If the camera looks at the front page, this is the line attributes for the front material,<br/>
 		 * otherwise for the back material.[<b>ToDo</b>: Is this really a propery? ]</p>
 		 */
 		public function get lineAttributes():LineAttributes

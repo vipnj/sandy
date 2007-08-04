@@ -17,7 +17,7 @@ limitations under the License.
 package sandy.materials 
 {
 	/**
-	 * Represents the material types used in Sandy
+	 * Represents the material types used in Sandy.
 	 * 
 	 * <p>Types are registered here as constant properties.<br/>
 	 * If new materials are added to the Sandy library, they should be refistered here.</p> 

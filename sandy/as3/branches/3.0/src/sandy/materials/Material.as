@@ -13,6 +13,7 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
+
 package sandy.materials 
 {
 	import flash.display.Sprite;
@@ -20,75 +21,26 @@ package sandy.materials
 	import sandy.core.data.Polygon;
 	
 	/**
-	 * ABSTRACT CLASS
-	 * <p>
-	 * This class is the basis of all the skins. It is abstract so that mean you can't instanciate this class directly.
-	 * </p>
+	 * ABSTRACT CLASS - base class for all materials
+	 * 
+	 * <p>This class should not be directly instatiated</p>
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
-	 * @version		2.0
-	 **/
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class Material
 	{
+		/**
+		 * The line attributes of this material
+		 */
 		public var lineAttributes:LineAttributes;
-	
-		public function get id():Number
-		{return _id;}
-		
-	
-		public function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void
-		{
-			;
-		}
-			
-		public function init( f:Polygon ):void
-		{
-			;
-		}
-	
-		/**
-		 * Returns the type of SKin you are using.
-		 * For the BasicSkin class, this value is set to NONE
-		 * @param	void
-		 * @return SkinType The type constant which represents your skin.
-		 */
-		public function get type():MaterialType
-		{ return m_nType; }
 		
 		/**
-		 * setLightingEnable. Prepare the skin to use the world light or not. The default value is false.
-		 * @param	bool	Boolean	true is the skin use the light of the world, false if no.
-		 * @return	void
+		 * Creates a matrial.
+		 *
+		 * <p>This constructor is never called directly - but by sub class constructors</p>
 		 */
-		public function set lightingEnable ( p_bBool:Boolean ):void
-		{
-			if( _useLight != p_bBool )
-			{
-				_useLight = p_bBool;
-				m_bModified = true;
-			}		
-		}
-		
-		/**
-		 * Set the value of the array of filters you want to apply to the object faces.
-		 * Warning : This is only available since Flash8.
-		 * @param	a Array the array containing the filters you want to apply, or an empty array if you want to clear the filters.
-		 */
-		public function set filters( a:Array ):void
-		{ _filters = a; m_bModified = true;	}
-		
-		/**
-		 * Get the array of filters you are applying to the object faces.
-		 * Warning : This is only available since Flash8.
-		 * @return	Array the array containing the filters you are using, or an empty array if you don't apply anything
-		 */
-		public function get filters():Array
-		{ return _filters; }
-		
-		public function get modified():Boolean
-		{
-			return (m_bModified && ((lineAttributes) ? lineAttributes.modified : true));
-		}
-		
 		public function Material()
 		{
 			_filters 	= [];
@@ -100,12 +52,97 @@ package sandy.materials
 		}
 		
 		/**
-		 * Property that has to be updated when the material needs to have the normals vector in order to compute the correct effect.
-		 * For example, with ligthening enabled, this property must be set to true to render correctly the light effect.
-		 * 
-		 * THe variable is READ ONLY unless you perfectly know what you are doing.
+		 * The unique id of this material
 		 */
+		public function get id():Number
+		{	
+			return _id;
+		}
 		
+	
+		/**
+		 * Renders the polygon dress in this material.
+		 *
+		 * <p>Implemented by sub classes</p>
+		 */
+		public function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void
+		{
+			;
+		}
+			
+		/**
+		 * Not used in this version of Sandy.
+		 *
+		 */
+		public function init( f:Polygon ):void
+		{
+			;
+		}
+	
+		/**
+		 * The material type of this material.
+		 * 
+		 * <p>For the default material this value is set to NONE</p>
+		 */
+		public function get type():MaterialType
+		{ 
+			return m_nType; 
+		}
+		
+		/**
+		 * Is the light enabled for this material?.
+		 *		
+		 * <p>true if this material uses light, false otherwise.</p>
+		 */
+		public function set lightingEnable ( p_bBool:Boolean ):void
+		{
+			if( _useLight != p_bBool )
+			{
+				_useLight = p_bBool;
+				m_bModified = true;
+			}		
+		}
+		
+		/**
+		 * The array of filters for this material
+		 * 
+		 * <p>You use this property to add an array of filters you want to apply to this material<br>
+		 * To remove the filters, just assign an empty array.</p>
+		 */
+		public function set filters( a:Array ):void
+		{ 
+			_filters = a; m_bModified = true;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function get filters():Array
+		{ 
+			return _filters; 
+		}
+		
+		/**
+		 * The modified state of this material.
+		 *
+		 * <p>true if this material or its line attributes were modified since last rendered, false otherwise.</p> 
+		 */
+		public function get modified():Boolean
+		{
+			return (m_bModified && ((lineAttributes) ? lineAttributes.modified : true));
+		}
+				
+		/**
+		 * The repeat property (?).
+		 * 
+		 * Property that has to be updated when the material needs to have the normals 
+		 * vector in order to compute the correct effect.
+		 * For example, with ligthening enabled, this property must be set to true 
+		 * in order to render the light effect correctly.
+		 * .
+		 * <p>[<strong>ToDo</strong>: Explain this better!]</p>
+		 * NOTE: The variable is READ ONLY unless you perfectly know what you are doing.
+		 */
 		public var repeat:Boolean;
 		
 		//////////////////

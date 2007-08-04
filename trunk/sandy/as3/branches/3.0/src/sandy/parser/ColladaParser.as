@@ -210,8 +210,8 @@ package sandy.parser
 					if( l_oNode != null )
 						l_oShape.addChild( l_oNode );
 				}
-				// -- doesn't work yet
-				//l_oShape.matrix = l_oMatrix;
+				
+				l_oShape.matrix = l_oMatrix;
 				
 				return l_oShape;
 			} 

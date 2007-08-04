@@ -1,3 +1,19 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
 package sandy.parser
 {
 	import flash.display.Bitmap;
@@ -12,6 +28,38 @@ package sandy.parser
 	import sandy.util.NumberUtil;
 	import sandy.math.Matrix4Math;
 	
+	/**
+	 * Transforms a COLLADA XML Document into Sandy geometries. 
+	 * <p>Creates a Group as rootnode which appends all geometries it finds. 
+	 * Recommended settings for the COLLADA exporter:</p>
+	 * <ul>
+	 * <li>Relative paths</li>
+	 * <li>Triangulate</li>
+	 * <li>Normals</li>
+	 * </ul>
+	 * 
+	 * @author		Dennis Ippel - ippeldv
+	 * @version		1.0
+	 * @date 		04.08.2007
+	 *
+	 * @example To parse a COLLADA object at runtime:
+	 *
+	 * <listing version="3.0">
+	 *     var parser:IParser = Parser.create( "/path/to/my/colladafile.dae", Parser.COLLADA );
+	 * </listing>
+	 * 
+	 * @example To parse an embedded COLLADA object:
+	 *
+	 * <listing version="3.0">
+	 *     [Embed( source="/path/to/my/colladafile.dae", mimeType="application/octet-stream" )]
+	 *     private var MyCollada:Class;
+	 * 
+	 *     ...
+	 * 
+	 *     var parser:IParser = Parser.create( new MyCollada(), Parser.COLLADA );
+	 * </listing>
+	 */
+	
 	public class ColladaParser extends AParser implements IParser
 	{
 		private var m_oCollada : XML;
@@ -21,11 +69,22 @@ package sandy.parser
 		
 		public var RELATIVE_TEXTURE_PATH : String;
 		
+		/**
+		 * Creates a new COLLADA parser instance.
+		 * 
+		 * @param p_sUrl		Can be either a string pointing to the location of the
+		 * 						COLLADA file or on instance of an embedded COLLADA file
+		 * @param p_nScale		The scale factor
+		 */		
 		public function ColladaParser( p_sUrl:*, p_nScale:Number )
 		{
 			super( p_sUrl, p_nScale );
 		}
 		
+		/**
+		 * Starts the parsing process
+		 * @param e				The Event object
+		 */		
 		protected override function parseData( e:Event=null ) : void
 		{
 			super.parseData( e );
@@ -41,6 +100,10 @@ package sandy.parser
 				parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
 		}
 		
+		/**
+		 * Parses the 3D scene
+		 * @param p_oScene		COLLADA XML's scene node
+		 */		
 		private function parseScene( p_oScene : XML ) : void
 		{
 			// -- local variables
@@ -61,6 +124,12 @@ package sandy.parser
 			dispatchEvent( l_eOnInit );
 		}
 		
+		/**
+		 * Reads the geometry and materials. Also performs scaling, translation
+		 * and rotation operations.
+		 * @param p_oNode		XML node containing a node from the 3D scene
+		 * @return 				A parsed Shape3D
+		 */		
 		private function parseNode( p_oNode : XML ) : Node
 		{
 			// -- local variables
@@ -152,6 +221,13 @@ package sandy.parser
 			}
 		}
 		
+		/**
+		 * Parses the geometry XML of a certain node.
+		 * 
+		 * @param p_sGeometryID		The COLLADA node ID
+		 * @param p_oMaterials		An object array containing all the loaded materials
+		 * @return 					The parsed Geometry3D
+		 */		
 		private function getGeometry( p_sGeometryID : String, p_oMaterials : Object ) :  Geometry3D
 		{
 			var i : int;
@@ -228,11 +304,6 @@ package sandy.parser
 			l_aTriangles = convertTriangleArray( l_oTriangles.input, l_aTriangles, l_nCount );
 			var l_nTriangeLength : int = l_aTriangles.length;
 			
-			// -- get specific array indices
-			var l_nVertexIndex : Number = Number( l_oTriangles.input.( @semantic == "VERTEX" ).@offset );
-			var l_nNormalIndex : Number = Number( l_oTriangles.input.( @semantic == "NORMAL" ).@offset );
-			var l_nUVCoordsIndex : Number = Number( l_oTriangles.input.( @semantic == "TEXCOORD" ).@offset );
-			
 			for( i = 0; i < l_nTriangeLength; i++ )
 			{
 				var l_aVertex : Array = l_aTriangles[ i ].VERTEX;
@@ -247,6 +318,12 @@ package sandy.parser
 			return l_oOutpGeom;
 		}
 		
+		/**
+		 * Takes a space separated string from an XML node and turns it into a vector array
+		 * @param p_sSourceID		The COLLADA node ID
+		 * @param p_oGeometry		And XMLList containing space separated values
+		 * @return 					An array containing parsed vectors
+		 */		
 		private function getFloatArray( p_sSourceID : String, p_oGeometry : XMLList ) : Array
 		{
 			var l_aFloatArray : Array = p_oGeometry..source.( @id == p_sSourceID ).float_array.split(" ");
@@ -266,26 +343,49 @@ package sandy.parser
 			return l_aOutput;
 		}
 		
+		/**
+		 * The <triangles> element provides the information needed to bind vertex
+		 * attributes together and then organize those vertices into individual 
+		 * triangles. This method binds the individual values to the given
+		 * input semantics (can be VERTEX, TEXCOORD, NORMAL, ... )
+		 * 
+		 * @param p_oInput				An XMLList containing the input semantic elements
+		 * @param p_aTriangles			An array containing the vertex attributes for a 
+		 * 								given number of triangles
+		 * @param p_nTriangleCount		The number of triangles
+		 * @return 						An array containing objects that hold vertex attributes
+		 * 								for each input semantic 
+		 */		
 		private function convertTriangleArray( p_oInput : XMLList, p_aTriangles : Array, p_nTriangleCount : int ) : Array
 		{
 			var l_nInput : int = p_oInput.length();
 			var l_nTriangles : int = p_aTriangles.length;
 			var l_aOutput : Array = new Array();
+			var l_nValuesPerTriangle : int = l_nTriangles / p_nTriangleCount;
+			var l_nMaxOffset : int;
 			
+			for( var m:int = 0; m < l_nInput; m++ )
+			{
+				l_nMaxOffset = Math.max( l_nMaxOffset, Number( p_oInput[ m ].@offset ) );
+			}
+			l_nMaxOffset += 1;
 			// -- iterate through all triangles
 			for( var i : int = 0; i < p_nTriangleCount; i++ )
 			{
 				var semantic : Object = new Object();
 				
-				// -- iterate through each input field
-				for( var j : int = 0; j < 3; j++ )
+				for( var j : int = 0; j < l_nValuesPerTriangle; j++ )
 				{
 					for( var k : int = 0; k < l_nInput; k++ )
 					{
-						if( !semantic[ p_oInput[ k ].@semantic ] )
-							semantic[ p_oInput[ k ].@semantic ] = new Array();
+						if( int( p_oInput[ k ].@offset ) == j % l_nMaxOffset )
+						{
+							if( !semantic[ p_oInput[ k ].@semantic ] )
+								semantic[ p_oInput[ k ].@semantic ] = new Array();
 						
-						semantic[ p_oInput[ k ].@semantic ].push( p_aTriangles.shift() );
+							var index:int = ( i * l_nValuesPerTriangle ) + j;
+							semantic[ p_oInput[ k ].@semantic ].push( p_aTriangles[ index ] );	
+						}							
 					}
 				}
 				
@@ -295,6 +395,12 @@ package sandy.parser
 			return l_aOutput;
 		}
 		
+		/**
+		 * Converts a space separated string to an array
+		 * 
+		 * @param p_sValues		A string containing space separated values
+		 * @return 				The resulting array 
+		 */		
 		private function stringToArray( p_sValues : String ) : Array
 		{
 			var l_aValues : Array = p_sValues.split(" ");
@@ -308,6 +414,12 @@ package sandy.parser
 			return l_aValues;
 		}
 		
+		/**
+		 * Converts a string to a vector
+		 * 
+		 * @param p_sValues		A string containing space separated values
+		 * @return 				The resulting vector 
+		 */		
 		private function stringToVector( p_sValues : String ) : Vector
 		{
 			var l_aValues : Array = p_sValues.split(" ");
@@ -319,6 +431,12 @@ package sandy.parser
 			return new Vector( l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ] );
 		}
 		
+		/**
+		 * Converts a space separated string to a matrix
+		 * 
+		 * @param p_sValues		A string containing space separated values
+		 * @return 				The resulting matrix 
+		 */		
 		private function stringToMatrix( p_sValues : String ) : Matrix4
 		{
 			var l_aValues : Array = p_sValues.split(" ");
@@ -337,6 +455,14 @@ package sandy.parser
 			return l_oMatrix4;
 		}
 		
+		/**
+		 * Reads material information. If texture maps are used on the
+		 * original object and the parser cannot find these files, then 
+		 * WireframeMaterial will be used by default.
+		 * 
+		 * @param p_oNode		The XML node containing material information
+		 * @return 				The parsed appearance
+		 */		
 		private function getAppearance( p_oNode : XML ) : Appearance
 		{
 			// -- local variables
@@ -390,6 +516,16 @@ package sandy.parser
 			else return l_oAppearance;
 		}
 		
+		/**
+		 * Extracts the location of the images and used it to load the textures.
+		 * If the images aren't found at the specified path, RELATIVE_TEXTURE_PATH 
+		 * will be used.
+		 * 
+		 * @param p_oLibImages		An XMLList containing information about the images
+		 * @return 					An object array containg the object ID, filename
+		 * 							and loader data
+		 */		
+		
 		private function loadImages( p_oLibImages : XMLList ) : Object
 		{
 			var l_oImages : Object = new Object();
@@ -414,6 +550,13 @@ package sandy.parser
 			return l_oImages;
 		}
 		
+		/**
+		 * The event handler that is fired when the image loading queue has finished
+		 * loading. Bitmapdata is transfered to a material array and the parseScene
+		 * method is called.
+		 * 
+		 * @param p_oEvent		Event object containing LoaderQueue information
+		 */		
 		private function imageQueueCompleteHandler( p_oEvent : QueueEvent ) : void
 		{
 			var l_oLoaders : Object = p_oEvent.loaders;

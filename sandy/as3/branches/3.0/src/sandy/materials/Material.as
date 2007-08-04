@@ -21,7 +21,7 @@ package sandy.materials
 	import sandy.core.data.Polygon;
 	
 	/**
-	 * ABSTRACT CLASS - base class for all materials
+	 * ABSTRACT CLASS - base class for all materials.
 	 * 
 	 * <p>This class should not be directly instatiated</p>
 	 *

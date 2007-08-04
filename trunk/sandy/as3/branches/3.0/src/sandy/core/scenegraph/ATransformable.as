@@ -69,10 +69,10 @@ package sandy.core.scenegraph
 			_vOut 	= new Vector( 0, 0, 1 );
 		}
 		/**
-		* The matrix of this object.
-		*
-		* <p>[<b>Todo</b>: Explain the use of this matrix better ]</p>
-		*/
+		 * The matrix of this object.
+		 *
+		 * <p>[<b>Todo</b>: Explain the use of this matrix better ]</p>
+		 */
 		public function get matrix():Matrix4
 		{
 		    	return m_oMatrix;

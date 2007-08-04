@@ -13,6 +13,7 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
+
 package sandy.materials 
 {
 	import flash.display.BitmapData;
@@ -28,14 +29,12 @@ package sandy.materials
 	import sandy.util.NumberUtil;
 	
 	/**
-	 * BitmapMaterial
-	 * <p>
-	 * This class goals is to display a bitmap onto the 3D shape polygons.
-	 * </p>
+	 * Displays a bitmap on the faces of a 3D shape.
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
-	 * @version		2.0
-	 * @date 		06.04.2007 
-	 **/
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class BitmapMaterial extends Material
 	{
 		public var matrix:Matrix = new Matrix();
@@ -45,10 +44,12 @@ package sandy.materials
 		public var enableAccurateClipping:Boolean = false;
 	
 		/**
-		 * Create a new BitmapMaterial.
-		 * @param t : The bitmapdata
+		 * Creates a new BitmapMaterial.
+		 *
+		 * @param p_oTexture 	The bitmapdata for this material
+		 * @param p_oLineAttr	The line attributes for this material
 		 */
-		public function BitmapMaterial( t:BitmapData, p_oLineAttr:LineAttributes = null )
+		public function BitmapMaterial( p_oTexture:BitmapData, p_oLineAttr:LineAttributes = null )
 		{
 			super();
 			// --
@@ -56,12 +57,18 @@ package sandy.materials
 			// --
 			lineAttributes = p_oLineAttr;
 			// --
-			texture = t;
+			texture = p_oTexture;
 			// --
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
 		}
-	
+		
+		/**
+		 * Renders this material on the face it dresses
+		 *
+		 * @param p_oPolygon	The face to be rendered
+		 * @param p_mcContainer	The container to draw on
+		 */
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
 			const lGraphics:Graphics = p_mcContainer.graphics;
@@ -103,7 +110,7 @@ package sandy.materials
 			}
 		}
 		
-		
+		// 
 		private function _drawPolygon( p_aPoints:Array, p_aUv:Array, p_oGraphics:Graphics ):void
 		{
 			var l_points: Array = p_aPoints.slice();
@@ -146,7 +153,7 @@ package sandy.materials
 			p_oGraphics.endFill();
 		}	
 
-		
+		//
 		private function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
 			var u0: Number = p_aUv[0].u * m_nWidth,
@@ -172,11 +179,17 @@ package sandy.materials
 			return m;
 		}
 				
+		/**
+		 * The texture ( bitmap ) of this material
+		 */
 		public function get texture():BitmapData
 		{
 			return m_oTexture;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set texture( p_oTexture:BitmapData ):void
 		{
 			m_oTexture = p_oTexture;
@@ -187,48 +200,51 @@ package sandy.materials
 		}
 	
 		/**
-		 * Change the transparency of the texture.
-		 * A value is expected to set the transparency. This value represents the percentage of transparency.
-		 * @param pValue An offset to change the transparency. A value between 0 and 100. 
-		 * If the given value isn't i this interval, it will be clamped.
+		 * Changes the transparency of the texture.
+		 *
+		 * <p>The passed value is the percentage of opacity.</p>
+		 *
+		 * @param p_nValue 	A value between 0 and 100. (automatically constrained)
 		 */
-		public function setTransparency( pValue:Number ):void
+		public function setTransparency( p_nValue:Number ):void
 		{
-			pValue = NumberUtil.constrain( pValue/100, 0, 1 );
+			p_nValue = NumberUtil.constrain( p_nValue/100, 0, 1 );
 			if( m_oCmf ) m_oCmf = null;
-			var matrix:Array = [1, 0, 0, 0, 0,
-					 			0, 1, 0, 0, 0, 
-					 			0, 0, 1, 0, 0, 
-					 			0, 0, 0, pValue, 0];
+			var matrix:Array = [	1, 0, 0, 0, 0,
+					 	0, 1, 0, 0, 0, 
+					 	0, 0, 1, 0, 0, 
+					 	0, 0, 0, p_nValue, 0];
 	 
 			m_oCmf = new ColorMatrixFilter( matrix );
 			texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
 		}
 		
-		public override function init( f:Polygon ):void
+
+		/**
+		 * Initiates this material.
+		 *
+		 * @param p_oPolygon	The face dressed by this material
+		 */
+		public override function init( p_oPolygon:Polygon ):void
 		{
-			if( f.vertices.length >= 3 )
+			if( p_oPolygon.vertices.length >= 3 )
 			{
 				var m:Matrix = null;
 				// --
 				if( m_nWidth > 0 && m_nHeight > 0 )
 				{		
-					var l_aUV:Array = f.aUVCoord;
+					var l_aUV:Array = p_oPolygon.aUVCoord;
 					if( l_aUV )
 					{
 						m = _createTextureMatrix( l_aUV );
 					}
 				}
 				// --
-				m_oPolygonMatrixMap[f] = m;
+				m_oPolygonMatrixMap[p_oPolygon] = m;
 			}
 		}
 
-		
-		/**
-		 * @param
-		 * @return
-		 */
+		//
 		private function __getBrightnessTransform( scale:Number ) : Array
 		{
 			var s:Number = scale;

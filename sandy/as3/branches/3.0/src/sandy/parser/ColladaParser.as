@@ -205,22 +205,25 @@ package sandy.parser
 				}
 			}
 			
-			// -- get normals float array 		
-			var l_sNormalsID : String = l_oTriangles.input.( @semantic == "NORMAL" ).@source.split("#")[1];
-			var l_aNormalFloats : Array = getFloatArray( l_sNormalsID, l_oGeometry );
-			var l_nNormalFloats : int = l_aNormalFloats.length;
-			
-			// -- set normals
-			for( i = 0; i < l_nNormalFloats; i++ )
-			{
-				var l_oNormal:Object = l_aNormalFloats[ i ];
+			// -- get normals float array 	
+			if(  l_oTriangles.input.( @semantic == "NORMAL" ).length() > 0 )
+			{	
+				var l_sNormalsID : String = l_oTriangles.input.( @semantic == "NORMAL" ).@source.split("#")[1];
+				var l_aNormalFloats : Array = getFloatArray( l_sNormalsID, l_oGeometry );
+				var l_nNormalFloats : int = l_aNormalFloats.length;
 				
-				l_oOutpGeom.aVertexNormals[ i ] = new Vertex( 
-					l_oNormal.x, 
-					l_oNormal.z,
-					l_oNormal.y
-				);
-			} 
+				// -- set normals
+				for( i = 0; i < l_nNormalFloats; i++ )
+				{
+					var l_oNormal:Object = l_aNormalFloats[ i ];
+					
+					l_oOutpGeom.aVertexNormals[ i ] = new Vertex( 
+						l_oNormal.x, 
+						l_oNormal.z,
+						l_oNormal.y
+					);
+				} 
+			}
 			
 			l_aTriangles = convertTriangleArray( l_oTriangles.input, l_aTriangles, l_nCount );
 			var l_nTriangeLength : int = l_aTriangles.length;
@@ -237,7 +240,7 @@ package sandy.parser
 				var l_aUVs : Array = l_aTriangles[ i ].TEXCOORD;
 
 				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
-				l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 1 ], l_aUVs[ 2 ] );
+				if( l_aUVs != null ) l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 1 ], l_aUVs[ 2 ] );
 
 			}
 
@@ -364,7 +367,7 @@ package sandy.parser
 					var l_sImageID : String = l_oEffect..newparam.( @sid == l_sSurfaceID ).surface.init_from;
 					// -- get image's location on the hard drive
 					
-					if( m_oMaterials[ l_sImageID ] ) l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ l_sImageID ].bitmapData ) );
+					if( m_oMaterials[ l_sImageID ].bitmapData ) l_oAppearance = new Appearance( new BitmapMaterial( m_oMaterials[ l_sImageID ].bitmapData ) );
 					if( l_oAppearance == null ) l_oAppearance = m_oStandardAppearance;
 				}
 				else if( l_oEffect..phong.length() > 0 )
@@ -406,7 +409,6 @@ package sandy.parser
 				);
 			}
 			l_oQueue.addEventListener( QueueEvent.QUEUE_COMPLETE, imageQueueCompleteHandler );
-			l_oQueue.addEventListener( QueueEvent.QUEUE_LOADER_ERROR, imageQueueLoaderErrorHandler );
 			l_oQueue.start();
 			
 			return l_oImages;
@@ -414,19 +416,13 @@ package sandy.parser
 		
 		private function imageQueueCompleteHandler( p_oEvent : QueueEvent ) : void
 		{
-			var l_oLoaders : Object = p_oEvent.getLoaders();
-			
+			var l_oLoaders : Object = p_oEvent.loaders;
+
 			for each( var l_oLoader : Object in l_oLoaders )
 			{
-				m_oMaterials[ l_oLoader.ID ].bitmapData = Bitmap( l_oLoader.loader.content ).bitmapData;
+				if( l_oLoader.loader.content )
+					m_oMaterials[ l_oLoader.ID ].bitmapData = Bitmap( l_oLoader.loader.content ).bitmapData;
 			}
-			
-			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
-		}
-		
-		private function imageQueueLoaderErrorHandler( p_oEvent : QueueEvent ) : void
-		{
-			trace("loading failed");
 			
 			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );
 		}

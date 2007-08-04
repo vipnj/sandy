@@ -24,6 +24,7 @@ package sandy.util
 	
 	import sandy.events.QueueEvent;
 	import sandy.events.SandyEvent;
+	import flash.display.LoaderInfo;
 
 	[Event(name="queueComplete", type="sandy.events.SandyEvent")]
 	[Event(name="queueLoaderError", type="sandy.events.SandyEvent")]
@@ -32,12 +33,12 @@ package sandy.util
 	{
 		private var m_oLoaders : Object;
 		private var m_nLoaders : int;
-		private var m_bErrorOccurred : Boolean;
+		private var m_oQueueEvent : QueueEvent;
 		
 		public function LoaderQueue()
 		{
-			m_bErrorOccurred = false;
 			m_oLoaders = new Object();
+			m_oQueueEvent = new QueueEvent( QueueEvent.QUEUE_COMPLETE );
 		}
 		
 		public function add( p_sID : String, p_oURLRequest : URLRequest ) : void
@@ -65,18 +66,25 @@ package sandy.util
 		private function completeHandler( p_oEvent : Event ) : void
 		{
 			m_nLoaders--;
-			if( m_nLoaders == 0 && !m_bErrorOccurred ) 
-				dispatchEvent( new QueueEvent( QueueEvent.QUEUE_COMPLETE, m_oLoaders ) );
-			else if( m_nLoaders == 0 && m_bErrorOccurred ) 
-				dispatchEvent( new QueueEvent( QueueEvent.QUEUE_LOADER_ERROR ) );
+			
+			if( m_nLoaders == 0 ) 
+			{
+				m_oQueueEvent.loaders = m_oLoaders;
+				dispatchEvent( m_oQueueEvent );
+			}
 		}
 		
-		private function ioErrorHandler( p_oEvent : Event ) : void
-		{
+		private function ioErrorHandler( p_oEvent : IOErrorEvent ) : void
+		{	
+			trace( p_oEvent.text );
+
 			m_nLoaders--;
-			m_bErrorOccurred = true;
-			// additio to fire the error. Otherwhise we don't send anything
-			dispatchEvent( new QueueEvent( QueueEvent.QUEUE_LOADER_ERROR ) );
+			
+			if( m_nLoaders == 0 ) 
+			{
+				m_oQueueEvent.loaders = m_oLoaders;
+				dispatchEvent( m_oQueueEvent );
+			}
 		}
 	}
 }

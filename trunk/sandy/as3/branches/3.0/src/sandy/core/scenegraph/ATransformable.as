@@ -617,7 +617,7 @@ package sandy.core.scenegraph
 			// we must consider the screen y-axis inversion
 			_p.x = p_nX;
 			_p.y = p_nY;
-			_p.z = z;	
+			_p.z = p_nZ;	
 		}
 
 

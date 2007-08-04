@@ -21,24 +21,32 @@ package sandy.events
 	public class QueueEvent extends Event
 	{
 		private var _loaders : Object;
+		
 		public static const QUEUE_COMPLETE : String = "queueComplete";
 		public static const QUEUE_LOADER_ERROR : String = "queueLoaderError";
 		
-		public function QueueEvent( type : String, loaders : Object=null, bubbles : Boolean = false,
+		public function QueueEvent( type : String, bubbles : Boolean = false,
 								   cancelable : Boolean = false)
 		{
 			super(type, bubbles, cancelable);
 			_loaders = loaders;
 		}
 		
-		public function getLoaders() : Object
+		public function set loaders( loaderObject : Object ) : void
+		{
+			_loaders = loaderObject;
+		}
+		
+		public function get loaders() : Object
 		{
 			return _loaders;
 		}
 		
 		override public function clone():Event
 	    {
-	        return new QueueEvent(type, bubbles, _loaders, cancelable);
+	    	var e : QueueEvent = new QueueEvent( type, bubbles, cancelable );
+	    	e.loaders = _loaders;
+	        return e;
 	    }
 	}
 }

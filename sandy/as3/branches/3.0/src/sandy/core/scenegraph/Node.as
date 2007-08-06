@@ -20,7 +20,6 @@ package sandy.core.scenegraph
 	import sandy.bounds.BSphere;
 	import sandy.core.data.Matrix4;
 	import sandy.events.BubbleEventBroadcaster;
-	import sandy.math.Matrix4Math;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	
@@ -41,7 +40,7 @@ package sandy.core.scenegraph
 		// This property represent the culling state of the current node
 		public var culled:CullingState;
 		
-		public var broadcaster:BubbleEventBroadcaster = new BubbleEventBroadcaster();
+		protected var m_oEB:BubbleEventBroadcaster;
 
 		// The class should not be instatiated, but AS3 doesn't allow private constructors
 		
@@ -64,6 +63,7 @@ package sandy.core.scenegraph
 			_visible = true;
 			_oBBox = new BBox();
 			_oBSphere = new BSphere();
+			m_oEB = new BubbleEventBroadcaster();
 			// -- 
 			_oModelCacheMatrix = new Matrix4();
 			_oViewCacheMatrix = new Matrix4();
@@ -71,8 +71,41 @@ package sandy.core.scenegraph
 			culled = CullingState.INSIDE;
 		}
 		
-		// This is a FINAL method, IT CAN NOT BE OVERLOADED.
+		/**
+		 * Access to the broadcaster property.
+		 * The broadcaster is the property used to send events to listeners.
+		 * This property is a {@BubbleEventBroadcaster} intance.
+		 * 
+		 * @return The instance of the current node broadcaster.
+		 */	
+		public function get broadcaster():BubbleEventBroadcaster
+		{
+			return m_oEB;
+		}
 		
+		/**
+		 * Adds listener for specifical event.
+		 * 
+		 * @param t Name of the Event.
+		 * @param oL Listener object.
+		 */
+		public function addEventListener(e:String, oL:*) : void
+		{
+			m_oEB.addEventListener.apply(m_oEB, arguments);
+		}
+		
+		/**
+		 * Removes listener for specifical event.
+		 * 
+		 * @param t Name of the Event.
+		 * @param oL Listener object.
+		 */
+		public function removeEventListener(e:String, oL:*) : void
+		{
+			m_oEB.removeEventListener(e, oL);
+		}
+	
+		// This is a FINAL method, IT CAN NOT BE OVERLOADED.  
 		/**
 		 * The unique id of this node in the node graph.
 		 *
@@ -139,7 +172,7 @@ package sandy.core.scenegraph
 			p_oChild.parent = this;
 			changed =  true ;
 			_aChilds.push( p_oChild );
-			broadcaster.addChild( p_oChild.broadcaster );
+			m_oEB.addChild( p_oChild.broadcaster );
 		}	
 		
 		/**
@@ -314,7 +347,7 @@ package sandy.core.scenegraph
 				_aChilds[int(l)] = null;	
 			}
 			_aChilds = null;
-			broadcaster = null;
+			m_oEB = null;
 			
 			// the unlink this node to his parent
 			if( hasParent() == true ) parent.removeChildById( this._id );
@@ -337,7 +370,7 @@ package sandy.core.scenegraph
 				parent.addChild( _aChilds[int(l)] );
 			}
 			_aChilds = null;
-			broadcaster = null;
+			m_oEB = null;
 			changed = true;
 		}
 	

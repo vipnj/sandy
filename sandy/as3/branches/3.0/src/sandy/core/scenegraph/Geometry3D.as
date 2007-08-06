@@ -19,6 +19,7 @@ package sandy.core.scenegraph
 	//import flash.utils.Dictionary;
 	
 	import sandy.core.data.UVCoord;
+	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	
 	
@@ -86,13 +87,7 @@ package sandy.core.scenegraph
 		*/
 		public function init():void
 		{
-			/*
-			aVertex = new Dictionary();
-			aFacesVertexID = new Dictionary();
-			aFacesNormals = new Dictionary();
-			aFacesUVCoordsID = new Dictionary();
-			aVertexNormals = new Dictionary();
-			aUVCoords = new Dictionary();*/
+			;
 		}
 		
 		/**
@@ -304,6 +299,85 @@ package sandy.core.scenegraph
 			return m_nLastUVId;
 		}
 		
+		
+		public function generateFaceNormals():void
+		{
+			if( aFacesNormals.length > 0 )  return;
+			else
+			{
+				for each( var a:Array in aFacesVertexID )
+				{
+					// If face is linear, as Line3D, no face normal to process
+					if( a.length < 3 ) continue;
+					// --
+					var lA:Vertex, lB:Vertex, lC:Vertex;
+					lA = aVertex[a[0]];
+					lB = aVertex[a[1]];
+					lC = aVertex[a[2]];
+					// --
+					var lV:Vector = new Vector( lB.wx - lA.wx, lB.wy - lA.wy, lB.wz - lA.wz );
+					var lW:Vector = new Vector( lB.wx - lC.wx, lB.wy - lC.wy, lB.wz - lC.wz );
+					// we compute de cross product
+					var lNormal:Vector = lV.cross( lW );
+					// we normalize the resulting vector
+					lNormal.normalize();
+					// --
+					setFaceNormal( getNextFaceNormalID(), lNormal.x, lNormal.y, lNormal.z );
+				}
+			}
+		}
+
+
+		public function generateVertexNormals():void
+		{
+			if( aVertexNormals.length > 0 )  return;
+			else
+			{
+				var lId:uint = 0;
+				for( lId = 0; lId < aFacesVertexID.length; lId++ )
+				{
+					var l_aList:Array = aFacesVertexID[ lId ];
+					// -- get the normal of that face
+					var l_oNormal:Vertex = aFacesNormals[ lId ];
+					// for some reason, no normal has been set up here. 
+					if( l_oNormal == null )
+						continue;
+					// -- add it to the corresponding vertex normals
+					if( null == aVertexNormals[l_aList[0]] )
+					{
+						m_nLastVertexNormalId++;
+						aVertexNormals[l_aList[0]] = new Vertex();
+					}
+					Vertex( aVertexNormals[l_aList[0]] ).add( l_oNormal );
+					
+					if( null == aVertexNormals[l_aList[1]] )
+					{
+						m_nLastVertexNormalId++;
+						aVertexNormals[l_aList[1]] = new Vertex();
+					}
+					Vertex( aVertexNormals[l_aList[1]] ).add( l_oNormal );
+					
+					if( null == aVertexNormals[l_aList[2]] )
+					{
+						m_nLastVertexNormalId++;
+						aVertexNormals[l_aList[2]] = new Vertex();
+					}
+					Vertex( aVertexNormals[l_aList[2]] ).add( l_oNormal );
+					
+					// -- We update the number of faces these vertex belongs to
+					aVertex[l_aList[0]].nbFaces++;
+					aVertex[l_aList[1]].nbFaces++;
+					aVertex[l_aList[2]].nbFaces++;
+				}
+				
+				for( lId = 0; lId < aVertexNormals.length; lId++ )
+				{
+					var l_oVertex:Vertex = aVertex[ lId ];
+					if( l_oVertex.nbFaces ) Vertex( aVertexNormals[ lId ] ).scale( 1 / l_oVertex.nbFaces );
+				}
+			}
+		}
+				
 		/**
 		* Returns a clone of this Geometry3D.
 		* 	

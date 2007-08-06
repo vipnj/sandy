@@ -70,7 +70,7 @@ package sandy.core.data
 		protected var m_oContainer:Sprite;
 		protected var m_oVisibilityRef:Vertex;
 		
-		public var broadcaster:BubbleEventBroadcaster = new BubbleEventBroadcaster();
+		protected var m_oEB:BubbleEventBroadcaster = new BubbleEventBroadcaster();
 		
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
 		{
@@ -84,6 +84,40 @@ package sandy.core.data
 			m_oContainer = new Sprite();
 		}
 	
+		/**
+		 * Access to the broadcaster property.
+		 * The broadcaster is the property used to send events to listeners.
+		 * This property is a {@BubbleEventBroadcaster} intance.
+		 * 
+		 * @return The instance of the current node broadcaster.
+		 */	
+		public function get broadcaster():BubbleEventBroadcaster
+		{
+			return m_oEB;
+		}
+		
+		/**
+		 * Adds listener for specifical event.
+		 * 
+		 * @param t Name of the Event.
+		 * @param oL Listener object.
+		 */
+		public function addEventListener(e:String, oL:*) : void
+		{
+			m_oEB.addEventListener.apply(m_oEB, arguments);
+		}
+		
+		/**
+		 * Removes listener for specifical event.
+		 * 
+		 * @param t Name of the Event.
+		 * @param oL Listener object.
+		 */
+		public function removeEventListener(e:String, oL:*) : void
+		{
+			m_oEB.removeEventListener(e, oL);
+		}
+		
 		/**
 		 * visible 
 		 * <p>Say if the face is visible or not</p>
@@ -241,7 +275,7 @@ package sandy.core.data
 
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			broadcaster.broadcastEvent( new BubbleEvent( p_oEvt.type, p_oEvt.target ) );
+			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, p_oEvt.target ) );
 		}
 		
 		/**

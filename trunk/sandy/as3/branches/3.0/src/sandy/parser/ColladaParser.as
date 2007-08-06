@@ -158,11 +158,10 @@ package sandy.parser
 				// -- create the new shape
 				l_oShape = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
 
+/*
 				// -- scale
 				if( p_oNode.scale.length() > 0 ) {
-					/* l_oMatrix.multiply( 
-						Matrix4Math.scaleVector( stringToVector( p_oNode.scale ) )
-					); */
+					
 					l_oVector = stringToVector( p_oNode.scale );
 					l_oShape.scaleX = l_oVector.x;
 					l_oShape.scaleY = l_oVector.z;
@@ -170,9 +169,7 @@ package sandy.parser
 				}
 				// -- translation
 				if( p_oNode.translate.length() > 0 ) {
-					/* l_oMatrix.multiply( 
-						Matrix4Math.translationVector( stringToVector( p_oNode.translate ) )
-					); */
+					/
 					l_oVector = stringToVector( p_oNode.translate );
 					l_oShape.setPosition( l_oVector.x, l_oVector.z, l_oVector.y );
 
@@ -188,6 +185,7 @@ package sandy.parser
 							l_oRotations[ 3 ] )
 					);
 				}
+
 				// -- baked matrix
 				if( p_oNode.matrix.length() > 0 ) {
 					l_oMatrix.multiply(
@@ -198,7 +196,7 @@ package sandy.parser
 					l_oShape.scaleY = l_oMatrix.n33;
 					l_oShape.scaleZ = l_oMatrix.n22;
 				}
-
+*/
 				// -- loop through subnodes
 				l_oNodes = p_oNode.node;
 				l_nNodeLen = l_oNodes.length();
@@ -327,15 +325,28 @@ package sandy.parser
 		private function getFloatArray( p_sSourceID : String, p_oGeometry : XMLList ) : Array
 		{
 			var l_aFloatArray : Array = p_oGeometry..source.( @id == p_sSourceID ).float_array.split(" ");
+			var l_nCount:uint = p_oGeometry..source.( @id == p_sSourceID ).technique_common.accessor.@count;
+			var l_nOffset:uint = p_oGeometry..source.( @id == p_sSourceID ).technique_common.accessor.@stride;
+			
 			var l_nFloatArray : int = l_aFloatArray.length;
 			var l_aOutput : Array = new Array();
 			
-			for( var i:int = 0; i < l_nFloatArray; i += 3 )
+			for( var i:int = 0; i < l_nFloatArray; i += l_nOffset )
 			{
-				var l_oCoords : Object = {
-					x : Number( l_aFloatArray[ i ] ),
-					y : Number( l_aFloatArray[ i + 1 ] ),
-					z : Number( l_aFloatArray[ i + 2 ] )
+				var l_oCoords : Object;
+				// FIX FROM THOMAS to solve the case there's only UV coords exported instead of UVW. To clean 
+				if( l_nOffset == 3 )
+				{
+					l_oCoords = {	x : Number( l_aFloatArray[ i ] ),
+									y : Number( l_aFloatArray[ i + 1 ] ),
+									z : Number( l_aFloatArray[ i + 2 ] )
+								};
+				}
+				else if( l_nOffset == 2 )
+				{
+					l_oCoords =	{	x : Number( l_aFloatArray[ i ] ),
+									y : Number( l_aFloatArray[ i + 1 ] )
+								};
 				}
 				l_aOutput.push( l_oCoords );
 			}

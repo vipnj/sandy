@@ -37,6 +37,12 @@ package sandy.materials
 		public var lineAttributes:LineAttributes;
 		
 		/**
+		 * Specify if the material use the vertex normal information
+		 * Default value is set to false.
+		 */
+		public var useVertexNormal:Boolean = false;
+		
+		/**
 		 * Creates a matrial.
 		 *
 		 * <p>This constructor is never called directly - but by sub class constructors</p>

@@ -76,6 +76,17 @@ package sandy.materials
 		}
 		
 		/**
+		 * Get the use of vertex normal feature of the appearance
+		 *
+		 * <p>true ONLY ONE of the materials is using this feature</p>
+		 */		
+		public function get useVertexNormal():Boolean
+		{ 
+			return Boolean(m_oBackMaterial.useVertexNormal && m_oFrontMaterial.useVertexNormal); 
+		}
+		
+		
+		/**
 		 * @private
 		 */
 		public function set frontMaterial( p_oMat:Material ):void

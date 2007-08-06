@@ -74,9 +74,11 @@ package
 			box = new Box( "myBox", 50, 50, 50, "quad", 3 );
 			box.appearance = l_oTextureAppearance;
 			box.rotateZ = 45;
-			box.useSingleContainer = false;
+			box.useSingleContainer = true;
 			box.enableEvents = true;
-			g.broadcaster.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver );
+			
+			// MODIFICATION, we directly access the node instead of the broadcaster
+			g.addEventListener( MouseEvent.ROLL_OVER, _onBoxRollOver );
 			
 			hedra = new Hedra( "myHedra", 50, 50, 100 );
 			hedra.appearance = l_oTextureAppearance;
@@ -96,7 +98,7 @@ package
 			l_oTorus.appearance = l_oTextureAppearance;	
 	
 			var l_oSphere:Sphere = new Sphere("mySphere", 60, 6, 4 );
-			//l_oCylinder.enableBackFaceCulling = false;
+			l_oCylinder.enableBackFaceCulling = false;
 			l_oSphere.z = 150;
 			l_oSphere.appearance = l_oTextureAppearance;	
 			
@@ -110,17 +112,7 @@ package
 			var line:Line3D = new Line3D( "myLine", new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
 			line.appearance = new Appearance( new ColorMaterial( 0, 0, new LineAttributes( 1, 0xFF ) ) );
 			// -- Tree creation
-			/*
-			tgTranslation.addChild( box );
-			tgRotation.addChild( hedra );
-			tgRotation.addChild( line );
-			tgRotation.addChild( l_oCylinder );
-			tgRotation.addChild( l_oTorus );
-			tgRotation.addChild( l_oSphere );
-			tgRotation.addChild( l_oCone );
-			tgTranslation.addChild( tgRotation );
-			g.addChild( tgTranslation );
-			*/
+
 			tgTranslation.addChild( box );
 			tgTranslation.addChild( hedra );
 			tgTranslation.addChild( line );

@@ -41,6 +41,9 @@ package sandy.core.scenegraph
 	 */
 	public class Camera3D extends ATransformable
 	{
+		public var nbPolygons:uint = 0;
+		public var nbVertices:uint = 0;
+		
 		/**
 		 * The frustum of the camera.
 		 */
@@ -162,6 +165,8 @@ package sandy.core.scenegraph
 		 */
 		public function renderDisplayList():void
 		{
+		    nbPolygons = m_aDisplayList.length;
+		    // --
 		    var l_nId:int=0, l_mcContainer:Sprite = World3D.getInstance().container;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
@@ -219,9 +224,16 @@ package sandy.core.scenegraph
 			var l_nCste:Number;
 			for each( var l_oVertex:Vertex in p_oList )
 			{
-				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
-				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+				if( ! l_oVertex.projected )
+				{
+					l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+					l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
+					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+					l_oVertex.sz = 1 / l_oVertex.wz;
+					
+					l_oVertex.projected = true;
+					nbVertices ++;
+				}
 			}
 		}
 				
@@ -251,6 +263,8 @@ package sandy.core.scenegraph
 		 */
 		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
+			nbVertices = 0;
+			// --
 			if( _perspectiveChanged ) updatePerspective();
 			super.update( p_oModelMatrix, p_bChanged );
 			// SHOULD BE DONE IN A FASTER WAY

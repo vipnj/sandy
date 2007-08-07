@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -50,7 +50,7 @@ class sandy.core.Sprite2D extends Object3D
 	* Set a Skin to the Object3D.
 	* <p>This method will set the the new Skin to all his faces.</p>
 	* 
-	* @param	s	The TexstureSkin to apply to the object
+	* @param	s	The skin to apply to the object. Must be a MovieSkin, not a TextureSkin.
 	* @return	Boolean True is the skin is applied, false otherwise.
 	*/
 	public function setSkin( s:MovieSkin ):Boolean
@@ -104,7 +104,7 @@ class sandy.core.Sprite2D extends Object3D
 	}
 	
 	/**
-	* Render the Object3D.
+	* Render the Sprite2D.
 	* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
 	*/ 
 	public function render ( Void ):Void
@@ -120,6 +120,49 @@ class sandy.core.Sprite2D extends Object3D
 		// --
 		setModified( false );
 	}
+	
+	/**
+	* Hide the Sprite2D.
+	* <p>Hide the sprite by setting its alpha to something low.</p>
+	*/ 
+	public function hide ( Void ):Void
+	{		
+		//trace ("Hiding sprite2D " + name);
+		//container._visible = true;
+		// Store the previous alpha
+		if (container._alpha > 0) {
+			_containerAlpha = container._alpha;
+		} else {
+			_containerAlpha = 100;
+		} 
+		setAlpha (0);
+		setModified( true );
+	}
+	
+	public function setTransparency (a:Number): Void {
+		setAlpha(a);
+	}
+	
+	public function setAlpha (a:Number):Void {
+		container._alpha = a;
+	}
+	
+	/**
+	* Show the Sprite2D.
+	* <p>Show the sprite by setting its alpha to 100.</p>
+	*/ 
+	public function show ( Void ):Void
+	{		
+		//trace ("Showing sprite2D " + name);
+		container._visible = true;
+		if (_containerAlpha > 0) {
+			setAlpha (_containerAlpha);
+		} else {
+			setAlpha (100);
+		}
+		setModified( true );
+	}
+	
 	
 	public function addFace( f:IPolygon ):Void
 	{
@@ -165,4 +208,5 @@ class sandy.core.Sprite2D extends Object3D
 	private var _v:Vertex;
 	private var _nScale:Number;
 	private var _s:MovieSkin;
+	private var _containerAlpha:Number;  // previous alpha setting for restoring later
 }

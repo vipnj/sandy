@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -313,7 +313,7 @@ class sandy.core.group.Node extends EventBroadcaster
 	}
 	
 	/**
-	 * Delete all the childs of this node, and also the datas it is actually storing.
+	 * Delete all the children of this node, and also the data it is actually storing.
 	 * Do a recursive call to child's destroy method.
 	 */
 	public function destroy( Void ):Void 
@@ -329,6 +329,32 @@ class sandy.core.group.Node extends EventBroadcaster
 		// Unlink this node from its parent
 		if( hasParent() == true ) _parent.removeChildById( this._id );
 		removeAllListeners();
+	}
+	
+	/**
+	 * Hide all the children of this node.
+	 * Do a recursive call to child's hide method.
+	 */
+	public function hideChildren (Void):Void {
+		var l:Number = _aChilds.length;
+		while( --l > -1 )
+		{
+			_aChilds[l].hide();
+			_aChilds[l].hideChildren();
+		}
+	}
+	
+	/**
+	 * Show all the children of this node.
+	 * Do a recursive call to child's show method.
+	 */
+	public function showChildren (Void):Void {
+		var l:Number = _aChilds.length;
+		while( --l > -1 )
+		{
+			_aChilds[l].show();
+			_aChilds[l].showChildren();
+		}
 	}
 
 	/**
@@ -372,5 +398,5 @@ class sandy.core.group.Node extends EventBroadcaster
 	private var _aChilds:Array;
 	private var _id:Number;
 	private var _parent:Node;
-	private var _modified:Boolean;
+	private var _modified:Boolean = true; // Force refresh the first time this item is drawn.
 }

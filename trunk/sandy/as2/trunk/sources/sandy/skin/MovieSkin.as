@@ -30,48 +30,83 @@ import flash.geom.Point;
 
 /**
 * MovieSkin
-* Allow you to texture a 3D Object with a movieClip wich contains animation, picture, or video.
+* Allow you to texture a 3D Object with a movieClip which contains animation, picture, or video.
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.2.2
-* @date 		20.04.2007 
+* @version		1.2.3
+* @date 		03.08.2007 
 **/
 class sandy.skin.MovieSkin extends BasicSkin implements Skin
 {
 	/**
 	* Create a new MovieSkin.
-	* @param url : URL to load
+	* @param url : URL to load. Can be an external SWF's url, a symbol name, or a movie clip instance.
 	* @param bDontAnimate : Boolean; if true (the default in Sandy 1.2) we DISABLE the automatic update of the texture property.
 	* @param bSmooth :	Boolean; if true perform smoothing (performance-intensive).
 	*/
-	public function MovieSkin( url:String, bDontAnimate:Boolean, bSmooth:Boolean )
+	public function MovieSkin( url, bDontAnimate:Boolean, bSmooth:Boolean )
 	{
 		// New bitmap will be set later using BitmapUtil.movieToBitmap()
 		super();
 		
-		_url = url;
-		_animate = (bDontAnimate == undefined) ? false : !bDontAnimate;
-	
-		// Try to attach the "url" name from the library (i.e., assume it is an internal symbol)
-		_mc = World3D.getInstance().getContainer().attachMovie(url, "Skin_"+_ID_, -10000-_ID_);
 		
+	
+		var inputIsClip:Boolean = false;
+		
+		// Try to attach the "url" name from the library (i.e., assume it is an internal symbol)
+		if (url instanceof MovieClip) {
+			_mc = World3D.getInstance().getContainer().createEmptyMovieClip("Skin_"+_ID_, -10000-_ID_);
+			
+			// trace ("A movieclip named " + url._name + " was passed to MovieSkin constructor.");
+			// Copy the bitmap from the input clip to the target clip - won't help for animation purposes.
+			// In AS3, we could duplicate the clip and reparent it, but that isn't supported in AS2.			
+			_mc.attachBitmap(BitmapUtil.movieToBitmap(url), _mc.getNextHighestDepth(), "auto", true);
+			_animate = false;
+
+			_url = targetPath(_mc);  // This isn't really valid/used in this case.
+			
+			inputIsClip = true;
+
+		} else {
+			_animate = (bDontAnimate == undefined) ? false : !bDontAnimate;
+			//trace ("URL passed in is a symbol or string");
+			_url = url;
+			// Try to create an instance from a library symbol of the specified name, if it exists.
+			_mc = World3D.getInstance().getContainer().attachMovie(url, "Skin_"+_ID_, -10000-_ID_);
+		}
+		
+	
 		// If attaching the "url" from the library failed, it isn't a symbol,
 		// so assume it is an external URL and try to load it.
 		if( _mc == undefined )
 		{
+			/*
+			if (typeof url == "string") {
+				trace ("URL passed in is a string or _mc creation otherwise failed " + url);
+			} else {
+				trace ("Something is wrong. Url passed in is not a string, it is " + (typeof url));
+			}
+			*/
 			// Create a clip to hold it
 			_mc = World3D.getInstance().getContainer().createEmptyMovieClip("Skin_"+_ID_, -10000-_ID_);
+			
 			_mcl = new MovieClipLoader();
 			_mcl.addListener(this);
 			// Load the external URL in the clip.
 			// The MovieClipLoader class will invoke onLoadInit() when the external swf loads.
-			_mcl.loadClip( url, _mc);
+			_mcl.loadClip(url, _mc);
 			_loaded = true;
 			_initialized = false;
-		}
-		else
-		{
+		} else if (inputIsClip) {
+			// trace ("URL passed in was a clip named '" + url._name + "'");
+			_initialized = false;
+			onLoadInit(_mc);
+			_loaded = false;
+	
+		} else {
+			
+			// trace ("URL passed in was a symbol");
 			// Otherwise, assume the clip is already initialized.
 			_loaded = false;
 			_initialized = true;

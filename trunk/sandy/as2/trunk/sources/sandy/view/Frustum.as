@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -82,7 +82,8 @@ class sandy.view.Frustum
 		var lRadAngle:Number = NumberUtil.toRadian( nFov );
 		// compute width and height of the near and far plane sections
 		var tang:Number = Math.tan(lRadAngle * 0.5) ;
-		// we inverse the vertical axis as Flash a a vertical axis inversed by our 3D one. VERY IMPORTANT
+		// We invert the vertical (Y) axis as Flash has a vertical axis inverted relative to our 3D Y axis. VERY IMPORTANT.
+		// Flash Y values increase towards bottom of screen. 3D Y axis increases going towards top of screen.
 		var yNear:Number = -tang * fNear;
 		var xNear:Number = yNear * nAspect;
 		var yFar:Number = yNear * fFar / fNear;

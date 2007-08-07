@@ -67,7 +67,8 @@ class sandy.core.World3D
 	
 	/**
 	 * Flag to control lighting model. If true then lit objects have full range from black to white.
-	 * If its false (the default) they just range from black to their normal appearance.	 */ 
+	 * If its false (the default) they just range from black to their normal appearance.
+	 */ 
 	public static var GO_BRIGHT:Boolean = false;
 	
 	/**
@@ -89,7 +90,7 @@ class sandy.core.World3D
 		_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 		_ambientLight = 0.3;
 		_isRunning = false;
-		// Put the world in the _root if no other clip is specified as its parent
+		// Put the world in the _root if no other MovieClip is specified as its parent
 		if (mc == undefined) {
 			mc = _root;
 		}
@@ -97,7 +98,7 @@ class sandy.core.World3D
 	}
 
 	/**
-	 * Removes the container clip and recreates it. 
+	 * Removes the container MovieClip and recreates it. 
      * This is a Kludge in order to clean up screen when resetting the world - unsupported and likely buggy
 	 */
 	public function resetContainer( mc:MovieClip ):Void
@@ -154,11 +155,13 @@ class sandy.core.World3D
 	/**
 	 * Get the Singleton instance of World3D.
 	 * 
-	 * @return World3D, the only one instance possible
+	 * @return World3D, the only instance possible
 	 */
 	public static function getInstance( mc:MovieClip ) : World3D
 	{
-		if (_inst == undefined) _inst = new World3D(mc);
+		if (_inst == undefined) {
+			_inst = new World3D(mc);
+		}
 		return _inst;
 	}
 
@@ -253,7 +256,8 @@ class sandy.core.World3D
 	
 	/**
 	 * Specify the lowest light level in the world
-	 * @param	a	the light level	 */
+	 * @param	a	the light level
+	 */
 	public function setAmbientLight( a:Number ):Void
 	{
 		_ambientLight = a;
@@ -262,7 +266,8 @@ class sandy.core.World3D
 	
 	/**
 	 * Get the lowest light level setting
-	 * @return	Number	light level	 */
+	 * @return	Number	light level
+	 */
 	public function getAmbientLight( Void ):Number
 	{
 		return _ambientLight;
@@ -283,7 +288,7 @@ class sandy.core.World3D
 	/**
 	* Get the root {@code Group} of the world.
 	*
-	* @return	Group	THe root group of the World3D instance.
+	* @return	Group	The root group of the World3D instance.
 	*/
 	public function getRootGroup( Void ):Group
 	{
@@ -354,24 +359,33 @@ class sandy.core.World3D
 	////////////////////
 	/**
 	 * Call the recursive rendering of all the children of this branchGroup.
-	 * This is the most important method in all the engine, because the mojority of the computations are done here.
+	 * This is the most important method in all the engine, because the majority of the computations are done here.
 	 * This method is making the points transformations and 2D projections.
 	 */
 	private function __render( Void ) : Void 
 	{
 		var l:Number, lp:Number, vx:Number, vy:Number, vz:Number, offx:Number, offy:Number, nbObjects:Number;
-		var mp11:Number,mp21:Number,mp31:Number,mp41:Number,mp12:Number,mp22:Number,mp32:Number,mp42:Number,mp13:Number,mp23:Number,mp33:Number,mp43:Number,mp14:Number,mp24:Number,mp34:Number,mp44:Number;
-		var m11:Number,m21:Number,m31:Number,m41:Number,m12:Number,m22:Number,m32:Number,m42:Number,m13:Number,m23:Number,m33:Number,m43:Number,m14:Number,m24:Number,m34:Number,m44:Number;
+		var mp11:Number, mp21:Number, mp31:Number, mp41:Number;
+		var mp12:Number, mp22:Number, mp32:Number, mp42:Number;
+		var mp13:Number, mp23:Number, mp33:Number, mp43:Number;
+		var mp14:Number, mp24:Number, mp34:Number, mp44:Number;
+		var m11:Number, m21:Number, m31:Number, m41:Number;
+		var m12:Number, m22:Number, m32:Number, m42:Number;
+		var m13:Number, m23:Number, m33:Number, m43:Number;
+		var m14:Number, m24:Number, m34:Number, m44:Number;
 		var aV:Array;
 		var mp:Matrix4, m:Matrix4, mt:Matrix4;
-		var cam:Camera3D ;
+		var cam:Camera3D;
 		var camCache:Boolean;
 		var obj:Object3D;
 		var v:Vertex;
 		var crt:Node, crtId:Number;
-		// we set a variable to remember the number of objects and in the same time we strop if no objects are displayable
-		if( _oRoot == null )
+		var omitPolys:Array = new Array();
+		
+		// we set a variable to remember the number of objects and in the same time we stop if no objects are displayable
+		if( _oRoot == null ) {
 			return;
+		}
 		//-- we initialize
 		_bGlbCache = false;
 		_aObjects	= [];
@@ -379,7 +393,7 @@ class sandy.core.World3D
 		_aCache 	= [];
 		var aF:Array  = [];
 		MatrixBuffer.init();
-		//
+		// The __parseTree() method  sets _bGlbCache to true if something has been modified.
 		__parseTree( _oRoot, _oRoot.isModified() );
 		//		
 		cam = _oCamera;
@@ -389,56 +403,79 @@ class sandy.core.World3D
 		mp = _mProj = cam.getProjectionMatrix() ;
 		//
 		offx = cam.viewport.nW2; offy = cam.viewport.nH2; 
-		// now we check if there are some modifications on that branch
-		// if true something has changed and we need to compute again
+		// now we check if there are some modifications on that branch;
+		// if true, something has changed and we need to compute again
 		l = nbObjects = _aObjects.length;
 		// If nothing has changed in the whole world
 		if( _bGlbCache == false && camCache == false )
 		{
+			//trace ("Nothing is changing, so we refresh rather than recalculate/redraw");
 			while( --l > -1 )
 			{
+				// Refresh those objects that need it
 				obj = _aObjects[ l ];
 				if( obj.needRefresh() )
 				{
+					//trace ("Refreshing object " + obj);
 					obj.refresh();
 				}
 			}
+			setCompiled(true); // Trying to reduce the number of unneeded computations. Not sure if this is right.
 		}
 		else
-		{
+		{   // Something in the world has changed, so let's recalculate the relevant projections.
+			//trace ("Something changed, so we need to recalculate. _bGlbCache: " +  _bGlbCache + " camCache: " + camCache);
+			
 			while( --l > -1 )
 			{
 				obj = _aObjects[ l ];
 				if( _aCache[ l ] == true || camCache == true )
 				{
 					m = _aMatrix[ l ];
-					if (m) 
-						m = Matrix4Math.multiply(mt,m);
-					else
+					if (m) {
+						m = Matrix4Math.multiply(mt, m);
+					//	setCompiled(true); // This seems to prevent correct refresh of rendered scene., so leave it commented out
+					} else {
 						m = mt;	
+					}
 					//
 					m11 = m.n11; m21 = m.n21; m31 = m.n31; m41 = m.n41;
 					m12 = m.n12; m22 = m.n22; m32 = m.n32; m42 = m.n42;
 					m13 = m.n13; m23 = m.n23; m33 = m.n33; m43 = m.n43;
 					m14 = m.n14; m24 = m.n24; m34 = m.n34; m44 = m.n44;
-					// Now we can transform the objet vertices into the camera coordinates
+					// Now we can transform the object vertices into the camera coordinates
 					obj.depth = 0;
 					aV = obj.aPoints;
-					lp = aV.length;
-					while( --lp > -1 )
+					
+					for (lp = 0; lp < aV.length; lp++) 
 					{
 						v = aV[lp];
 						v.wx = v.x * m11 + v.y * m12 + v.z * m13 + m14;
 						v.wy = v.x * m21 + v.y * m22 + v.z * m23 + m24;
 						v.wz = v.x * m31 + v.y * m32 + v.z * m33 + m34;
-						obj.depth += v.wz;
+						// Check if there is a sign difference (multiplication yields negative number)  which indicates object is partially in front of and partially behind the camera.
+						// Such cases were causing freaky rendering, so let's eliminate those polys as a partial fix
+						if (obj.depth * v.wz < 0) { 
+							//trace ("WARNING - Flipping sign in World3D.__render!!!!");
+							//trace ("obj.depth is " + obj.depth + " and v.wz is " + v.wz);
+							//trace ("Omitting polygon " + _aObjects[ l ].getId());
+							omitPolys[_aObjects[ l ].getId()] = true;
+						} else {
+							obj.depth += v.wz;
+						}
 					}
 					//
 					obj.depth /= aV.length;
-					// Now we clip the object and in case it is visible or patially visible, we project it
-					// into the screen coordinates
+					// Now we check whether we should clip (eliminate) the object from the rendered scene.
+					// If it is visible or partially visible, we project it into the screen coordinates.
+					// It may be clipped due to frustum clipping being active or for some other reason.
+					// See Object3D.clip() method for determining whether to clip an object.
+					// Bruce: This is this for the entire object, not at the polygon level.
+					// FIXME: There are still problems with objects behind the camera appearing in front of the camera, but inverted, as if they
+                    // somehow wrapped around the world.
 					if( obj.clip( cam.frustrum ) == false )
 					{
+						//trace ("Clipping is false for this object");
 						// we add the object to the list of the rendered objects
 						aF.push( obj );
 						//
@@ -452,30 +489,60 @@ class sandy.core.World3D
 						while( --lp > -1 )
 						{
 							v = aV[lp];
+							// Where does the formula come from? Is it right?
+							// It freaks out when Math.abs(c) > 0.
 							var c:Number = 	1 / ( v.wx * mp41 + v.wy * mp42 + v.wz * mp43 + mp44 );
-							v.sx =  c * ( v.wx * mp11 + v.wy * mp12 + v.wz * mp13 + mp14 ) * offx + offx;
+							v.sx =  c * ((v.wx * mp11)+ (v.wy * mp12) + (v.wz * mp13) + mp14 ) * offx + offx;
 							v.sy = -c * ( v.wx * mp21 + v.wy * mp22 + v.wz * mp23 + mp24 ) * offy + offy;
 						}
-
+					} else {
+						// trace ("Clipping is true for this object so we don't draw it at all");
 					}
 				}// end objects loop
 			}
-		}
+			setCompiled(true);
+		} // FIXME? - Bruce put rendering inside conditional instead of always rendering every time through the loop.
+          // This may cause textures on some rotating objects to fail to rotate with the object.
 		
-		aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
-		var l_length:Number = aF.length;
-		//
-		for(var i:Number=0; i < l_length; i++) 
-		{
-			obj = aF[i];
-			obj.container.swapDepths(i);
-			obj.render();
-		}
+			aF.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
+			var l_length:Number = aF.length;
+			//
+			//trace ("omitPolys " + omitPolys);
+			for(var i:Number=0; i < l_length; i++) 
+			{
+				obj = aF[i];
+                // FIXME - This doesn't seem to work right, so I'm disabling this part of the conditional for now
+                //if (omitPolys[obj.getId()]) {
+				if (false) {  
+
+					// This prevents us from drawing polys that look screwy (mess up the camera view)
+					// Because the poly has vertices both in front of and behind camera.
+					// There is probably a better way to calculate this and draw the portion of the poly that is within view (requires
+                    // figuring out a way to add vertices (one more per poly) where the camera plane intercepts the poly.
+                   // For example, a 3-vertex poly would turn into a 4-vertex poly because the camera plane would cut across the poly.
+					trace ("Skipping poly " + obj.getId());
+				} else {
+					obj.container.swapDepths(i);
+					obj.render();
+				}
+			}
+			
+			//setCompiled(true); - FIX - this causes "streaking" of MovieSkin textures on polygons, reaching some incorrect coordinate offscreen
+
+		//}
+	//}
+	
 			
 	} // end method
 
 	
-	private function __parseTree( n:INode, cache:Boolean ):Void
+	private function setCompiled (flag:Boolean):Void {
+		if (flag == false || _root.fastRenderingFlag == true) {
+			getCamera().setCompiled(flag);
+		}
+	}
+	
+	private function __parseTree( n:INode, cache:Boolean ):Void  // FIXME, if n:INode is n:Node, the compiler complains.  The incoming arg might be a Group (_oRoot) or n.getChildList[l].
 	{
 		var a:Array = n.getChildList();
 		var lCache:Boolean = n.isModified();
@@ -503,7 +570,10 @@ class sandy.core.World3D
 			}
 			n.dispose();
 		}
-		n.setModified( false );
+		if (lCache) {
+			// May be faster to just always invoke setModified(), but I'm doing this for testing purposes to limit invocations/trace. FIXME
+			n.setModified( false );
+		}
 		return;
 	}
 	

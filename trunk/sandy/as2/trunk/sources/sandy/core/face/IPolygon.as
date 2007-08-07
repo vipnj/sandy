@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,6 +14,7 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import com.bourre.events.IEventDispatcher;
 import flash.geom.Matrix;
 
 import sandy.core.data.UVCoord;
@@ -28,7 +29,7 @@ import sandy.skin.Skin;
 * @date 		12.01.2006
 * 
 **/
-interface sandy.core.face.IPolygon
+interface sandy.core.face.IPolygon extends IEventDispatcher
 {
 	public function getUVCoords( Void ):Array;
 	
@@ -52,12 +53,12 @@ interface sandy.core.face.IPolygon
 	
 	/**
 	* Say if the face is visible by the camera or not
-	* <p>This method is called during the object rendering, it is very useful to prevent from displaying unvisible faces.</p>
-	* <p>If the user wants to display unvisible faces, he must use {@link mb.sandy.core.Object3D#drawAllFaces} property.</p>
+	* <p>This method is called during the object rendering, it is very useful to prevent from displaying invisible faces.</p>
+	* <p>If the user wants to display invisible faces, he must use Object.enableBackFaceCulling(false).</p>
 	* 
 	* @return	Boolean	a boolean set at true if the face is visible, false otherwise.
 	*/
-	public function isVisible( Void ):Boolean;
+	public function isVisible( faceNum:Number ):Boolean;
 	
 	/**
 	* Display the Face of the Object3D into a MovieClip.
@@ -65,7 +66,7 @@ interface sandy.core.face.IPolygon
 	* <p>{@code mc} represent the MovieClip where the Face must be displayed. 
 	* @param	mc		The MovieClip
 	*/
-	public function render( mc:MovieClip, pS:Skin, pSb:Skin  ):Void;
+	public function render( mc:MovieClip, pS:Skin, pSb:Skin, faceNum:Number ):Void;
 	
 	/**
 	* Set the normale vector of the face. Useful when the normale for this face is alleady computed

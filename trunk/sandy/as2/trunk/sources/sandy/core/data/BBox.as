@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -49,7 +49,7 @@ class sandy.core.data.BBox
 	
 	/**
 	 * Create a BBox object, representing a Bounding Box volume englobing the 3D object passed in parameters.
-	 * Verry usefull for clipping and so performance !
+	 * Very useful for clipping and so performance !
 	 * @param obj Object3D The object that you want to add a bounding Box volume.
 	 */
 	public function compute( a:Array ):Void

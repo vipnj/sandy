@@ -31,8 +31,8 @@ import sandy.math.VectorMath;
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.2.1
-* @date 		16.04.2007
+* @version		1.2.2
+* @date 		07.08.2007
 */
 class sandy.core.transform.Transform3D extends EventBroadcaster implements ITransform3D 
 {
@@ -44,11 +44,14 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	/**
 	 * Create a new Transform3D instance. An identity matrix is created by default, and the transform type is NONE.
 	 */
-	public function Transform3D ( Void )
+	public function Transform3D ( inName:String )
 	{
 		super( this );
 		_m = Matrix4.createIdentity();
 		_type = TransformType.NONE;
+		_name = inName;
+		//_m = Matrix4Math.translation(0, 0, 0);
+		
 	}
 	
 	/**
@@ -331,6 +334,9 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	*/
 	public function isModified( Void ):Boolean
 	{
+		//if (_bModified) {
+			//trace ("Transform3D   .isModified  " + _bModified + " " +  _name);
+		//}
 		return _bModified;
 	}
 	
@@ -341,7 +347,8 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	*/
 	public function setModified( b:Boolean ):Void
 	{
-		_bModified = b;
+		_bModified = b
+		//trace ("Transform3D   .setModified " + _bModified + " " +  _name);
 	}
 	
 	/**
@@ -357,5 +364,6 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	private var _bModified:Boolean;
 	private var _m:Matrix4;
 	private var _type:TransformType;
+	private var _name:String; // For debug purposes.
 
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,6 +14,10 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
+import com.bourre.commands.Delegate;
+import com.bourre.events.BasicEvent;
+import com.bourre.events.EventBroadcaster;
+
 import flash.geom.Matrix;
 
 import sandy.core.data.UVCoord;
@@ -28,27 +32,29 @@ import sandy.skin.SkinType;
 import sandy.skin.TextureSkin;
 import sandy.skin.VideoSkin;
 import sandy.view.Frustum;
+import sandy.events.ObjectEvent;
 
 /**
 * Polygon
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.2.1
-* @date 		28.03.2007 
+* @version		1.2.2
+* @date 		07.08.2007 
 **/
-class sandy.core.face.Polygon implements IPolygon
+class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 {
 	public var depth:Number;
 	public var clipped:Boolean;
 	
 	public function Polygon( oref:Object3D /* ... */ )
 	{
+		super( this );
 		_o = oref;
 		_bfc = 1;
 		_id = Polygon._ID_ ++;
 		_s = _sb = undefined;
-		_aVertex = arguments.slice(1);
+		_aVertex = arguments.slice(1); 
 		_aClipped = _aVertex.slice();
 		_nCL = _nL = _aVertex.length;
 		_aUV = new Array(3);
@@ -134,16 +140,25 @@ class sandy.core.face.Polygon implements IPolygon
 		return _aClipped;
 	}
 	
+	public function getPosition( Void ):Vector
+	{
+		var v:Vertex = _aVertex[0]; // FIX - should this be an average of multiple vertices?
+		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
+	}
+	
 	/** 
-	 * Render the face into a MovieClip.
+	 * Render the polygon into a MovieClip.
 	 *
 	 * @param	{@code mc}	A {@code MovieClip}.
 	 */
-	public function render( mc:MovieClip, pS:Skin, pSb:Skin ): Void
+	public function render( mc:MovieClip, pS:Skin, pSb:Skin, faceNum:Number ): Void
 	{
 		var s:Skin;
 		var l:Number = (clipped == true) ? _nCL : _nL;
 		var a:Array = (clipped == true) ? _aClipped : _aVertex;
+		
+		//trace ("Rendering faceNum  " + faceNum + " for mc " + mc._name);
+		if( _bEv) __prepareEvents( mc );
 		//
 		if( _bfc == 1 ) s = (_s == null) ? pS : _s;
 		else	        s = (_sb == null) ? pSb : _sb;
@@ -203,15 +218,24 @@ class sandy.core.face.Polygon implements IPolygon
 		// -- We normalize the sum and return it
 		var d:Number = 0;
 		var l:Number = _nCL;
-		while( --l > -1 )
+		while( --l > -1 ) {
+			if (d * _aClipped[l].wz < 0) {
+				return 0; // Sign flipped (item is behind camera, so omit the polygon by returning 0 depth.
+			}
 			d += _aClipped[l].wz;
-		return depth = d / _nCL;
+		}
+			
+		 
+		depth = d / _nCL;
+		
+		//trace ("zAverage depth is " + depth);
+		return depth;
 	}
 	
 	/**
 	 * Returns the min depth of its vertex.
 	 * @param Void	
-	 * @return number the minimum depth of it's vertex
+	 * @return number the minimum depth of its vertex
 	 */
 	public function getMinDepth ( Void ):Number
 	{
@@ -237,7 +261,7 @@ class sandy.core.face.Polygon implements IPolygon
 	}
 	
 	/**
-	* Get a String represntation of the {@code NFace3D}.
+	* Get a String representation of the {@code NFace3D}.
 	* 
 	* @return	A String representing the {@code NFace3D}.
 	*/
@@ -246,6 +270,15 @@ class sandy.core.face.Polygon implements IPolygon
 		return new String("sandy.core.face.Polygon");
 	}
 
+	
+	/**
+	* Returns the array of vertices after applying clipping.
+	* When the camera cuts across a triangular polygon, it does so at 2 points,
+	* resulting in a quadrilateral that represents the truncated triangle. (Sketch a picture to make this clear to yourself).
+	* So, if the camera intersects the poly, the Frustum.clipFrustum() method adds a vertex to the vertex list.
+	* @param	frustum
+	* @return	Array of vertices.
+	*/
 	public function clip( frustum:Frustum ):Array
 	{
 		delete _aClipped;
@@ -266,16 +299,30 @@ class sandy.core.face.Polygon implements IPolygon
 		return _id;
 	}
 	
+	public function getName(Void):String
+	{
+		return ("polygon_" + _id);
+	}
+	
 	
 	/**
 	* Enable or not the events onPress, onRollOver and onRollOut with this face.
 	* @param b Boolean True to enable the events, false otherwise.
 	*/
 	public function enableEvents( b:Boolean ):Void
-	{
+	{		
 		_bEv = b;
+		
+		// If events are enabled on this poly, then tell the parent Object3D (owner) to enable separate events
+		// If _bEv is false, we can't undo this, as there may be other polys for who are setting it to true.
+		// So it is the programmer's responsibility to invoke _o.setSeparatePolys(false) manually, if desired.
+		if (_bEv) {
+			//trace ("Enabling separate poly events for object " + _o.name);
+			_o.setSeparatePolys (true);
+		}
 	}
 
+	
 	/**
 	 * isvisible 
 	 * <p>Say if the face is visible or not</p>
@@ -283,10 +330,37 @@ class sandy.core.face.Polygon implements IPolygon
 	 * @param Void
 	 * @return a Boolean, true if visible, false otherwise
 	 */	
-	public function isVisible( Void ): Boolean
+	public function isVisible( faceNum:Number ): Boolean
 	{
-		if( _nL < 3 ) return _bV = true;
-		else return _bV = ( _bfc * ((_aVertex[1].sx - _aVertex[0].sx)*(_aVertex[2].sy - _aVertex[0].sy)-(_aVertex[1].sy - _aVertex[0].sy)*(_aVertex[2].sx - _aVertex[0].sx)) < 0 );
+		/*
+		var temp1:Number;
+		var temp2:Number;
+		var temp3:Number;
+		var temp4:Number;
+		var temp5:Number;
+		var temp6:Number;
+		var temp7:Number;
+		*/
+		if( _nL < 3 ) {
+			_bV = true;
+		} else {
+			// What is the basis for this formula? How does it indicate whether the polygon is facing the camera?
+			// bfc indicates "swapInside"
+			_bV = ( _bfc * ((_aVertex[1].sx - _aVertex[0].sx)*(_aVertex[2].sy - _aVertex[0].sy)-(_aVertex[1].sy - _aVertex[0].sy)*(_aVertex[2].sx - _aVertex[0].sx)) < 0 );
+			/*
+			temp1 = (_aVertex[1].sx - _aVertex[0].sx);
+			temp2 = (_aVertex[2].sy - _aVertex[0].sy);
+			temp3 = (_aVertex[1].sy - _aVertex[0].sy);
+			temp4 = (_aVertex[2].sx - _aVertex[0].sx);
+			temp5 = temp1*temp2;
+			temp6 = temp3*temp4;
+			temp7 = temp1*temp2-temp3*temp4;
+			_bV = ( _bfc * (temp1*temp2-temp3*temp4) < 0 );
+			*/
+			
+		}
+			
+		return _bV;
 	}
 
 	/**
@@ -324,11 +398,26 @@ class sandy.core.face.Polygon implements IPolygon
 	{
 		_vn = n;
 	}
+	public function setNormal( n:Vector ):Void
+	{
+		setNormale(n);
+	}
+	
+	public function getNormale( Void):Vector
+	{
+		return _vn;
+	}
+	public function getNormal( Void):Vector
+	{
+		return getNormale();
+	}
+	
+	
 	
 	/**
 	 * Set up the back skin of the face.
 	 * It corresponds to the skin that is applied to the back of the face, so to the faces that is normally hidden to 
-	 * the user but that is visible if you've set {@code Object3D.drawAllFaces} to true.
+	 * the user but that is visible if you've set {@code Object.enableBackFaceCulling()} to false.
 	 * @param	s	The Skin to set.
 	 */
 	public function setBackSkin( s:Skin ):Void
@@ -373,7 +462,7 @@ class sandy.core.face.Polygon implements IPolygon
 	}
 
 	/**
-	 * Destroy the movieclip attache to this polygon
+	 * Destroy the movieclip attached to this polygon
 	 */
 	public function destroy( Void ):Void
 	{
@@ -389,7 +478,33 @@ class sandy.core.face.Polygon implements IPolygon
 		return _m;
 	}
 
+	//////////////
+	/// PRIVATE
+	//////////////
+	private function __prepareEvents( mc:MovieClip ):Void
+	{
+		//if (!_inited) { // Can't use this, as the clips are recreated and deleted repeatedly
+			//_inited = true
+			mc.onPress = Delegate.create( this, __onPressed );
+			mc.onRollOver = Delegate.create( this, __onRollOver );
+			mc.onRollOut = Delegate.create( this, __onRollOut );
+		//}
+	}
+
+	private function __onPressed( e:BasicEvent ):Void
+	{
+		broadcastEvent( new ObjectEvent( ObjectEvent.onPressEVENT, this ) );
+	}
+	private function __onRollOver( e:BasicEvent ):Void
+	{
+		broadcastEvent( new ObjectEvent( ObjectEvent.onRollOverEVENT, this ) );
+	}	
+	private function __onRollOut( e:BasicEvent ):Void
+	{
+		broadcastEvent( new ObjectEvent( ObjectEvent.onRollOutEVENT, this ) );
+	}	
 	
+	private var _inited:Boolean = false;
 	private var _aUV:Array;
 	private var _aVertex:Array;
 	private var _aClipped:Array;
@@ -397,9 +512,9 @@ class sandy.core.face.Polygon implements IPolygon
 	private var _nCL:Number;
 	private var _o:Object3D; // reference to is owner object
 	/**
-	 * Vertex representing the normal of the face!
+	 * Vector representing the normal of the face!
 	 */
-	private var _vn:Vector; // Vertex containing the normal of the 
+	private var _vn:Vector; // Vector containing the normal of the 
 	/**
 	 * Skin of the face
 	 */ 
@@ -428,8 +543,6 @@ class sandy.core.face.Polygon implements IPolygon
 	/**
 	* The latest movieclip used to render the face
 	*/
-
 	private var _m:Matrix;
-
 }
 

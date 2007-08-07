@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -17,15 +17,17 @@ limitations under the License.
 import sandy.core.group.Node;
 import sandy.core.group.INode;
 import sandy.core.buffer.MatrixBuffer;
-import sandy.core.transform.ITransform3D;
+import sandy.core.transform.Transform3D;
 import sandy.core.data.Matrix4;
 
 /**
 * @author		Thomas Pfeiffer - kiroukou
-* @version		1.0
-* @date 		16.05.2006
+* @author		Bruce Epstein - zeusprod
+* @since		1.0
+* @version		1.2.1
+* @date 		07.08.2007
 **/
-class sandy.core.group.TransformGroup extends Node implements INode
+class sandy.core.group.TransformGroup extends Node implements INode  
 {
 	/**
 	* Create a new TransformGroup.
@@ -33,18 +35,20 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	* It has a matrix which is in fact its Transform3D property matrix.
 	* @param [OPTIONNAL] transform Transform3D The transformation to apply to this transformGroup
 	*/ 	
-	public function TransformGroup( transform:ITransform3D )
+	public function TransformGroup( transform:Transform3D, inName:String )  //  Changed from ITransform3D to Transform3D?
 	{
 		super();
 		_t = (undefined == transform) ? null : transform;
+		setModified( true );
 		_bPop = false;
+		name = (inName == undefined) ? "TransformGroup name" : inName;
 	}
 	
 	/**
 	 * Add a transformation to the current TransformGroup. This allows to apply a transformation to all the childs of the Node.
 	 * @param t		The transformation to add
 	 */
-	public function setTransform( t:ITransform3D ):Void
+	public function setTransform( t:Transform3D ):Void // Changed to Transform3D
 	{
 		_t = t;
 		setModified( true );
@@ -54,7 +58,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
 	 * @return	The transformation 
 	 */
-	public function getTransform( Void ):ITransform3D
+	public function getTransform( Void ):Transform3D // Changed to Transform3D
 	{
 		return _t;
 	}
@@ -72,6 +76,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	
 	public function setModified( b:Boolean ):Void
 	{
+		//trace ("TransformGroup setModified " + b + " " +  name);
 		super.setModified( b );
 		_t.setModified( b );
 	}
@@ -128,7 +133,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	/**
 	* The transformation of this TransformGroup
 	*/
-	private var _t:ITransform3D;
+	private var _t:Transform3D; // Changed to Transform3D
 	private var _bPop:Boolean;
 
 }

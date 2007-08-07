@@ -31,8 +31,8 @@ import sandy.view.Viewport;
 * @author		Thomas Pfeiffer - kiroukou
 * @author		Bruce Epstein - zeusprod
 * @since		1.0
-* @version		1.2.2
-* @date 		18.04.2007
+* @version		1.2.3
+* @date 		07.08.2007
 **/
 class sandy.view.Camera3D 
 {
@@ -346,6 +346,14 @@ class sandy.view.Camera3D
 		return _nFar;
 	}
 	
+    // We need to set _compiled to true after the camera matrix has been computed.
+    // Otherwise, the system perpetually redraws the scene thinking the matrix changed. 
+	public function setCompiled( b:Boolean ):Void
+	{
+		_compiled = b;
+	}
+	
+	
 	/**
 	* Set the position of the camera. Basically apply a translation.
 	* @param x x position of the camera
@@ -357,7 +365,7 @@ class sandy.view.Camera3D
 		_compiled = false;
 		// we must consider the screen y-axis inversion
 		_p.x = x;
-		_p.y = y;
+ 		_p.y = y;
 		_p.z = z;	
 	}
 	
@@ -415,22 +423,22 @@ class sandy.view.Camera3D
 	*/
 	public function isModified( Void ):Boolean
 	{
+		/* If the camera matrix is not compiled, then the camera has been modified */
 		return (_compiled == false);
 	}
 	
 	/**
-	* Compile the camera transformations by multiplicating the matrix together.
-	* Be carefull to call isModified method before to save computations. 
+	* Compile the camera transformations by multiplying the matrix together.
+	* Do this only if isModified() is true, to save computations. 
 	*/
 	public function compile( Void ):Void
 	{
-		if(false == _compiled )
-		{
+		if (isModified()) {
 			// we set up the rotation matrix from euler's angle
 			__updateTransformMatrix();
 			// we add the translation effect
 			_mf = Matrix4Math.multiply ( _mp, _mt );
-			_compiled = true;
+			setCompiled(true);
 		}
 	}
 	
@@ -464,7 +472,11 @@ class sandy.view.Camera3D
 	*/
 	public function getTransformMatrix(Void):Matrix4
 	{
-		if( _compiled == false ) __updateTransformMatrix();
+		if (isModified()) {
+			__updateTransformMatrix();
+			//setCompiled();  // FIXME - This causes the first redraw to be incorrect.
+			//compile(); // FIXME - This causes the first redraw to be incorrect.
+		}
 		return _mt;
 	}
 

@@ -24,6 +24,7 @@ import sandy.core.data.BSphere;
 import sandy.core.data.Vector;
 import sandy.core.data.Vertex;
 import sandy.core.face.IPolygon;
+import sandy.core.face.Polygon;
 import sandy.core.group.Leaf;
 import sandy.core.World3D;
 import sandy.events.ObjectEvent;
@@ -31,8 +32,9 @@ import sandy.events.SkinEvent;
 import sandy.skin.SimpleLineSkin;
 import sandy.skin.Skin;
 import sandy.view.Frustum;
-import sandy.core.transform.ITransform3D;
+import sandy.core.transform.Transform3D; // Changed from ITransform3D to Transform3D
 import sandy.core.data.Matrix4;
+
 
 /**
 * <p>Represent an Object3D in a World3D</p>
@@ -76,9 +78,9 @@ class sandy.core.Object3D extends Leaf
 	*/ 
 	public var aFaces:Array;
 	/**
-	* Array of normals vertex. UNUSED in the current version of the engine.
+	* Array of normals vertex used for the first time in Sandy 1.2 as of August 2007
 	*/
-	public var aNormals:Array;
+	public var aNormals:Array; // Can't initialize normals here. It won't reset for each instance. Must do it in the constructor
 
 	/**
 	* Create a new Object3D.
@@ -96,6 +98,7 @@ class sandy.core.Object3D extends Leaf
 		aPoints		= new Array ();
 		aFaces		= new Array ();
 		_aSorted	= new Array ();
+		aNormals	= new Array ();
 		depth = 0;
 		_backFaceCulling = true;
 		_bPolyClipped    = false;
@@ -122,6 +125,16 @@ class sandy.core.Object3D extends Leaf
 		World3D.getInstance().addEventListener( World3D.onContainerCreatedEVENT, this, __onWorldContainer );
 	}	
 
+	public function setTransparency (a:Number):Void {
+		setAlpha(a);
+	}
+	
+	
+	public function setAlpha (a:Number):Void {
+		container._alpha = a;
+	}
+	
+	
 	public function enableClipping( b:Boolean ):Void
 	{
 		_enableClipping = b;
@@ -199,7 +212,7 @@ class sandy.core.Object3D extends Leaf
 	*/
 	public function getPosition( Void ):Vector
 	{
-		var v:Vertex = aPoints[0];
+		var v:Vertex = aPoints[0]; // FIXME - should this be an average of multiple vertices?
 		return new Vector( v.wx - v.x, v.wy - v.y, v.wz - v.z );
 	}
 
@@ -244,6 +257,14 @@ class sandy.core.Object3D extends Leaf
 		// This could return a 2D Point instead, but I went with Vector since
 		// it is part of the Sandy libraries can we can control the toString(); method.
 		return new Vector (maxX - minX, maxY - minY, 0);
+	}
+	
+	
+	public function getSize(Void):Vector {
+		// The primitives implement a getSize() method, so this is rarely called, except for ASE models.
+		//trace ("Inside object3D.getSize");
+		// FIXME - this should also account for the object's scale, which it does not
+		return getSizeOnStage();
 	}
 	
 	
@@ -311,8 +332,8 @@ class sandy.core.Object3D extends Leaf
 	* Allows to enable the event system with onPress, onRollOver and onRollOut events.
 	* Once this feature is enable this feature, the animation is more CPU intensive.
 	* The default value is false.
-	* This method set the argument value to all the faces of the objet.
-	* As the Face object has also a enableEvents( Boolean ) method, you have the possibility to enable only
+	* This method set the argument value to encompass all the faces of the object.
+	* As the Polygon class has also a enableEvents( Boolean ) method, you have the possibility to enable only
 	* the faces that are interessting for you.
 	* @param	b Boolean true to enable event system, false otherwise
 	*/
@@ -356,7 +377,7 @@ class sandy.core.Object3D extends Leaf
 	}
 
 	/**
-	 * Hide (false) or make visible( true)  the current object.
+	 * Hide (false) or make visible( true) the current object.
 	 * The default state is visible (true)
 	 */
 	public function setVisible( b:Boolean ):Void
@@ -372,6 +393,42 @@ class sandy.core.Object3D extends Leaf
 	public function isVisible( Void ):Boolean
 	{
 		return _visible;
+	}
+	
+	/**
+	* Hide the Object3D.
+	* <p>Hide the object by setting its alpha to zero.</p>
+	*/ 
+	public function hide ( Void ):Void
+	{		
+		//trace ("Hiding Object3D " + name);
+		//setVisible(false);
+		//container._visible = false;
+		// Store the previous alpha
+		if (container._alpha > 0) {
+			_containerAlpha = container._alpha;
+		} else {
+			_containerAlpha = 100;
+		} 
+		setAlpha (0);
+		setModified( true );
+	}
+	
+	/**
+	* Show the Object3D.
+	* <p>Show the object by setting it alpha to 100 or old alpha property (could use visible property instead)</p>
+	*/ 
+	public function show ( Void ):Void
+	{		
+		//trace ("Showing Object3D " + name);
+		//setVisible(true);
+		container._visible = true;
+		if (_containerAlpha > 0) {
+			setAlpha (_containerAlpha);
+		} else {
+			setAlpha (100);
+		}
+		setModified( true );
 	}
 	
 	/**
@@ -426,34 +483,85 @@ class sandy.core.Object3D extends Leaf
 	
 	/**
 	* Render the Object3D.
-	* <p>Check Faces display visibility and store visible Faces into ZBuffer.</p>
+	* <p>Check each face's (polygon's) display visibility and store visible polygons into ZBuffer.</p>
 	*/ 
 	public function render ( Void ):Void
 	{
 		var ndepth:Number;
 		// -- local copy because it's faster
 		var l:Number = aFaces.length;
-		var f:IPolygon;
+		var f:Polygon;  // Changed from IPolygon to Polygon. Is that right?
+		
+		//if (!_needRedraw) {
+			//return;
+		//}
+		
 		//
-		container.clear();
+		emptyContainer();
 		//
 		_aSorted = [];
+		
+	//_root.setFastRendering(true); - Ignore this
 		while( --l > -1 )
 		{
 			f = aFaces[l];
-			if ( f.isVisible() || !_backFaceCulling ) 
-			{
-				ndepth 	= (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
-				if(ndepth) _aSorted.push( f );
+			
+			
+			// The isVisible method checks whether something is a face that is visible to the camera (front face vs. backface)
+			// I don't think it checks whether it also is desirable to render the face. Maybe you need to turn on clipping to prevent spurious rendering.
+			// Here are a bunch of attempts at altering the rendering logic. I leave them here for historical purposes,
+			// but most if not all are probably questionable or wrong.
+			//if ( f.isVisible(l) || !_backFaceCulling ) // FIX ME - very inefficient
+			//if (!f.isVisible(l)) { trace ("Poly " + l + " is invisible and separate polys is " + _bSeparatePolys + " and _enableForcedDepth is " + _enableForcedDepth ) };
+			// If backfaceCulling is false, draw the poly
+			// If separate polys is true, draw the poly (or Ihave t convert its coordinates to another system
+			//if (_bSeparatePolys || !_backFaceCulling || f.isVisible(l)) {  // Is there an optimizing compiler to prevent execution of unneeded clauses?
+			if (!_backFaceCulling || f.isVisible(l)) {
+				ndepth = (_enableForcedDepth) ? _forcedDepth : f.getZAverage();
+				//trace ("nDepth is " + ndepth);
+				if (ndepth) {
+					//trace ("Pushing poly " + l + " of depth " + ndepth);
+					_aSorted.push( f );
+				
+				} else {
+					// Skip this poly (or clip it instead)
+					//trace ("NOT Pushing poly " + l + " of depth " + ndepth);
+				}
 			}
 		}
+		
+		//trace ("There are " + aFaces.length + " polys, of which " + _aSorted.length + " are visible");
 		//
 		_aSorted.sortOn( "depth", Array.NUMERIC | Array.ASCENDING );
 		//
+		
+		// Create a "child" clip to told the polys (after destroying the old one if necessary)
+		//trace ("child before " + container.child);
 		l = _aSorted.length;
-		while( --l > -1 )
-		{
-			_aSorted[l].render( container, _s, _sb );				
+		
+		// This is used only if the polygons are to be rendered in separate movie clips.
+        // It is useful for easy per-poly event handling but is presumably slower.
+		if (_bSeparatePolys) {
+			
+			//trace ("child after " + container.child);
+			var c:MovieClip = container.createEmptyMovieClip( 'child', 0 );
+			//trace ("child name " + c);
+		
+			while( --l > -1 )
+			{
+				// For debugging, including the polygon number in the array
+				var polyNum = _aSorted[l]._id;
+				var mc:MovieClip = c.createEmptyMovieClip( 'c_'+l, l );
+				_aSorted[l].render( mc, _s, _sb, polyNum );
+			
+			}
+		} else {
+			while( --l > -1 )
+			{
+				// For debugging, including the polygon number in the array
+				var polyNum = _aSorted[l]._id;
+				_aSorted[l].render( container, _s, _sb, polyNum );
+			}
 		}
 		// -- 
 		_needRedraw = false;
@@ -465,12 +573,28 @@ class sandy.core.Object3D extends Leaf
 		var f:IPolygon;
 		var l:Number = a.length;
 		//
-		container.clear();
+		emptyContainer();
 		//
-		while( --l > -1 )
-		{
-			a[l].refresh( container, _s, _sb );
+		
+		if (_bSeparatePolys) {
+			//trace ("Refreshing separate polys");
+			var c:MovieClip = container.createEmptyMovieClip( 'child', 0 );
+			while( --l > -1 )
+			{
+				var mc:MovieClip = c.createEmptyMovieClip( 'c_'+l, l );
+				a[l].refresh( mc, _s, _sb );
+			
+			}
+		} else {
+			//trace ("Refreshing single object");
+			while( --l > -1 )
+				{
+					a[l].refresh( container, _s, _sb );
+				}
 		}
+		// -- 
+		
+		
 		// -- 
 		_needRedraw = false;
 	}
@@ -551,7 +675,7 @@ class sandy.core.Object3D extends Leaf
 	 * Add a transformation to the current TransformGroup. This allows to apply a transformation to all the childs of the Node.
 	 * @param t		The transformation to add
 	 */
-	public function setTransform( t:ITransform3D ):Void
+	public function setTransform( t:Transform3D ):Void // Changed from ITransform3D
 	{
 		_t = t;
 		setModified( true );
@@ -561,7 +685,7 @@ class sandy.core.Object3D extends Leaf
 	 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
 	 * @return	The transformation 
 	 */
-	public function getTransform( Void ):ITransform3D
+	public function getTransform( Void ):Transform3D // Changed from ITransform3D
 	{
 		return _t;
 	}
@@ -634,14 +758,17 @@ class sandy.core.Object3D extends Leaf
 					{
 						aClipped = aClipped.concat( aFaces[l].clip( frustum ) );
 					}
-					// We consider that the object is not clipped and needs to be draw.
-					_bPolyClipped = true; // FIXME - This looks wrong. Shouldn't it be set to false?
-					//_bPolyClipped = false;
+					// We consider that the object is not clipped and needs to be drawn.
+					//_bPolyClipped = true; // FIXME - This looks wrong. Shouldn't it be set to false?
+					_bPolyClipped = false;
+					result = false;  // This is the default anyway
 				}// ELSE => INSIDE
 			}// ELSE => INSIDE
 		}// ELSE => INSIDE
 		
-		if( result ) container.clear();
+		if (result) {
+			emptyContainer();
+		}
 		return result;
 	}
 
@@ -682,6 +809,24 @@ class sandy.core.Object3D extends Leaf
 	public function removeEventListener(t:String, oL) : Void
 	{
 		_oEB.removeEventListener( t, oL );
+	}
+	
+	// Use separate polys for easier per-poly event handling
+	public function setSeparatePolys (b:Boolean):Void {
+		if (b != undefined) {
+			_bSeparatePolys = b;
+		}
+		emptyContainer();
+	}
+	
+
+	private function emptyContainer (Void):Void {
+		if (container != undefined) {
+			container.clear();
+			if (container.child != undefined) {
+				container.child.removeMovieClip();
+			}
+		}
 	}
 	
 	//////////////
@@ -754,7 +899,7 @@ class sandy.core.Object3D extends Leaf
 	private var _eventDelegate:Delegate;
 	private var _oBBox:BBox;
 	private var _oBSphere:BSphere;
-	private var _t:ITransform3D;
+	private var _t:Transform3D;  // Changed from ITransform3D
 	private var _oOnPress:ObjectEvent;
 	private var _oOnRelease:ObjectEvent;
 	private var _oOnReleaseOutside:ObjectEvent;
@@ -762,4 +907,6 @@ class sandy.core.Object3D extends Leaf
 	private var _oOnRollOut:ObjectEvent;
 	private var _oEB:EventBroadcaster;	
 	private var _bPolyClipped:Boolean;
+	private var _bSeparatePolys:Boolean = false; // If true, draw each poly  in separate movie clip, which allows us to track events on a poly-by-poly basis
+	private var _containerAlpha:Number;  // previous alpha setting for restoring later
 }

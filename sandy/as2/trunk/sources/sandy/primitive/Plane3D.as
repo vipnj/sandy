@@ -30,8 +30,8 @@ import sandy.primitive.Primitive3D;
 * @author		Nicolas Coevoet - [ NikO ]
 * @author		Bruce Epstein 	- zeusprod
 * @since		0.1
-* @version		1.2.2
-* @date 		02.08.2007 
+* @version		1.2.3
+* @date 		03.08.2007 
 **/
 
 class sandy.primitive.Plane3D extends Object3D implements Primitive3D
@@ -48,6 +48,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	private var _mode : String;
 	
 	private var _mirror : Boolean; // If true, mirror the image, as was the case in old versions of Sandy 1.2 (defaults to false)
+	private var _spin : Boolean; // If true, spin the UV mapping 180 degrees. (could spin the Plane3D or skin texture instead)
 	
 	/**
 	* This is the constructor to call when you nedd to create an Vertical Plane primitive.
@@ -60,7 +61,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 	* @param 	mode String represent the two available modes to generates the faces.
 	* "tri" is necessary to have faces with 3 points, and "quad" for 4 points.
 	*/
-	public function Plane3D(h:Number,lg:Number,q:Number, mode:String, mirror:Boolean)
+	public function Plane3D(h:Number,lg:Number,q:Number, mode:String, mirror:Boolean, spin:Boolean)
 	{
 		super( ) ;
 		_h = (undefined == h) ? 6 : Number(h) ;
@@ -68,6 +69,7 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 		_q = (undefined == q || q <= 0 || q > 10) ?  1 : Number(q) ;
 		_mode = ( undefined == mode || (mode != 'tri' && mode != 'quad') ) ? 'tri' : mode;
 		_mirror = ( undefined == mirror ) ? false : mirror;
+		_spin = ( undefined == spin ) ? false : spin;
 	
 		generate() ;
 	}
@@ -95,28 +97,66 @@ class sandy.primitive.Plane3D extends Object3D implements Primitive3D
 		do
 		{
 			var j:Number = -l2;
+			
 			do
 			{
 				if (_mirror) {
-					p = new Vertex(j,0,i); id1 = aPoints.push (p) - 1;
-					p = new Vertex(j+pasL,0,i); id2 = aPoints.push (p) - 1;
-					p = new Vertex(j+pasL,0,i+pasH); id3 = aPoints.push (p) - 1;
-					p = new Vertex(j,0,i+pasH); id4 = aPoints.push (p) - 1;
-					//We add the texture coordinates
-					uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
-					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
-					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
-					uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
-				} else {
-					p = new Vertex(-(j+pasL),0,i); id3 = aPoints.push (p) - 1;
-					p = new Vertex(-j,0,i); id4 = aPoints.push (p) - 1;
-					p = new Vertex(-j,0,i+pasH); id1 = aPoints.push (p) - 1;
-					p = new Vertex(-(j+pasL),0,i+pasH); id2 = aPoints.push (p) - 1;
 					
-					uv1 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
-					uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
-					uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
-					uv4 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
+					//We add the texture coordinates
+					if (_spin) {
+						//trace ("Spin, mirror");
+						p = new Vertex(j,0,i); id1 = aPoints.push (p) - 1;
+						p = new Vertex(j+pasL,0,i); id2 = aPoints.push (p) - 1;
+						p = new Vertex(j+pasL,0,i+pasH); id3 = aPoints.push (p) - 1;
+						p = new Vertex(j,0,i+pasH); id4 = aPoints.push (p) - 1;
+						uv4 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+						uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
+						uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
+						uv1 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
+					} else {
+						//trace ("no Spin, yes mirror");
+						p = new Vertex(-(j+pasL),0,i); id3 = aPoints.push (p) - 1;
+						p = new Vertex(-j,0,i); id4 = aPoints.push (p) - 1;
+						p = new Vertex(-j,0,i+pasH); id1 = aPoints.push (p) - 1;
+						p = new Vertex(-(j+pasL),0,i+pasH); id2 = aPoints.push (p) - 1;
+						uv1 = new UVCoord ((j+l2)/_lg,(-i+h2-pasH)/_h);
+						uv2 = new UVCoord ((j+l2+pasL)/_lg,(-i+h2-pasH)/_h);
+						uv3 = new UVCoord ((j+l2+pasL)/_lg,(-i+h2)/_h);
+						uv4 = new UVCoord ((j+l2)/_lg,(-i+h2)/_h);
+					}
+				} else {
+					
+					if (_spin) {
+						//trace ("Spin, no mirror");
+						p = new Vertex(-(j+pasL),0,i); id3 = aPoints.push (p) - 1;
+						p = new Vertex(-j,0,i); id4 = aPoints.push (p) - 1;
+						p = new Vertex(-j,0,i+pasH); id1 = aPoints.push (p) - 1;
+						p = new Vertex(-(j+pasL),0,i+pasH); id2 = aPoints.push (p) - 1;
+						uv1 = new UVCoord ((j+l2)/_lg,(i+h2+pasH)/_h);
+						uv2 = new UVCoord ((j+l2+pasL)/_lg,(i+h2+pasH)/_h);
+						uv3 = new UVCoord ((j+l2+pasL)/_lg,(i+h2)/_h);
+						uv4 = new UVCoord ((j+l2)/_lg,(i+h2)/_h);
+						
+					} else {
+						//trace ("No Spin, no mirror");
+						
+						p = new Vertex(j,0,i); id1 = aPoints.push (p) - 1;
+						p = new Vertex(j+pasL,0,i); id2 = aPoints.push (p) - 1;
+						p = new Vertex(j+pasL,0,i+pasH); id3 = aPoints.push (p) - 1;
+						p = new Vertex(j,0,i+pasH); id4 = aPoints.push (p) - 1;
+						uv1 = new UVCoord ((j+l2)/_lg,(-i+h2)/_h);
+						uv2 = new UVCoord ((j+l2+pasL)/_lg,(-i+h2)/_h);
+						uv3 = new UVCoord ((j+l2+pasL)/_lg,(-i+h2-pasH)/_h);
+						uv4 = new UVCoord ((j+l2)/_lg,(-i+h2-pasH)/_h);
+						
+					}
+					/*
+					trace ("uv1:" + uv1.u + " : " + uv1.v);
+					trace ("uv2:" +uv2.u + " : " + uv2.v);
+					trace ("uv3:" +uv3.u + " : " + uv3.v);
+					trace ("uv4:" +uv4.u + " : " + uv4.v);
+					trace("");
+					*/
 				}
 				//Face creation
 				if( _mode == 'tri' )

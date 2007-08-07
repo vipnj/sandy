@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -33,7 +33,7 @@ class sandy.util.BitmapUtil
 	{
 		var bmp:BitmapData;
 		pTransparent 	= (pTransparent == undefined) ? true : pTransparent;
-		if( pTransparent == true && pColor == undefined ) pColor = 0x00FF00CC; // a random color, needed tby the bitmapData constructor to apply transparency
+		if( pTransparent == true && pColor == undefined ) pColor = 0x00FF00CC; // a random color, needed by the bitmapData constructor to apply transparency
 		if( pColor )
 		{
 			bmp = new BitmapData( mc._width, mc._height, pTransparent, pColor );

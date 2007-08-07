@@ -79,7 +79,7 @@ class sandy.skin.VideoSkin extends TextureSkin
 	
 	private function __updateTexture():Void
 	{
-		texture.draw( _video );
+		texture.draw( _video );  // The BitmpaData.draw() method causes a Flash Player security warning when using content from an untrusted domain.
 		// le broadcast ne se fait pas tout seul? car pas de set texture() de réaliser?
 		broadcastEvent( _eOnUpdate );
 	}

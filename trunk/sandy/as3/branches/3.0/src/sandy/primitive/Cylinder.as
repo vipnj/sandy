@@ -81,6 +81,8 @@ package sandy.primitive
 		
 		private var m_bIsTopExcluded:Boolean;
 		private var m_bIsBottomExcluded:Boolean;
+		
+		private var m_bIsWholeMappingEnabled:Boolean;
 
 		/**
 		 * Creates a Cylinder primitive or truncated cone.
@@ -101,8 +103,9 @@ package sandy.primitive
 		 * @param	topRadius	[optional] - An optional parameter for cone- or diverging cylinders
 		 * @param	p_bExcludeBottom[optional] - Exclude the creation of the bottom surface. Default false
 		 * @param	p_bExludeTop	[optional] - Exclude the creation of the top surface. Default false
+		 * @param   p_bWholeMapping [optional] - Specify if the material applied to the cylinder will map the whole cylinder (true and default) or each faces separately (false)
 		 */
-		function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false )
+		function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false, p_bWholeMapping:Boolean = true )
 		{
 			super( p_sName );
 	
@@ -115,7 +118,7 @@ package sandy.primitive
 			var scale :Number = DEFAULT_SCALE;
 			m_bIsBottomExcluded = p_bExcludeBottom;
 			m_bIsTopExcluded = p_bExludeTop;
-			
+			m_bIsWholeMappingEnabled = p_bWholeMapping;
 			geometry = generate();
 		}
 		
@@ -177,10 +180,21 @@ package sandy.primitive
 						aP3 = aVtc[j-1][(i==0?iHorNum:i)-1];
 						aP4 = aVtc[j-1][bEnd?0:i];
 						// -- uv
-						var fJ0:Number = j		/ iVerNum;
-						var fJ1:Number = (j-1)	/ iVerNum;
-						var fI0:Number = (i+1)	/ iHorNum;
-						var fI1:Number = i		/ iHorNum;
+						var fJ0:Number, fJ1:Number, fI0:Number, fI1:Number;
+						if( m_bIsWholeMappingEnabled )
+						{
+							fJ0 = j		/ iVerNum;
+							fJ1 = (j-1)	/ iVerNum;
+							fI0 = (i+1)	/ iHorNum;
+							fI1 = i		/ iHorNum;
+						}
+						else
+						{
+							fJ0 = ((j))	/ iVer;
+							fJ1 = ((j-1))  / iVer;
+							fI0 = 0;
+							fI1 = 1;
+						}
 						//
 						aP4uv = l_oGeometry3D.setUVCoords(l_oGeometry3D.getNextUVCoordID(), fI0, 1-fJ1);
 						aP1uv = l_oGeometry3D.setUVCoords(l_oGeometry3D.getNextUVCoordID(), fI0, 1-fJ0);

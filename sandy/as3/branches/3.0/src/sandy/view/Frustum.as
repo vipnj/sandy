@@ -26,12 +26,16 @@ package sandy.view
 	import sandy.util.NumberUtil;
 	
 	/**
-	* Frustum
-	* Class used to determine if a box, a sphere, or a point is in the frustrum of the camera.
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		12.05.2006
-	**/
+	 * Used to create the frustum of the camera.
+	 * 
+	 * <p>The frustum is volume used to control if geometrical object, such as a box, a sphere, or a point
+	 * can be seen by the camera, and thus should be rendered.</p> 
+	 * <p>Clipping of objects and polygons is performed against the frustum surfaces, as well as the near and far planes.</p>
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class Frustum 
 	{
 		public var aPlanes:Array;
@@ -57,7 +61,7 @@ package sandy.view
 		public static const FAR:uint 	= 1;
 		public static const RIGHT:uint 	= 2;
 		public static const LEFT:uint	= 3;
-	    public static const TOP:uint 	= 4;
+	    	public static const TOP:uint 	= 4;
 		public static const BOTTOM:uint = 5; 
 		
 		public static const INSIDE:CullingState = CullingState.INSIDE;
@@ -65,6 +69,11 @@ package sandy.view
 		public static const INTERSECT:CullingState = CullingState.INTERSECT;
 		public static const EPSILON:Number = 0.005;
 	
+		/**
+		 * Creates a frustum for the camera.
+		 *
+		 * <p>This constructor only creates the necessay data structures</p>
+		 */
 		public function Frustum() 
 		{
 			aPlanes = new Array(6);
@@ -73,29 +82,37 @@ package sandy.view
 			aConstants = new Array(6);
 		}
 		
-		public function computePlanes( nAspect:Number, fNear:Number, fFar:Number, nFov:Number ):void
+		/**
+		 * Computes the frustum planes.
+		 * 
+		 * @param p_nAspect	Aspect ration of the camera
+		 * @param p_nNear	The distance from the camera to the near clipping plane
+		 * @param p_nFar	The distance from the camera to the far clipping plane
+		 * @param p_nFov	Vertical field of view of the camera
+		 */
+		public function computePlanes( p_nAspect:Number, p_nNear:Number, p_nFar:Number, p_nFov:Number ):void
 		{
 			// store the information
-			var lRadAngle:Number = NumberUtil.toRadian( nFov );
+			var lRadAngle:Number = NumberUtil.toRadian( p_nFov );
 			// compute width and height of the near and far plane sections
 			var tang:Number = Math.tan(lRadAngle * 0.5) ;
 			
 			// we inverse the vertical axis as Flash as a vertical axis inversed by our 3D one. VERY IMPORTANT
-			var yNear:Number = -tang * fNear;			
-			var xNear:Number = yNear * nAspect;
-			var yFar:Number = yNear * fFar / fNear;
-			var xFar:Number = xNear * fFar / fNear;
-			fNear = -fNear;
-			fFar = -fFar;
+			var yNear:Number = -tang * p_nNear;			
+			var xNear:Number = yNear * p_nAspect;
+			var yFar:Number = yNear * p_nFar / p_nNear;
+			var xFar:Number = xNear * p_nFar / p_nNear;
+			p_nNear = -p_nNear;
+			p_nFar = -p_nFar;
 			var p:Array = aPoints;
-			p[0] = new Vector( xNear, yNear, fNear); // Near, right, top
-			p[1] = new Vector( xNear,-yNear, fNear); // Near, right, bottom
-			p[2] = new Vector(-xNear,-yNear, fNear); // Near, left, bottom
-			p[3] = new Vector(-xNear, yNear, fNear); // Near, left, top
-			p[4] = new Vector( xFar,  yFar,  fFar);  // Far, right, top
-			p[5] = new Vector( xFar, -yFar,  fFar);  // Far, right, bottom
-			p[6] = new Vector(-xFar, -yFar,  fFar);  // Far, left, bottom
-			p[7] = new Vector(-xFar,  yFar,  fFar);  // Far, left, top
+			p[0] = new Vector( xNear, yNear, p_nNear); // Near, right, top
+			p[1] = new Vector( xNear,-yNear, p_nNear); // Near, right, bottom
+			p[2] = new Vector(-xNear,-yNear, p_nNear); // Near, left, bottom
+			p[3] = new Vector(-xNear, yNear, p_nNear); // Near, left, top
+			p[4] = new Vector( xFar,  yFar,  p_nFar);  // Far, right, top
+			p[5] = new Vector( xFar, -yFar,  p_nFar);  // Far, right, bottom
+			p[6] = new Vector(-xFar, -yFar,  p_nFar);  // Far, left, bottom
+			p[7] = new Vector(-xFar,  yFar,  p_nFar);  // Far, left, top
 			
 			aPlanes[LEFT] 	= PlaneMath.computePlaneFromPoints( p[2], p[3], p[6] ); // Left
 			aPlanes[RIGHT] 	= PlaneMath.computePlaneFromPoints( p[0], p[1], p[4] ); // right
@@ -108,6 +125,14 @@ package sandy.view
 				PlaneMath.normalizePlane( aPlanes[i] );	
 		}
 		
+		/**
+		 * Extracts the clipping planes.
+		 *
+		 * <p>[<strong>ToDo</strong>: Expalain this ]</p>
+		 *
+		 * @param comboMatrix
+		 * @param normalize
+		 */
 		public function extractPlanes( comboMatrix:Matrix4, normalize:Boolean ):void
 		{
 			// Left clipping plane
@@ -152,16 +177,32 @@ package sandy.view
 			};
 		}
 		
-		public function pointInFrustum( p:Vector ):CullingState
+		/**
+		 * Returns the culling state for the passed point.
+		 * 
+		 * <p>The method tests if the passed point is within the frustum volume or not.<br/>
+		 * The returned culling state is Frustum.INSIDE or Frustum.OUTSIDE</p>
+		 *
+		 * @param p_oPoint	The point to test
+		 */
+		public function pointInFrustum( p_oPoint:Vector ):CullingState
 		{
 	        for each( var plane:Plane in aPlanes ) 
 			{
-				if ( PlaneMath.classifyPoint( plane, p) == PlaneMath.NEGATIVE )
+				if ( PlaneMath.classifyPoint( plane, p_oPoint) == PlaneMath.NEGATIVE )
 					return Frustum.OUTSIDE;
 			}
 			return Frustum.INSIDE ;
 		}
 		
+		/**
+		 * Returns the culling state for the passed bounding sphere.
+		 * 
+		 * <p>The method tests if the bounding sphere is within the frustum volume or not.<br/>
+		 * The returned culling state is Frustum.INSIDE, Frustum.OUTSIDE or Frustum.INTERSECT</p>
+		 *
+		 * @param p_oS	The sphere to test
+		 */
 		public function sphereInFrustum( p_oS:BSphere ):CullingState
 		{
 	        var d:Number, c:Number;
@@ -179,6 +220,14 @@ package sandy.view
 	        return (c == 6) ? Frustum.INSIDE : Frustum.INTERSECT;
 		}
 	
+		/**
+		 * Returns the culling state for the passed bounding box.
+		 * 
+		 * <p>The method tests if the bounding box is within the frustum volume or not.<br/>
+		 * The returned culling state is Frustum.INSIDE, Frustum.OUTSIDE or Frustum.INTERSECT</p>
+		 *
+		 * @param p_oS	The box to test
+		 */
 		public function boxInFrustum( box:BBox ):CullingState
 		{
 			var result:CullingState = Frustum.INSIDE;
@@ -216,32 +265,45 @@ package sandy.view
 			return result;
 		}
 	
-		public function clipFrustum( cvert: Array, p_aUVCoords:Array ):void
+		/**
+		 * Clips a polygon against the frustum planes
+		 *
+		 * @param p_aCvert	Vertices of the polygon
+		 * @param p_aUVCoords	UV coordiantes of the polygon
+		 */
+		public function clipFrustum( p_aCvert: Array, p_aUVCoords:Array ):void
 		{
-	        if( cvert.length <= 2 ) return;
-			clipPolygon( aPlanes[NEAR], cvert, p_aUVCoords ); // near
-			if( cvert.length <= 2 ) return;
-			clipPolygon( aPlanes[LEFT], cvert, p_aUVCoords ); // left
-			if( cvert.length <= 2 ) return;
-			clipPolygon( aPlanes[RIGHT], cvert, p_aUVCoords ); // right
-			if( cvert.length <= 2 ) return;
-	        clipPolygon( aPlanes[BOTTOM], cvert, p_aUVCoords ); // top
-			if( cvert.length <= 2 ) return;
-		    clipPolygon( aPlanes[TOP], cvert, p_aUVCoords ); // bottom	
+	        if( p_aCvert.length <= 2 ) return;
+			clipPolygon( aPlanes[NEAR], p_aCvert, p_aUVCoords ); // near
+			if( p_aCvert.length <= 2 ) return;
+			clipPolygon( aPlanes[LEFT], p_aCvert, p_aUVCoords ); // left
+			if( p_aCvert.length <= 2 ) return;
+			clipPolygon( aPlanes[RIGHT], p_aCvert, p_aUVCoords ); // right
+			if( p_aCvert.length <= 2 ) return;
+	        	clipPolygon( aPlanes[BOTTOM], p_aCvert, p_aUVCoords ); // top
+			if( p_aCvert.length <= 2 ) return;
+		    	clipPolygon( aPlanes[TOP], p_aCvert, p_aUVCoords ); // bottom	
 		}
 	
 	    
-		public function clipPolygon( p:Plane, pts:Array, p_aUVCoords:Array ):void
+		/**
+		 * Clips a polygon against one the frustum planes
+		 *
+		 * @param p_oPlane	The plane to clip against
+		 * @param p_aCvert	Vertices of the polygon		 
+		 * @param p_aUVCoords	UV coordiantes of the polygon
+		 */
+		public function clipPolygon( p_oPlane:Plane, p_aCvert:Array, p_aUVCoords:Array ):void
 		{	
 			var allin:Boolean = true, allout:Boolean = true;
 			var v:Vertex;
-			var i:Number, l:Number = pts.length, lDist:Number;
+			var i:Number, l:Number = p_aCvert.length, lDist:Number;
 			// -- If no points, we return null
 			var aDist:Array = new Array();
 			// -- otherwise we compute the distances to frustum plane
-			for each( v in pts )
+			for each( v in p_aCvert )
 			{
-				lDist = p.a * v.wx + p.b * v.wy + p.c * v.wz + p.d;
+				lDist = p_oPlane.a * v.wx + p_oPlane.b * v.wy + p_oPlane.c * v.wz + p_oPlane.d;
 				if (lDist < 0) allin = false;
 				if (lDist >= 0) allout = false;
 				aDist.push( lDist );		
@@ -252,12 +314,12 @@ package sandy.view
 			else if (allout)
 			{
 				// we return an empty array
-				pts.splice(0);
+				p_aCvert.splice(0);
 				p_aUVCoords.splice(0);
 				return;
 			}
 			// Clip a polygon against a plane
-			var tmp:Array = pts.splice(0);
+			var tmp:Array = p_aCvert.splice(0);
 			var l_aTmpUv:Array = p_aUVCoords.splice(0);
 			var l_oUV1:UVCoord = l_aTmpUv[0], l_oUV2:UVCoord = null, l_oUVTmp:UVCoord = null;
 			var v1:Vertex = tmp[0], v2:Vertex = null,  t:Vertex = null;
@@ -274,7 +336,7 @@ package sandy.view
 				// Sutherland-hodgeman clipping
 				if ( inside && (dist2 >= 0) ) 
 				{
-					pts.push(v2);	// Both in
+					p_aCvert.push(v2);	// Both in
 					p_aUVCoords.push(l_oUV2);
 				}
 				else if ( (!inside) && (dist2>=0) )		// Coming in
@@ -287,8 +349,8 @@ package sandy.view
 					t.wy = (v1.wy+(v2.wy-v1.wy)*d);
 					t.wz = (v1.wz+(v2.wz-v1.wz)*d);
 					//
-					pts.push( t );
-					pts.push( v2 );
+					p_aCvert.push( t );
+					p_aCvert.push( v2 );
 					//
 					l_oUVTmp = new UVCoord();
 					l_oUVTmp.u = (l_oUV1.u+(l_oUV2.u-l_oUV1.u)*d);
@@ -313,7 +375,7 @@ package sandy.view
 					l_oUVTmp.v = (l_oUV1.v+(l_oUV2.v-l_oUV1.v)*d);
 					//
 					p_aUVCoords.push(l_oUVTmp);
-					pts.push( t );
+					p_aCvert.push( t );
 				} 
 				else
 				{

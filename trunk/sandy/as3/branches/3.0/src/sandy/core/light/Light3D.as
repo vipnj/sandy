@@ -24,74 +24,89 @@ package sandy.core.light
 		
 	[Event(name="lightUpdated", type="sandy.events.SandyEvent")]
 	
-	/**
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		02.06.2006
-	* 
-	**/
+       	/**
+	 * The Light3D class is used for creating the light of the world.
+	 * 
+	 * <p>The light in Sandy is a light source at infinity, emitting parallel whit light.<br/>
+	 * The direction of light and the intensity can be varied</p>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class Light3D extends EventDispatcher
 	{
 		
-		/*
-		* Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
-		*/
+		/**
+		 * Maximum intensity value.
+		 */
 		public static var MAX_POWER:Number = 150;
 	
 		/**
-		 * Create a new {@code Light3D}.
+		 * Creates a new light source.
 		 * 
-		 * @param	p		A {@code Vector4} for the {@code Light3D} position.
-		 * @param	nCol	Color of the Light3D.
+		 * @param p_oD		The direction of the emitted light.
+		 * @param p_nPow	Intensity of the emitted light.
 		 * 
 		 */
-		public function Light3D ( d:Vector, pow:Number )
+		public function Light3D ( p_oD:Vector, p_nPow:Number )
 		{
-			_dir = d;
-			setPower( pow );
+			_dir = p_oD;
+			setPower( p_nPow );
 		}
 		
 		/**
-		 * The the power of the light. A number between 0 and MAX_POWER is necessary. 
-		 * The highter the power of the light is, the less the shadows are visibles.
-		 * @param n Number a Number between 0 and MAX_POWER. This number is the light intensity.
+		 * Sets the the intensity of the light. 
+		 *
+		 * @param p_nPow 	Intensity of the emitted light.
 		 */
-		public function setPower( n:Number ):void
+		public function setPower( p_nPow:Number ):void
 		{
-			_power =  NumberUtil.constrain( n, 0, Light3D.MAX_POWER );
+			_power =  NumberUtil.constrain( p_nPow, 0, Light3D.MAX_POWER );
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
 		
 		/**
-		 * Returns the power of the light.
-		 * @return Number a number between 0 - MAX_POWER.
+		 * Returns the intensity of the light.
+		 *
+		 * @return 	The intensity as a number between 0 - MAX_POWER.
 		 */
 		public function getPower():Number
 		{
 			return _power;
 		}
 		
+		/**
+		 * Returns the direction of the light.
+		 *
+		 * @return 	The light direction
+		 */
 		public function getDirectionVector():Vector
 		{
 			return _dir;
 		}
 		
 		/**
-		 * Set the position of the {@code Light3D}.
+		 * Sets the direction of the light using components.
 		 * 
-		 * @param	x	the x coordinate
-		 * @param	y	the y coordinate
-		 * @param	z	the z coordinate
+		 * @param p_nX	the x component
+		 * @param p_nY	the y component
+		 * @param p_nZ	the z component
 		 */	
-		public function setDirection( x:Number, y:Number, z:Number ):void
+		public function setDirection( p_nX:Number, p_nY:Number, p_nZ:Number ):void
 		{
-			_dir.x = x; _dir.y = y; _dir.z = z;
+			_dir.x = p_nX; _dir.y = p_nY; _dir.z = p_nZ;
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
 		
-		public function setDirectionVector( pDir:Vector ):void
+		/**
+		 * Sets the direction of the light using the vector.
+		 * 
+		 * @param p_oDir	The direction of the light
+		 */	
+		public function setDirectionVector( p_oDir:Vector ):void
 		{
-			_dir = pDir;
+			_dir = p_oDir;
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
 		
@@ -100,7 +115,8 @@ package sandy.core.light
 			;
 		}
 	
-		// Direction of the light. It is 3D vector. Please refer to the Light tutorial to learn more about Sandy's lights.
+		// Direction of the light. It is 3D vector. 
+		//Please refer to the Light tutorial to learn more about Sandy's lights.
 		private var _dir:Vector;	
 		private var _power : Number;
 	}

@@ -47,8 +47,9 @@ package sandy.materials
 		 * @param p_nColor 	The color for this material in hexadecimal notation
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
 		 * @param p_oLineAttr	The line attributes for this material
+		 * @param p_oOutlineAttr The outlie attributes settings for this material
 		 */
-		public function ColorMaterial( p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:LineAttributes = null )
+		public function ColorMaterial( p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:LineAttributes = null, p_oOutlineAttr:OutlineAttributes = null )
 		{
 			super();
 			// --
@@ -58,6 +59,7 @@ package sandy.materials
 			m_nAlpha = p_nAlpha/100;
 			// --
 			lineAttributes = p_oLineAttr;
+			outlineAttributes = p_oOutlineAttr;
 		}
 
 		/**
@@ -70,7 +72,10 @@ package sandy.materials
 		{
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			if( !l_points.length ) return;
-			const l_graphics:Graphics = p_mcContainer.graphics;
+			var l_oVertex:Vertex;
+			var lId:int = l_points.length;
+			var l_graphics:Graphics = p_mcContainer.graphics;
+			
 			var l_nCol:uint = m_nColor;
 			if( _useLight )
 			{
@@ -91,19 +96,15 @@ package sandy.materials
 				l_nCol =  r << 16 | g << 8 |  b;
 			}
 			// --
+			l_graphics.lineStyle();
 			l_graphics.beginFill( l_nCol, m_nAlpha );
-			// --
-			if( lineAttributes )
-				l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
-			// --
 			l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
-			// --
-			for each (var l_oVertex:Vertex in l_points )
-			{
+			while( l_oVertex = l_points[ --lId ] )
 				l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-			}
-			// --
 			l_graphics.endFill();
+			// --
+			if( lineAttributes ) lineAttributes.draw( l_graphics, p_oPolygon, l_points );
+			if( outlineAttributes ) outlineAttributes.draw( l_graphics, p_oPolygon, l_points );
 		}
 
 		/**

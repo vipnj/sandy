@@ -48,14 +48,16 @@ package sandy.materials
 		 *
 		 * @param p_oTexture 	The bitmapdata for this material
 		 * @param p_oLineAttr	The line attributes for this material
+		 * @param p_oOutlineAttr The outlie attributes settings for this material
 		 */
-		public function BitmapMaterial( p_oTexture:BitmapData, p_oLineAttr:LineAttributes = null )
+		public function BitmapMaterial( p_oTexture:BitmapData, p_oLineAttr:LineAttributes = null, p_oOutlineAttr:OutlineAttributes = null )
 		{
 			super();
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
 			lineAttributes = p_oLineAttr;
+			outlineAttributes = p_oOutlineAttr;
 			// --
 			texture = p_oTexture;
 			// --
@@ -76,7 +78,7 @@ package sandy.materials
 			if( p_oPolygon.isClipped && enableAccurateClipping )
 			{
 				if( p_oPolygon.cvertices.length )
-					_drawPolygon( p_oPolygon.cvertices, p_oPolygon.caUVCoord, lGraphics );
+					_drawPolygon( p_oPolygon, p_oPolygon.cvertices, p_oPolygon.caUVCoord, lGraphics );
 			}
 			else
 			{
@@ -96,10 +98,9 @@ package sandy.materials
 				matrix = lUv.clone();
 				matrix.concat(m_oTmp);
 				// --
-				lGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
+				lGraphics.lineStyle();
+				lGraphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
 				// --
-				if( lineAttributes )
-					lGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
 				// --
 				lGraphics.moveTo( l_points[0].sx, l_points[0].sy );
 				// --
@@ -107,11 +108,14 @@ package sandy.materials
 					lGraphics.lineTo( l_oPoint.sx, l_oPoint.sy );
 				//	--
 				lGraphics.endFill();
+				
+				if( lineAttributes ) lineAttributes.draw( lGraphics, p_oPolygon, l_points );
+				if( outlineAttributes ) outlineAttributes.draw( lGraphics, p_oPolygon, l_points );
 			}
 		}
 		
 		// 
-		private function _drawPolygon( p_aPoints:Array, p_aUv:Array, p_oGraphics:Graphics ):void
+		private function _drawPolygon( p_oPolygon:Polygon, p_aPoints:Array, p_aUv:Array, p_oGraphics:Graphics ):void
 		{
 			var l_points: Array = p_aPoints.slice();
 			var l_uv: Array = p_aUv.slice();
@@ -123,7 +127,7 @@ package sandy.materials
 				p_aPoints.splice( 1, 1 );
 				p_aUv.splice( 1, 1 );
 				//
-				_drawPolygon( p_aPoints, p_aUv, p_oGraphics );
+				_drawPolygon( p_oPolygon, p_aPoints, p_aUv, p_oGraphics );
 			}
 
 			const lUv:Matrix = _createTextureMatrix( l_uv );
@@ -140,10 +144,8 @@ package sandy.materials
 			matrix = lUv.clone();
 			matrix.concat(m_oTmp);
 			//
-			p_oGraphics.beginBitmapFill( m_oTexture, matrix, true, smooth );
-			// --
-			if( lineAttributes )
-				p_oGraphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+			p_oGraphics.lineStyle();
+			p_oGraphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
 			// --
 			p_oGraphics.moveTo( x0, y0 );
 			// --
@@ -151,6 +153,9 @@ package sandy.materials
 				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);
 			//	
 			p_oGraphics.endFill();
+			
+			if( lineAttributes ) lineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
+			if( outlineAttributes ) outlineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
 		}	
 
 		//

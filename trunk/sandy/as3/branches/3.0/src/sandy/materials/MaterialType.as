@@ -65,6 +65,12 @@ package sandy.materials
 		public static function get VIDEO():MaterialType { return __video; }
 		private static var __video:MaterialType = new MaterialType( 6);
 		
+		
+		/**
+		 * Constant value representing the WireFrameMaterial
+		 */
+		public static function get OUTLINE():MaterialType { return __outline; }
+		private static var __outline:MaterialType = new MaterialType( 7 );
 		//---------//
 		//Variables//
 		//---------//

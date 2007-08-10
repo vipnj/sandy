@@ -41,38 +41,66 @@ package sandy.core.data
 	// _______
 	// STATICS_______________________________________________________	
 		private static var _ID_:uint = 0;
-		/** Unique face id */
-		public const id:uint = _ID_++;
+		
 	// ______
 	// PUBLIC________________________________________________________		
+		/**
+		 * [READ-ONLY] property
+		 * Unique polygon ID Number
+		 */
+		public const id:uint = _ID_++;
+		
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var owner:Shape3D;
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var isClipped:Boolean = false;
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var cvertices:Array;
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var vertices:Array;
+		/**
+		 * [READ-ONLY] property
+		 */
+		public var vertexNormals:Array;
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var normal:Vertex;
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var aUVCoord:Array;
+		
+		/**
+		 * [READ-ONLY] property
+		 */
+		public var aEdges:Array;
+		
+		/**
+		 * [READ-ONLY] property
+		 */
 		public var caUVCoord:Array;
-		/** Boolean representing the state of the event activation */
-		private var mouseEvents:Boolean = false;
-		/** Normal backface culling side is 1. -1 means that it is the opposite side which is visible */
+		
+		/**
+		 *  Normal backface culling side is 1. -1 means that it is the opposite side which is visible 
+		 */
 		public var backfaceCulling:Number;
-	// _______
-	// PRIVATE_______________________________________________________			
-	
-		/** Reference to its owner geometry */
-		private var m_oGeometry:Geometry3D;
-		private var m_oAppearance:Appearance;
-		/** array of ID of uv coordinates in geometry object */
-		private var m_aUVCoords:Array;
-		private var m_bVisible:Boolean = false;
 		
-		protected var m_nDepth:Number;
-		protected var m_oContainer:Sprite;
-		protected var m_oVisibilityRef:Vertex;
+		/**
+		 * [READ-ONLY] property
+		 * Array of polygons that share an edge with the current polygon
+		 */
+		public var aNeighboors:Array = new Array();
 		
-		protected var m_oEB:BubbleEventBroadcaster = new BubbleEventBroadcaster();
-		
-		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0 )
+		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0, p_nEdgesID:uint=0 )
 		{
 			owner = p_oOwner;
 			m_oGeometry = p_geometry;
@@ -80,7 +108,7 @@ package sandy.core.data
 			backfaceCulling = 1;
 			m_nDepth = 0;
 			// --
-			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
+			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID, p_nEdgesID );
 			m_oContainer = new Sprite();
 		}
 	
@@ -149,14 +177,16 @@ package sandy.core.data
 		 * Calling this method make the polygon gets its vertice and normals by reference instead of accessing them by their ID.
 		 * This method shall be called once the geometry created.
 		 */
-		private function __update( p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number ):void
+		private function __update( p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:uint, p_nEdgeListID:uint ):void
 		{
 			var i:int=0, l:int;
 			// --
+			vertexNormals = new Array();
 			vertices = new Array();
 			for each( var o:* in p_aVertexID )
 			{
 				vertices[i] = Vertex( m_oGeometry.aVertex[ p_aVertexID[i] ] );
+				vertexNormals[i] = m_oGeometry.aVertexNormals[ p_aVertexID[i] ];
 				i++;
 			}
 			// --
@@ -180,6 +210,15 @@ package sandy.core.data
 				var l_oNormal:Vector = createNormal();
 				var l_nID:Number = m_oGeometry.setFaceNormal( m_oGeometry.getNextFaceNormalID(), l_oNormal.x, l_oNormal.y, l_oNormal.z );
 				normal = Vertex( m_oGeometry.aFacesNormals[ l_nID ] );
+			}
+			// --
+			aEdges = new Array();
+			for each( var l_nEdgeId:uint in  m_oGeometry.aFaceEdges[p_nEdgeListID] )
+			{
+				var l_oEdge:Edge3D = m_oGeometry.aEdges[ l_nEdgeId ];
+				l_oEdge.vertex1 = m_oGeometry.aVertex[ l_oEdge.vertexId1 ];
+				l_oEdge.vertex2 = m_oGeometry.aVertex[ l_oEdge.vertexId2 ];
+				aEdges.push( l_oEdge );
 			}
 		}
 		
@@ -356,5 +395,24 @@ package sandy.core.data
 		{
 			//dispatchEvent(e);
 		}
+		
+	// _______
+	// PRIVATE_______________________________________________________			
+	
+		/** Reference to its owner geometry */
+		private var m_oGeometry:Geometry3D;
+		private var m_oAppearance:Appearance;
+		/** array of ID of uv coordinates in geometry object */
+		private var m_aUVCoords:Array;
+		private var m_bVisible:Boolean = false;
+		
+		protected var m_nDepth:Number;
+		protected var m_oContainer:Sprite;
+		protected var m_oVisibilityRef:Vertex;
+		
+		protected var m_oEB:BubbleEventBroadcaster = new BubbleEventBroadcaster();
+				
+		/** Boolean representing the state of the event activation */
+		private var mouseEvents:Boolean = false;
 	}
 }

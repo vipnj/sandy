@@ -16,18 +16,16 @@ limitations under the License.
 
 package sandy.materials
 {
-	import flash.display.Graphics;
 	import flash.display.Sprite;
-	import sandy.core.data.Vertex;
+	
 	import sandy.core.data.Polygon;
 	/**
 	 * Displays the faces of a 3D shape as a wire frame.
 	 *
-	 * <p>Based on the AS2 class VideoSkin made by kiroukou and zeusprod</p>
+	 * <p>This material is used to represent a kind a naked view of a Shape3D. It shows all the edges
+	 * with a certain thickness, color and alpha that you can specify inside the constructor</p>
 	 *
-	 * @author		Xavier Martin - zeflasher
 	 * @author		Thomas PFEIFFER - kiroukou
-	 * @since		1.0
 	 * @version		3.0
 	 * @date 		26.06.2007
 	 */
@@ -39,14 +37,16 @@ package sandy.materials
 		 * @param p_nThickness	The thickness of the lines - Default 1
 		 * @param p_nColor 	The color of the lines - Default 0
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
+		 * @param p_oOutLineAtt The outlie attributes object
 		 */
-		public function WireFrameMaterial( p_nThickness:uint=1, p_nColor:uint = 0, p_nAlpha:uint = 100 )
+		public function WireFrameMaterial( p_nThickness:uint=1, p_nColor:uint = 0, p_nAlpha:uint = 100, p_oOutLineAtt:OutlineAttributes=null )
 		{
 			super();
 			// --
 			m_nType = MaterialType.WIREFRAME;
 			// --
 			lineAttributes = new LineAttributes( p_nThickness, p_nColor,p_nAlpha ) ;
+			outlineAttributes = p_oOutLineAtt;
 		}
 
 		/**
@@ -57,17 +57,8 @@ package sandy.materials
 		 */		
 		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
-			var l_graphics:Graphics = p_mcContainer.graphics;
-			// --
-			l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
-			// --
-			l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
-			// --
-			for each (var l_oVertex:Vertex in l_points )
-			{
-				l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-			}
+			lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			if( outlineAttributes ) outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
 		}
 
 	}

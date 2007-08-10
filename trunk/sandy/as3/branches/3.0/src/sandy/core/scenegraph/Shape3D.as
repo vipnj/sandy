@@ -23,6 +23,7 @@ package sandy.core.scenegraph
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.World3D;
+	import sandy.core.data.Edge3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
@@ -155,10 +156,9 @@ package sandy.core.scenegraph
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
 	        /////////////////////////
-	        	_oBSphere.transform( _oViewCacheMatrix );
-	        	culled = p_oFrustum.sphereInFrustum( _oBSphere );
+        	_oBSphere.transform( _oViewCacheMatrix );
+        	culled = p_oFrustum.sphereInFrustum( _oBSphere );
 			// --
-			
 			if( culled == Frustum.INTERSECT && _oBBox )
 			{
 				////////////////////////
@@ -617,20 +617,43 @@ package sandy.core.scenegraph
 		
 		private function __generatePolygons( p_oGeometry:Geometry3D ):void
 		{
-			var i:int = 0;
-			//
+			var i:uint = 0;
+			// --
 			for each ( var o:* in p_oGeometry.aFacesVertexID )
 			{
-				aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i );
+				aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i, i );
 				if( m_oAppearance ) aPolygons[i].appearance = m_oAppearance;
-					this.broadcaster.addChild( aPolygons[i].broadcaster );
+				this.broadcaster.addChild( aPolygons[i].broadcaster );
 				// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
 				i++;
 			}
+			// -- attempt to create the neighboors relation between polygons
+	        
+	        var j: uint;
+	        var a: uint = aPolygons.length;
+	        //for( j = a - 1, i = 0 ; i < a ; j = i, i++ )
+	        for( i = 0; i < a-1; i++ )
+	        {
+	        	for( j=i+1; j < a; j++ )
+		        {
+		        	var lP1:Polygon = aPolygons[i];
+		        	var lP2:Polygon = aPolygons[j];
+		        	// check if they share at least 2 vertices
+		        	var lCount:uint = 0;
+		        	for each( var l_oEdge:Edge3D in lP1.aEdges )
+		        		if( lP2.aEdges.indexOf( l_oEdge ) > -1 ) lCount++;
+		        	//
+		        	if( lCount > 0 )
+		        	{
+		        		lP1.aNeighboors.push( lP2 );
+		        		lP2.aNeighboors.push( lP1 );
+		        	}
+		        }
+			}
 		}
 	    		
-	// ______________
-	// [PRIVATE] DATA________________________________________________				
+		// ______________
+		// [PRIVATE] DATA________________________________________________				
 		private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
 	    private var m_bEv:Boolean = false; // The event system state (enable or not)
 		private var m_bBackFaceCulling:Boolean;

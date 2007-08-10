@@ -18,20 +18,20 @@ package sandy.materials
 {
 	import flash.display.Graphics;
 	
+	import sandy.core.data.Edge3D;
 	import sandy.core.data.Polygon;
-	import sandy.core.data.Vertex;
 	
 	/**
-	 * Holds all line attribute data for a material.
+	 * Holds all outline attributes data for a material.
 	 *
-	 * <p>Some materials have line attributes to outline the faces of a 3D shape.<br/>
-	 * In these cases a LineAttributes object holds all line attribute data</p>
+	 * <p>Each material can have an outline attribute to outline the whole 3D shape.<br/>
+	 * The OutlineAttributes class stores all the information to draw this outline shape</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
-	 * @date 		26.07.2007
+	 * @date 		09.09.2007
 	 */
-	public final class LineAttributes 
+	public final class OutlineAttributes 
 	{
 		private var m_nThickness:Number;
 		private var m_nColor:Number;
@@ -40,13 +40,13 @@ package sandy.materials
 		public var modified:Boolean;
 		
 		/**
-		 * Creates a new LineAttributes object.
+		 * Creates a new OutlineAttributes object.
 		 *
 		 * @param p_nThickness	The line thickness - Defaoult 1
-		 * @param p_nColor	The line color - Defaoult 0 ( black )
+		 * @param p_nColor	The line color - Default 0 ( black )
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
 		 */
-		public function LineAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 100 )
+		public function OutlineAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 100 )
 		{
 			m_nThickness = p_nThickness;
 			m_nAlpha = p_nAlpha/100;
@@ -110,14 +110,41 @@ package sandy.materials
 		
 		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_aPoints:Array ):void
 		{
-			const l_points:Array = p_aPoints;
-			var l_oVertex:Vertex;
-			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
+			var l_oEdge:Edge3D;
+			var l_oPolygon:Polygon;
+			var l_bFound:Boolean;
 			// --
-			p_oGraphics.moveTo( l_points[0].sx, l_points[0].sy );
-			var lId:int = l_points.length;
-			while( l_oVertex = l_points[ --lId ] )
-				p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-		}
+			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
+			p_oGraphics.beginFill(0);
+			// --
+			for each( l_oEdge in p_oPolygon.aEdges )
+        	{
+        		l_bFound = false;
+        		// --
+        		for each( l_oPolygon in p_oPolygon.aNeighboors )
+				{
+	        		// aNeighboor not visible, does it share an edge?
+					// if so, we draw it
+					if( l_oPolygon.aEdges.indexOf( l_oEdge ) > -1 )
+	        		{
+						if( l_oPolygon.visible == false )
+						{
+							p_oGraphics.moveTo( l_oEdge.vertex1.sx, l_oEdge.vertex1.sy );
+							p_oGraphics.lineTo( l_oEdge.vertex2.sx, l_oEdge.vertex2.sy );
+						}
+						l_bFound = true;
+					}
+	   			}
+	   			// -- if not shared with any neighboor, it is an extremity edge that shall be drawn
+	   			if( l_bFound == false )
+	   			{
+		   			p_oGraphics.moveTo( l_oEdge.vertex1.sx, l_oEdge.vertex1.sy );
+					p_oGraphics.lineTo( l_oEdge.vertex2.sx, l_oEdge.vertex2.sy );
+	   			}
+        	}
+        	
+        	p_oGraphics.endFill();
+        }
+        
 	}
 }

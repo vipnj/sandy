@@ -63,6 +63,8 @@ package sandy.core.data
 		 */
 		public var nbFaces:uint = 0;
 		
+		public var aFaces:Array = new Array();
+		
 		/**
 		* Create a new {@code Vertex} Instance.
 		* If no

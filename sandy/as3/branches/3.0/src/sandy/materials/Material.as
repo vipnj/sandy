@@ -36,6 +36,12 @@ package sandy.materials
 		 */
 		public var lineAttributes:LineAttributes;
 		
+		
+		/**
+		 * The outline attributes of this material.
+		 */
+		public var outlineAttributes:OutlineAttributes;
+		
 		/**
 		 * Specify if the material use the vertex normal information
 		 * Default value is set to false.

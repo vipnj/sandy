@@ -21,6 +21,8 @@ package sandy.core.scenegraph
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
+	import sandy.core.data.Edge3D;
+	import flash.utils.Dictionary;
 	
 	
 	/**
@@ -54,6 +56,9 @@ package sandy.core.scenegraph
 	// ______
 	// PUBLIC________________________________________________________	
 		
+		private var EDGES_DICO:Dictionary = new Dictionary(true);
+		
+		
 		/** Array of vertices */
 		public var aVertex:Array = new Array();
 		/** Array of faces composed from vertices */
@@ -62,6 +67,9 @@ package sandy.core.scenegraph
 		/** Array ov normals */
 		public var aFacesNormals:Array = new Array();
 		public var aVertexNormals:Array = new Array();
+		public var aEdges:Array = new Array();
+		// Array of face edges
+		public var aFaceEdges:Array = new Array();
 		/** UV Coords for faces */
 		public var aUVCoords:Array = new Array();
 		private var m_nLastVertexId:int = 0;
@@ -70,6 +78,7 @@ package sandy.core.scenegraph
 		private var m_nLastFaceUVId:int = 0;
 		private var m_nLastUVId:int = 0;
 		private var m_nLastVertexNormalId:int = 0;
+		private var m_aVertexFaces:Array = new Array();
 	// ___________
 	// CONSTRUCTOR___________________________________________________
 		
@@ -203,10 +212,50 @@ package sandy.core.scenegraph
 			{
 				var rest:Array = (arguments[0] is Array)? arguments[0]: arguments.splice(0);
 				aFacesVertexID[p_nFaceID] = rest;
+				
+				// Time to check if edges allready exist or if we shall create them
+				for( var lId:uint = 0; lId < rest.length; lId++ )
+				{
+					var lId1:uint = rest[lId];
+					var lId2:uint = rest[ (lId+1)%rest.length ];
+					var lEdgeID:uint;
+					var lString:String;
+					// --
+					if( isEdgeExist( lId1, lId2 ) == false )
+					{
+						lEdgeID = aEdges.push( new Edge3D( lId1, lId2 ) ) - 1;
+						// --
+						if( lId1 < lId2 ) lString = lId1+"_"+lId2;
+						else lString = lId2+"_"+lId1;
+						// --
+						EDGES_DICO[lString] = lEdgeID;
+					}
+					else
+					{
+						if( lId1 < lId2 ) lString = lId1+"_"+lId2;
+						else lString = lId2+"_"+lId1;
+						lEdgeID = EDGES_DICO[lString];
+					}
+					
+					if( null == aFaceEdges[p_nFaceID] ) aFaceEdges[p_nFaceID] = new Array();
+						( aFaceEdges[p_nFaceID] as Array ).push( lEdgeID );
+				}
+				
 				return ++m_nLastFaceId - 1; 
 			}
 		}
-	
+		
+		private function isEdgeExist( p_nVertexId1:uint, p_nVertexId2:uint ):Boolean
+		{
+			var lString:String;
+			// --
+			if( p_nVertexId1 < p_nVertexId2 ) lString = p_nVertexId1+"_"+p_nVertexId2;
+			else lString = p_nVertexId2+"_"+p_nVertexId1;
+			// --
+			if( EDGES_DICO[lString] == null ) return false;
+			else return true;
+		}
+		
 		/**
 		 * Returns the next unused face id.
 		 *
@@ -365,6 +414,15 @@ package sandy.core.scenegraph
 					Vertex( aVertexNormals[l_aList[2]] ).add( l_oNormal );
 					
 					// -- We update the number of faces these vertex belongs to
+					if( (aVertex[l_aList[0]] as Vertex).aFaces.indexOf( lId ) == 0 )
+						(aVertex[l_aList[0]] as Vertex).aFaces.push( lId );
+					
+					if( (aVertex[l_aList[1]] as Vertex).aFaces.indexOf( lId ) == 0 )
+						(aVertex[l_aList[1]] as Vertex).aFaces.push( lId );
+					
+					if( (aVertex[l_aList[2]] as Vertex).aFaces.indexOf( lId ) == 0 )
+						(aVertex[l_aList[2]] as Vertex).aFaces.push( lId );
+						
 					aVertex[l_aList[0]].nbFaces++;
 					aVertex[l_aList[1]].nbFaces++;
 					aVertex[l_aList[2]].nbFaces++;

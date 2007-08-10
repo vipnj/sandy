@@ -88,16 +88,18 @@ package sandy.primitive
 		 */
 		public function generate( ...arguments ):Geometry3D
 		{
-				var l_geometry:Geometry3D = new Geometry3D();
+			var l_geometry:Geometry3D = new Geometry3D();
 			//Creation of the points
+			var i:uint, j:uint;
 			var h2:Number = _h/2;
 			var l2:Number = _lg/2;
 			var pasH:Number = _h/_qV;
 			var pasL:Number = _lg/_qH;
+			var iH:Number, iL:Number, iTH:Number, iTL:Number;
 			
-			for( var iH:Number = -h2, iTH:Number = 0; iH <= h2; iH += pasH, iTH += pasH )
+			for( i = 0, iH = -h2, iTH = 0; i <= _qV; iH += pasH, iTH += pasH, i++ )
 			{
-				for( var iL:Number = -l2, iTL:Number = 0; iL <= l2; iL += pasL, iTL += pasL )
+				for( j=0, iL = -l2, iTL = 0; j <= _qH; iL += pasL, iTL += pasL, j++ )
 				{	
 					if( m_sType == Plane3D.ZX_ALIGNED )
 					{
@@ -116,9 +118,9 @@ package sandy.primitive
 			}
 			
 				
-			for( var i:uint = 0; i < _qV; i++ )
+			for( i = 0; i < _qV; i++ )
 			{
-				for( var j:uint = 0; j < _qH; j++ )
+				for( j = 0; j < _qH; j++ )
 				{
 					//Face creation
 					if( _mode == PrimitiveMode.TRI )

@@ -158,7 +158,6 @@ package sandy.parser
 				// -- create the new shape
 				l_oShape = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
 
-/*
 				// -- scale
 				if( p_oNode.scale.length() > 0 ) {
 					
@@ -169,7 +168,6 @@ package sandy.parser
 				}
 				// -- translation
 				if( p_oNode.translate.length() > 0 ) {
-					/
 					l_oVector = stringToVector( p_oNode.translate );
 					l_oShape.setPosition( l_oVector.x, l_oVector.z, l_oVector.y );
 
@@ -196,7 +194,7 @@ package sandy.parser
 					l_oShape.scaleY = l_oMatrix.n33;
 					l_oShape.scaleZ = l_oMatrix.n22;
 				}
-*/
+
 				// -- loop through subnodes
 				l_oNodes = p_oNode.node;
 				l_nNodeLen = l_oNodes.length();

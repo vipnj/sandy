@@ -20,7 +20,7 @@ package sandy.materials
 	
 	import sandy.core.data.Polygon;
 	/**
-	 * Displays the faces of a 3D shape as a wire frame.
+	 * Displays the outline of a 3D shape in wireframe.
 	 *
 	 * <p>Material which draws only the external edges of the shape</p>
 	 *
@@ -28,11 +28,11 @@ package sandy.materials
 	 * @version		3.0
 	 * @date 		10.08.2007
 	 */
-	public final class OutlineMaterial extends Material
+	public class OutlineMaterial extends Material
 	{
 		
 		/**
-		 * Creates a new WireFrameMaterial.
+		 * Creates a new OutlineMaterial.
 		 *
 		 * @param p_nThickness	The thickness of the lines - Default 1
 		 * @param p_nColor 	The color of the lines - Default 0

@@ -657,17 +657,17 @@ package sandy.core.scenegraph
 			if( changed )
 			{
 				m_oMatrix.n11 = _vSide.x * _oScale.x; 
-				m_oMatrix.n12 = _vUp.x; 
-				m_oMatrix.n13 = _vOut.x; 
+				m_oMatrix.n12 = _vUp.x * _oScale.y; 
+				m_oMatrix.n13 = _vOut.x * _oScale.z; 
 				m_oMatrix.n14 = _p.x;
 
-				m_oMatrix.n21 = _vSide.y; 
+				m_oMatrix.n21 = _vSide.y * _oScale.x; 
 				m_oMatrix.n22 = _vUp.y * _oScale.y; 
-				m_oMatrix.n23 = _vOut.y; 
+				m_oMatrix.n23 = _vOut.y * _oScale.z; 
 				m_oMatrix.n24 = _p.y;
 
-				m_oMatrix.n31 = _vSide.z; 
-				m_oMatrix.n32 = _vUp.z; 
+				m_oMatrix.n31 = _vSide.z * _oScale.x; 
+				m_oMatrix.n32 = _vUp.z * _oScale.y; 
 				m_oMatrix.n33 = _vOut.z * _oScale.z;  
 				m_oMatrix.n34 = _p.z;
 

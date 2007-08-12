@@ -1,3 +1,19 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
 package sandy.parser
 {
 	import flash.events.Event;
@@ -8,13 +24,51 @@ package sandy.parser
 	import sandy.materials.Appearance;
 	import sandy.materials.WireFrameMaterial;
 
+	/**
+	 * Transforms an ASE file into Sandy geometries. 
+	 * <p>Creates a Group as rootnode which appends all geometries it finds.
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		1.0
+	 * @date 		04.08.2007
+	 *
+	 * @example To parse an ASE file at runtime:
+	 *
+	 * <listing version="3.0">
+	 *     var parser:IParser = Parser.create( "/path/to/my/asefile.ase", Parser.ASE );
+	 * </listing>
+	 * 
+	 * @example To parse an embedded ASE object:
+	 *
+	 * <listing version="3.0">
+	 *     [Embed( source="/path/to/my/asefile.ase", mimeType="application/octet-stream" )]
+	 *     private var MyASE:Class;
+	 * 
+	 *     ...
+	 * 
+	 *     var parser:IParser = Parser.create( new MyASE(), Parser.ASE );
+	 * </listing>
+	 */	
+
 	internal final class ASEParser extends AParser implements IParser
 	{
-		public function ASEParser( p_sUrl:String, p_nScale:Number )
+		/**
+		 * Creates a new ASEParser instance
+		 * 
+		 * @param p_sUrl		This can be either a String containing an URL or a 
+		 * 						an embedded object
+		 * @param p_nScale		The scale factor
+		 */		
+		public function ASEParser( p_sUrl:*, p_nScale:Number )
 		{
 			super( p_sUrl, p_nScale );
 		}
 			
+		/**
+		 * Starts the parsing process
+		 * 
+		 * @param e				The Event object
+		 */		
 		protected override function parseData( e:Event=null ):void
 		{
 			super.parseData( e );

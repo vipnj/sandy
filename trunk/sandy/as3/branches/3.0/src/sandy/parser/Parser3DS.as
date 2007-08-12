@@ -1,3 +1,19 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
 package sandy.parser
 {
 	import flash.events.*;
@@ -15,17 +31,24 @@ package sandy.parser
 	import sandy.materials.WireFrameMaterial;
 	import sandy.math.ColorMath;
 
+	/**
+	 * Transforms a 3DS file into Sandy geometries. 
+	 * <p>Creates a Group as rootnode which appends all geometries it finds.
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		1.0
+	 * @date 		04.08.2007
+	 *
+	 * @example To parse a 3DS file at runtime:
+	 *
+	 * <listing version="3.0">
+	 *     var parser:IParser = Parser.create( "/path/to/my/3dsfile.3ds", Parser.3DS );
+	 * </listing>
+	 * 
+	 */	
+	 
 	internal final class Parser3DS extends AParser implements IParser
 	{
-		public function Parser3DS( p_sUrl:String, p_nScale:Number )
-		{
-			super( p_sUrl, p_nScale );
-			m_sDataFormat = URLLoaderDataFormat.BINARY;
-		}
-		
-		/////////////////////
-		///  PROPERTIES   ///
-		/////////////////////		
 		private var _rot_m:Array;
 		private var currentObjectName:String;
 		private var data:ByteArray;
@@ -33,14 +56,23 @@ package sandy.parser
 		private var startFrame:uint;
 		private var endFrame:uint;   	
 		private var lastRotation:Quaternion;
+
+		/**
+		 * Creates a new Parser3DS instance.
+		 * 
+		 * @param p_sUrl		A String pointing to the location of the 3DS file
+		 * @param p_nScale		The scale factor
+		 */		
+		public function Parser3DS( p_sUrl:String, p_nScale:Number )
+		{
+			super( p_sUrl, p_nScale );
+			m_sDataFormat = URLLoaderDataFormat.BINARY;
+		}
 		
-	    /**
-	     * Initialize the object passed in parameter (which should be new) with the datas
-	     * stored in the 3DS file given in second parameter
-	     * 
-	     * @param scene  Array 	All 3D objects will be added here
-	     * @param url    String	The url of the .3DS file used to initialized the Object3D
-	     */
+		/**
+		 * Starts the parsing process
+		 * @param e				The Event object
+		 */
 	   protected override function parseData( e:Event=null ):void
 		{
 			super.parseData( e );
@@ -408,6 +440,11 @@ package sandy.parser
 			dispatchEvent( l_eOnInit );
 		}
 
+		/**
+		 * Reads a vector from a ByteArray
+		 * 
+		 * @return	A vector containing the x, y, z values
+		 */		
 		private function readVector():Vector
 		{
 			var x:Number = data.readFloat();
@@ -416,21 +453,42 @@ package sandy.parser
 			return new Vector(x, z, y);
 		}
 		
+		/**
+		 * Reads a byte from a ByteArray
+		 * 
+		 * @return 	A byte
+		 */		
 		private function readByte():int
 		{
 			return data.readByte();
 		}
 		
+		/**
+		 * Reads a character (unsigned byte) from a ByteArray
+		 * 
+		 * @return A character
+		 */		
 		private function readChar():uint
 		{
 			return data.readUnsignedByte();
 		}
+		
+		/**
+		 * Reads an integer from a ByteArray
+		 * 
+		 * @return	An integer
+		 */		
 		private function readInt():uint 
 		{
  			var temp:uint = readChar();
  			return ( temp | (readChar() << 8));
 		}
 		
+		/**
+		 * Reads a string from a ByteArray
+		 * 
+		 * @return 	A String
+		 */		
 		private function readString():String 
 		{
  			var name:String = "";

@@ -73,7 +73,7 @@ package sandy.parser
 		 * Creates a new COLLADA parser instance.
 		 * 
 		 * @param p_sUrl		Can be either a string pointing to the location of the
-		 * 						COLLADA file or on instance of an embedded COLLADA file
+		 * 						COLLADA file or an instance of an embedded COLLADA file
 		 * @param p_nScale		The scale factor
 		 */		
 		public function ColladaParser( p_sUrl:*, p_nScale:Number )
@@ -83,6 +83,7 @@ package sandy.parser
 		
 		/**
 		 * Starts the parsing process
+		 * 
 		 * @param e				The Event object
 		 */		
 		protected override function parseData( e:Event=null ) : void

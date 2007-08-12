@@ -1,3 +1,19 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
 package sandy.parser
 {
 	import flash.events.Event;
@@ -12,6 +28,17 @@ package sandy.parser
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
 	
+	/**
+	 * ABSTRACT CLASS - super class for all parser objects.
+	 * 
+	 * <p> This class should not be directly instatiated, but sub classed.<br/>
+	 * The AParser class is responsible for creating the root Group, loading files 
+	 * and handling the corresponding events.</p>
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		1.0
+	 * @date 		04.08.2007
+	 **/
 	internal class AParser extends EventDispatcher implements IParser
 	{
 		protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.onProgressEVENT );
@@ -19,12 +46,20 @@ package sandy.parser
 		protected var m_oGroup:Group;
 		protected var m_oFile:Object;
 		protected var m_oFileLoader:URLLoader
-		private var m_sUrl:String;
 		protected var m_sDataFormat:String;
 		protected var m_nScale:Number;
-		
 		protected var m_oStandardAppearance : Appearance;
 		
+		private var m_sUrl:String;
+	
+		/**
+		 * Creates a parser object. Creates a root Group, default appearance
+		 * and sets up an URLLoader.
+		 *
+		 * @param p_sFile		Must be either a text string containing the location
+		 * 						to a file or an embedded object
+		 * @param p_nScale		The scale amount
+		 */			
 		public function AParser( p_sFile:*, p_nScale:Number )
 		{ 
 			m_oGroup = new Group('parser');
@@ -43,20 +78,31 @@ package sandy.parser
 			standardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 		}
 		
+		/**
+		 * Set the standard appearance for all the parsed objects.
+		 * 
+		 * @param p_oAppearance		The standard appearance
+		 */		
 		public function set standardAppearance( p_oAppearance:Appearance ):void
 		{
 			m_oStandardAppearance = p_oAppearance;
 		}
 		
 		/**
-		* Function is call in case of IO error
-		* @param	e IOErrorEvent 	IO_ERROR
+		* Called when an I/O error occurs.
+		 * 
+		* @param	e	The error event
 		*/
 		private function _io_error( e:IOErrorEvent ):void
 		{
 			dispatchEvent( new ParserEvent( ParserEvent.onFailEVENT ) );
 		}
 		
+		/**
+		 * This method is called when all files are loaded and initialized
+		 * 
+		 * @param e		The event object
+		 */		
 		protected function parseData( e:Event=null ):void
 		{
 			if( e != null )
@@ -67,11 +113,7 @@ package sandy.parser
 		}
 		
 	    /**
-	     * Initialize the object passed in parameter (which should be new) with the datas
-	     * stored in the ASE file given in second parameter
-	     * 
-	     * @param o    Object3D 	The Object3D we want to initialize
-	     * @param url    String	The url of the .ASE file used to initialized the Object3D
+	     * Load the file that needs to be parsed. When done, call the parseData method. 
 	     */
 	    public function parse():void
 		{

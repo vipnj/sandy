@@ -105,15 +105,15 @@ package sandy.primitive
 		 * @param	p_bExludeTop	[optional] - Exclude the creation of the top surface. Default false
 		 * @param   p_bWholeMapping [optional] - Specify if the material applied to the cylinder will map the whole cylinder (true and default) or each faces separately (false)
 		 */
-		function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false, p_bWholeMapping:Boolean = true )
+		public function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false, p_bWholeMapping:Boolean = true )
 		{
 			super( p_sName );
 	
 			this.segmentsW = Math.max( MIN_SEGMENTSW, p_nSegmentsW || DEFAULT_SEGMENTSW); // Defaults to 8
 			this.segmentsH = Math.max( MIN_SEGMENTSH, p_nSegmentsH || DEFAULT_SEGMENTSH); // Defaults to 6
-			radius = (p_nRadius==0) ? DEFAULT_RADIUS : p_nRadius; // Defaults to 100
-			height = (p_nHeight==0) ? DEFAULT_HEIGHT : p_nHeight; // Defaults to 100
-			topRadius = (p_nTopRadius==undefined) ? radius : p_nTopRadius;
+			radius = p_nRadius;
+			height = p_nHeight;
+			topRadius = p_nTopRadius;
 	
 			var scale :Number = DEFAULT_SCALE;
 			m_bIsBottomExcluded = p_bExcludeBottom;

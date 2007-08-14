@@ -20,14 +20,20 @@ package sandy.bounds
 	import sandy.core.data.Vertex;	
 	
 	/**
-	* Bounding Sphere object used to clip the object faster.
-	* 
-	* <p>Create a bounding Sphere that contains the whole object</p>
-	*
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.1
-	* @date 		22.02.2006
-	*/
+	 * The <code>BSphere</code> object is used to clip the object faster.
+	 * <p>It Creates a bounding sphere that contains the whole object</p>
+	 * 
+	 * @example 	This example is taken from the Shape3D class. It is used in
+	 * 				the <code>updateBoundingVolumes()</code> method:
+ 	 *
+ 	 * <listing version="3.0">
+ 	 *     _oBSphere = BSphere.create( m_oGeometry.aVertex );
+ 	 *  </listing>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		0.1
+	 * @date 		22.03.2006
+	 */
 	public final class BSphere
 	{
 		public var center:Vector;
@@ -38,23 +44,23 @@ package sandy.bounds
 		public var m_nTRadius:Number;
 	
 		/**
-		 * Create a BSphere object, representing a Bounding Sphere volume englobing the 3D object passed in parameters.
-		 * Verry usefull for clipping and so performance !
+		 * Creates a bounding sphere that encloses a 3D object. This object's vertices are passed
+		 * to the <code>create</code> method in the form of an <code>Array</code>. Very useful 
+		 * for clipping and thus performance!
 		 * 
+		 * @param p_aVertices		The vertices of the 3D object
+		 * @return 					A <code>BSphere</code> instance
 		 */	
-		public static function create( p_aPts:Array ):BSphere
+		public static function create( p_aVertices:Array ):BSphere
 		{
 		    var l_sphere:BSphere = new BSphere();
-		    l_sphere.compute( p_aPts );
+		    l_sphere.compute( p_aVertices );
 			return l_sphere;
 		}
 				
 		/**
-		* <p>Create a new {@code BSphere} Instance</p>
-		* 
-		* @param	pos	The center of the sphere
-		* @param	radius	THe radius of the Sphere
-		*/ 	
+		 * <p>Create a new <code>BSphere</code> instance.</p>
+		 */ 	
 		public function BSphere()
 		{
 			center = new Vector();
@@ -62,6 +68,11 @@ package sandy.bounds
 			radius = 1.0;
 		}
 		
+		/**
+	     * Applies the transformation that is specified in the <code>Matrix4</code> parameter.
+	     * 
+	     * @param p_oMatrix		The transformation matrix
+	     */	
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
 	        m_oPosition.copy( center );
@@ -71,25 +82,29 @@ package sandy.bounds
 	    }
 	    
 		/**
-		* Get a String represntation of the {@code BSphere}.
+		* Returns a <code>String</code> represntation of the <code>BSphere</code>.
 		* 
-		* @return	A String representing the Bounding Sphere
+		* @return	A String representing the bounding sphere
 		*/ 	
 		public function toString():String
 		{
 			return "sandy.bounds.BSphere (center : "+center+", radius : "+radius + ")";
 		}
 		
-				
-		public function compute( pPoints:Array ):void
+		/**
+		 * Performs the actual computing of the bounding sphere's center and radius
+		 * 
+		 * @param p_aVertices		The vertices of the 3D object
+		 */		
+		public function compute( p_aVertices:Array ):void
 		{
 			var x:Number, y:Number, z:Number, d:Number;
-			if(pPoints.length == 0) return;
+			if(p_aVertices.length == 0) return;
 			
 			var p:Array = new Array();
 			var i:int, j:int, l:int = 0;
 			
-			for each( var v:Vertex in pPoints )
+			for each( var v:Vertex in p_aVertices )
 			{
 				p.push( v.getVector() );
 				l++;
@@ -150,21 +165,23 @@ package sandy.bounds
 		}
 	  
 	  
-		/*
-		* Return the positions of the array of Position p that are outside the BoundingSphere
-		* @param the array of points to test
-		* @return an array of points containing those that are outside. The array has a length of 0 if all the points are inside or on the surface.
-		*/
-		private function pointsOutofSphere(p:Array):Array
+		/**
+		 * Return the positions of the array of Position p that are outside the BoundingSphere.
+		 * 
+		 * @param 	An array containing the points to test
+	 	 * @return 	An array of points containing those that are outside. The array has a length 
+	 	 * 			of 0 if all the points are inside or on the surface.
+		 */
+		private function pointsOutofSphere(p_aPoints:Array):Array
 		{
 			var r:Array = new Array();
-			var i:int, l:int = p.length;
+			var i:int, l:int = p_aPoints.length;
 			
 			while( i < l ) 
 			{
-				if(distance(p[int(i)]) > 0) 
+				if(distance(p_aPoints[int(i)]) > 0) 
 				{
-					r.push( p[int(i)] );
+					r.push( p_aPoints[int(i)] );
 				}
 				
 				i++;
@@ -172,34 +189,39 @@ package sandy.bounds
 			return r;
 		}
 	  
-		  /**
-		   * return where a Position is from the sphere surface
-		   * @return >0 if position is outside the sphere, <0 if inside, =0 if on the surface of thesphere
-		   */
-		public function distance(point:Vector):Number
+		/**
+		 * Returns the distance of a point from the surface.
+		 * 
+		 * @return 	>0 if position is outside the sphere, <0 if inside, =0 if on the surface of the sphere
+		 */
+		public function distance(p_oPoint:Vector):Number
 		{
-			
-			var x:Number = point.x - center.x;
-			var y:Number = point.y - center.y;
-			var z:Number = point.z - center.z;
+			var x:Number = p_oPoint.x - center.x;
+			var y:Number = p_oPoint.y - center.y;
+			var z:Number = p_oPoint.z - center.z;
 			return  Math.sqrt(x * x + y * y + z * z) - radius;
 		}
-		  
-		private function computeRadius(ps:Array):Number
+		
+		/**
+		 * Computes the bounding sphere's radius
+		 * 
+		 * @param p_aPoints		An array containing the sphere's points
+		 * @return 				The bounding sphere's radius
+		 */		
+		private function computeRadius(p_aPoints:Array):Number
 		{
 			var x:Number, y:Number, z:Number, d:Number, dmax:Number = 0;
-			var i:int, l:int = ps.length;
+			var i:int, l:int = p_aPoints.length;
 			while( i < l ) 
 			{
-				x = ps[int(i)].x - center.x;
-				y = ps[int(i)].x - center.x;
-				z = ps[int(i)].x - center.x;
+				x = p_aPoints[int(i)].x - center.x;
+				y = p_aPoints[int(i)].x - center.x;
+				z = p_aPoints[int(i)].x - center.x;
 				d = x * x + y * y + z * z;
 				if(d > dmax) dmax = d;
 				i++;
 			}
 			return Math.sqrt(dmax);
 		}
-	
 	}
 }

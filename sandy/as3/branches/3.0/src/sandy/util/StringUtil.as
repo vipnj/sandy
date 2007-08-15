@@ -13,83 +13,99 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
+
 package sandy.util 
 {
+	/**
+	 * Utility class for string manipulation.
+	 *  
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class StringUtil
 	{
 		/**
-		* Basic replace string method. It replace in the string pstr the pattern pold by the new pattern pnew.
-		* @param	pstr The string to modify
-		* @param	pold The old pattern to replace
-		* @param	pnew The new pattern you want to replace with
-		* @return	The modified string.
-		*/
-		public static function replace( pstr:String, pold:String, pnew:String ):String
+		 * Replaces a sub string with another in the target string.
+		 *
+		 * @param p_sStr 	The string to modify ( target )
+		 * @param p_sOld 	The old pattern to replace
+		 * @param p_sNew 	The new pattern you want to replace with
+		 * @return		The modified string.
+		 */
+		public static function replace( p_sStr:String, p_sOld:String, p_sNew:String ):String
 		{
 			// we do the replacement if the element is present at least once.
-			if( pstr.lastIndexOf( pold ) )
+			if( p_sStr.lastIndexOf( p_sOld ) )
 			{
-				return pstr.split( pold ).join( pnew );
+				return p_sStr.split( p_sOld ).join( p_sNew );
 			}
 			else
-				return pstr;
+				return p_sStr;
 		}
 		
 		/**
-		* Returns an array containing all the strings that are between the pattern deb and end.
-		* The patterns aren't in the result strings.
-		* @param	pstr	String	the string we are going to look for patterns into.
-		* @param	pdeb	String	the start pattern
-		* @param	pfin	String	the end pattern
-		* @return	An array of Strings if we have found some parts of string matching the pattern, or an empty array if not.
-		*/
-		public static function getTextBetween( pstr:String, pdeb:String, pfin:String ):Array/*String*/
+		 * Returns all sub strings in a string between two given delimiter patterns.
+		 * 
+		 * <p>The delimiters are not included in the results.</p>
+		 *
+		 * @param p_sStr	The string we are going search for patterns.
+		 * @param p_sStart	The start delimiter
+		 * @param p_sEnd	The end delimiter
+		 * @return 		An array of found sub strings. Empty if no matching patterns were found.
+		 */
+		public static function getTextBetween( p_sStr:String, p_sStart:String, p_sEnd:String ):Array/*String*/
 		{
 			var r:Array 	= [];
 			var idd:Number 	= 0;
-			var idf:Number 	= pdeb.length;
+			var idf:Number 	= p_sStart.length;
 			// --
-			while( ( idd = pstr.indexOf( pdeb, idd ) ) > 0 && ( idf = pstr.indexOf( pfin, idd+pdeb.length ) ) > 0 )
+			while( ( idd = p_sStr.indexOf( p_sStart, idd ) ) > 0 && ( idf = p_sStr.indexOf( p_sEnd, idd+p_sStart.length ) ) > 0 )
 			{
-				r.push( pstr.slice( idd+pdeb.length, idf ) );
-				idd = idf+pfin.length;
-				idf = idd+pdeb.length;
+				r.push( p_sStr.slice( idd+p_sStart.length, idf ) );
+				idd = idf+p_sEnd.length;
+				idf = idd+p_sStart.length;
 			}
 			return r;
 		}
 	
 	//--------------------------The following added by [Peanut]-------------------------//
 		/**
-		*public static findBlockIndex():Array
-		*<p>Search all block's start and end index.</p>
-		*@param		str:String				The source string
-		*@param		str_s:String			Block start with
-		*@param		str_e:String			Block end with
-		*@return	Array	store all the start and end index;
-		*	<p>array struct:</p>
-		*	<p>array[0] = [Block_Start_String_Length, Block_End_String_Length]</p>
-		*	<p>array[1] = [Start_Index_1, End_Index_1]</p>
-		*	<p>array[x] = [Start_Index_x, End_Index_x]</p>
-		*/
-		public static function findBlockIndex (str:String, str_s:String, str_e:String):Array  {
+		 * Returns pairs of start and end indices of a block in a source string.
+		 *
+		 * <p>The target string is searched for blocks of text between a start and and an end delimiter string.<br/>
+		 * The start and end indices into the searched string, for each found block is stored in a two dimensional array.<br />
+		 * All inices are returned as an array opf index pairs.</p>
+		 *
+		 *	<p>array struct:</p>
+		 *	<p>array[0] = [Block_Start_String_Length, Block_End_String_Length]</p>
+		 *	<p>array[1] = [Start_Index_1, End_Index_1]</p>
+		 *	<p>array[x] = [Start_Index_x, End_Index_x]</p>
+		 *
+		 *@param p_sStr		The source string
+		 *@param p_sStart	Block start with
+		 *@param p_sEnd		Block end with
+		 *@return		An array containtng all the start and end indices
+		 */
+		public static function findBlockIndex (p_sStr:String, p_sStart:String, p_sEnd:String):Array  {
 			var pps:Array = new Array(), ppe:Array = new Array();
 			var pairs:Array = new Array();
-			pairs.push(new Array(str_s.length, str_e.length));
+			pairs.push(new Array(p_sStart.length, p_sEnd.length));
 			//--start serach
 			var searchStart1:Number = -1;
 			var searchStart2:Number = -1;
 			var i:Number;
-			while (str.indexOf(str_s, searchStart1+1)>-1 && str.indexOf(str_e, searchStart2+1)>-1){
-				searchStart1 = str.indexOf(str_s, searchStart1+1);
+			while (p_sStr.indexOf(p_sStart, searchStart1+1)>-1 && p_sStr.indexOf(p_sEnd, searchStart2+1)>-1){
+				searchStart1 = p_sStr.indexOf(p_sStart, searchStart1+1);
 				pps.push(searchStart1);
-				searchStart2 = str.indexOf(str_e, searchStart2+1);
+				searchStart2 = p_sStr.indexOf(p_sEnd, searchStart2+1);
 				ppe.push(searchStart2);
 			}
 			for (i=0; i<ppe.length-1; i++) {
 				for (var j:Number=i+1; j<pps.length; j++) {
 					var a:Number = ppe[i]-pps[j];
 					if (a<0) {
-						pairs.push(new Array(pps[j-1]+str_s.length, ppe[i]));
+						pairs.push(new Array(pps[j-1]+p_sStart.length, ppe[i]));
 						pps.splice(j-1, 1);
 						ppe.splice(i, 1);
 						i--;
@@ -99,7 +115,7 @@ package sandy.util
 				}
 			}
 			for (i=0; i<pps.length; i++) {
-				pairs.push(new Array(pps[i]+str_s.length, ppe[pps.length-1-i]));
+				pairs.push(new Array(pps[i]+p_sStart.length, ppe[pps.length-1-i]));
 			}
 			pairs.sort(function (a:Number, b:Number):Number {
 				if (a[0]<b[0]) {
@@ -113,111 +129,121 @@ package sandy.util
 		}
 		
 		/**
-		*public static function getPairs ():Array
-		*<p>Get block from source string by index</p>
-		*@param		str:String					Source string
-		*@param		pairs:Array					Index source, created by findBlockIndex
-		*@param		withSymbol:Boolean			Return with start and end symbols
-		*@return	Array		All blocks between the start and end symbols
-		*/
-		public static function getBlocks (str:String, pairs:Array, withSymbol:Boolean):Array  {
+		 * Returns all blocks between start and end indices from a source string.
+		 *
+		 * <p>Given an array of index pairs, normally created by a call to findBlockIndex,
+		 * all blocks between index pairs are extracted and stored in an array</p>
+		 *
+		 * @param p_sStr		Source string
+		 * @param p_aPairs		Index pairs created by findBlockIndex
+		 * @param p_bWithSymbol		Include start and end symbols if set to true
+		 * @return			All blocks between the start and end indices
+		 */
+		public static function getBlocks (p_sStr:String, p_aPairs:Array, p_bWithSymbol:Boolean):Array  {
 			var pairStrs:Array = new Array();
 			var i:Number;
 			var t:String;
 			
-			if (withSymbol) {
-				for (i=1; i<pairs.length; i++) {
-					t = str.substring(pairs[i][0]-pairs[0][0], pairs[i][1]+pairs[0][1]);
+			if (p_bWithSymbol) {
+				for (i=1; i<p_aPairs.length; i++) {
+					t = p_sStr.substring(p_aPairs[i][0]-p_aPairs[0][0], p_aPairs[i][1]+p_aPairs[0][1]);
 					pairStrs.push(t);
 				}
 			} else {
-				for (i=1; i<pairs.length; i++) {
-					t = str.substring(pairs[i][0], pairs[i][1]);
+				for (i=1; i<p_aPairs.length; i++) {
+					t = p_sStr.substring(p_aPairs[i][0], p_aPairs[i][1]);
 					pairStrs.push(t);
 				}
 			}
 			return pairStrs;
 		}
 		
-		/**public static function getBlockByIndex():String
-		 * <p>Return a special block by index</p>
-		 * @param		str:String			Source String
-		 * @param		pairs:Array			Index array, created by findBlockIndex
-		 * @param		strIndex:Number		String index, if we found a block start with this index then return
-		 * @param		noSymbol:Boolean	Return without start and end symbols
-		 * @return		String
+		/**
+		 * Returns a specific sub string of the source string.
+		 *
+		 * @param p_sStr	Source string
+		 * @param p_aPairs	Index pairs created by findBlockIndex
+		 * @param p_nIndex	Start index into the string of the block to search for
+		 * @param p_bNoSymbol	Do not include start and end symbols 
+		 * @return		The searched sub string or an empty string if not found.
 		 */
-		public static function getBlockByIndex(str:String, pairs:Array, strIndex:Number, noSymbol:Boolean):String{
+		public static function getBlockByIndex(p_sStr:String, p_aPairs:Array, p_nIndex:Number, p_bNoSymbol:Boolean):String{
 			var _str:String = "";
-			for (var i:Number=1; i<pairs.length; i++) {
-				if(strIndex == pairs[i][0]-pairs[0][0])
-					if(noSymbol)
-						_str = str.substring(pairs[i][0], pairs[i][1]);
+			for (var i:Number=1; i<p_aPairs.length; i++) {
+				if(p_nIndex == p_aPairs[i][0]-p_aPairs[0][0])
+					if(p_bNoSymbol)
+						_str = p_sStr.substring(p_aPairs[i][0], p_aPairs[i][1]);
 					else
-						_str = str.substring(pairs[i][0]-pairs[0][0], pairs[i][1]+pairs[0][1]);
+						_str = p_sStr.substring(p_aPairs[i][0]-p_aPairs[0][0], p_aPairs[i][1]+p_aPairs[0][1]);
 			}
 			
 			return _str;
 		}
 		
 		/**
-		 * Return block range array
-		 * @param		pairs:Array			Block indexes, use findBlockIndex() to create
-		 * @param		strIndex:Number		String's index in source string
-		 * @return		Array		Store where the block start and where to end. If not found, return [-1, -1]
+		 * Returns The start and end indices for a substring, analyzed by findBlockIndex.
+		 * 
+		 * @param p_aPairs	Index pairs created by findBlockIndex
+		 * @param p_nIndex	Start index into the string of the block of interest
+		 * @return		The pair of start and end indices, [-1, -1] if not found.
 		 */
-		public static function getBlockRange(pairs:Array, strIndex:Number):Array{
-			for (var i:Number=1; i<pairs.length; i++) {
-				if(strIndex == pairs[i][0]-pairs[0][0])
-					return [pairs[i][0]-pairs[0][0], pairs[i][1]+pairs[0][1]];
+		public static function getBlockRange(p_aPairs:Array, p_nIndex:Number):Array{
+			for (var i:Number=1; i<p_aPairs.length; i++) {
+				if(p_nIndex == p_aPairs[i][0]-p_aPairs[0][0])
+					return [p_aPairs[i][0]-p_aPairs[0][0], p_aPairs[i][1]+p_aPairs[0][1]];
 			}
 			return [-1, -1];
 		}
 		
 		/**
-		 * Clear '\r' '\n' and replace multi spaces with a single space.
-		 * @param	expand:Array	Others string you want to clear
+		 * Removes '\r' '\n' and replaces multiple spaces with a single space.
+		 *
+		 * @param p_sStr	The string to clean
+		 * @param p_aExpand	Other strings you want to clear out
 		 */
-		public static function clear(str:String, expand:Array):String{
-			str = str.split("\r").join(" ");
-			str = str.split("\n").join(" ");
-			if(expand){
-				for(var i:Number=0; i<expand.length; i++){
-					str = str.split(expand[i]).join(" ");
+		public static function clear(p_sStr:String, p_aExpand:Array):String{
+			p_sStr = p_sStr.split("\r").join(" ");
+			p_sStr = p_sStr.split("\n").join(" ");
+			if(p_aExpand){
+				for(var i:Number=0; i<p_aExpand.length; i++){
+					p_sStr = p_sStr.split(p_aExpand[i]).join(" ");
 				}
 			}
-			str = StringUtil.clearRepeat(str, " ", " ");
-			return str;
+			p_sStr = StringUtil.clearRepeat(p_sStr, " ", " ");
+			return p_sStr;
 		}
 		
 		/**
-		 * Clear repeated strings
-		 * @param		repeat:Array	The repeat chars which will be cleared.
-		 * <p>ex: If you want to clear "ababab", just input "ab" is enough.</p>
-		 * @param		replace:String	Replace chars, default is a space.
+		 * Clears the source string from multiple occurences of a pattern.
+		 *
+		 * <p>Ex: If you want to clear "ababab", you can use "ab" as a pattern.</p> 
+		 *
+		 * @param p_sRepeat	The pattern to clear out
+		 * @param p_sReplace	Replace chars, default is a space.
 		 */
-		public static function clearRepeat(str:String, repeat:String, replace:String=""):String{
-			if(replace == "") replace = " ";
-			var r:String = repeat+repeat;
+		public static function clearRepeat(p_sStr:String, p_sRepeat:String, p_sReplace:String=""):String{
+			if(p_sReplace == "") p_sReplace = " ";
+			var r:String = p_sRepeat+p_sRepeat;
 			
-			while (str.indexOf(r) > -1)
-				str = str.split(r).join(repeat);
+			while (p_sStr.indexOf(r) > -1)
+				p_sStr = p_sStr.split(r).join(p_sRepeat);
 				
-			return str.split(repeat).join(replace);
+			return p_sStr.split(p_sRepeat).join(p_sReplace);
 		}
 		
 		/**
-		 * Return string's start index when it's appear one more times	
-		 * @param		s:String		Source string
-		 * @param		f:String		String you want find
-		 * @param		times:Number	How many times string appeared
-		 * @param		start:Number	Where we start search
-		 * @return		id:Number		String id which you want	
+		 * Returns the index of the N:th occurance of sub string.
+		 *
+		 * @param p_sStr	Source string
+		 * @param p_sSubstr	Sub string you want find
+		 * @param p_nOccur	The occurance of the substriong to find
+		 * @param p_nStart	Start index for the search
+		 * @return		Start index of the search sub string
 		 */
-		public static function indexTimes(s:String, f:String, times:Number, start:Number):Number{
-			var id:Number = start?start:0;
-			for(var i:Number=0; i<times; i++){
-				id = s.indexOf(f, id)+1;
+		public static function indexTimes(p_sStr:String, p_sSubstr:String, p_nOccur:Number, p_nStart:Number):Number{
+			var id:Number = p_nStart?p_nStart:0;
+			for(var i:Number=0; i<p_nOccur; i++){
+				id = p_sStr.indexOf(p_sSubstr, id)+1;
 			}
 			return id-1;
 		}

@@ -17,118 +17,130 @@ limitations under the License.
 package sandy.util 
 {
 	/**
-	* NumberUtil
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.2
-	* @date 		12.01.2006 
-	**/
-	
+	 * Utility class for useful numeric constants and number manipulation.
+	 *  
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class NumberUtil 
 	{
 		/**
-		 * Constant used pretty much everywhere. Trick of final const keywords use.
+		 * Math constant 2*pi
 		 */
 		public static function get TWO_PI():Number { return __TWO_PI; }
 		private static var __TWO_PI:Number = 2 * Math.PI;
+		
 		/**
-		 * Constant used pretty much everywhere. Trick of final const keywords use.
+		 * Math constant pi
 		 */
 		public static function get PI():Number { return __PI; }
 		private static var __PI:Number = Math.PI;	
 		
 		/**
-		 * Constant used pretty much everywhere. Trick of final const keywords use.
+		 * Math constant pi/2
 		 */
 		public static function get HALF_PI():Number { return __HALF_PI; }
 		private static var __HALF_PI:Number = 0.5 * Math.PI;	
 		
 		/**
-		 * Constant used to convert angle from radians to degress
+		 * Constant used to convert angle from radians to degrees
 		 */
 		public static function get TO_DEGREE():Number { return __TO_DREGREE; }
 		private static var __TO_DREGREE:Number = 180 /  Math.PI;
 		
 		/**
-		 * Constant used to convert degress to radians.
+		 * Constant used to convert degrees to radians.
 		 */
 		public static function get TO_RADIAN():Number { return __TO_RADIAN; }
 		private static var __TO_RADIAN:Number = Math.PI / 180;
 		
 		/**
-		 * Value used to compare a number and another one. Basically it's used to say if a number is zero or not.
+		 * Value used to compare numbers with. 
+		 * 
+		 * <p>Basically used to say if a number is zero or not.<br />
+		 * Adjust this number with regard to the precision of your application</p>
 		 */
 		public static var TOL:Number = 0.0001;	
 			
 		/**
-		 * Say if a Number is close enought to zero to ba able to say it's zero. 
-		 * Adjust TOL property depending on the precision of your Application
-		 * @param n Number The number to compare with zero
-		 * @return Boolean true if the Number is comparable to zero, false otherwise.
+		 * Is the number small enough to be regarded as zero?.
+		 *
+		 * <p>Adjust the TOL property depending on the precision of your application</p>
+		 *
+		 * @param p_nN 	The number to compare to zero
+		 * @return 	true if the number is to be regarded as zero, false otherwise.
 		 */
-		public static function isZero( n:Number ):Boolean
+		public static function isZero( p_nN:Number ):Boolean
 		{
-			return _fABS( n ) < TOL ;
+			return _fABS( p_nN ) < TOL ;
 		}
 		
 		/**
-		 * Say if a Number is close enought to another to ba able to say they are equal. 
-		 * Adjust TOL property depending on the precision of your Application
-		 * @param n Number The number to compare m
-		 * @param m Number The number you want to compare with n
-		 * @return Boolean true if the numbers are comparable to zero, false otherwise.
+		 * Are the numbers close enough to be regarded as equal?.
+		 * 
+		 * <p>Adjust the TOL property depending on the precision of your application</p>
+		 *
+		 * @param p_nN 	The first number
+		 * @param p_nM 	The second number
+		 * @return 	true if the numbers are regarded as equal, false otherwise.
 		 */
-		public static function areEqual( n:Number, m:Number ):Boolean
+		public static function areEqual( p_nN:Number, p_nM:Number ):Boolean
 		{
-			return _fABS( n - m ) < TOL ;
+			return _fABS( p_nN - p_nM ) < TOL ;
 		}
 		
 		/**
-		 * Convert an angle from Radians to Degrees unit
-		 * @param n  Number Number representing the angle in radian
-		 * @return Number The angle in degrees unit
+		 * Converts an angle from radians to degrees
+		 *
+		 * @param p_nRad	A number representing the angle in radians
+		 * @return 		The angle in degrees
 		 */
-		public static function toDegree ( n:Number ):Number
+		public static function toDegree ( p_nRad:Number ):Number
 		{
-			return n * TO_DEGREE;
+			return p_nRad * TO_DEGREE;
 		}
 		
 		/**
-		 * Convert an angle from Degrees to Radians unit
-		 * @param n  Number Number representing the angle in dregrees
-		 * @return Number The angle in radian unit
+		 * Converts an angle from degrees to radians.
+		 * 
+		 * @param p_nDeg 	A number representing the angle in dregrees
+		 * @return 		The angle in radians
 		 */
-		public static function toRadian ( n:Number ):Number
+		public static function toRadian ( p_nDeg:Number ):Number
 		{
-			return n * TO_RADIAN;
+			return p_nDeg * TO_RADIAN;
 		}
 			
 		/**
-		 * Add a constrain to the number which must be between min and max values. Usually name clamp ?
-		 * @param n Number The number to constrain
-		 * @param min Number The minimal valid value
-		 * @param max Number The maximal valid value
-		 * @return Number The number constrained
+		 * Constrains a number to a given interval
+		 * 
+		 * @param p_nN 		The number to constrain
+		 * @param p_nMin 	The minimal valid value
+		 * @param p_nMax 	The maximal valid value
+		 * @return 		The constrained number
 		 */
-		 public static function constrain( n:Number, min:Number, max:Number ):Number
-		 {
-		 	return Math.max( Math.min( n, max ) , min );
-		 }
+		public static function constrain( p_nN:Number, p_nMin:Number, p_nMax:Number ):Number
+		{
+			return Math.max( Math.min( p_nN, p_nMax ) , p_nMin );
+		}
 		 
 		/**
-		 * Round a number to specified accuracy
-		 * @param n Number The number to round
-		 * @param roundToInterval Number The accuracy to which to round
-	     *    (i.e., set roundInterval to 0.01 to round 2 to decimal places)
-		 * @return Number The rounded number
+		 * Rounds a number to specified accuracy.
+		 *
+		 * <p>To round off the number to 2 decimals, set the the accuracy to 0.01</p>
+		 *
+		 * @param p_nN 			The number to round off
+		 * @param p_nRoundToInterval 	The accuracy to which to round
+		 * @return 			The rounded number
 		 */
-		 public static function roundTo (n:Number, roundToInterval:Number=0):Number 
-		 {
-			if (roundToInterval == 0) 
+		public static function roundTo (p_nN:Number, p_nRoundToInterval:Number=0):Number 
+		{
+			if (p_nRoundToInterval == 0) 
 			{
-				roundToInterval = 1;
+				p_nRoundToInterval = 1;
 			}
-			return Math.round(n/roundToInterval) * roundToInterval;
+			return Math.round(p_nN/p_nRoundToInterval) * p_nRoundToInterval;
 		}
 		 	 
 		private static var _fABS:Function = Math.abs;	

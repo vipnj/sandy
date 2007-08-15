@@ -13,43 +13,46 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
+
 package sandy.math 
 {
 	/**
-	* Math functions for Numbers (angles).
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Tabin Cédric - thecaptain
-	* @author		Nicolas Coevoet - [ NikO ]
-	* @since		0.1
-	* @version		0.2
-	* @date 		12.01.2006* 
-	**/
+	 * Math functions for Numbers (angles).
+	 *
+	 * <p>[<strong>ToDo</strong>: Don't we have this somewhere else? ]</p>
+	 *  
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @author		Tabin Cédric - thecaptain
+	 * @author		Nicolas Coevoet - [ NikO ]
+	 * @since		0.1
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class NumberMath
 	{
 		private static var _2rad:Number = Math.PI/180;
 		private static var _2deg:Number = 180/Math.PI;
 		
 		/**
-		 * Transform a degree angle to radian.
+		 * Converts an angular value from degrees to radians.
 		 * 
-		 * @param	n	A degree number.
-		 * @return	The radian.
+		 * @param p_nAngle 	The angle in degrees
+		 * @return		The angle in radians
 		 */	
-		public static function toRadian( n:Number ):Number
+		public static function toRadian( p_nAngle:Number ):Number
 		{
-			return n*_2rad;
+			return p_nAngle*_2rad;
 		}
 	
 		/**
-		 * Transform a radian angle to degree.
+		 * Converts an angular value from degrees to radians.
 		 * 
-		 * @param	n	a radian number.
-		 * @return	The degree.
+		 * @param p_nAngle 	The angle in radians
+		 * @return		The angle in degrees
 		 */	
-		public static function toDegree (n:Number):Number
+		public static function toDegree (p_nAngle:Number):Number
 		{
-			return n*_2deg;
+			return p_nAngle*_2deg;
 		}
 	}
 }

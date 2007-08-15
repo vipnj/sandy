@@ -20,19 +20,24 @@ package sandy.math
 	import sandy.errors.SingletonError;
 	 
 	/**
-	* Math functions for {@link Vertex}.
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.2
-	* @date 		12.01.2006 
-	**/
+	 * Math functions for vertex manipulation.
+	 *  
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		0.2
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class VertexMath extends VectorMath
 	{
 		private static var instance:VertexMath;
 		private static var create:Boolean;
 		
 		/**
-		 * Singleton Constructor
+		 * Creates a VertexMath object.
+		 * 
+		 * <p>This is a singleton constructor, and should not be called directly.<br />
+		 * If called from outside the ColorMath class, it throws a SingletonError.</p>
+		 * [<strong>ToDo</strong>: Why instantiate this at all? - all methods are class methods! ]
 		 */ 
 		public function VertexMath(){
 			if ( !create )
@@ -42,7 +47,9 @@ package sandy.math
 		}
 		
 		/**
-		 * Returns an instance of this class
+		 * Returns an instance of this class.
+		 *
+		 * <p>Call this method to get an instance of VertexMath</p>
 		 */
 		public static function getInstance():VertexMath
 		{
@@ -57,86 +64,96 @@ package sandy.math
 		}
 		
 		/**
-		 * Compute the oposite of the {@code Vertex}.
+		 * Computes the opposite of a vertex.
 		 *
-		 * @param {@code v} a {@code Vertex}.
-		 * @return a {@code Vertex}.
+		 * <p>The "opposite" vertex is a vertex where all components are multiplied by -1</p>
+		 *
+		 * @param p_oV 	The vertex.
+		 * @return 	The opposite vertex.
 		 */
-		public static function negate( v:Vertex ): Vertex
+		public static function negate( p_oV:Vertex ): Vertex
 		{
-			return new Vertex (	- v.x,
-	                      		- v.y,
-	               				- v.z );
+			return new Vertex (	
+						- p_oV.x,
+	                      			- p_oV.y,
+	               				- p_oV.z 
+	               			);
 		}
 	
 		/**
-		 * Compute the dot product of the two {@code Vertex}.
+		 * Computes the dot product of the two vertices.
 		 *
-		 * @param {@code v} a {@code Vertex}.
-		 * @param {@code w} a {@code Vertex}.
-		 * @return the dot procuct of the 2 {@code Vertex}.
+		 * @param p_oV 	The first vertex
+		 * @param p_oW 	The second vertex
+		 * @return 	The dot procuct
 		 */
-		public static function dot( v: Vertex, w: Vertex):Number
+		public static function dot( p_oV: Vertex, p_oW: Vertex):Number
 		{
-			return ( v.wx * w.wx + v.wy * w.wy + w.wz * v.wz );
+			return ( p_oV.wx * p_oW.wx + p_oV.wy * p_oW.wy + p_oW.wz * p_oV.wz );
 		}
 		
 		/**
-		 * Compute the addition of the two {@code Vertex}.
-		 * TODO : Check here! We should add all the properties of the vertices!
-		 * @param {@code v} a {@code VertexVertex}.
-		 * @param {@code w} a {@code Vertex}.
-		 * @return The resulting {@code Vertex}.
-	
+		 * Adds the two vertices.
+		 *
+		 * <p>[<strong>ToDo</strong>: Check here! We should add all the properties of the vertices! ]</p>
+		 *
+		 * @param p_oV 	The first vertex
+		 * @param p_oW 	The second vertex
+		 * @return 	The resulting vertex
 		 */
-		public static function addVertex( v:Vertex, w:Vertex ): Vertex
+		public static function addVertex( p_oV:Vertex, p_oW:Vertex ): Vertex
 		{
-			return new Vertex(	v.x + w.x ,
-	                           	v.y + w.y ,
-	                        	v.z + w.z );
+			return new Vertex(	
+						p_oV.x + p_oW.x ,
+	                	           	p_oV.y + p_oW.y ,
+	                	        	p_oV.z + p_oW.z 
+	                        	);
 		}
 		
 		/**
-		 * Compute the substraction of the two  {@code Vertex}.
+		 * Substracts one vertices from another
 		 *
-		 * @param {@code v} a {@code Vertex}.
-		 * @param {@code w} a {@code Vertex}.
-		 * @return The resulting {@code Vertex}.
+		 * @param p_oV 	The vertex to subtract from
+		 * @param p_oW	The vertex to subtract
+		 * @return 	The resulting vertex
 		 */
-		public static function sub( v:Vertex, w:Vertex ): Vertex
+		public static function sub( p_oV:Vertex, p_oW:Vertex ): Vertex
 		{
-			return new Vertex(	 v.x - w.x ,
-	                             v.y - w.y ,
-	                             v.z - w.z ,
-	                             v.wx - w.wx ,
-	                             v.wy - w.wy ,
-	                             v.wz - w.wz );
+			return new Vertex(	 
+						p_oV.x - p_oW.x ,
+						p_oV.y - p_oW.y ,
+						p_oV.z - p_oW.z ,
+						p_oV.wx - p_oW.wx ,
+						p_oV.wy - p_oW.wy ,
+						p_oV.wz - p_oW.wz 
+					);
 		}	
 		
 		/**
-		 * Compute the cross product of the two {@code Vertex}.
+		 * Computes the cross product the two vertices.
 		 *
-		 * @param {@code v} a {@code Vertex}.
-		 * @param {@code w} a {@code Vertex}.
-		 * @return the {@code Vertex} resulting of the cross product.
+		 * @param p_oV 	The first vertex
+		 * @param p_oW 	The second vertex
+		 * @return 	The resulting cross product
 		 */
-		public static function cross(w:Vertex, v:Vertex):Vertex
+		public static function cross(p_oW:Vertex, p_oV:Vertex):Vertex
 		{
 			// cross product vector that will be returned
-			return new Vertex (		(w.y * v.z) - (w.z * v.y) ,
-									(w.z * v.x) - (w.x * v.z) ,
-									(w.x * v.y) - (w.y * v.x));
+			return new Vertex (	(p_oW.y * p_oV.z) - (p_oW.z * p_oV.y) ,
+						(p_oW.z * p_oV.x) - (p_oW.x * p_oV.z) ,
+						(p_oW.x * p_oV.y) - (p_oW.y * p_oV.x)
+					);
 		}
 		
 		/**
-		 * clone the {@code Vertex}.
+		 * Clones a vertex.
 		 *
-		 * @param {@code v} a {@code Vertex}.
-		 * @return a clone of the Vertex passed in parameters
+		 * @param p_oV	A vertex to clone.
+		 * @return 	The clone
 		 */	
-		public static function clone( v:Vertex ): Vertex
+		public static function clone( p_oV:Vertex ): Vertex
 		{
-			return new Vertex( v.x, v.y, v.z );
+			return new Vertex( p_oV.x, p_oV.y, p_oV.z );
 		}	
 	}
 }

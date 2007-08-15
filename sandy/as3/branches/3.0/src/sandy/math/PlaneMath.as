@@ -21,21 +21,24 @@ package sandy.math
 	import sandy.errors.SingletonError;
 	
 	/**
-	* Math functions for planes.
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
+	 * Math functions for planes.
+	 *  
+	 * @author		Thomas Pfeiffer - kiroukou
 	 * @since		0.3
-	 * @version		0.1
-	 * @date 		21.02.2006
-	* 
-	**/
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class PlaneMath
 	{
 		private static var instance:PlaneMath;
 		private static var create:Boolean;
 		
 		/**
-		 * Singleton Constructor
+		 * Creates a PlaneMath object.
+		 * 
+		 * <p>This is a singleton constructor, and should not be called directly.<br />
+		 * If called from outside the PlaneMath class, it throws a SingletonError.</p>
+		 * [<strong>ToDo</strong>: Why instantiate this at all? - all methods are class methods! ]
 		 */ 
 		public function PlaneMath()
 		{
@@ -46,7 +49,9 @@ package sandy.math
 		}
 		
 		/**
-		 * Returns an instance of this class
+		 * Returns an instance of this class.
+		 *
+		 * <p>Call this method to get an instance of ColorMath</p>
 		 */
 		public static function getInstance():PlaneMath
 		{
@@ -60,68 +65,98 @@ package sandy.math
 			return instance;
 		}
 		
+		/**
+		 * Defines the numeric value -1
+		 */
 		public static function get NEGATIVE():Number { return -1; }
+		
+		/**
+		 * Defines the numeric value 0
+		 */
 		public static function get ON_PLANE():Number { return  0; }
+		
+		/**
+		 * Defines the numeric value 1		 */
 		public static function get POSITIVE():Number { return  1; }
 		
 		/**
-		 * Normalize the plane. Often before making some calculations with a plane you have to normalize it.
-		 * @param plane Plane The plane that we want to normalize.
+		 * Normalizes the plane. 
+		 * 
+		 * <p>Often before making some calculations with a plane you have to normalize it.</p>
+		 *
+		 * @param p_oPlane 	The plane to normalize.
 		 */
-		public static function normalizePlane( plane:Plane ):void
+		public static function normalizePlane( p_oPlane:Plane ):void
 		{
 			var mag:Number;
-			mag = Math.sqrt( plane.a * plane.a + plane.b * plane.b + plane.c * plane.c );
-			plane.a = plane.a / mag;
-			plane.b = plane.b / mag;
-			plane.c = plane.c / mag;
-			plane.d = plane.d / mag;
+			mag = Math.sqrt( p_oPlane.a * p_oPlane.a + p_oPlane.b * p_oPlane.b + p_oPlane.c * p_oPlane.c );
+			p_oPlane.a = p_oPlane.a / mag;
+			p_oPlane.b = p_oPlane.b / mag;
+			p_oPlane.c = p_oPlane.c / mag;
+			p_oPlane.d = p_oPlane.d / mag;
 		}
 		
 		/**
 		 * Computes the distance between a plane and a 3D point (a vector here).
-		 * @param plane Plane The plane we want to compute the distance from
-		 * @param pt Vector The vector in the 3D space
-		 * @return Number The distance between the point and the plane.
+		 *
+		 * @param p_oPlane The plane we want to compute the distance from
+		 * @param pt 	The point in space
+		 * @return 	The distance between the point and the plane.
 		 */
-		public static function distanceToPoint( plane:Plane, pt:Vector ):Number
+		public static function distanceToPoint( p_oPlane:Plane, p_oPoint:Vector ):Number
 		{
-			return plane.a * pt.x + plane.b * pt.y + plane.c * pt.z + plane.d ;
+			return p_oPlane.a * p_oPoint.x + p_oPlane.b * p_oPoint.y + p_oPlane.c * p_oPoint.z + p_oPlane.d ;
 		}
 		
 		/**
-		 * Returns a constant PlaneMath.NEGATIVE PlaneMath.POSITIVE PlaneMath.ON_PLANE depending of the position
-		 * of the point compared to the plane
-		 * @param plane Plane The reference plane
-		 * @param pt Vector The point we want to classify
-		 * @return Number The classification of the point PlaneMath.NEGATIVE or PlaneMath.POSITIVE or PlaneMath.ON_PLANE 
+		 * Returns a classification constant depending on a points position relative to a plane.
+		 * 
+		 * <p>The classification is one of PlaneMath.NEGATIVE PlaneMath.POSITIVE PlaneMath.ON_PLANE</p>
+		 *
+		 * @param p_oPlane 	The reference plane
+		 * @param p_oPoint 		The point we want to classify
+		 * @return 		The classification of the point
 		 */
-		public static function classifyPoint( plane:Plane, pt:Vector ):Number
+		public static function classifyPoint( p_oPlane:Plane, p_oPoint:Vector ):Number
 		{
 			var d:Number;
-			d = PlaneMath.distanceToPoint( plane, pt );
+			d = PlaneMath.distanceToPoint( p_oPlane, p_oPoint );
 			if (d < 0) return PlaneMath.NEGATIVE;
 			if (d > 0) return PlaneMath.POSITIVE;
 			return PlaneMath.ON_PLANE;
 		}
 		
-		public static function computePlaneFromPoints( pA:Vector, pB:Vector, pC:Vector ):Plane
+		/**
+		 * Computes a plane from three specified points.
+		 *
+		 * @param p_oPointA	The first point
+		 * @param p_oPointB	The second point
+		 * @param p_oPointC	The third point
+		 * @return 	The Plane object		 
+		 */
+		public static function computePlaneFromPoints( p_oPointA:Vector, p_oPointB:Vector, p_oPointC:Vector ):Plane
 		{
-			var n:Vector = VectorMath.cross( VectorMath.sub( pA, pB), VectorMath.sub( pA, pC) );
+			var n:Vector = VectorMath.cross( VectorMath.sub( p_oPointA, p_oPointB), VectorMath.sub( p_oPointA, p_oPointC) );
 			VectorMath.normalize( n );
-			var d:Number = VectorMath.dot( pA, n);
+			var d:Number = VectorMath.dot( p_oPointA, n);
 			// --
 			return new Plane( n.x, n.y, n.z, d);
 		}
-		
-		public static function createFromNormalAndPoint( pNormal:Vector, pD:Number ):Plane
+		/**
+		 * Computes a plane from a normal vector and a specified point.
+		 *
+		 * @param p_oNormal	The normal vector
+		 * @param p_nPoint		The point
+		 * @return 		The Plane object
+		 */		
+		public static function createFromNormalAndPoint( p_oNormal:Vector, p_nPoint:Number ):Plane
 		{
 			var p:Plane = new Plane();
-			VectorMath.normalize(pNormal);
-			p.a = pNormal.x;
-			p.b = pNormal.y;
-			p.c = pNormal.z;
-			p.d = pD;
+			VectorMath.normalize(p_oNormal);
+			p.a = p_oNormal.x;
+			p.b = p_oNormal.y;
+			p.c = p_oNormal.z;
+			p.d = p_nPoint;
 			PlaneMath.normalizePlane( p );
 			return p;
 		}

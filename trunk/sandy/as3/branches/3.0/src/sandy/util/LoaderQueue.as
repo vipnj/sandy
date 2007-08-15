@@ -29,18 +29,40 @@ package sandy.util
 	[Event(name="queueComplete", type="sandy.events.SandyEvent")]
 	[Event(name="queueLoaderError", type="sandy.events.SandyEvent")]
 
+       	/**
+	 * Utility class for loading resources.
+	 *
+	 * <p>A LoaderQueue allows you to queue up requests for loading external resources</p>
+	 * 
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class LoaderQueue extends EventDispatcher
 	{
 		private var m_oLoaders : Object;
 		private var m_nLoaders : int;
 		private var m_oQueueEvent : QueueEvent;
 		
+		/**
+		 * Creates a new loader queue.
+		 *
+		 */
 		public function LoaderQueue()
 		{
 			m_oLoaders = new Object();
 			m_oQueueEvent = new QueueEvent( QueueEvent.QUEUE_COMPLETE );
 		}
 		
+		/**
+		 * Adds a new request to this loader queue.
+		 *
+		 * <p>The request is given its own loader and is added to a loader queue<br/>
+		 * The loding is postponed until the start method of the queue is called.</p>
+		 * 
+		 * @param p_sID		A string identifier for this request
+		 * @param p_oURLRequest	The request
+		 */
 		public function add( p_sID : String, p_oURLRequest : URLRequest ) : void
 		{
 			m_oLoaders[ p_sID ] = 
@@ -53,16 +75,25 @@ package sandy.util
 			m_nLoaders++;
 		}
 		
+		/**
+		 * Starts the loading of all resources in the queue.
+		 *
+		 * <p>All loaders in the queue are started and IOErrorEvent and the COMPLETE event are subscribed to.</p>
+		 */
 		public function start() : void
 		{
 			for each( var l_oLoader : Object in m_oLoaders )
 			{
 				l_oLoader.loader.load( l_oLoader.request );
 				l_oLoader.loader.contentLoaderInfo.addEventListener( Event.COMPLETE, completeHandler );
-	            l_oLoader.loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, ioErrorHandler );
+	            		l_oLoader.loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, ioErrorHandler );
 			}
 		}
 		
+		/**
+		 * Fires a QueueEvent, once all requested resources are loaded.
+		 * Type QUEUE_COMPLETE
+		 */
 		private function completeHandler( p_oEvent : Event ) : void
 		{
 			m_nLoaders--;
@@ -74,6 +105,10 @@ package sandy.util
 			}
 		}
 		
+		/**
+		 * Fires an error event if any of the loaders didn't succeed
+		 *
+		 */
 		private function ioErrorHandler( p_oEvent : IOErrorEvent ) : void
 		{	
 			trace( p_oEvent.text );

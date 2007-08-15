@@ -13,53 +13,58 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
+
 package sandy.util 
 {
 	import sandy.core.data.Vector;
 	import sandy.math.VectorMath;
-	/**
-	* BezierUtil
-	* All credits go to Alex Ulhmann and its Animation Package Library 
-	* @author		Thomas Pfeiffer - kiroukou
-	* @since		1.0
-	* @version		1.0
-	* @date 		27.04.2006 
-	**/
-	
+       	
+       	/**
+	 * Utility class for Bézier calculations.
+	 * 
+	 * <p>All credits go to Alex Ulhmann and his Animation Package Library </p>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		1.0
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class BezierUtil 
 	{
-		
 		/**
-		* @method getPointsOnQuadCurve
-		* Returns a point on a quadratic bezier curve with Robert Penner's optimization 
-		*				of the standard equation.
-		* @param p (Number) A percentage between [0-1]
-		* @param p1 (Vector)
-		* @param p2 (Vector)
-		* @param p3 (Vector)
-		* @return Vector	The resulting position vector
-		*/
-		/*Adapted from Robert Penner.*/
+		 * Returns a point on a quadratic Bézier curve.
+		 * 
+		 * <p>Adapted from Robert Penner<br />
+		 * with Robert Penner's optimization of the standard equation.</p>
+		 * 
+		 * @param p 	A fraction between [0-1] of the whole curve
+		 * @param p1 	First point
+		 * @param p2 	Second point
+		 * @param p3 	Third point
+		 * @return 	The resulting position vector
+		 */
 		public static function getPointsOnQuadCurve(p:Number, p1:Vector, p2:Vector, p3:Vector):Vector 
 		{
 			var ip2:Number = 2 * ( 1 - p );
 			return new Vector(
-								p1.x + p*(ip2*(p2.x-p1.x) + p*(p3.x - p1.x)),
-								p1.y + p*(ip2*(p2.y-p1.y) + p*(p3.y - p1.y)),
-								p1.z + p*(ip2*(p2.z-p1.z) + p*(p3.z - p1.z))
-							  );
+				p1.x + p*(ip2*(p2.x-p1.x) + p*(p3.x - p1.x)),
+				p1.y + p*(ip2*(p2.y-p1.y) + p*(p3.y - p1.y)),
+				p1.z + p*(ip2*(p2.z-p1.z) + p*(p3.z - p1.z))
+			);
 		}
 		
 		/**
-		* @method getPointsOnCubicCurve
-		* @param p (Number) A percentage between [0-1]
-		* @param p1 (Vector)
-		* @param p2 (Vector)
-		* @param p3 (Vector)
-		* @param p4 (Vector)
-		* @return Vector	The resulting position vector
-		*/	
-		/*Adapted from Paul Bourke.*/
+		 * Returns a point on a qubic Bézier curve.
+		 * 
+		 * <p>Adapted from Paul Bourke.</p>
+		 * 
+		 * @param p 	A fraction between [0-1] of the whole curve
+		 * @param p1 	First point
+		 * @param p2 	Second point
+		 * @param p3 	Third point
+		 * @param p4 	Fourth point
+		 * @return 	The resulting position vector
+		 */	
 		public static function getPointsOnCubicCurve(p:Number, p1:Vector, p2:Vector, p3:Vector, p4:Vector):Vector 
 		{
 			var a:Number,b:Number,c:Number,d:Number,e:Number;	
@@ -69,40 +74,44 @@ package sandy.util
 			b = e * a;
 			c = d * p;
 			return new Vector(
-								b * p1.x + 3 * p * e * p2.x + 3 * d * a * p3.x + c * p4.x,
-								b * p1.y + 3 * p * e * p2.y + 3 * d * a * p3.y + c * p4.y,
-								b * p1.z + 3 * p * e * p2.z + 3 * d * a * p3.z + c * p4.z
-							 );
+				b * p1.x + 3 * p * e * p2.x + 3 * d * a * p3.x + c * p4.x,
+				b * p1.y + 3 * p * e * p2.y + 3 * d * a * p3.y + c * p4.y,
+				b * p1.z + 3 * p * e * p2.z + 3 * d * a * p3.z + c * p4.z
+			);
 		}
 		
 		/**
-		* @method getQuadControlPoints
-		* @param start Vector	The starting point
-		* @param middle Vector	The point where the curve goes throught
-		* @param end Vector 	The end point of the curve
-		* @return Vector The control point
-		*/
-		/*Adapted from Robert Penner's drawCurve3Pts() method*/
+		 * Returns the control point for a quadratic Bézier curve.
+		 *
+		 * <p>Adapted from Robert Penner's drawCurve3Pts() method</p>
+		 *
+		 * @param start		The start point of the curve
+		 * @param middle	The middle point
+		 * @param end	 	The end point
+		 * @return		The control point
+		 */
 		public static function getQuadControlPoints(start:Vector, middle:Vector,end:Vector):Vector
 		{						        
 			return new Vector(
-								(2 * middle.x) - .5 * (start.x + end.x),
-								(2 * middle.y) - .5 * (start.y + end.y),  
-								(2 * middle.z) - .5 * (start.z + end.z)
-							 );
+				(2 * middle.x) - .5 * (start.x + end.x),
+				(2 * middle.y) - .5 * (start.y + end.y),  
+				(2 * middle.z) - .5 * (start.z + end.z)
+			);
 		}	
 		
 		/**
-		* @method getCubicControlPoints
-		* If anybody finds a generic method to compute control points 
-		* 				for bezier curves with n control points, 
-		* 				if only the points on the curve are given, please let us know!
-		* @param start (Vector)
-		* @param through1 (Vector)
-		* @param through2 (Vector)
-		* @param end (Vector)
-		* @return Array of Vector. A two dimensionnal array containing the two controls points.
-		*/	
+		 * Returns the control points for a qubic Bézier curve.
+		 * 
+		 * <p>If anybody finds a generic method to compute control points 
+		 * for bezier curves with n control points, if only the points on the curve are given, 
+		 * please let us know!</p>
+		 * 
+		 * @param start		The start point of the curve
+		 * @param through1 	The second point
+		 * @param through2 	The third point
+		 * @param end	 	The end point
+		 * @return 		A two dimensional array containing the two controls points.
+		 */	
 		public static function getCubicControlPoints(start:Vector, through1:Vector, through2:Vector, end:Vector):Array 
 		{
 			return [
@@ -119,11 +128,14 @@ package sandy.util
 		}
 	
 		/**
-		* Apply the casteljau algorithm.
-		* @param	p	Number	A percentage value between [0-1]
-		* @param	plist Array of Vector The list of vector that are used as control points of the Bezier curve.
-		* @return	Vector	The position on the Bezier curve at the ration p of the curve.
-		*/
+		 * Applies the de Casteljau's algorithm.
+		 *
+		 * <p>[<strong>ToDo</strong>: Better explanations - link to wikipedia ]</p>
+		 *
+		 * @param p 	A fraction between [0-1] of the whole curve
+		 * @param plist	The list of control points of the Bézier curve.
+		 * @return	The position on the Bézier curve at the fraction p of the curve.
+		 */
 		public static function casteljau( p:Number, plist:Array ):Vector
 		{
 			var list:Array = plist.slice();
@@ -152,14 +164,17 @@ package sandy.util
 		}
 		
 		/**
-		* More robust casteljau algorithm if the intervals are wierd.
-		* UNTESTED METHOD. MAY BE REMOVED IN THE FUTURE VERSION. USE IT CAREFULLY.
-		* @param	p
-		* @param	plist
-		* @param	pdeb
-		* @param	pfin
-		* @return
-		*/
+		 * Applies a more robust de Casteljau's algorithm if the intervals are "wierd".
+		 * 
+		 * <p>UNTESTED METHOD. MAY BE REMOVED IN THE FUTURE VERSION. USE IT CAREFULLY.</p>
+		 * <p>[<strong>ToDo</strong>: Better explanations - link to wikipedia ]</p>
+		 *
+		 * @param p 	A fraction between [0-1] of the whole curve
+		 * @param plist	The list of control points of the Bézier curve.
+		 * @param	pdeb
+		 * @param	pfin
+		 * @return	The position on the Bézier curve at the fraction p of the curve.
+		 */
 		public static function casteljau_interval( p:Number, plist:Array, pdeb:Number, pfin:Number ):Vector
 		{
 			var aNewList:Array = plist.slice();

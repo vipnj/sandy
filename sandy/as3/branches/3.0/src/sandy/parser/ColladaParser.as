@@ -174,7 +174,7 @@ package sandy.parser
 
 				}
 				// -- rotate
-				if( p_oNode.rotate.length() > 0 ) {
+ 				if( p_oNode.rotate.length() == 1 ) {
 					var l_oRotations : Array = stringToArray( p_oNode.rotate );
 					l_oMatrix.multiply( 
 						Matrix4Math.axisRotation( 
@@ -183,6 +183,24 @@ package sandy.parser
 							l_oRotations[ 1 ],
 							l_oRotations[ 3 ] )
 					);
+				} else if( p_oNode.rotate.length() == 3 ) {
+					for( var j:int=0; j < 3; j++ )
+					{
+						var l_oRot : Array = stringToArray( p_oNode.rotate[i] );
+					
+						switch( p_oNode.rotate[j].@sid.toLowerCase() )
+						{
+							case "rotatex":
+								l_oShape.rotateX = Number( l_oRot[ 3 ] );
+								break;
+							case "rotatey":
+								l_oShape.rotateY = Number( l_oRot[ 3 ] );
+								break;
+							case "rotatez":
+								l_oShape.rotateZ = Number( l_oRot[ 3 ] );
+								break;
+						}
+					}				
 				}
 
 				// -- baked matrix

@@ -1,43 +1,50 @@
-﻿package sandy.math 
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
+package sandy.math 
 {
-	/*
-	# ***** BEGIN LICENSE BLOCK *****
-	Copyright the original author or authors.
-	Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-		http://www.mozilla.org/MPL/MPL-1.1.html
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-	
-	# ***** END LICENSE BLOCK *****
-	*/
 	
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.util.NumberUtil;
 	
 	/**
-	* Math functions for {@link Matrix4}.
-	* @author		Thomas Pfeiffer - kiroukou
-	* @since		0.1
-	* @version		0.2
-	* @date 		12.01.2006
-	* 
-	**/
+	 * Math functions for Matrix4 calculations.
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		0.1
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class Matrix4Math 
 	{
+		/**
+		 * Should we use the fast math calculations?
+		 *
+		 * <p>Set to true if fast math is used - Default false
+		 */
 		public static var USE_FAST_MATH:Boolean = false;
 		
 		/**
-		 * Compute the multiplication of 2 {@code Matrix4} but as they were 3x3 Matrix4.
+		 * Computes the multiplication of two Matrix4 matrices, as if they were 3x3.
 		 *
-		 * @param {@code m1} a {@code Matrix4}.
-		 * @param {@code m2} a {@code Matrix4}.
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @see "sandy.core.data.Matrix4"
+		 * @param m1 	The first matrix.
+		 * @param m2	The second matrix.
+		 * @return 	The resulting matrix
 		 */
 		public static function multiply3x3(m1:Matrix4, m2:Matrix4) : Matrix4 
 		{
@@ -70,6 +77,15 @@
 		}
 
 	
+		/**
+		 * Computes the multiplication of two Matrix4 matrices.
+		 *
+		 * <p>[<strong>ToDo</strong>: Explain this multiplication ]</p>
+		 *
+		 * @param m1 	The first matrix.
+		 * @param m2	The second matrix.
+		 * @return 	The resulting matrix
+		 */
 		public static function multiply4x3( m1:Matrix4, m2:Matrix4 ):Matrix4
 		{
 			const m111:Number = m1.n11, m211:Number = m2.n11,
@@ -105,11 +121,13 @@
 		}
 			
 		/**
-		 * Compute the multiplication of 2 {@code Matrix4}.
+		 * Computes the multiplication of two Matrix4 matrices.
 		 *
-		 * @param {@code m1} a {@code Matrix4}.
-		 * @param {@code m2} a {@code Matrix4}.
-		 * @return The result of computation : a {@code Matrix4}.
+		 * <p>[<strong>ToDo</strong>: Explain this multiplication ]</p>
+		 *
+		 * @param m1 	The first matrix.
+		 * @param m2	The second matrix.
+		 * @return 	The resulting matrix
 		 */
 		public static function multiply(m1:Matrix4, m2:Matrix4) : Matrix4 
 		{
@@ -147,11 +165,11 @@
 		}
 		
 		/**
-		 * Compute an addition {@code Matrix4}.
+		 * Computes the addition of two Matrix4 matrices.
 		 *
-		 * @param {@code m1} Matrix4 to add.
-		 * @param {@code m2} Matrix4 to add.
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @param m1 	The first matrix.
+		 * @param m2	The second matrix.
+		 * @return 	The resulting matrix
 		 */
 		public static function addMatrix4(m1:Matrix4, m2:Matrix4): Matrix4
 		{
@@ -165,58 +183,63 @@
 		}
 		
 		/**
-		 * Compute a clonage {@code Matrix4}.
+		 * Returns the clone of a Matrix4 matrix.
 		 *
-		 * @param {@code m1} Matrix4 to clone.
-		 * @return The result of clonage : a {@code Matrix4}.
+		 * @param m1 	The matrix to clone
+		 * @return 	The resulting matrix
 		 */
 		public static function clone(m:Matrix4):Matrix4
 		{
-			return new Matrix4(	m.n11,m.n12,m.n13,m.n14,
-	                            m.n21,m.n22,m.n23,m.n24,
-								m.n31,m.n32,m.n33,m.n34,
-								m.n41,m.n42,m.n43,m.n44
-	                           );
+			return new Matrix4
+			(
+				m.n11,m.n12,m.n13,m.n14,
+				m.n21,m.n22,m.n23,m.n24,
+				m.n31,m.n32,m.n33,m.n34,
+				m.n41,m.n42,m.n43,m.n44
+			);
 		}
 		
 		/**
-		 * Compute a multiplication of a vertex and the Matrix4{@code Matrix4}.
+		 * Multiplies a 3D vertex by a Matrix4 matrix.
 		 *
-		 * @param {@code m} Matrix4.
-		 * @param {@code v} Vertex
-		 * @return void
+		 * @param m 	The matrix.
+		 * @param pv	The vertex
+		 * @return 	The resulting vector
 		 */    
 		public static function vectorMult( m:Matrix4, pv:Vector ): Vector
 		{
 			const x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
-			return  new Vector( (x * m.n11 + y * m.n12 + z * m.n13 + m.n14),
-								(x * m.n21 + y * m.n22 + z * m.n23 + m.n24),
-								(x * m.n31 + y * m.n32 + z * m.n33 + m.n34));
+			return  new Vector( 	(x * m.n11 + y * m.n12 + z * m.n13 + m.n14),
+						(x * m.n21 + y * m.n22 + z * m.n23 + m.n24),
+						(x * m.n31 + y * m.n32 + z * m.n33 + m.n34)
+					);
 		}
 	
 		/**
-		 * Compute a multiplication of a vector and the Matrix4{@code Matrix4} 
-		 *    as there were of 3 dimensions.
+		 * Multiplies a 3D vector by a Matrix4 matrix as a 3x3 matrix.
 		 *
-		 * @param {@code m} Matrix4.
-		 * @param {@code v} Vector
-		 * @return void
+		 * <p>Uses the upper left 3 by 3 elements</p>
+		 *
+		 * @param m 	The matrix
+		 * @param v 	The vector
+		 * @return 	The resulting vector
 		 */
 		public static function vectorMult3x3( m:Matrix4, pv:Vector ):Vector
 		{
 			const x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
-			return  new Vector( (x * m.n11 + y * m.n12 + z * m.n13),
-								(x * m.n21 + y * m.n22 + z * m.n23),
-								(x * m.n31 + y * m.n32 + z * m.n33));
+			return  new Vector( 	(x * m.n11 + y * m.n12 + z * m.n13),
+						(x * m.n21 + y * m.n22 + z * m.n23),
+						(x * m.n31 + y * m.n32 + z * m.n33)
+					);
 		}
 	        
 		/**
-		 * Compute a Rotation {@code Matrix4} from the Euler angle in degrees unit.
+		 * Computes a rotation Matrix4 matrix from the Euler angle in degrees.
 		 *
-		 * @param {@code ax} angle of rotation around X axis in degree.
-		 * @param {@code ay} angle of rotation around Y axis in degree.
-		 * @param {@code az} angle of rotation around Z axis in degree.
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @param ax 	Angle of rotation around X axis in degrees.
+		 * @param ay 	Angle of rotation around Y axis in degrees.
+		 * @param az 	Angle of rotation around Z axis in degrees.
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function eulerRotation ( ax:Number, ay:Number, az:Number ) : Matrix4
 		{
@@ -248,9 +271,10 @@
 		}
 		
 		/**
-		 * 
-		 * @param angle Number angle of rotation in degrees
-		 * @return the computed Matrix4
+		 * Computes a rotation Matrix4 matrix for an x axis rotation.
+		 *
+		 * @param angle	Angle of rotation
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function rotationX ( angle:Number ):Matrix4
 		{
@@ -267,9 +291,10 @@
 		}
 		
 		/**
-		 * 
-		 * @param angle Number angle of rotation in degrees
-		 * @return the computed Matrix4
+		 * Computes a rotation Matrix4 matrix for an y axis rotation.
+		 *
+		 * @param angle	Angle of rotation
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function rotationY ( angle:Number ):Matrix4
 		{
@@ -286,9 +311,10 @@
 		}
 		
 		/**
-		 * 
-		 * @param angle Number angle of rotation in degrees
-		 * @return the computed Matrix4
+		 * Computes a rotation Matrix4 matrix for an z axis rotation.
+		 *
+		 * @param angle	Angle of rotation
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function rotationZ ( angle:Number ):Matrix4
 		{
@@ -305,11 +331,11 @@
 		}
 		
 		/**
-		 * Compute a Rotation around a Vector which represents the axis of rotation{@code Matrix4}.
+		 * Computes a rotation Matrix4 matrix for a general axis of rotation.
 		 *
-		 * @param {@code v} The axis of rotation
-		 * @param The angle of rotation in degree
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @param v 	The axis of rotation
+		 * @param angle The angle of rotation in degrees
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function axisRotationVector ( v:Vector, angle:Number ) : Matrix4
 		{
@@ -317,13 +343,15 @@
 		}
 		
 		/**
-		 * Compute a Rotation around an axis{@code Matrix4}.
+		 * Computes a rotation Matrix4 matrix for a general axis of rotation.
 		 *
-		 * @param {@code nRotX} rotation X.
-		 * @param {@code nRotY} rotation Y.
-		 * @param {@code nRotZ} rotation Z.
-		 * @param The angle of rotation in degree
-		 * @return The result of computation : a {@code Matrix4}.
+		 * <p>[<strong>ToDo</strong>: My gosh! Explain this Thomas ;-) ]</p>
+		 *
+		 * @param u 	rotation X.
+		 * @param v 	rotation Y.
+		 * @param w 	rotation Z.
+		 * @param angle	The angle of rotation in degrees
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function axisRotation ( u:Number, v:Number, w:Number, angle:Number ) : Matrix4
 		{
@@ -357,7 +385,7 @@
 		}
 		
 		/**
-		 * Compute a translation {@code Matrix4}.
+		 * Computes a translation Matrix4 matrix.
 		 * 
 		 * <pre>
 		 * |1  0  0  0|
@@ -366,10 +394,10 @@
 		 * |Tx Ty Tz 1|
 		 * </pre>
 		 * 
-		 * @param {@code nTx} translation X.
-		 * @param {@code nTy} translation Y.
-		 * @param {@code nTz} translation Z.
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @param nTx 	Translation in the x direction.
+		 * @param nTy 	Translation in the y direction.
+		 * @param nTz 	Translation in the z direction.
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function translation(nTx:Number, nTy:Number, nTz:Number) : Matrix4 
 		{
@@ -381,7 +409,7 @@
 		}
 	
 		/**
-		 * Compute a translation from a vector {@code Matrix4}.
+		 * Computes a translation Matrix4 matrix from a vector.
 		 * 
 		 * <pre>
 		 * |1  0  0  0|
@@ -390,8 +418,8 @@
 		 * |Tx Ty Tz 1|
 		 * </pre>
 		 * 
-		 * @param {@code v} translation Vector.
-	( * @return The result of computation : a {@code Matrix4}.
+		 * @param v 	Translation Vector.
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function translationVector( v:Vector ) : Matrix4 
 		{
@@ -403,7 +431,7 @@
 		}
 		
 		/**
-		 * Compute a scale {@code Matrix4}.
+		 * Computes a scale Matrix4 matrix.
 		 * 
 		 * <pre>
 		 * |Sx 0  0  0|
@@ -412,10 +440,10 @@
 		 * |0  0  0  1|
 		 * </pre>
 		 *
-		 * @param {@code nRotX} translation X.
-		 * @param {@code nRotY} translation Y.
-		 * @param {@code nRotZ} translation Z.
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @param nXScale 	Scale factor in the x direction
+		 * @param nYScale 	Scale factor in the y direction
+		 * @param nZScale 	Scale factor in the z direction
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function scale(nXScale:Number, nYScale:Number, nZScale:Number) : Matrix4 
 		{
@@ -427,7 +455,7 @@
 		}
 		
 		/**
-		 * Compute a scale {@code Matrix4}.
+		 * Computes a scale Matrix4 matrix from a scale vector.
 		 * 
 		 * <pre>
 		 * |Sx 0  0  0|
@@ -436,8 +464,8 @@
 		 * |0  0  0  1|
 		 * </pre>
 		 *
-		 * @param {@code Vector} The vector containing the scale values
-		 * @return The result of computation : a {@code Matrix4}.
+		 * @param v	The vector containing the scale values
+		 * @return 	The resulting Matrix4 matrix.
 		 */
 		public static function scaleVector( v:Vector) : Matrix4 
 		{
@@ -449,10 +477,11 @@
 		}
 			
 		/**
-		* Compute the determinant of the 4x4 square Matrix4
-		* @param m a Matrix4
-		* @return Number the determinant
-		*/
+		 * Computes the determinant of a Matrix4 matrix.
+		 *
+		 * @param m 	The matrix
+		 * @return 	The determinant
+		 */
 		public static function det( m:Matrix4 ):Number
 		{
 			return		(m.n11 * m.n22 - m.n21 * m.n12) * (m.n33 * m.n44 - m.n43 * m.n34)- (m.n11 * m.n32 - m.n31 * m.n12) * (m.n23 * m.n44 - m.n43 * m.n24)
@@ -461,15 +490,26 @@
 	
 		}
 		
+		/**
+		 * Computes the 3x3 determinant of a Matrix4 matrix.
+		 *
+		 * <p>Uses the upper left 3 by 3 elements</p>
+		 *
+		 * @param m 	The matrix
+		 * @return 	The determinant
+		 */
 		public static function det3x3( m:Matrix4 ):Number
 		{	
 			return m.n11 * ( m.n22 * m.n33 - m.n23 * m.n32 ) + m.n21 * ( m.n32 * m.n13 - m.n12 * m.n33 ) + m.n31 * ( m.n12 * m.n23 - m.n22 * m.n13 );
 		}
 	
 		/**
-		 * Computes the trace of the Matrix4.
-		 * @param m Matrix4 The Matrix4 we want to compute the trace
-		 * @return The trace value which is the sum of the element on the diagonal
+		 * Computes the trace of a Matrix4 matrix.
+		 *
+		 * <p>The trace value is the sum of the element on the diagonal of the matrix</p>
+		 *
+		 * @param m 	The matrix we want to compute the trace
+		 * @return 	The trace value
 		 */
 		public static function getTrace( m:Matrix4 ):Number
 		{
@@ -477,9 +517,10 @@
 		}
 		
 		/**
-		* Return the inverse of the Matrix4 passed in parameter.
-		* @param m The Matrix4 to inverse
-		* @return Matrix4 The inverse Matrix4
+		* Returns the inverse of a Matrix4 matrix.
+		*
+		* @param m 	The matrix to invert
+		* @return 	The inverse Matrix4 matrix
 		*/
 		public static function getInverse( m:Matrix4 ):Matrix4
 		{
@@ -517,10 +558,13 @@
 		}
 		
 		/**
-		 * Realize a rotation around a specific axis (the axis must be normalized!) and from an pangle degrees and around a specific position.
-		 * @param pAxis A 3D Vector representing the axis of rtation. Must be normalized
-		 * @param ref Vector The center of rotation as a 3D point.
-		 * @param pAngle Number The angle of rotation in degrees.
+		 * Computes a Matrix4 matrix for a rotation around a specific axis through a specific point.
+		 * 
+		 * <p>NOTE - The axis must be normalized!</p>
+		 *
+		 * @param axis 		A vector representing the axis of rtation.
+		 * @param ref 		The center of rotation.
+		 * @param pAngle	The angle of rotation in degrees.
 		 */
 		public static function axisRotationWithReference( axis:Vector, ref:Vector, pAngle:Number ):Matrix4
 		{

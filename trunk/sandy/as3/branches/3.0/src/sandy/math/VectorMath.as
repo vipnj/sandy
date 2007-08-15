@@ -19,149 +19,156 @@ package sandy.math
 	import sandy.core.data.Vector;
 	 
 	/**
-	* Math functions for {@link Vector4}.
-	*  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.2
-	* @date 		12.01.2006 
-	**/
+	 * Math functions for vector manipulations.
+	 *  
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		0.2
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
 	public class VectorMath
 	{
 		
 		/**
-		 * Compute the norm of the {@code Vector}.
+		 * Computes the norm of a 3D vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return the norm of the {@code Vector}.
+		 * @param p_oV 	The vector.
+		 * @return 	The norm of the vector.
 		 */
-		public static function getNorm( v:Vector ):Number
+		public static function getNorm( p_oV:Vector ):Number
 		{
-			return Math.sqrt( v.x*v.x + v.y*v.y + v.z*v.z );
+			return Math.sqrt( p_oV.x*p_oV.x + p_oV.y*p_oV.y + p_oV.z*p_oV.z );
 		}
 		
 		/**
-		 * Compute the oposite of the {@code Vector}.
+		 * Computes the oposite vector of a specified 3D vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return a {@code Vector}.
+		 * @param p_oV 	The vector.
+		 * @return 	The opposed vector.
 		 */
-		public static function negate( v:Vector ): Vector
+		public static function negate( p_oV:Vector ): Vector
 		{
-			return new Vector( - v.x, - v.y, - v.z );
+			return new Vector( - p_oV.x, - p_oV.y, - p_oV.z );
 		}
 		
 		/**
-		 * Compute the addition of the two {@code Vector}.
+		 * Adds two 3D vectors.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return The resulting {@code Vector}.
+		 * @param p_oV 	The first vector
+		 * @param p_oW 	The second vector
+		 * @return 	The resulting vector
 		 */
-		public static function addVector( v:Vector, w:Vector ): Vector
+		public static function addVector( p_oV:Vector, p_oW:Vector ): Vector
 		{
-			return new Vector( 	v.x + w.x ,
-	                           	v.y + w.y ,
-	                           	v.z + w.z );
+			return new Vector( 	p_oV.x + p_oW.x ,
+	                           	p_oV.y + p_oW.y ,
+	                           	p_oV.z + p_oW.z );
 		}
 		
 		/**
-		 * Compute the substraction of the two {@code Vector}.
+		 * Substracts one 3D vector from another
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return The resulting {@code Vector}.
+		 * @param p_oV 	The vector to subtract from
+		 * @param p_oW	The vector to subtract
+		 * @return 	The resulting vector
 		 */
-		public static function sub( v:Vector, w:Vector ): Vector
+		public static function sub( p_oV:Vector, p_oW:Vector ): Vector
 		{
-			return new Vector(	v.x - w.x ,
-	                            v.y - w.y ,
-	                            v.z - w.z );
+			return new Vector(	p_oV.x - p_oW.x ,
+	                            p_oV.y - p_oW.y ,
+	                            p_oV.z - p_oW.z );
 		}
 		
 		/**
-		 * Compute the power of the current vector
+		 * Computes the power of a 3D vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code pow} a {@code Number}.
-		 * @return The resulting {@code Vector}.
+		 * <p>Here the meaning of the power of a vector is a new vector<br />
+		 * where each element is the the n:th power of the corresponding element.</p>
+		 * <p>Ex: A^n = ( A.x^n, A.y^n, A.z^n ) </p>
+		 * 
+		 * @param p_oV		The vector.
+		 * @param p_nExp	The exponent
+		 * @return 		The resulting vector.
 		 */
-		public static function pow( v:Vector, pow:Number ): Vector
+		public static function pow( p_oV:Vector, p_nExp:Number ): Vector
 		{
-			return new Vector(	Math.pow( v.x, pow ) ,
-	                            Math.pow( v.y, pow ) ,
-	                            Math.pow( v.z, pow ) );
+			return new Vector(	Math.pow( p_oV.x, p_nExp ) ,
+	                            Math.pow( p_oV.y, p_nExp ) ,
+	                            Math.pow( p_oV.z, p_nExp ) );
 		}
 		/**
-		 * Compute the multiplication of the {@code Vector} and the scalar.
+		 * Multiplies a 3D vector by specified scalar.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code n a {@code Number}.
-		 * @return The resulting {@code Vector}.
+		 * @param p_oV 	The vector to multiply
+		 * @param n 	The scaler to multiply
+		 * @return 	The resulting vector
 		 */
-		public static function scale( v:Vector, n:Number ): Vector
+		public static function scale( p_oV:Vector, n:Number ): Vector
 		{
-			return new Vector(	v.x * n ,
-	                            v.y * n ,
-	                            v.z * n );
-		}
-		
-		/**
-		 * Compute the dot product of the two {@code Vector}.
-		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return the dot procuct of the 2 {@code Vector}.
-		 */
-		public static function dot( v: Vector, w: Vector):Number
-		{
-			return ( v.x * w.x + v.y * w.y + w.z * v.z );
+			return new Vector(	p_oV.x * n ,
+	                            		p_oV.y * n ,
+	                            		p_oV.z * n 
+	                            	);
 		}
 		
 		/**
-		 * Compute the cross product of the two {@code Vector}.
+		 * Computes the dot product the two 3D vectors.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return the {@code Vector} resulting of the cross product.
+		 * @param p_oV 	The first vector
+		 * @param p_oW 	The second vector
+		 * @return 	The dot procuct
 		 */
-		public static function cross(w:Vector, v:Vector):Vector
+		public static function dot( p_oV: Vector, p_oW: Vector):Number
+		{
+			return ( p_oV.x * p_oW.x + p_oV.y * p_oW.y + p_oW.z * p_oV.z );
+		}
+		
+		/**
+		 * Computes the cross product of two 3D vectors.
+		 *
+		 * @param p_oW	The first vector
+		 * @param p_oV	The second vector
+		 * @return 	The resulting cross product
+		 */
+		public static function cross(p_oW:Vector, p_oV:Vector):Vector
 		{
 			// cross product vector that will be returned
 	                // calculate the components of the cross product
-			return new Vector( 	(w.y * v.z) - (w.z * v.y) ,
-	                            (w.z * v.x) - (w.x * v.z) ,
-	                            (w.x * v.y) - (w.y * v.x));
+			return new Vector(	(p_oW.y * p_oV.z) - (p_oW.z * p_oV.y) ,
+	                            		(p_oW.z * p_oV.x) - (p_oW.x * p_oV.z) ,
+	                            		(p_oW.x * p_oV.y) - (p_oW.y * p_oV.x)
+	                            	);
 		}
 		
 		/**
-		 * Normalize the {@code Vector}.
+		 * Normalizes a 3d vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return a Boolean true for success, false for mistake.
+		 * @param p_oV 	The vector to normalize
+		 * @return 	true if the normalization was successful, false otherwise.
 		 */	
-		public static function normalize( v:Vector ): Boolean
+		public static function normalize( p_oV:Vector ): Boolean
 		{
 			// -- We get the norm of the vector
-			var norm:Number = VectorMath.getNorm( v );
+			var norm:Number = VectorMath.getNorm( p_oV );
 			// -- We escape the process is norm is null or equal to 1
 			if( norm == 0 || norm == 1) return false;
-			v.x /= norm;
-			v.y /= norm;
-			v.z /= norm;
+			p_oV.x /= norm;
+			p_oV.y /= norm;
+			p_oV.z /= norm;
 	
 			return true;
 		}
 		
 		/**
-		* Returns the angle in radian between the two 3D vectors. The formula used here is very simple.
-		* It comes from the definition of the dot product between two vectors.
-		* @param	v	Vector	The first Vector
-		* @param	w	Vector	The second vector
-		* @return 	Number	The angle in radian between the two vectors.
-		*/
-		public static function getAngle ( v:Vector, w:Vector ):Number
+		 * Calculates the angle between two 3D vectors. 
+		 * 
+		 * @param p_oV	The first Vector
+		 * @param p_oW	The second vector
+		 * @return	The angle in radians between the two vectors.
+		 */
+		public static function getAngle ( p_oV:Vector, p_oW:Vector ):Number
 		{
-			var ncos:Number = VectorMath.dot( v, w ) / ( VectorMath.getNorm(v) * VectorMath.getNorm(w) );
+			var ncos:Number = VectorMath.dot( p_oV, p_oW ) / ( VectorMath.getNorm(p_oV) * VectorMath.getNorm(p_oW) );
 			var sin2:Number = 1 - ncos * ncos;
 			if (sin2<0)
 			{
@@ -174,14 +181,14 @@ package sandy.math
 		}
 		
 		/**
-		 * clone the {@code Vector}.
+		 * Clones a 3D vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return a clone of the Vector passed in parameters
+		 * @param p_oV 	The vector
+		 * @return 	The clone
 		 */	
-		public static function clone( v:Vector ): Vector
+		public static function clone( p_oV:Vector ): Vector
 		{
-			return new Vector( v.x, v.y, v.z );
+			return new Vector( p_oV.x, p_oV.y, p_oV.z );
 		}
 	
 	}

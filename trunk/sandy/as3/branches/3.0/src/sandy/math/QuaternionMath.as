@@ -22,10 +22,14 @@ package sandy.math
 	import sandy.util.NumberUtil;
 	
 	/**
-	 * QuaternionMath
-	 * Tools useful to manipulate the quaternion object.
+	 * Math functions for manipulation of quaternion objects.
+	 * 
+	 * <p>UNTESTED - DO NOT USE THIS CLASS UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING<br/>
+	 * Do we ever ;-)[Petit comment]</p>
+	 * <p>You can clearly see the reason this class is undocumented.</p>
+	 *
 	 * @author Thomas PFEIFFER - Kiroukou
-	 * @version UNTESTED - DO NOT USE THIS CLASS UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING
+	 * @version 3.0
 	 */
 	public class QuaternionMath 
 	{

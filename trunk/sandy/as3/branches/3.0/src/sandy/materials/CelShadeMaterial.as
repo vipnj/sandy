@@ -13,7 +13,7 @@ package sandy.materials
 	import sandy.core.scenegraph.Camera3D;
 	
 	/**
-	 * Displays the faces of a 3D shape as a wire frame.
+	 * Displays the faces of a 3D shape as a Cel Shaded Material (polygon based cel shading).
 	 *
 	 * <p>Material which draws in CelShading style using a lighting map and outlines.</p>
 	 *

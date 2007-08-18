@@ -27,7 +27,7 @@ package sandy.materials
 		private var m_nAlpha:Number;
 		private var lightingMap:Array;
 		/**
-		 * Creates a new WireFrameMaterial.
+		 * Creates a new CelShadeMaterial.
 		 *
 		 * @param p_nColor	The color of the fills - Default 0
 		 * @param p_nAlpha 	The alpha of the fills - Default 100, value range ( 0 - 100 )

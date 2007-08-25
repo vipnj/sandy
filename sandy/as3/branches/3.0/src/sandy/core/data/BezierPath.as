@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,25 +14,28 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data 
+package sandy.core.data
 {
 	import sandy.util.BezierUtil;
-	
+
 	/**
-	* A 3D path interpolated with Bezier equations
-	* 
-	* <p>A Bezier path is basically an array of 3D points, but the path is interpolated thanks to Bezier equations, allowing
-	* some nice movements</p>
-	* 
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		27.04.2006
-	*/
+	 * A 3D Bézier path.
+	 *
+	 * <p>The Bezier path is built form an array of 3D points, by using Bezier equations<br />
+	 * With two points the path is degenereated to a straight line. To get a curved line, you need
+	 * at least three points. The mid point is used as a control point which gives the curvature.<br />
+	 * After that you will have to add three point segments</p>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		1.0
+	 * @version		3.0
+	 * @date 		24.08.2007
+	 */
 	public class BezierPath
 	{
 		/**
-		* Create a new {@code BezierPath} Instance.
-		*/
+		 * Creates a new Bézier path.
+		 */
 		public function BezierPath( /*pbBoucle:Boolean*/ )
 		{
 			_aContainer = new Array();
@@ -41,72 +44,82 @@ package sandy.core.data
 			_bBoucle = false;
 			_bCompiled = false;
 		}
-		
+
 		/**
-		* Returns the segment that fits to the percentage number passed in arguments.
-		* You can imagine the whole path length as the 1.0 value (100%). Now if you need the segment when you are at only 10% of the whole path
-		* you just have to pass 0.1 in argument, and the returned array contain the bezierCurve points [startPoint, controlPoint, endPoint]
-		* @param	pnId
-		* @return	Array array containing the segment's bezierCurve points [startPoint, controlPoint, endPoint]
-		*/
-		public function getSegment( pnId:uint ):Array
+		 * Returns a segment of this path identified by its sequence number.
+		 *
+		 * <p>The Bézier path is made up of a sequence of segments which are internally numbered.
+		 * This method returns the n:th segment, where n is the passed in number.</p>
+		 *
+		 * @param	p_nId The number of the segment to return
+		 * @return	An array containing the bezierCurve points [startPoint, controlPoint, endPoint]
+		 */
+		public function getSegment( p_nId:uint ):Array
 		{
-			if( pnId >= 0 && pnId < _nNbSegments )
+			if( p_nId >= 0 && p_nId < _nNbSegments )
 			{
-				return _aSegments[ int(pnId) ];
+				return _aSegments[ int(p_nId) ];
 			}
 			else
 			{
 				return null;
 			}
 		}
-		
+
 		/**
-		* Returns the position in the 3D space at a specific percentage.
-		* You can imagine the whole path length as the 1.0 value (100%). Now if you need the position when you are at only 10% of the whole path
-		* you just have to pass 0.1 in argument, and the returned value is the position on that percentage of the whole path.
-		* @param	p Number A percentage between [0-1]
-		* @return	Vector The 3D position on the path at the current percentage.
-		*/
-		public function getPosition( p:Number ):Vector
+		 * Returns the position in the 3D space at a specific portion of this path.
+		 *
+		 * If you regard the whole length of the path as 1.0 (100%),
+		 * and you need the position at 10% of the whole path,
+		 * you pass 0.1 as an argument.
+		 *
+		 * @param	p_nP  The portion of the path length ( 0 - 1 )
+		 * @return	The 3D position on the path at
+		 */
+		public function getPosition( p_nP:Number ):Vector
 		{
-			var id:Number = Math.floor(p/_nRatio);
+			var id:Number = Math.floor(p_nP/_nRatio);
 			if( id == _nNbSegments )
 			{
 				id --;
-				p = 1.0;
+				p_nP = 1.0;
 			}
 			var seg:Array = getSegment( id );
-			return BezierUtil.getPointsOnQuadCurve( (p-id*_nRatio)/_nRatio, seg[0], seg[1], seg[2] );
+			return BezierUtil.getPointsOnQuadCurve( (p_nP-id*_nRatio)/_nRatio, seg[0], seg[1], seg[2] );
 		}
-		
-		
+
+
 		/**
-		* Add a point to the path.
-		* WARNING : You can't add a point to the path once it has been compiled.
-		* @param	x Number
-		* @param	y Number
-		* @param	z Number
-		* @return 	Boolean true if operation succeed, false otherwise.
-		*/
-		public function addPoint( x:Number, y:Number, z:Number ):Boolean
+		 * Adds a 3D point to this path.
+		 *
+		 * <p>NOTE: You can't add a point to the path once it has been compiled.</p>
+		 * <p>Add at least three point for a a curved segment, then two new points for each segment,<br />
+		 * the first a control point, the second an end point.</p>
+		 *
+		 * @param	p_nX The x coordinate of the 3D point
+		 * @param	p_nY The y coordinate of the 3D point
+		 * @param	p_nZ The z coordinate of the 3D point
+		 * @return 	true if operation succeed, false otherwise.
+		 */
+		public function addPoint( p_nX:Number, p_nY:Number, p_nZ:Number ):Boolean
 		{
-			if( _bCompiled ) 
+			if( _bCompiled )
 			{
 				return false;
 			}
 			else
 			{
-				_aContainer.push( new Vector( x, y, z ) );
+				_aContainer.push( new Vector( p_nX, p_nY, p_nZ ) );
 				return true;
 			}
 		}
-		
+
 		/**
-		* Computes all the control points. 
-		* Must be called before being used by Sandy's engine. Should be called once tha last point of the path has been added.
-		* @param	void
-		*/
+		 * Computes all the control points for this path.
+		 *
+		 * <p>Must be called after the last point of the path has been added,
+		 * and before being used by Sandy's engine.</p>
+		 */
 		public function compile():void
 		{
 			_nNbPoints = _aContainer.length;
@@ -120,7 +133,7 @@ package sandy.core.data
 			var a:Vector, b:Vector, c:Vector;
 			for (var i:Number = 0; i <= _nNbPoints-2; i+=2 )
 			{
-				a = _aContainer[int(i)]; 
+				a = _aContainer[int(i)];
 				b = _aContainer[int(i+1)];
 				c = _aContainer[int(i+2)];
 				_aSegments.push( [ a, b, c ] );
@@ -128,73 +141,73 @@ package sandy.core.data
 			if( _bBoucle )
 			{
 				_aSegments.push([
-								_aContainer[ int(_nNbPoints) ], 
-								BezierUtil.getQuadControlPoints(_aContainer[ int(_nNbPoints) ],_aContainer[ 0 ],_aContainer[ 1 ]), 
-								_aContainer[ 0 ] 
-								]);
+						_aContainer[ int(_nNbPoints) ],
+						BezierUtil.getQuadControlPoints(_aContainer[ int(_nNbPoints) ],_aContainer[ 0 ],_aContainer[ 1 ]),
+						_aContainer[ 0 ]
+						]);
 			}
-			// -- 
+			// --
 			_nNbSegments = _aSegments.length;
 			_nRatio = 1 / _nNbSegments;
 		}
-			
+
 		/**
-		* returns the number of segments;
-		* @param	void
-		* @return Number the number of segments
-		*/
+		 * Returns the number of segments for this path.
+		 *
+		 * @return The number of segments
+		 */
 		public function getNumberOfSegments():uint
 		{
 			return _nNbSegments;
 		}
-		
+
 		/**
-		* Get a String represntation of the {@code BezierPath}.
-		* 
-		* @return	A String representing the {@code BezierPath}.
-		*/
+		 * Returns a string represntation of the Bezier path.
+		 *
+		 * @return	A string representing the BezierPath.
+		 */
 		public function toString():String
 		{
 			return "sandy.core.data.BezierPath";
 		}
-		
+
 		/**
-		* properties used to store transformed coordinates in the local frame of the object
-		*/
+		 * Transformed coordinates in the local frame of the object.
+		 */
 		private var _aContainer:Array;
-		
+
 		/**
-		* Array of segments
-		*/
+		 * Array of segments.
+		 */
 		private var _aSegments:Array;
-	
-		
+
+
 		/**
-		* current segment id
-		*/
+		 * Current segment id.
+		 */
 		private var _nCrtSegment:uint;
-		
+
 		/**
-		* The number of segments of the path
-		*/
+		 * Number of segments of this path.
+		 */
 		private var _nNbSegments:uint;
-		
+
 		/**
-		* The number of points of the path
-		*/
+		 * Number of points of this path.
+		 */
 		private var _nNbPoints:uint;
-		
+
 		/**
-		* Boolean set to true is the path has to be closed, false otherwise. default is false
-		*/
+		 * Should this path be closed? True if it should false otherwise, default - false
+		 */
 		private var _bBoucle:Boolean;
-		
+
 		/**
-		* Boolean keeping the state the the path, compiled or not
-		*/
+		 * Is this path compiled? True if it is, false otherwise.
+		 */
 		private var _bCompiled:Boolean;
-		
+
 		private var _nRatio:Number;
-		
+
 	}
 }

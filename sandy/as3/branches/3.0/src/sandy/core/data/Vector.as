@@ -14,86 +14,97 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data 
+package sandy.core.data
 {
-	/**
-	* Point in 3D world.
-	* 
-	* <p>A Vector is the representation of a position into a 3D space.</p>
-	*
-	* @author		Thomas Pfeiffer - kiroukou
-	* @author		Mirek Mencel
-	* @author		Tabin Cédric - thecaptain
-	* @author		Nicolas Coevoet - [ NikO ]
-	* @author		Bruce Epstein - zeusprod - truncated toString output to 2 decimals
-	* @since		0.1
-	* @version		2.0.1
-	* @date 		12.04.2007
-	*/
 	import sandy.util.NumberUtil;
-	
+
+	/**
+	 * A point in 3D world.
+	 *
+	 * <p>A representation of a position in a 3D space.</p>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @author		Mirek Mencel
+	 * @author		Tabin Cédric - thecaptain
+	 * @author		Nicolas Coevoet - [ NikO ]
+	 * @author		Bruce Epstein - zeusprod - truncated toString output to 2 decimals
+	 * @since		0.1
+	 * @version		3.0
+	 * @date 		24.08.2007
+	 */
 	public final class Vector
 	{
 		public var x:Number;
 		public var y:Number;
 		public var z:Number;
-	
+
 		/**
-		* <p>Create a new {@code Vector} Instance</p>
-		* 
-		* @param	px	the x coordinate
-		* @param	py	the y coordinate
-		* @param	pz	the z coordinate
-		*/ 	
-		public function Vector(px:Number=0, py:Number=0, pz:Number=0)
+		* Creates a new vector instance.
+		*
+		* @param	p_nX	the x coordinate
+		* @param	p_nY	the y coordinate
+		* @param	p_nZ	the z coordinate
+		*/
+		public function Vector(p_nX:Number=0, p_nY:Number=0, p_nZ:Number=0)
 		{
-			x = px;
-			y = py;
-			z = pz;
+			x = p_nX;
+			y = p_nY;
+			z = p_nZ;
 		}
-		
-		
+
+
+		/**
+		 * Returns a clone of thei vector.
+		 *
+		 * @return 	The clone
+		 */
 		public function clone():Vector
 		{
 		    var l_oV:Vector = new Vector( x, y, z );
 		    return l_oV;
 		}
-		
+
+		/**
+		 * Makes this vector a copy of the specified vector.
+		 *
+		 * <p>All elements of this vector is set to those of the argument vector</p>
+		 *
+		 * @param p_oVector	The vector to copy
+		 */
 		public function copy( p_oVector:Vector ):void
 		{
 			x = p_oVector.x;
 			y = p_oVector.y;
 			z = p_oVector.z;
 		}
-	
+
 		/**
-		 * Compute the norm of the {@code Vector}.
+		 * Computes and returns the norm of this vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return the norm of the {@code Vector}.
+		 * <p>The norm of the vector is sqrt( x*x + y*y + z*z )</p>
+		 *
+		 * @return 	The norm
 		 */
 		public function getNorm():Number
 		{
 			return Math.sqrt( x*x + y*y + z*z );
 		}
-		
+
 		/**
-		 * Compute the oposite of the {@code Vector}.
+		 * Compute and returns the invers of this vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return a {@code Vector}.
+		 * @return 	The inverse
 		 */
-		public function negate( v:Vector ): Vector
+		public function negate( /*v:Vector*/ ): Vector
 		{
+			// Commented out the argument as it is never used - Petit
 			return new Vector( - x, - y, - z );
 		}
-		
+
 		/**
-		 * Compute the addition of the two {@code Vector}.
+		 * Adds a specified vector to this vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return nothing
+		 * @param v 	The vector to add
 		 */
 		public function add( v:Vector ):void
 		{
@@ -101,9 +112,9 @@ package sandy.core.data
 			y += v.y;
 			z += v.z;
 		}
-		
+
 		/**
-		 * Compute the substraction of the two {@code Vector}.
+		 * Substracts the specified vector from this vector.
 		 *
 		 * @param {@code v} a {@code Vector}.
 		 * @param {@code w} a {@code Vector}.
@@ -115,26 +126,25 @@ package sandy.core.data
 			y -= v.y;
 			z -= v.z;
 		}
-		
+
 		/**
-		 * Compute the power of the current vector
+		 * Raises this vector to the specified power.
 		 *
-		 * @param {@code v} a {@code Vector}.
+		 * <p>Each component of the vector is raised to the argument power.<br />
+		 * So x = Math.pow( x, pow ), y = Math.pow( y, pow ),z = Math.pow( z, pow )</p>
+		 *
 		 * @param {@code pow} a {@code Number}.
-		 * @return The resulting {@code Vector}.
 		 */
 		public function pow( pow:Number ):void
 		{
 			x = Math.pow( x, pow );
-	        y = Math.pow( y, pow );
-	        z = Math.pow( z, pow );
+	        	y = Math.pow( y, pow );
+	        	z = Math.pow( z, pow );
 		}
 		/**
-		 * Compute the multiplication of the {@code Vector} and the scalar.
+		 * Multiplies this vector by the specified scalar.
 		 *
-		 * @param {@code v} a {@code Vector}.
 		 * @param {@code n a {@code Number}.
-		 * @return The resulting {@code Vector}.
 		 */
 		public function scale( n:Number ):void
 		{
@@ -142,41 +152,40 @@ package sandy.core.data
 			y *= n;
 			z *= n;
 		}
-		
+
 		/**
-		 * Compute the dot product of the two {@code Vector}.
+		 * Computes and returns the dot product between this vector and the specified vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return the dot procuct of the 2 {@code Vector}.
+		 * @param w 	The vector to multiply
+		 * @return 	The dot procuct
 		 */
 		public function dot( w: Vector):Number
 		{
 			return ( x * w.x + y * w.y + z * w.z );
 		}
-		
+
 		/**
-		 * Compute the cross product of the two {@code Vector}.
+		 * Computes and returns the cross between this vector and the specified vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @param {@code w} a {@code Vector}.
-		 * @return the {@code Vector} resulting of the cross product.
+		 * @param v 	The vector to make the cross product with ( right side )
+		 * @return 	The cross product vector.
 		 */
 		public function cross( v:Vector):Vector
 		{
 			// cross product vector that will be returned
-	        // calculate the components of the cross product
-			return new Vector( 	(y * v.z) - (z * v.y) ,
-	                            (z * v.x) - (x * v.z) ,
-	                            (x * v.y) - (y * v.x));
+	        	// calculate the components of the cross product
+			return new Vector(
+						(y * v.z) - (z * v.y) ,
+	                 			(z * v.x) - (x * v.z) ,
+	                            		(x * v.y) - (y * v.x)
+	                            	  );
 		}
-		
+
 		/**
-		 * Normalize the {@code Vector}.
+		 * Normalizes this vector.
 		 *
-		 * @param {@code v} a {@code Vector}.
-		 * @return a Boolean true for success, false for mistake.
-		 */	
+		 * <p>After normalizing the vector, the direction is the same, but the length is = 1.</p>
+		 */
 		public function normalize():void
 		{
 			// -- We get the norm of the vector
@@ -187,14 +196,13 @@ package sandy.core.data
 			y /= norm;
 			z /= norm;
 		}
-		
+
 		/**
-		* Returns the angle in radian between the two 3D vectors. The formula used here is very simple.
-		* It comes from the definition of the dot product between two vectors.
-		* @param	v	Vector	The first Vector
-		* @param	w	Vector	The second vector
-		* @return 	Number	The angle in radian between the two vectors.
-		*/
+		 * Returns the angle between this vector and the specified vector.
+		 *
+		 * @param w	The vector making an angle with this one
+		 * @return 	The angle in radians
+		 */
 		public function getAngle ( w:Vector ):Number
 		{
 			var ncos:Number = dot( w ) / ( getNorm() * w.getNorm() );
@@ -208,53 +216,78 @@ package sandy.core.data
 			//sqrt returns a NaN for a negative value !
 			return  Math.atan2( Math.sqrt(sin2), ncos );
 		}
-		
-		
+
+
 		/**
-		* Get a String represntation of the {@code Vector}.
-		* 
-		* @return	A String representing the {@code Vector}.
-		*/ 	
+		 * Returns a string representing this vector.
+		 *
+		 * @param decPlaces	Number of decimals
+		 * @return	The string representatation
+		 */
 		public function toString(decPlaces:Number=0):String
 		{
-			if (decPlaces == 0) 
+			if (decPlaces == 0)
 			{
 				decPlaces = 0.01;
 			}
 			// Round display to two decimals places
 			// Returns "{x, y, z}"
-			return "{" + NumberUtil.roundTo(x, decPlaces) + ", " + 
-						 NumberUtil.roundTo(y, decPlaces) + ", " + 
+			return "{" + NumberUtil.roundTo(x, decPlaces) + ", " +
+						 NumberUtil.roundTo(y, decPlaces) + ", " +
 						 NumberUtil.roundTo(z, decPlaces) + "}";
 		}
-		
+
+		/**
+		 * Is this vector equal to the specified vector?.
+		 *
+		 * <p>Compares this vector with the vector passed in the argument.<br />
+		 * If all components in the two vectors are equal a value of true is returned.</p>
+		 *
+		 * @return 	true if the the two vectors are equal, fals otherwise.
+		 */
 		public function equals(p_vector:Vector):Boolean
 		{
 			return (p_vector.x == x && p_vector.y == y && p_vector.z == z);
 		}
-	
+
 		// Useful for XML output
+		/**
+		 * Returns a string representation of this vector with rounded values.
+		 *
+		 * <p>[<strong>ToDo</strong>: Explain why this is good for XML output! ]</p>
+		 *
+		 * @param decPlaces	Number of decimals
+		 * @return 		The specific serialize string
+		 */
 		public function serialize(decPlaces:Number=0):String
 		{
-			if (decPlaces == 0) 
+			if (decPlaces == 0)
 			{
 				decPlaces = .01
 			}
 			//returns x,y,x
-			return  (NumberUtil.roundTo(x, decPlaces) + "," + 
-					 NumberUtil.roundTo(y, decPlaces) + "," + 
-					 NumberUtil.roundTo(z, decPlaces));
+			return  (	NumberUtil.roundTo(x, decPlaces) + "," +
+					 NumberUtil.roundTo(y, decPlaces) + "," +
+					 NumberUtil.roundTo(z, decPlaces)
+				);
 		}
-		
+
 		// Useful for XML output
+		/**
+		 * Sets the elements of this vector from a string representation.
+		 *
+		 * <p>[<strong>ToDo</strong>: Explain why this is good for XML intput! ]</p>
+		 *
+		 * @param 	A string representing the vector ( specific serialize format )
+		 */
 		public function deserialize(convertFrom:String):void
 		{
 			var tmp:Array = convertFrom.split(",");
-			if (tmp.length != 3) 
+			if (tmp.length != 3)
 			{
 				trace ("Unexpected length of string to deserialize into a vector " + convertFrom);
 			}
-			
+
 			x = tmp[0];
 			y = tmp[1];
 			z = tmp[2];

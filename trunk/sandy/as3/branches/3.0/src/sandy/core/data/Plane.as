@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,44 +14,47 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.data 
+package sandy.core.data
 {
 	/**
-	* Plane representation in a 3D space. Used maily to represent the frustrum planes of the camera
-	* This class is not used yet in Sandy.
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		0.1
-	* @date 		22.02.2006
-	*/
+	 * A plane in 3D space.
+	 *
+	 * <p>Used maily to represent the frustrum planes of the camera.</p>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		0.1
+	 * @version		3.0
+	 * @date 		24.08.2007
+	 */
 	final public class Plane
 	{
 		public var a:Number;
 		public var b:Number;
 		public var c:Number;
 		public var d:Number;
-	
+
 		/**
-		* <p>Create a new {@code Plane} Instance</p>
-		* 
-		* @param	a	the first plane coordinate
-		* @param	b	the second plane coordinate
-		* @param	c	the third plane coordinate
-		* @param	d	the forth plane coordinate
-		*/ 	
-		public function Plane( a:Number=0, b:Number=0, c:Number=0, d:Number=0 )
+		* Creates a new Plane instance.
+		*
+		* @param	p_nA	the first plane coordinate
+		* @param	p_nB	the second plane coordinate
+		* @param	p_nC	the third plane coordinate
+		* @param	p_nd	the forth plane coordinate
+		*/
+		public function Plane( p_nA:Number=0, p_nB:Number=0, p_nC:Number=0, p_nd:Number=0 )
 		{
-			this.a = a; 
-			this.b = b; 
-			this.c = c; 
-			this.d = d;
+			this.a = p_nA;
+			this.b = p_nB;
+			this.c = p_nC;
+			this.d = p_nd;
 		}
-		
-		
+
+
 		/**
-		* Get a String represntation of the {@code Plane}.
-		* 
-		* @return	A String representing the {@code Plane}.
-		*/ 	
+		 * Returns a string represntation of this plane.
+		 *
+		 * @return	The string representing this plane.
+		 */
 		public function toString():String
 		{
 			return "sandy.core.data.Plane" + "(a:"+a+", b:"+b+", c:"+c+", d:"+d+")";

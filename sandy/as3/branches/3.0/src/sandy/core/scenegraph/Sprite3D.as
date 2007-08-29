@@ -20,6 +20,7 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	
 	import sandy.bounds.BSphere;
+	import sandy.core.Scene3D;
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
@@ -153,11 +154,12 @@ package sandy.core.scenegraph
 		 * the bounding box is updated to perform the more precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oFrustum	The frustum of the current camera
 		 * @param p_oViewMatrix	The view martix of the curren camera
 		 * @param p_bChanged
 		 */
-		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
 			//
@@ -186,15 +188,16 @@ package sandy.core.scenegraph
 		/**
 		 * Renders this 3D sprite
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oCamera	The current camera
 		 */
-	    	public override function render( p_oCamera:Camera3D ):void
+	    public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
-	       		const l_oMatrix:Matrix4 = _oViewCacheMatrix,
-			m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
-			m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
-			m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
-			m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
+	       	const l_oMatrix:Matrix4 = _oViewCacheMatrix,
+					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
+					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
+					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
+					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 					
 	        	_dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
 			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23;
@@ -235,9 +238,10 @@ package sandy.core.scenegraph
 		 *
 		 * <p>[<b>ToDo</b>: We have a FIXME label here, so it may not work as expected ]</p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display( p_oContainer:Sprite = null ):void
+		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
 			//FIXME I don't like the way the perspective is applied here...
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;

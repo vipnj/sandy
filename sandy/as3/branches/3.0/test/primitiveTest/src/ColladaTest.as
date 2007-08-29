@@ -90,7 +90,7 @@ package
 		private function _initRender( pEvt:ParserEvent ):void
 		{
 			var lGroup:Group = Group( pEvt.group );
-			var lShape:Shape3D = lGroup.getChildList()[0].getChildList()[0];
+			var lShape:Shape3D = lGroup.getChildList()[0];
 			world.root.addChild( lShape );
 
 			++nLoaded;

@@ -58,7 +58,7 @@ package sandy.core.data
 		 *
 		 * @return 	The clone
 		 */
-		public function clone():Vector
+		public final function clone():Vector
 		{
 		    var l_oV:Vector = new Vector( x, y, z );
 		    return l_oV;
@@ -71,7 +71,7 @@ package sandy.core.data
 		 *
 		 * @param p_oVector	The vector to copy
 		 */
-		public function copy( p_oVector:Vector ):void
+		public final function copy( p_oVector:Vector ):void
 		{
 			x = p_oVector.x;
 			y = p_oVector.y;
@@ -85,7 +85,7 @@ package sandy.core.data
 		 *
 		 * @return 	The norm
 		 */
-		public function getNorm():Number
+		public final function getNorm():Number
 		{
 			return Math.sqrt( x*x + y*y + z*z );
 		}
@@ -95,7 +95,7 @@ package sandy.core.data
 		 *
 		 * @return 	The inverse
 		 */
-		public function negate( /*v:Vector*/ ): Vector
+		public final function negate( /*v:Vector*/ ): Vector
 		{
 			// Commented out the argument as it is never used - Petit
 			return new Vector( - x, - y, - z );
@@ -106,7 +106,7 @@ package sandy.core.data
 		 *
 		 * @param v 	The vector to add
 		 */
-		public function add( v:Vector ):void
+		public final function add( v:Vector ):void
 		{
 			x += v.x;
 			y += v.y;
@@ -120,7 +120,7 @@ package sandy.core.data
 		 * @param {@code w} a {@code Vector}.
 		 * @return The resulting {@code Vector}.
 		 */
-		public function sub( v:Vector ):void
+		public final function sub( v:Vector ):void
 		{
 			x -= v.x;
 			y -= v.y;
@@ -135,7 +135,7 @@ package sandy.core.data
 		 *
 		 * @param {@code pow} a {@code Number}.
 		 */
-		public function pow( pow:Number ):void
+		public final function pow( pow:Number ):void
 		{
 			x = Math.pow( x, pow );
 	        	y = Math.pow( y, pow );
@@ -146,7 +146,7 @@ package sandy.core.data
 		 *
 		 * @param {@code n a {@code Number}.
 		 */
-		public function scale( n:Number ):void
+		public final function scale( n:Number ):void
 		{
 			x *= n;
 			y *= n;
@@ -159,7 +159,7 @@ package sandy.core.data
 		 * @param w 	The vector to multiply
 		 * @return 	The dot procuct
 		 */
-		public function dot( w: Vector):Number
+		public final function dot( w: Vector):Number
 		{
 			return ( x * w.x + y * w.y + z * w.z );
 		}
@@ -170,7 +170,7 @@ package sandy.core.data
 		 * @param v 	The vector to make the cross product with ( right side )
 		 * @return 	The cross product vector.
 		 */
-		public function cross( v:Vector):Vector
+		public final function cross( v:Vector):Vector
 		{
 			// cross product vector that will be returned
 	        	// calculate the components of the cross product
@@ -186,7 +186,7 @@ package sandy.core.data
 		 *
 		 * <p>After normalizing the vector, the direction is the same, but the length is = 1.</p>
 		 */
-		public function normalize():void
+		public final function normalize():void
 		{
 			// -- We get the norm of the vector
 			var norm:Number = getNorm();
@@ -203,7 +203,7 @@ package sandy.core.data
 		 * @param w	The vector making an angle with this one
 		 * @return 	The angle in radians
 		 */
-		public function getAngle ( w:Vector ):Number
+		public final function getAngle ( w:Vector ):Number
 		{
 			var ncos:Number = dot( w ) / ( getNorm() * w.getNorm() );
 			var sin2:Number = 1 - ncos * ncos;
@@ -224,7 +224,7 @@ package sandy.core.data
 		 * @param decPlaces	Number of decimals
 		 * @return	The string representatation
 		 */
-		public function toString(decPlaces:Number=0):String
+		public final function toString(decPlaces:Number=0):String
 		{
 			if (decPlaces == 0)
 			{
@@ -245,7 +245,7 @@ package sandy.core.data
 		 *
 		 * @return 	true if the the two vectors are equal, fals otherwise.
 		 */
-		public function equals(p_vector:Vector):Boolean
+		public final function equals(p_vector:Vector):Boolean
 		{
 			return (p_vector.x == x && p_vector.y == y && p_vector.z == z);
 		}
@@ -259,7 +259,7 @@ package sandy.core.data
 		 * @param decPlaces	Number of decimals
 		 * @return 		The specific serialize string
 		 */
-		public function serialize(decPlaces:Number=0):String
+		public final function serialize(decPlaces:Number=0):String
 		{
 			if (decPlaces == 0)
 			{
@@ -280,7 +280,7 @@ package sandy.core.data
 		 *
 		 * @param 	A string representing the vector ( specific serialize format )
 		 */
-		public function deserialize(convertFrom:String):void
+		public final function deserialize(convertFrom:String):void
 		{
 			var tmp:Array = convertFrom.split(",");
 			if (tmp.length != 3)

@@ -16,9 +16,8 @@ limitations under the License.
 
 package sandy.core.data
 {
-	import flash.geom.Matrix;
-	import sandy.util.NumberUtil;
 	import sandy.math.FastMath;
+	import sandy.util.NumberUtil;
 
 	/**
 	 * A 4x4 matrix for transformations in 3D space.
@@ -221,7 +220,7 @@ package sandy.core.data
 		 *
 		 * @return	The zero matrix
 		 */
-		public function zero():void
+		public final function zero():void
 		{
 			n11 = 0 ; n12 = 0 ; n13 = 0 ; n14 = 0;
 			n21 = 0 ; n22 = 0 ; n23 = 0 ; n24 = 0;
@@ -240,7 +239,7 @@ package sandy.core.data
 		 *
 		 * @return	The identity matrix
 		 */
-		public function identity():void
+		public final function identity():void
 		{
 			n11 = 1 ; n12 = 0 ; n13 = 0 ; n14 = 0;
 			n21 = 0 ; n22 = 1 ; n23 = 0 ; n24 = 0;
@@ -249,19 +248,16 @@ package sandy.core.data
 		}
 
 		/**
-		 * Returns a clone of a Matrix4 matrix.
+		 * Compute a clonage {@code Matrix4}.
 		 *
-		 * @param m1 	The matrix to clone
-		 * @return 	The resulting matrix
+		 * @return The result of clonage : a {@code Matrix4}.
 		 */
-		public function clone(m:Matrix4):Matrix4
+		public final function clone():Matrix4
 		{
-			return new Matrix4(
-						n11,n12,n13,n14,
-	                			n21,n22,n23,n24,
-						n31,n32,n33,n34,
-						n41,n42,n43,n44
-					);
+			return new Matrix4(	n11,n12,n13,n14,
+	                            n21,n22,n23,n24,
+								n31,n32,n33,n34,
+								n41,n42,n43,n44 );
 		}
 
 		/**
@@ -271,7 +267,7 @@ package sandy.core.data
 		 *
 		 * @param m1 	The matrix to copy.
 		 */
-		public function copy(m:Matrix4):void
+		public final function copy(m:Matrix4):void
 		{
 			n11 = m.n11 ; n12 = m.n12 ; n13 = m.n13 ; n14 = m.n14 ;
 			n21 = m.n21 ; n22 = m.n22 ; n23 = m.n23 ; n24 = m.n24 ;
@@ -284,7 +280,7 @@ package sandy.core.data
 		 *
 		 * @param m2 	The matrix to multiply with.
 		 */
-		public function multiply3x3( m2:Matrix4) : void
+		public final function multiply3x3( m2:Matrix4) : void
 		{
 			const m111:Number = n11, m211:Number = m2.n11,
 			m121:Number = n21, m221:Number = m2.n21,
@@ -318,7 +314,7 @@ package sandy.core.data
 		 *
 		 * @param m2 	The matrix to multiply with.
 		 */
-		public function multiply4x3( m2:Matrix4 ):void
+		public final function multiply4x3( m2:Matrix4 ):void
 		{
 			const 	m111:Number = n11, 	m211:Number = m2.n11,
 				m121:Number = n21, 	m221:Number = m2.n21,
@@ -357,7 +353,7 @@ package sandy.core.data
 		 *
 		 * @param m2 	The matrix to multiply with.
 		 */
-		public function multiply( m2:Matrix4) : void
+		public final function multiply( m2:Matrix4) : void
 		{
 			const m111:Number = n11, m121:Number = n21, m131:Number = n31, m141:Number = n41,
 				m112:Number = n12, m122:Number = n22, m132:Number = n32, m142:Number = n42,
@@ -399,23 +395,23 @@ package sandy.core.data
 		 *
 		 * @param m2 	Matrix to add to thei matrix.
 		 */
-		public function addMatrix( m2:Matrix4): void
+		public final function addMatrix( m2:Matrix4): void
 		{
-			n11 + m2.n11;
-			n12 + m2.n12;
-			n13 + m2.n13;
-			n14 + m2.n14;
-			n21 + m2.n21;
-			n22 + m2.n22;
-			n23 + m2.n23;
-			n24 + m2.n24;
-			n31 + m2.n31;
-			n32 + m2.n32;
-			n33 + m2.n33;
-			n34 + m2.n34;
-			n41 + m2.n41;
-			n42 + m2.n42;
-			n43 + m2.n43;
+			n11 += m2.n11; 
+			n12 += m2.n12; 
+			n13 += m2.n13; 
+			n14 += m2.n14;
+			n21 += m2.n21; 
+			n22 += m2.n22; 
+			n23 += m2.n23; 
+			n24 += m2.n24;
+			n31 += m2.n31; 
+			n32 += m2.n32; 
+			n33 += m2.n33; 
+			n34 += m2.n34;
+			n41 += m2.n41; 
+			n42 += m2.n42; 
+			n43 += m2.n43; 
 			n44 += m2.n44;
 
 		}
@@ -425,7 +421,7 @@ package sandy.core.data
 		 *
 		 * @param pv	The vertex to be mutliplied
 		 */
-		public function vectorMult( pv:Vector ):void
+		public final function vectorMult( pv:Vector ):void
 		{
 			const x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
 			pv.x = (x * n11 + y * n12 + z * n13 + n14);
@@ -440,59 +436,21 @@ package sandy.core.data
 		 *
 		 * @param pv	The vector to be mutliplied
 		 */
-		public function vectorMult3x3( pv:Vector ):void
+		public final function vectorMult3x3( pv:Vector ):void
 		{
 			const x:Number=pv.x, y:Number=pv.y, z:Number=pv.z;
 			pv.x = (x * n11 + y * n12 + z * n13);
 			pv.y = (x * n21 + y * n22 + z * n23);
 			pv.z = (x * n31 + y * n32 + z * n33);
 		}
-
-		/**
-		 * Makes this matrix a rotation matrix for the given angles of rotation.
-		 *
-		 * <p>The matrix is computed from the Euler angles in degrees.</p>
-		 *
-		 * @param ax 	Angle of rotation around x axis.
-		 * @param ay 	Angle of rotation around y axis.
-		 * @param az 	Angle of rotation around z axis.
-		 */
-		public function eulerRotation ( ax:Number, ay:Number, az:Number ) : void
-		{
-			identity();
-			//
-			ax = NumberUtil.toRadian(ax);
-			ay = NumberUtil.toRadian(ay);
-			az = NumberUtil.toRadian(az);
-			// --
-			const a:Number = ( USE_FAST_MATH == false ) ? Math.cos( ax ) : FastMath.cos(ax);
-			const b:Number = ( USE_FAST_MATH == false ) ? Math.sin( ax ) : FastMath.sin(ax);
-			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( ay ) : FastMath.cos(ay);
-			const d:Number = ( USE_FAST_MATH == false ) ? Math.sin( ay ) : FastMath.sin(ay);
-			const e:Number = ( USE_FAST_MATH == false ) ? Math.cos( az ) : FastMath.cos(az);
-			const f:Number = ( USE_FAST_MATH == false ) ? Math.sin( az ) : FastMath.sin(az);
-			const ad:Number = a * d	;
-			const bd:Number = b * d	;
-			//
-			n11 =   c  * e         ;
-			n12 = - c  * f         ;
-			n13 =   d              ;
-			n21 =   bd * e + a * f ;
-			n22 = - bd * f + a * e ;
-			n23 = - b  * c 	 ;
-			n31 = - ad * e + b * f ;
-			n32 =   ad * f + b * e ;
-			n33 =   a  * c         ;
-		}
-
+		
 		/**
 		 * Makes this matrix a rotation matrix for the given angle of rotation.
-		 *
-		 * <p>The matrix is computed from the angle of rotation around the x axes.</p>
-		 *
-		 * @param angle 	Angle of rotation around x axis in degrees.
+		 * 
+		 * @param angle Number angle of rotation in degrees
+		 * @return the computed matrix
 		 */
-		public function rotationX ( angle:Number ):void
+		public final function rotationX ( angle:Number ):void
 		{
 			identity()
 			//
@@ -513,7 +471,7 @@ package sandy.core.data
 		 *
 		 * @param angle 	Angle of rotation around y axis in degrees.
 		 */
-		public function rotationY ( angle:Number ):void
+		public final function rotationY ( angle:Number ):void
 		{
 			identity()
 			//
@@ -534,7 +492,7 @@ package sandy.core.data
 		 *
 		 * @param angle 	Angle of rotation around z axis in degrees.
 		 */
-		public function rotationZ ( angle:Number ):void
+		public final function rotationZ ( angle:Number ):void
 		{
 			identity()
 			//
@@ -557,55 +515,15 @@ package sandy.core.data
 		 * @param v 	The axis of rotation
 		 * @param angle	The angle of rotation in degrees
 		 */
-		public function axisRotationVector ( v:Vector, angle:Number ) : void
+		public final function axisRotationVector ( v:Vector, angle:Number ) : void
 		{
 			axisRotation( v.x, v.y, v.z, angle );
 		}
-
-		/**
-		 * Makes this matrix a rotation matrix for a rotation around a given axis.
-		 *
-		 * <p>The matrix is computed from the angle of rotation around the given axes.</p><br />
-		 * The axis is given as components 3D vector.</p>
-		 *
-		 * @param u 	The x component of the axis of rotation
-		 * @param v 	The y component of the axis of rotation
-		 * @param w	The z component of the axis of rotation
-		 * @param angle	The angle of rotation in degrees
-		 */
-		public function axisRotation ( u:Number, v:Number, w:Number, angle:Number ) : void
-		{
-			identity()
-			//
-			angle = NumberUtil.toRadian( angle );
-			// -- modification pour verifier qu'il n'y ai pas un probleme de precision avec la camera
-			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
-			const scos:Number	= 1 - c ;
-			// --
-			var suv	:Number = u * v * scos ;
-			var svw	:Number = v * w * scos ;
-			var suw	:Number = u * w * scos ;
-			var sw	:Number = s * w ;
-			var sv	:Number = s * v ;
-			var su	:Number = s * u ;
-
-			n11  =   c + u * u * scos	;
-			n12  = - sw 	+ suv 			;
-			n13  =   sv 	+ suw			;
-
-			n21  =   sw 	+ suv 			;
-			n22  =   c + v * v * scos 	;
-			n23  = - su 	+ svw			;
-
-			n31  = - sv	+ suw 			;
-			n32  =   su	+ svw 			;
-			n33  =   c	+ w * w * scos	;
-		}
-
+		
+		
 		/**
 		 * Makes this matrix a translation matrix from translation components.
-		 *
+		 * 
 		 * <pre>
 		 * |1  0  0  0|
 		 * |0  1  0  0|
@@ -617,7 +535,7 @@ package sandy.core.data
 		 * @param nTy 	Translation in the y direction.
 		 * @param nTz 	Translation in the z direction.
 		 */
-		public function translation(nTx:Number, nTy:Number, nTz:Number) : void
+		public final function translation(nTx:Number, nTy:Number, nTz:Number) : void
 		{
 			identity()
 			//
@@ -638,7 +556,7 @@ package sandy.core.data
 		 *
 		 * @param v 	The translation Vector.
 		 */
-		public function translationVector( v:Vector ) : void
+		public final function translationVector( v:Vector ) : void
 		{
 			identity()
 			//
@@ -661,7 +579,7 @@ package sandy.core.data
 		 * @param nYScale 	y-scale.
 		 * @param nZScale	z-scale.
 		 */
-		public function scale(nXScale:Number, nYScale:Number, nZScale:Number) : void
+		public final function scale(nXScale:Number, nYScale:Number, nZScale:Number) : void
 		{
 			identity()
 			//
@@ -682,7 +600,7 @@ package sandy.core.data
 		 *
 		 * @param v	The scale vector.
 		 */
-		public function scaleVector( v:Vector) : void
+		public final function scaleVector( v:Vector) : void
 		{
 			identity()
 			//
@@ -696,7 +614,7 @@ package sandy.core.data
 		*
 		* @return 	The determinant
 		*/
-		public function det():Number
+		public final function det():Number
 		{
 			return		(n11 * n22 - n21 * n12) * (n33 * n44 - n43 * n34)- (n11 * n32 - n31 * n12) * (n23 * n44 - n43 * n24)
 					 + 	(n11 * n42 - n41 * n12) * (n23 * n34 - n33 * n24)+ (n21 * n32 - n31 * n22) * (n13 * n44 - n43 * n14)
@@ -709,7 +627,7 @@ package sandy.core.data
 		*
 		* @return 	The determinant
 		*/
-		public function det3x3():Number
+		public final function det3x3():Number
 		{
 			return n11 * ( n22 * n33 - n23 * n32 ) + n21 * ( n32 * n13 - n12 * n33 ) + n31 * ( n12 * n23 - n22 * n13 );
 		}
@@ -721,15 +639,17 @@ package sandy.core.data
 		 *
 		 * @return 	The trace value
 		 */
-		public function getTrace():Number
+		public final function getTrace():Number
 		{
 			return n11 + n22 + n33 + n44;
 		}
-
+		
 		/**
-		* Inverts this matrix.
+		* Return the inverse of the matrix passed in parameter.
+		* @param m The matrix4 to inverse
+		* @return Matrix4 The inverse Matrix4
 		*/
-		public function inverse():void
+		public final function inverse():void
 		{
 			//take the determinant
 			var d:Number = det()
@@ -773,7 +693,7 @@ package sandy.core.data
 		 * @param ref 		The reference point.
 		 * @param pAngle	The angle of rotation in degrees.
 		 */
-		public function axisRotationWithReference( axis:Vector, ref:Vector, pAngle:Number ):void
+		public final function axisRotationWithReference( axis:Vector, ref:Vector, pAngle:Number ):void
 		{
 			var tmp:Matrix4 = new Matrix4();
 			var angle:Number = ( pAngle + 360 ) % 360;
@@ -790,7 +710,7 @@ package sandy.core.data
 		 *
 		 * @return	The string representing this matrix
 		 */
-		public function toString(): String
+		public final function toString(): String
 		{
 			var s:String =  "sandy.core.data.Matrix4" + "\n (";
 			s += n11+"\t"+n12+"\t"+n13+"\t"+n14+"\n";
@@ -798,6 +718,135 @@ package sandy.core.data
 			s += n31+"\t"+n32+"\t"+n33+"\t"+n34+"\n";
 			s += n41+"\t"+n42+"\t"+n43+"\t"+n44+"\n)";
 			return s;
+		}
+		
+		/**
+		 * Returns a vector that containes the 3D position information.
+		 * 
+		 * @return A vector
+		 */
+		public final function getTranslation():Vector
+		{
+			return new Vector( n14, n24, n34 );
+		}
+		
+		/**
+		 * Compute a Rotation around an axis{@code Matrix4}.
+		 *
+		 * @param {@code nRotX} rotation X.
+		 * @param {@code nRotY} rotation Y.
+		 * @param {@code nRotZ} rotation Z.
+		 * @param The angle of rotation in degree
+		 * @return The result of computation : a {@code Matrix4}.
+		 */
+		public final function axisRotation ( u:Number, v:Number, w:Number, angle:Number ) : void
+		{
+			identity()
+			//
+			angle = NumberUtil.toRadian( angle );
+			// -- modification pour verifier qu'il n'y ai pas un probleme de precision avec la camera
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			const scos:Number	= 1 - c ;
+			// --
+			var suv	:Number = u * v * scos ;
+			var svw	:Number = v * w * scos ;
+			var suw	:Number = u * w * scos ;
+			var sw	:Number = s * w ;
+			var sv	:Number = s * v ;
+			var su	:Number = s * u ;
+			
+			n11  =   c + u * u * scos	;
+			n12  = - sw 	+ suv 			;
+			n13  =   sv 	+ suw			;
+	
+			n21  =   sw 	+ suv 			;
+			n22  =   c + v * v * scos 	;
+			n23  = - su 	+ svw			;
+	
+			n31  = - sv	+ suw 			;
+			n32  =   su	+ svw 			;
+			n33  =   c	+ w * w * scos	;
+		}
+		
+		
+	        
+		/**
+		 * Compute a Rotation {@code Matrix4} from the Euler angle in degrees unit.
+		 *
+		 * @param {@code ax} angle of rotation around X axis in degree.
+		 * @param {@code ay} angle of rotation around Y axis in degree.
+		 * @param {@code az} angle of rotation around Z axis in degree.
+		 * @return The result of computation : a {@code Matrix4}.
+		 */
+		public final function eulerRotation ( ax:Number, ay:Number, az:Number ) : void
+		{
+			identity();
+			//
+			ax = NumberUtil.toRadian(ax);
+			ay = NumberUtil.toRadian(ay);
+			az = NumberUtil.toRadian(az);
+			// --
+			const a:Number = ( USE_FAST_MATH == false ) ? Math.cos( ax ) : FastMath.cos(ax);
+			const b:Number = ( USE_FAST_MATH == false ) ? Math.sin( ax ) : FastMath.sin(ax);
+			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( ay ) : FastMath.cos(ay);
+			const d:Number = ( USE_FAST_MATH == false ) ? Math.sin( ay ) : FastMath.sin(ay);
+			const e:Number = ( USE_FAST_MATH == false ) ? Math.cos( az ) : FastMath.cos(az);
+			const f:Number = ( USE_FAST_MATH == false ) ? Math.sin( az ) : FastMath.sin(az);
+			const ad:Number = a * d	;
+			const bd:Number = b * d	;
+			//
+			n11 =   c  * e         ;
+			n12 = - c  * f         ;
+			n13 =   d              ;
+			n21 =   bd * e + a * f ;
+			n22 = - bd * f + a * e ;
+			n23 = - b  * c 	 ;
+			n31 = - ad * e + b * f ;
+			n32 =   ad * f + b * e ;
+			n33 =   a  * c         ;
+		}
+		
+		/**
+		 * Get the eulers angles from the rotation matrix
+		 * @param t The Matrix4 instance from which t extract these angles
+		 * 
+		 * @return A vector that represent the Euler angles in the 3D space (X, Y and Z)
+		 */
+		public static function getEulerAngles( t:Matrix4 ):Vector
+		{
+			var lAngleY:Number = Math.asin( t.n13 );
+			var lCos:Number = Math.cos( lAngleY );
+			
+			lAngleY *= NumberUtil.TO_DEGREE;
+			var lTrx:Number, lTry:Number, lAngleX:Number, lAngleZ:Number;
+			
+			if( Math.abs( lCos ) > 0.005 )
+			{
+				lTrx = t.n33 / lCos;
+				lTry = -t.n23 / lCos;
+				lAngleX = Math.atan2( lTry, lTrx );
+				// --
+				lTrx = t.n11 / lCos;
+				lTry = -t.n12 / lCos;
+				lAngleZ = Math.atan2( lTry, lTrx );
+			}
+			else
+			{
+				lAngleX = 0;
+				lTrx = t.n22;
+				lTry = t.n21;
+				lAngleZ = Math.atan2( lTry, lTrx );
+			}
+			
+			lAngleX *= NumberUtil.TO_DEGREE;
+			lAngleZ *= NumberUtil.TO_DEGREE;
+			
+			if( lAngleX < 0 ) lAngleX += 360;
+			if( lAngleY < 0 ) lAngleY += 360;
+			if( lAngleZ < 0 ) lAngleZ += 360;
+			
+			return new Vector( lAngleX, lAngleY, lAngleZ );
 		}
 	}
 }

@@ -15,6 +15,7 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
+	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 
@@ -627,10 +628,11 @@ package sandy.core.scenegraph
 		 * <p>For node's with transformation, this method updates the transformation taking into account the matrix cache system.<br/>
 		 * <b>FIXME<b>: Transformable nodes shall upate their transform if necessary before calling this method.</p>
 		 *
-		 * @param p_oModelMatrix [<b>ToDo</b>: Explain the parameters]
-		 * @param p_bChanged
+		 * @param p_oScene The current scene
+		 * @param p_oModelMatrix The matrix which represents the parent model matrix. Basically it stores the rotation/translation/scale of all the nodes above the current one.
+		 * @param p_bChanged	A boolean value which specify if the state has changed since the previous rendering. If false, we save some matrix multiplication process.
 		 */
-		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			updateTransform();
 			if( p_bChanged || changed )
@@ -646,7 +648,7 @@ package sandy.core.scenegraph
 				 }
 			}
 			//
-			super.update( _oModelCacheMatrix, p_bChanged );
+			super.update( p_oScene, _oModelCacheMatrix, p_bChanged );
 		}
 
 		/**

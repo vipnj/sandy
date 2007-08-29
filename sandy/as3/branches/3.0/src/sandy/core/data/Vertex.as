@@ -96,7 +96,7 @@ package sandy.core.data
 		*
 		* @return
 		*/
-		public function getWorldVector():Vector
+		public final function getWorldVector():Vector
 		{
 			return new Vector( wx, wy, wz );
 		}
@@ -106,17 +106,17 @@ package sandy.core.data
 		 *
 		 * @return 	The vector
 		 */
-	    	public function getVector():Vector
-	    	{
-	    	    return new Vector( x, y, z );
-	    	}
+	    public final function getVector():Vector
+	    {
+	   		return new Vector( x, y, z );
+	    }
 
 		/**
 		 * Returns a clone of this vertex.
 		 *
 		 * @return 	The clone
 		 */
-		public function clone():Vertex
+		public final function clone():Vertex
 		{
 		    var l_oV:Vertex = new Vertex( x, y, z );
 		    l_oV.wx = wx;    l_oV.sx = sx;
@@ -134,7 +134,7 @@ package sandy.core.data
 		 *
 		 * @return 	The new vertex
 		 */
-		public function clone2():Vertex
+		public final function clone2():Vertex
 		{
 		    return new Vertex( wx, wy, wz );
 		}
@@ -158,7 +158,7 @@ package sandy.core.data
 		 *
 		 * @return 	true if the vertices are considered equal, false otherwise
 		 */
-	 	public function equals(p_vertex:Vertex):Boolean
+	 	public final function equals(p_vertex:Vertex):Boolean
 		{
 			return Boolean( p_vertex.x  ==  x && p_vertex.y  ==  y && p_vertex.z  ==  z &&
 					p_vertex.wx == wx && p_vertex.wy == wy && p_vertex.wz == wz &&
@@ -172,7 +172,7 @@ package sandy.core.data
 		 *
 		 * @param 	The vertex to copy to this
 		 */
-		public function copy( p_oVector:Vertex ):void
+		public final function copy( p_oVector:Vertex ):void
 		{
 			x = p_oVector.x;
 			y = p_oVector.y;
@@ -193,7 +193,7 @@ package sandy.core.data
 		 *
 		 * @return 	The norm
 		 */
-		public function getNorm():Number
+		public final function getNorm():Number
 		{
 			return Math.sqrt( x*x + y*y + z*z );
 		}
@@ -205,7 +205,7 @@ package sandy.core.data
 		 *
 		 * @return 	The invers
 		 */
-		public function negate( /*v:Vertex*/ ): Vertex
+		public final function negate( /*v:Vertex*/ ): Vertex
 		{
 			// The argument is commented out, as it is not used - Petit
 			return new Vertex( - x, - y, - z, -wx, -wy, -wz);
@@ -216,7 +216,7 @@ package sandy.core.data
 		 *
 		 * @param v 	The vertex to add to this vertex
 		 */
-		public function add( v:Vertex ):void
+		public final function add( v:Vertex ):void
 		{
 			x += v.x;
 			y += v.y;
@@ -249,7 +249,7 @@ package sandy.core.data
 		 *
 		 * @param {@code pow} a {@code Number}.
 		 */
-		public function pow( pow:Number ):void
+		public final function pow( pow:Number ):void
 		{
 			x = Math.pow( x, pow );
 	        	y = Math.pow( y, pow );
@@ -266,7 +266,7 @@ package sandy.core.data
 		 *
 		 * @param n 	The number to multiply with
 		 */
-		public function scale( n:Number ):void
+		public final function scale( n:Number ):void
 		{
 			x *= n;
 			y *= n;
@@ -284,7 +284,7 @@ package sandy.core.data
 		 * @param w 	The vertex to make a dot product with
 		 * @return 	The dot product
 		 */
-		public function dot( w: Vertex):Number
+		public final function dot( w: Vertex):Number
 		{
 			return ( x * w.x + y * w.y + z * w.z );
 		}
@@ -297,7 +297,7 @@ package sandy.core.data
 		 * @param v 	The vertex to make a cross product with
 		 * @return 	the resulting vertex of the cross product.
 		 */
-		public function cross( v:Vertex):Vertex
+		public final function cross( v:Vertex):Vertex
 		{
 			// cross product vector that will be returned
 	        	// calculate the components of the cross product
@@ -313,7 +313,7 @@ package sandy.core.data
 		 * <p>Normalization means that all components of the vertex are divided by its norm.<br />
 		 * The norm is calculated as the sqrt(x*x + y*y + z*z), that is the length of the position vector.</p>
 		 */
-		public function normalize():void
+		public final function normalize():void
 		{
 			// -- We get the norm of the vector
 			var norm:Number = getNorm();
@@ -334,7 +334,7 @@ package sandy.core.data
 		 * @param w	The vertex making an angle with this one
 		 * @return 	The angle in radians
 		 */
-		public function getAngle ( w:Vertex ):Number
+		public final function getAngle ( w:Vertex ):Number
 		{
 			var ncos:Number = dot( w ) / ( getNorm() * w.getNorm() );
 			var sin2:Number = 1 - ncos * ncos;
@@ -355,7 +355,7 @@ package sandy.core.data
 		 * @param decPlaces	Number of decimals
 		 * @return	The representation
 		 */
-		public function toString(decPlaces:Number=0):String
+		public final function toString(decPlaces:Number=0):String
 		{
 			if (decPlaces == 0)
 			{
@@ -384,7 +384,7 @@ package sandy.core.data
 		 * @param decPlaces	Number of decimals
 		 * @return 		The specific serialize string
 		 */
-		public function serialize(decPlaces:Number=0):String
+		public final function serialize(decPlaces:Number=0):String
 		{
 			if (decPlaces == 0)
 			{
@@ -410,7 +410,7 @@ package sandy.core.data
 		 *
 		 * @param 	A string representing the vertex ( specific serialize format )
 		 */
-		public function deserialize(convertFrom:String):void
+		public final function deserialize(convertFrom:String):void
 		{
 			var tmp:Array = convertFrom.split(",");
 			if (tmp.length != 9)

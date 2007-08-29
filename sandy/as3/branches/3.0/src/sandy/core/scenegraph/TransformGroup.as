@@ -15,6 +15,7 @@ limitations under the License.
 */
 package sandy.core.scenegraph 
 {
+	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
@@ -53,18 +54,19 @@ package sandy.core.scenegraph
 		 * the bounding box is updated to perform the more precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oFrustum	The frustum of the current camera
 		 * @param p_oViewMatrix	The view martix of the curren camera
 		 * @param p_bChanged
 		 */
-		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			// TODO
 			// Parse the children, take their bounding volume and merge it with the current node recurssively. 
 			// After that call the super cull method to get the correct cull value.		
 			const lChanged:Boolean = p_bChanged || changed;
 			for each( var l_oNode:Node in _aChilds )
-			    l_oNode.cull( p_oFrustum, p_oViewMatrix, lChanged );
+			    l_oNode.cull( p_oScene, p_oFrustum, p_oViewMatrix, lChanged );
 			// --
 			//super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
@@ -72,16 +74,17 @@ package sandy.core.scenegraph
 		/**
 		 * Renders all children of this transformgroup.
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oCamera	The current camera
 		 */
-		public override function render( p_oCamera:Camera3D ):void
+		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
 			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
 			// --
 			for each( var l_oNode:Node in _aChilds )
 			{
 			    if( l_oNode.culled != l_oCStateOut )
-			    	l_oNode.render( p_oCamera );
+			    	l_oNode.render( p_oScene, p_oCamera );
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
 			    l_oNode.culled = l_oCStateIn; // Default value is inside.

@@ -18,6 +18,7 @@ package sandy.core.scenegraph
 {
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
+	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.events.BubbleEventBroadcaster;
 	import sandy.view.CullingState;
@@ -339,35 +340,34 @@ package sandy.core.scenegraph
 		 */
 		public function destroy():void 
 		{			
+			// the unlink this node to his parent
+			if( hasParent() == true ) parent.removeChildById( this._id );
+			
 			// should we kill all the childs, or just make them childs of current node parent ?
-			var l:int = _aChilds.length;
-			while( --l > -1 )
+			for each( var lNode:Node in _aChilds )
 			{
-				_aChilds[int(l)].destroy();
-				_aChilds[int(l)] = null;	
+				lNode.destroy();
 			}
 			_aChilds = null;
 			m_oEB = null;
-			
-			// the unlink this node to his parent
-			if( hasParent() == true ) parent.removeChildById( this._id );
 		}
 	
 		/**
 		 * Removes this node from the node tree.
+		 * PAY ATTENTION that remove method only remove the current node and NOT its children!
+		 * To remove the current node and all its children please refer to the destroy method.
 		 * 
 		 * <p>The child nodes of this node becomes child nodes of this node's parent.</p>
 		 */
 		public function remove() :void 
 		{
-			var l:int = _aChilds.length;
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
-			parent.removeChildById( this.id );
+			parent.removeChildById( this._id );
 			// now we make current node children the current parent's node children
-			while( --l > -1 )
+			for each( var lNode:Node in _aChilds )
 			{
-				parent.addChild( _aChilds[int(l)] );
+				parent.addChild( lNode );
 			}
 			_aChilds = null;
 			m_oEB = null;
@@ -399,17 +399,18 @@ package sandy.core.scenegraph
 		 * 
 		 * <p>For a node with transformation, this method must update the transformation taking into account the matrix cache system.</p>
 		 *
-		 * <p>[<b>ToDo</b> : Explain the parameters and what the do ]</p>
+		 * <p>[<b>ToDo</b> : Explain the parameters and what they do with more details]</p>
+		 * @param p_oScene The current scene 
 		 * @param p_oModelMatrix
 		 * @param p_bChanged
 		 */
-		public function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
+		public function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			/* Shall be overriden */
 			changed = changed || p_bChanged;
 			var l_oNode:Node;
 			for each( l_oNode in _aChilds )
-				l_oNode.update( p_oModelMatrix, changed );
+				l_oNode.update( p_oScene, p_oModelMatrix, changed );
 		}
 	
 		
@@ -422,13 +423,14 @@ package sandy.core.scenegraph
 		 * First the bounding sphere is updated, and if intersecting, the bounding box is updated to perform a more
 		 * precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
-		 *
+		 * 
+		 * @param p_oScene		The current scene
 		 * @param p_oFrustum	The frustum of the current camera
 		 * @param p_oViewMatrix	<b>[ToDo: explain]</b>
 		 * @param p_bChanged	<b>[ToDo: explain]</b>
 		 *
 		 */
-		public function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		public function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			if( _visible == false )
 			{
@@ -448,9 +450,10 @@ package sandy.core.scenegraph
 		 *
 		 * <p>Implemented in sub classes</p>
 		 *
+		 * @param  p_oScene		The current scene
 		 * @param  p_oCamera	The camera of the world
 		 */
-		public function render( p_oCamera:Camera3D ):void
+		public function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
 			;/* TO OVERRIDE */
 		}

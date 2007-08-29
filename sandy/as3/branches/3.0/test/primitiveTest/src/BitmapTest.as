@@ -100,11 +100,18 @@ package
 		{
 			m_oBox.rotateX ++;
 			m_oTorus.rotateY++ ;
-			(m_oSphere.parent as TransformGroup).rotateY ++;
+			if( m_oSphere.parent is TransformGroup ) 
+				(m_oSphere.parent as TransformGroup).rotateY ++;
 			m_oScene.render();
 			// --
 		//	stats.text = "Displayed polygons count:"+m_oScene.camera.nbPolygons+" Projected vertices count="+m_oScene.camera.nbVertices;
 			fps.nextFrame();
+			
+			if( m_oBox.rotateX == 45 )
+			{
+				//m_oScene.root.destroy();
+				m_oScene.root.getChildByName( "rotationPivot" ).remove();
+			}
 		}
 	}
 }

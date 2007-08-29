@@ -37,7 +37,7 @@ package sandy.core.scenegraph
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
-	final public class Sprite2D extends ATransformable implements IDisplayable
+	public class Sprite2D extends ATransformable implements IDisplayable
 	{	
 		// FIXME Create a Sprite as the spriteD container, 
 		//and offer a method to attach a visual content as a child of the sprite

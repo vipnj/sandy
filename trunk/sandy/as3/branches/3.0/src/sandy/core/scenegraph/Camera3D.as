@@ -16,9 +16,10 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.display.Sprite;
+	import flash.display.DisplayObjectContainer;
 	import flash.geom.Rectangle;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
@@ -26,7 +27,6 @@ package sandy.core.scenegraph
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
-	import flash.geom.Matrix;
 	
 	/**
 	 * The Camera3D class is used to create a camera for the Sandy world.
@@ -161,24 +161,34 @@ package sandy.core.scenegraph
 		//// GRAPHICAL ELEMENTS MANAGMENT /////
 		///////////////////////////////////////
 		/**
-		 * [<b>Todo</b>: Explain this ;-)].
+		 * Process the rendering of the scene.
+		 * The camera has all the information needed about the objects to render.
+		 * 
+		 * The camera stores all the visible shape/polygons into an array, and loop through it calling their display method.
+		 * Before the display call, the container graphics is cleared.
 		 */
-		public function renderDisplayList():void
+		public function renderDisplayList( p_oScene:Scene3D ):void
 		{
+			var l_oShape:IDisplayable;
+			// --
+			for each( l_oShape in m_aDisplayedList )
+			{
+				l_oShape.clear();
+			}
+		    
 		    nbPolygons = m_aDisplayList.length;
 		    // --
-		    var l_nId:int=0, l_mcContainer:Sprite = World3D.getInstance().container;
+		    var l_nId:int=0, l_mcContainer:DisplayObjectContainer = p_oScene.container;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
-			for each( var l_oShape:IDisplayable in m_aDisplayList )
+			for each( l_oShape in m_aDisplayList )
 			{
-				l_oShape.clear();
-				l_oShape.display();
+				l_oShape.display( p_oScene );
 				l_mcContainer.addChild( l_oShape.container );
 			}
 			// --
-			m_aDisplayList.splice(0);
+			m_aDisplayedList = m_aDisplayList.splice(0);
 		}
 
 		/**
@@ -248,9 +258,9 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * Nothing to do - the camera is not rendered.
+		 * Nothing to do - the camera is not rendered
 		 */
-		public override function render( p_oCamera:Camera3D):void
+		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D):void
 		{
 			return;/* Nothing to do here */
 		}
@@ -258,15 +268,16 @@ package sandy.core.scenegraph
 		/**
 		 * Updates the state of the camera transformation.
 		 *
-		 * @param p_oModelMatrix	[<b>Todo</b>: Explain this ;-)]
-		 * @param p_bChanged		[<b>Todo</b>: Explain this ;-)]
+		 * @param p_oScene			The current scene
+		 * @param p_oModelMatrix The matrix which represents the parent model matrix. Basically it stores the rotation/translation/scale of all the nodes above the current one.
+		 * @param p_bChanged	A boolean value which specify if the state has changed since the previous rendering. If false, we save some matrix multiplication process.
 		 */
-		public override function update( p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			nbVertices = 0;
 			// --
 			if( _perspectiveChanged ) updatePerspective();
-			super.update( p_oModelMatrix, p_bChanged );
+			super.update( p_oScene, p_oModelMatrix, p_bChanged );
 			// SHOULD BE DONE IN A FASTER WAY
 			m_oModelMatrixInv.copy( _oModelCacheMatrix );
 			m_oModelMatrixInv.inverse();
@@ -298,9 +309,9 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * Nothing to do - the camera is not rendered.
+		 * Nothing to do - the camera can't be culled
 		 */
-		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			return;
 		}
@@ -358,6 +369,8 @@ package sandy.core.scenegraph
 			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
 			mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;			
 			
+			_mpInv = Matrix4Math.getInverse( _mp );
+			
 			changed = true;	
 		}
 			
@@ -390,6 +403,7 @@ package sandy.core.scenegraph
 		
 		private var _viewport:ViewPort;
 		private var m_aDisplayList:Array;
+		private var m_aDisplayedList:Array;
 		private var _perspectiveChanged:Boolean;
 		private var _nFov:Number;
 		private var _nFar:Number;

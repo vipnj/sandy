@@ -19,7 +19,8 @@ package sandy.core.data
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-
+	
+	import sandy.core.Scene3D;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.IDisplayable;
 	import sandy.core.scenegraph.Shape3D;
@@ -290,9 +291,10 @@ package sandy.core.data
 		/**
 		 * Displays this polygon on its container if visible.
 		 *
+		 * @param p_oScene The current scene this polygon is rendered into
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display( p_oContainer:Sprite = null ):void
+		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
 			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite;
 			// --

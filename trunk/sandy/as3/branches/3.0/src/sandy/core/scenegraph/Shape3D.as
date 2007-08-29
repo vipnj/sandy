@@ -22,6 +22,7 @@ package sandy.core.scenegraph
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
+	import sandy.core.Scene3D;
 	import sandy.core.World3D;
 	import sandy.core.data.Edge3D;
 	import sandy.core.data.Matrix4;
@@ -67,12 +68,12 @@ package sandy.core.scenegraph
 			// -- Add this graphical object to the World display list
 			m_oContainer = new Sprite();
 			// --
-	        	geometry = p_oGeometry;
-	        	// -- HACK to make sure that the correct container system will be applied
+	        geometry = p_oGeometry;
+	        // -- HACK to make sure that the correct container system will be applied
 			m_bUseSingleContainer = !p_bUseSingleContainer;
 			useSingleContainer = p_bUseSingleContainer;
-	        	// --
-	        	m_bBackFaceCulling = true;
+	        // --
+	        m_bBackFaceCulling = true;
 			m_bEnableForcedDepth = false;
 			m_bEnableClipping = false;
 			m_bClipped = false;
@@ -81,59 +82,63 @@ package sandy.core.scenegraph
 			if( p_oAppearance ) appearance = p_oAppearance;
 			// -- 
 			updateBoundingVolumes();
-	    	}
-	    	/**
-	    	 * Should this object use a slinge container to draw on?.
-	    	 *
-	    	 * <p>If true, this object renders itself on a single container ( Sprite ),<br/>
-	    	 * if false, each polygon is rendered on its own container.</p>
-	    	 */
-	    	public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
-	    	{
-	    		var l_oFace:Polygon;
-	    		// --
-	    		if( p_bUseSingleContainer == m_bUseSingleContainer ) return;
-	    		// --
-	    		if( p_bUseSingleContainer )
-	    		{
-	    			for each( l_oFace in aPolygons )
-	    			{
-						if( World3D.getInstance().container.contains( l_oFace.container ) ) 
-						{
-							l_oFace.container.graphics.clear();
-							World3D.getInstance().container.removeChild( l_oFace.container );
-							this.broadcaster.removeChild( l_oFace.broadcaster );
-						}
-	    			}
-	    		}
-	    		else
-	    		{
-	    			if( World3D.getInstance().container.contains(m_oContainer) )
-	    			{
-	    				m_oContainer.graphics.clear();
-	    				World3D.getInstance().container.removeChild( m_oContainer );
-	    			}
-	    			// --
-	    			for each( l_oFace in aPolygons )
-	    			{
+	    }
+	    	
+    	/**
+    	 * setter that allow user to change the way to render this object.
+    	 * set to true, the shape will be rendered into a single Sprite object, which is accessible through the container property.
+    	 * set to false, the container property does not target anything, but all the polygons will be rendered into their own dedidated container.
+    	 *
+    	 * <p>If true, this object renders itself on a single container ( Sprite ),<br/>
+    	 * if false, each polygon is rendered on its own container.</p>
+    	 */
+    	public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
+    	{
+    		var l_oFace:Polygon;
+    		// --
+    		if( p_bUseSingleContainer == m_bUseSingleContainer ) return;
+    		// --
+    		if( p_bUseSingleContainer )
+    		{
+    			for each( l_oFace in aPolygons )
+    			{
+					if( World3D.getInstance().container.contains( l_oFace.container ) ) 
+					{
+						l_oFace.container.graphics.clear();
+						World3D.getInstance().container.removeChild( l_oFace.container );
+						this.broadcaster.removeChild( l_oFace.broadcaster );
+					}
+    			}
+    		}
+    		else
+    		{
+    			if( World3D.getInstance().container.contains(m_oContainer) )
+    			{
+    				m_oContainer.graphics.clear();
+    				World3D.getInstance().container.removeChild( m_oContainer );
+    			}
+    			// --
+    			for each( l_oFace in aPolygons )
+    			{
 					this.broadcaster.addChild( l_oFace.broadcaster );
 					// we reset the polygon container to the original one, and add it to the world container
 					l_oFace.container.graphics.clear();
-	    			}
-	    		}
-	    		m_bUseSingleContainer = p_bUseSingleContainer;
-	    	}
+    			}
+    		}
+    		m_bUseSingleContainer = p_bUseSingleContainer;
+    	}
+    	
 		/**
 		 * Updates the bounding volumes of this object.
 		 */
-	    	public function updateBoundingVolumes():void
-	    	{
-	    	    if( m_oGeometry )
-	    	    {
-	    	        _oBSphere 	= BSphere.create( m_oGeometry.aVertex );
-	    	        _oBBox 		= BBox.create( m_oGeometry.aVertex );
-	    	    }
-	    	}
+    	public function updateBoundingVolumes():void
+    	{
+    	    if( m_oGeometry )
+    	    {
+    	        _oBSphere 	= BSphere.create( m_oGeometry.aVertex );
+    	        _oBBox 		= BBox.create( m_oGeometry.aVertex );
+    	    }
+    	}
 		  
 		/**
 		 * Tests this node against the camera frustum to get its visibility.
@@ -145,13 +150,14 @@ package sandy.core.scenegraph
 		 * the bounding box is updated to perform the more precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oFrustum	The frustum of the current camera
 		 * @param p_oViewMatrix	The view martix of the curren camera
 		 * @param p_bChanged
 		 */
-		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
-			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
+			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
 
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
@@ -178,29 +184,15 @@ package sandy.core.scenegraph
 					m_bClipped = true;
 				}
 			}
-			else if( culled == CullingState.OUTSIDE )
-			{
-				// We clear it to avoid any ghost effect.
-				if( !m_bUseSingleContainer )
-		    		{
-		    			for each( var l_oFace:Polygon in aPolygons )
-		    			{
-						l_oFace.container.graphics.clear();
-		    			}
-		    		}
-		    		else
-		    		{
-		    			m_oContainer.graphics.clear();
-		    		}
-			}
 		}
 		
 		/**
 		 * Renders this 3D object.
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oCamera	The current camera
 		 */		
-		public override function render( p_oCamera:Camera3D ):void
+		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
 			var l_bVisible:Boolean;
 			var l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
@@ -266,7 +258,6 @@ package sandy.core.scenegraph
 							else
 								p_oCamera.addToDisplayList( l_oFace );
 				 		} 
-				 		else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();	
 					}
 					else
 					{
@@ -283,11 +274,10 @@ package sandy.core.scenegraph
 								m_aVisiblePoly.push( l_oFace );
 							else
 								p_oCamera.addToDisplayList( l_oFace );
-						}
-						else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();	  
+						} 
 				 	}
 		 
-				}else if( !m_bUseSingleContainer ) l_oFace.container.graphics.clear();
+				}
 				
 			}
 			// --
@@ -316,15 +306,16 @@ package sandy.core.scenegraph
 		 * <p>The method is called only if the object renders on a single container<br/> 
 		 * - ( useSignelContainer = true ).</p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display(  p_oContainer:Sprite = null ):void
+		public function display(  p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
 			for each( var l_oPoly:Polygon in m_aVisiblePoly )
 			{
-				l_oPoly.display( m_oContainer );
+				l_oPoly.display( p_oScene, m_oContainer );
 			}
 		}
 

@@ -20,6 +20,7 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	
 	import sandy.bounds.BSphere;
+	import sandy.core.Scene3D;
 	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
@@ -142,13 +143,14 @@ package sandy.core.scenegraph
 		 * the bounding box is updated to perform the more precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oFrustum	The frustum of the current camera
 		 * @param p_oViewMatrix	The view martix of the curren camera
 		 * @param p_bChanged
 		 */
-		public override function cull( p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
-			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
+			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
 			// --
 			if( _oViewCacheMatrix )
 			{
@@ -175,11 +177,12 @@ package sandy.core.scenegraph
 		/**
 		 * Renders this 2D sprite
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oCamera	The current camera
 		 */
-	    	public override function render( p_oCamera:Camera3D ):void
+	    public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
-	    	   	_v.wx = _v.x * _oViewCacheMatrix.n11 + _v.y * _oViewCacheMatrix.n12 + _v.z * _oViewCacheMatrix.n13 + _oViewCacheMatrix.n14;
+	    	_v.wx = _v.x * _oViewCacheMatrix.n11 + _v.y * _oViewCacheMatrix.n12 + _v.z * _oViewCacheMatrix.n13 + _oViewCacheMatrix.n14;
 			_v.wy = _v.x * _oViewCacheMatrix.n21 + _v.y * _oViewCacheMatrix.n22 + _v.z * _oViewCacheMatrix.n23 + _oViewCacheMatrix.n24;
 			_v.wz = _v.x * _oViewCacheMatrix.n31 + _v.y * _oViewCacheMatrix.n32 + _v.z * _oViewCacheMatrix.n33 + _oViewCacheMatrix.n34;
 			m_nDepth = _v.wz;
@@ -206,9 +209,10 @@ package sandy.core.scenegraph
 		 *
 		 * <p>[<b>ToDo</b>: We have a FIXME label here, so it may not work as expected ]</p>
 		 *
+		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display( p_oContainer:Sprite = null ):void
+		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
 			//FIXME I don't like the way the perspective is applied here...
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;

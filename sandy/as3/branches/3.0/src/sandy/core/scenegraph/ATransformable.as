@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,7 +13,7 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK ******/
 
-package sandy.core.scenegraph 
+package sandy.core.scenegraph
 {
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
@@ -21,24 +21,32 @@ package sandy.core.scenegraph
 
 	/**
 	 * ABSTRACT CLASS - super class for all movable objects in the object tree.
-	 * 
+	 *
 	 * <p> This class should not be directly instatiated, but sub classed.<br/>
-	 * The Atransformable class is resposible for scaling, rotation and translation of its sub class</p>
-	 * 
+	 * The Atransformable class is resposible for scaling, rotation and translation of objects in 3D space.</p>
+	 *
+	 * <p>Rotations and translations are performed in one of three coordinate systems or reference frames:<br/>
+	 * - The local frame which is the objects own coordinate system<br />
+	 * - The parent frame which is the coordinate system of the object's parent, normally a TransformGroup<br/>
+	 * - The world frame which is the coordinate system of the world, the global system.</p>
+	 * <p>Positions, directions, translations and rotations of an ATransformable object are performed in its parent frame.<br />
+	 * Tilt, pan and roll, are rotations around the local axes, and moveForward, moveUpwards and moveSideways are translations along local axes.</p>
+	 *
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
 	 * @date 		16.03.2007
 	 **/
 	public class ATransformable extends Node
 	{
-		
+
 		/**
 		 * Creates a transformable node in the object tree of the world.
 		 *
-		 * <p>This constructor should normally not be called directly - only via its sub classes.</p>
+		 * <p>This constructor should normally not be called directly, but from a sub class.</p>
 		 *
 		 * @param p_sName	A string identifier for this object
-		 */	
+		 */
 		public function ATransformable ( p_sName:String="" )
 		{
 			super( p_sName );
@@ -61,7 +69,7 @@ package sandy.core.scenegraph
 		/**
 		 * Initiates the local coordinate system for this object.
 		 *
-		 * <p>The local coordinate system for this object is set parallell to the global system.</p>
+		 * <p>The local coordinate system for this object is set parallell the parent system.</p>
 		 */
 		public function initFrame():void
 		{
@@ -78,7 +86,7 @@ package sandy.core.scenegraph
 		{
 		    	return m_oMatrix;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -90,17 +98,17 @@ package sandy.core.scenegraph
 		    	m_oMatrix.vectorMult3x3(_vUp);
 		    	m_oMatrix.vectorMult3x3(_vOut);
 		}
-		
+
 		/**
 		 * @private
-		 */   		
+		 */
 		public function set x( p_nX:Number ):void
 		{
 			_p.x = p_nX;
 			changed = true;
 		}
 		/**
-		 * X position of this object.
+		 * x position of this object in its parent frame.
 		 */
 		public function get x():Number
 		{
@@ -109,7 +117,7 @@ package sandy.core.scenegraph
 
 		/**
 		 * @private
-		 */   					
+		 */
 		public function set y( p_nY:Number ):void
 		{
 			_p.y = p_nY;
@@ -117,7 +125,7 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Y position of this object.
+		 * y position of this object in its parent frame.
 		 */
 		public function get y():Number
 		{
@@ -126,7 +134,7 @@ package sandy.core.scenegraph
 
 		/**
 		 * @private
-		 */   					
+		 */
 		public function set z( p_nZ:Number ):void
 		{
 			_p.z = p_nZ;
@@ -134,23 +142,23 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Z position of the node.
+		 * z position of the node in its parent frame.
 		 */
 		public function get z():Number
 		{
 			return _p.z;
-		}				
+		}
 
 		/**
-		 * Forward direction ( local z ) in world coordinates.
+		 * Forward direction ( local z ) in parent coordinates.
 		 */
 		public function get out():Vector
 		{
 			return _vOut;
 		}
-		
+
 		/**
-		 * Side direction ( local x ) in world coordinates.
+		 * Side direction ( local x ) in parent coordinates.
 		 */
 		public function get side():Vector
 		{
@@ -158,13 +166,13 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Up direction ( local y ) in world coordinates.
+		 * Up direction ( local y ) in parent coordinates.
 		 */
 		public function get up():Vector
 		{
 			return _vUp;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -173,9 +181,9 @@ package sandy.core.scenegraph
 			_oScale.x = p_nScaleX;
 			changed = true;
 		}
-		
+
 		/**
-		 * X scale of this object.
+		 * x scale of this object.
 		 *
 		 * <p>A value of 1 scales to the original x scale, a value of 2 doubles the x scale.<br/>
 		 * NOTE : This value does not affect the camera object.</p>
@@ -184,7 +192,7 @@ package sandy.core.scenegraph
 		{
 			return _oScale.x;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -193,9 +201,9 @@ package sandy.core.scenegraph
 			_oScale.y = p_scaleY;
 			changed = true;
 		}
-		
+
 		/**
-		 * Y scale of this object.
+		 * y scale of this object.
 		 *
 		 * <p>A value of 1 scales to the original y scale, a value of 2 doubles the y scale.<br/>
 		 * NOTE : This value does not affect the camera object.</p>
@@ -204,7 +212,7 @@ package sandy.core.scenegraph
 		{
 			return _oScale.y;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -213,9 +221,9 @@ package sandy.core.scenegraph
 			_oScale.z = p_scaleZ;
 			changed = true;
 		}
-		
+
 		/**
-		 * Z scale of this object.
+		 * z scale of this object.
 		 *
 		 * <p>A value of 1 scales to the original z scale, a value of 2 doubles the z scale.<br/>
 		 * NOTE : This value does not affect the camera object.</p>
@@ -223,11 +231,11 @@ package sandy.core.scenegraph
 		public function get scaleZ():Number
 		{
 			return _oScale.z;
-		}	
+		}
 
 		/**
-		 * Translates this object along its side vector ( local x ).
-		 * 
+		 * Translates this object along its side vector ( local x ) in the parent frame.
+		 *
 		 * <p>If you imagine yourself in the world, it would be a step to your right or to your left</p>
 		 *
 		 * @param p_nD	How far to move
@@ -241,8 +249,8 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Translates this object along its up vector ( local y ).
-		 * 
+		 * Translates this object along its up vector ( local y ) in the parent frame.
+		 *
 		 * <p>If you imagine yourself in the world, it would be a step up or down<br/>
 		 * in the direction of your body, not always vertically!</p>
 		 *
@@ -257,8 +265,8 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Translates this object along its forward vector ( local z ).
-		 * 
+		 * Translates this object along its forward vector ( local z ) in the parent frame.
+		 *
 		 * <p>If you imagine yourself in the world, it would be a step forward<br/>
 		 * in the direction you look, not always horizontally!</p>
 		 *
@@ -273,50 +281,50 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Translates this object horizontally in its forward direction.
-		 * 
-		 * <p>If you imagine yourself in the world, it would be a step in the forward direction, 
+		 * Translates this object parallel to its parent zx plane and in its forward direction.
+		 *
+		 * <p>If you imagine yourself in the world, it would be a step in the forward direction,
 		 * but without changing your altitude ( constant global z ).</p>
 		 *
 		 * @param p_nD	How far to move
-		 */	
+		 */
 		public function moveHorizontally( p_nD:Number ) : void
 		{
 			changed = true;
 			_p.x += _vOut.x * p_nD;
-			_p.z += _vOut.z * p_nD;	
+			_p.z += _vOut.z * p_nD;
 		}
 
 		/**
-		 * Translates this object vertically.
-		 * 
+		 * Translates this object vertically in ots parent frame.
+		 *
 		 * <p>If you imagine yourself in the world, it would be a strictly vertical step,
 		 * ( in the global y direction )</p>
 		 *
 		 * @param p_nD	How far to move
-		 */	
+		 */
 		public function moveVertically( p_nD:Number ) : void
 		{
 			changed = true;
-			_p.y += p_nD;	
+			_p.y += p_nD;
 		}
 
 		/**
-		 * Translates this object laterally.
-		 * 
-		 * <p>This is a translation paralell to the zx plane in the global x direction</p>
+		 * Translates this object laterally in its parent frame.
+		 *
+		 * <p>This is a translation in the parents x direction.</p>
 		 *
 		 * @param p_nD	How far to move
-		 */	
+		 */
 		public function moveLateraly( p_nD:Number ) : void
 		{
 			changed = true;
-			_p.x += p_nD;	
+			_p.x += p_nD;
 		}
 
 		/**
-		 * Translate this object from it's current position with the specified offset.
-		 * 
+		 * Translate this object from it's current position with the specified offsets.
+		 *
 		 * @param p_nX 	Offset that will be added to the x coordinate of the object
 		 * @param p_nY 	Offset that will be added to the y coordinate of the object
 		 * @param p_nZ 	Offset that will be added to the z coordinate of the object
@@ -326,13 +334,13 @@ package sandy.core.scenegraph
 			changed = true;
 			_p.x += p_nX;
 			_p.y += p_nY;
-			_p.z += p_nZ;	
+			_p.z += p_nZ;
 		}
 
 
 		/**
-		 * Rotate this object around the specified axis by the specified angle.
-		 * 
+		 * Rotate this object around the specified axis in the parent frame by the specified angle.
+		 *
 		 * <p>NOTE : The axis will be normalized automatically.</p>
 		 *
 		 * @param p_nX		The x coordinate of the axis
@@ -354,20 +362,18 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Make this object "look at" the specified position. 
+		 * The position in the parent frame this object should "look at".
 		 *
 		 * <p>Useful for following a moving object or a static object while this object is moving.<br/>
 		 * Normally used when this object is a camera</p>
-		 *
-		 * @param p_oTarget The point in global space  position to look at
 		 */
 		public function set target( p_oTarget:Vector ):void
 		{
 			lookAt( p_oTarget.x, p_oTarget.y, p_oTarget.z) ;
 		}
-		
+
 		/**
-		 * Make this object "look at" the specified position. 
+		 * Makes this object "look at" the specified position in the parent frame.
 		 *
 		 * <p>Useful for following a moving object or a static object while this object is moving.<br/>
 		 * Normally used when this object is a camera</p>
@@ -395,10 +401,10 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Rotates this object around an axis paralell to the global x axis.
-		 * 
-		 * <p>The object rotates a specified angle ( degrees ) around an axis through the 
-		 * objects reference point, paralell to the global x axis.</p>
+		 * Rotates this object around an axis parallel to the parents x axis.
+		 *
+		 * <p>The object rotates a specified angle ( degrees ) around an axis through the
+		 * objects reference point, paralell to the x axis of the parent frame.</p>
 		 */
 		public function set rotateX ( p_nAngle:Number ):void
 		{
@@ -406,14 +412,14 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			m_tmpMt.rotationX( l_nAngle );			
+			m_tmpMt.rotationX( l_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
 			// --
 			_vRotation.x = p_nAngle;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -423,10 +429,10 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Rotates this object around an axis paralell to the global y axis.
-		 * 
-		 * <p>The object rotates a specified angle ( degrees ) around an axis through the 
-		 * objects reference point, paralell to the global y axis.</p>
+		 * Rotates this object around an axis parallel to the parents y axis.
+		 *
+		 * <p>The object rotates a specified angle ( degrees ) around an axis through the
+		 * objects reference point, parallel to the y axis of the parent frame.</p>
 		 */
 		public function set rotateY ( p_nAngle:Number ):void
 		{
@@ -434,7 +440,7 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			m_tmpMt.rotationY( l_nAngle );			
+			m_tmpMt.rotationY( l_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
@@ -451,10 +457,10 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Rotates this object around an axis paralell to the global z axis.
-		 * 
-		 * <p>The object rotates a specified angle ( degrees ) around an axis through the 
-		 * objects reference point, paralell to the global z axis.</p>
+		 * Rotates this object around an axis paralell to the parents z axis.
+		 *
+		 * <p>The object rotates a specified angle ( degrees ) around an axis through the
+		 * objects reference point, paralell to the z axis of the parent frame.</p>
 		 */
 		public function set rotateZ ( p_nAngle:Number ):void
 		{
@@ -462,13 +468,13 @@ package sandy.core.scenegraph
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			m_tmpMt.rotationZ( l_nAngle );			
+			m_tmpMt.rotationZ( l_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
 			// --
 			_vRotation.z = p_nAngle;
-		}	
+		}
 
 		/**
 		 * @private
@@ -494,8 +500,8 @@ package sandy.core.scenegraph
 		/**
 		 * Rolls this object around the local z axis.
 		 *
-		 * <p>The roll angle interval is -180 to +180 degrees<br/> 
-		 * At 0 degrees the local x axis is aligned with the horizon<br/>
+		 * <p>The roll angle interval is -180 to +180 degrees<br/>
+		 * At 0 degrees the local x axis is aligned with the horizon of its parent<br/>
 		 * Full roll right = 180 and full roll left = -180 degrees ( upside down ).</p>
 		 *
 		 * @param p_nAngle 	The roll angle in degrees.
@@ -505,13 +511,13 @@ package sandy.core.scenegraph
 			var l_nAngle:Number = (p_nAngle - _nRoll)
 			if(l_nAngle == 0 ) return;
 			changed = true;
-			// --		
+			// --
 			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
 			_nRoll = p_nAngle;
-		}	
+		}
 
 		/**
 		 * @private
@@ -524,10 +530,10 @@ package sandy.core.scenegraph
 		/**
 		 * Tilts this object around the local x axis.
 		 *
-		 * <p>The tilt angle interval is -90 to +90 degrees<br/> 
-		 * At 0 degrees the local z axis is paralell to the global zx plane<br/>
-		 * Stright up = +90 and stright down = -90 degrees.</p>
-		 * 
+		 * <p>The tilt angle interval is -90 to +90 degrees<br/>
+		 * At 0 degrees the local z axis is paralell to the zx plane of its parent coordinate system.<br/>
+		 * Straight up = +90 and stright down = -90 degrees.</p>
+		 *
 		 * @param p_nAngle 	The tilt angle in degrees.
 		 */
 		public function set tilt ( p_nAngle:Number ):void
@@ -550,13 +556,13 @@ package sandy.core.scenegraph
 		{
 			return _nTilt;
 		}
-		
+
 		/**
 		 * Pans this object around the local y axis.
 		 *
-		 * <p>The tilt angle interval is 0 to 360 degrees<br/> 
-		 * North = 0, East = 90, South = 180 nad West = 270 degrees.</p>
-		 * 
+		 * <p>The tilt angle interval is 0 to 360 degrees<br/>
+		 * Directions within the parent frame are: North = 0, East = 90, South = 180 nad West = 270 degrees.</p>
+		 *
 		 * @param p_nAngle 	The pan angle in degrees.
 		 */
 		public function set pan ( p_nAngle:Number ):void
@@ -579,13 +585,13 @@ package sandy.core.scenegraph
 		{
 			return _nYaw;
 		}
-		
+
 		/**
-		 * Rotates this object around a specified axis trough a global reference point.
+		 * Rotates this object around a specified axis trough a reference point in the parent frame.
 		 *
 		 * <p>The axis is given as a Vector in global coordinates and must be normalized.<br/>
-		 * The reference point is given as a Vector in global coordinates.<br/>
-		 * 
+		 * The reference point is given as a Vector in parent coordinates.<br/>
+		 *
 		 * @param p_oAxis 	The axis of rotation. <b>Must be normalized !!</b>
 		 * @param p_oRef 	The global reference point
 		 * @param p_nAngle 	The angle of rotation in degrees.
@@ -606,7 +612,7 @@ package sandy.core.scenegraph
 
 
 		/**
-		 * Sets the global position of this object.
+		 * Sets the position of this object in coordinates of its parent frame.
 		 *
 		 * @param p_nX 	The x coordinate
 		 * @param p_nY 	The y coordiante
@@ -618,13 +624,13 @@ package sandy.core.scenegraph
 			// we must consider the screen y-axis inversion
 			_p.x = p_nX;
 			_p.y = p_nY;
-			_p.z = p_nZ;	
+			_p.z = p_nZ;
 		}
 
 
 		/**
-		 * Updates this node or object. 
-		 * 
+		 * Updates this node or object.
+		 *
 		 * <p>For node's with transformation, this method updates the transformation taking into account the matrix cache system.<br/>
 		 * <b>FIXME<b>: Transformable nodes shall upate their transform if necessary before calling this method.</p>
 		 *
@@ -658,19 +664,19 @@ package sandy.core.scenegraph
 		{
 			if( changed )
 			{
-				m_oMatrix.n11 = _vSide.x * _oScale.x; 
-				m_oMatrix.n12 = _vUp.x * _oScale.y; 
-				m_oMatrix.n13 = _vOut.x * _oScale.z; 
+				m_oMatrix.n11 = _vSide.x * _oScale.x;
+				m_oMatrix.n12 = _vUp.x * _oScale.y;
+				m_oMatrix.n13 = _vOut.x * _oScale.z;
 				m_oMatrix.n14 = _p.x;
 
-				m_oMatrix.n21 = _vSide.y * _oScale.x; 
-				m_oMatrix.n22 = _vUp.y * _oScale.y; 
-				m_oMatrix.n23 = _vOut.y * _oScale.z; 
+				m_oMatrix.n21 = _vSide.y * _oScale.x;
+				m_oMatrix.n22 = _vUp.y * _oScale.y;
+				m_oMatrix.n23 = _vOut.y * _oScale.z;
 				m_oMatrix.n24 = _p.y;
 
-				m_oMatrix.n31 = _vSide.z * _oScale.x; 
-				m_oMatrix.n32 = _vUp.z * _oScale.y; 
-				m_oMatrix.n33 = _vOut.z * _oScale.z;  
+				m_oMatrix.n31 = _vSide.z * _oScale.x;
+				m_oMatrix.n32 = _vUp.z * _oScale.y;
+				m_oMatrix.n33 = _vOut.z * _oScale.z;
 				m_oMatrix.n34 = _p.z;
 
 				m_oMatrix.n41 = m_oMatrix.n42 = m_oMatrix.n43 = 0;
@@ -683,7 +689,7 @@ package sandy.core.scenegraph
 		 *
 		 * <p>Choose which coordinate system the returned position refers to, by passing a mode string:<br/>
 		 * The position is returned as a vector in one of the following:<br/>
-		 * If "local", the position is relative to the parent frame.
+		 * If "local", the position is coordinates of the parent frame.
 		 * If "absolute" the position is in world coordinates
 		 * If "camera" the position is relative to the camera's coordinate system.
 		 * Default value is "local"
@@ -703,12 +709,17 @@ package sandy.core.scenegraph
 			return l_oPos;
 		}
 
+		/**
+		 * Returns a string representation of this object
+		 *
+		 * @return	The fully qualified name of this class
+		 */
 		public override function toString():String
 		{
 		    	return "sandy.core.scenegraph.ATransformable";
 		}
-		// 
-		private var m_oMatrix:Matrix4;		
+		//
+		private var m_oMatrix:Matrix4;
 		// Side Orientation Vector
 		protected var _vSide:Vector;
 		// view Orientation Vector
@@ -721,10 +732,10 @@ package sandy.core.scenegraph
 		private var _nYaw:Number;
 		// current roll value
 		private var _nRoll:Number;
-		private var _vRotation:Vector;		
+		private var _vRotation:Vector;
 		private var _vLookatDown:Vector; // Private absolute down vector
-		protected var _p:Vector;	
+		protected var _p:Vector;
 		protected var _oScale:Vector;
 		protected var m_tmpMt:Matrix4; // temporary transform matrix used at updateTransform
-	}	
+	}
 }

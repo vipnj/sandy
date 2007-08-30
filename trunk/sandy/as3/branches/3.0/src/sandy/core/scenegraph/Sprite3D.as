@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,11 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph 
-{	
+package sandy.core.scenegraph
+{
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	
+
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
 	import sandy.core.World3D;
@@ -29,13 +29,13 @@ package sandy.core.scenegraph
 	import sandy.util.NumberUtil;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
-	
+
 	/**
 	 * The Sprite3D class is use to create a 3D sprite.
 	 *
 	 * <p>A Sprite3D can be seen as a special Sprite2D.<br/>
 	 * It has an appearance that is a movie clip containing 360 frames (at least!) with texture.</p>
-	 * 
+	 *
 	 * <p>Depending on the camera position, a different frame of the clip is shown, givin a 3D effect.<p/>
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
@@ -43,10 +43,10 @@ package sandy.core.scenegraph
 	 * @date 		20.05.2006
 	 **/
 	public class Sprite3D extends ATransformable implements IDisplayable
-	{	
-		// FIXME Create a Sprite as the spriteD container, 
+	{
+		// FIXME Create a Sprite as the spriteD container,
 		// and offer a method to attach a visual content as a child of the sprite
-		
+
 		 /**
 	 	 * Creates a Sprite3D
 		 *
@@ -54,13 +54,13 @@ package sandy.core.scenegraph
 		 * @param p_oContent	The Movieclip containing the textures
 		 * @param p_nScale 	A number used to change the scale of the displayed object.
 		 * 			In case that the object projected dimension
-		 *			isn't adapted to your needs. 
-		 *			Default value is 1.0 which means unchanged. 
+		 *			isn't adapted to your needs.
+		 *			Default value is 1.0 which means unchanged.
 		 * 			A value of 2.0 will make the object will double the size
-		 * 		 
+		 *
 		 * @param p_nOffset 	A number between [0-360] to give a frame offset into the clip.
 		 */
-		public function Sprite3D( p_sName:String, p_oContent:MovieClip, p_nScale:Number=1, p_nOffset:Number=0 ) 
+		public function Sprite3D( p_sName:String, p_oContent:MovieClip, p_nScale:Number=1, p_nOffset:Number=0 )
 		{
 			super(p_sName);
 			m_oContainer = new Sprite();
@@ -92,7 +92,7 @@ package sandy.core.scenegraph
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -100,7 +100,7 @@ package sandy.core.scenegraph
 		{
 			return m_oContent;
 		}
-		
+
 		/**
 		 * The container of this sprite ( canvas )
 		 */
@@ -108,7 +108,7 @@ package sandy.core.scenegraph
 		{
 			return m_oContainer;
 		}
-		
+
 		/**
 		 * Sets the radius of bounding sphere for this sprite.
 		 *
@@ -116,9 +116,9 @@ package sandy.core.scenegraph
 		 */
 		public function setBoundingSphereRadius( p_nRadius:Number ):void
 		{
-			_oBSphere.radius = p_nRadius; 
+			_oBSphere.radius = p_nRadius;
 		}
-	
+
 		/**
 		 * The scale of this sprite.
 		 *
@@ -126,13 +126,13 @@ package sandy.core.scenegraph
 		 */
 		public function get scale():Number
 		{ return _nScale; }
-	
+
 		/**
 		 * @private
 		 */
 		public function set scale( n:Number ):void
 		{
-			if( n )	_nScale = n; 
+			if( n )	_nScale = n;
 		}
 
 		/**
@@ -143,14 +143,14 @@ package sandy.core.scenegraph
 		{
 			return m_nDepth;
 		}
-		  
+
 		/**
 		 * Tests this node against the camera frustum to get its visibility.
 		 *
-		 * <p>If this node and its children are not within the frustum, 
+		 * <p>If this node and its children are not within the frustum,
 		 * the node is set to cull and it would not be displayed.<p/>
 		 * <p>The method also updates the bounding volumes to make the more accurate culling system possible.<br/>
-		 * First the bounding sphere is updated, and if intersecting, 
+		 * First the bounding sphere is updated, and if intersecting,
 		 * the bounding box is updated to perform the more precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
@@ -161,7 +161,7 @@ package sandy.core.scenegraph
 		 */
 		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
-			super.cull(p_oFrustum, p_oViewMatrix, p_bChanged );
+			super.cull(p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
 			//
 			if( _oViewCacheMatrix )
 			{
@@ -184,7 +184,7 @@ package sandy.core.scenegraph
 			if( culled == CullingState.OUTSIDE )  container.visible = false;
 			else container.visible = true;
 		}
-		
+
 		/**
 		 * Renders this 3D sprite
 		 *
@@ -198,21 +198,21 @@ package sandy.core.scenegraph
 					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
-					
+
 	        	_dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
 			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23;
 			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33;
-			
+
 			_v.wx = _v.x * m11 + _v.y * m12 + _v.z * m13 + m14;
 			_v.wy = _v.x * m21 + _v.y * m22 + _v.z * m23 + m24;
 			_v.wz = _v.x * m31 + _v.y * m32 + _v.z * m33 + m34;
-			
+
 			m_nDepth = _v.wz;
 			m_nPerspScale = _nScale * 100/m_nDepth;
 			// --
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( [_v] );	
+			p_oCamera.addToProjectionList( [_v] );
 			// --
 	        	var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );
@@ -221,18 +221,18 @@ package sandy.core.scenegraph
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
 			m_oContent.gotoAndStop( __frameFromAngle( angle ) );
 		}
-		
+
 		/**
 		 * Clears the graphics object of this object's container.
 		 *
-		 * <p>The the graphics that were drawn on the Graphics object is erased, 
+		 * <p>The the graphics that were drawn on the Graphics object is erased,
 		 * and the fill and line style settings are reset.</p>
 		 */
 		public function clear():void
 		{
 			;//m_oContainer.graphics.clear();
 		}
-		
+
 		/**
 		 * Displays this sprite xxx.
 		 *
@@ -248,7 +248,7 @@ package sandy.core.scenegraph
 			m_oContainer.x = _v.sx - m_nW2;
 			m_oContainer.y = _v.sy - m_nH2;
 		}
-		
+
 		// Returns the frame to show at the current camera angle
 		private function __frameFromAngle(a:Number):Number
 		{
@@ -256,8 +256,8 @@ package sandy.core.scenegraph
 			a = (( a + _nOffset )+360) % 360;
 			return a;
 		}
-				
-	
+
+
 		/**
 		* The frame offset into the content MovieClip
 		*/
@@ -265,7 +265,7 @@ package sandy.core.scenegraph
 		{
 			return _nOffset;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -273,12 +273,12 @@ package sandy.core.scenegraph
 		{
 			_nOffset = n;
 		}
-		
+
 		// -- frames offset
 		private var _nOffset:Number;
 		private var _vView:Vector;
 		private var _dir:Vertex;
-				
+
 		private var m_nPerspScale:Number=0;
 		private var m_nW2:Number=0;
 		private var m_nH2:Number=0;

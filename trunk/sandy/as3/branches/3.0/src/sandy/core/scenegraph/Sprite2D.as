@@ -62,9 +62,9 @@ package sandy.core.scenegraph
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
-	        	_oBBox 		= null;
-	        	setBoundingSphereRadius( 30 );
-	        	// --
+	        _oBBox 		= null;
+	        setBoundingSphereRadius( 30 );
+	        // --
 			_nScale = p_nScale;
 			// --
 			content = p_oContent;

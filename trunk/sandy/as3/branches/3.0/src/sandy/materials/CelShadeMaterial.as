@@ -56,10 +56,11 @@ package sandy.materials
 		/**
 		 * Renders this material on the face it dresses.
 		 *
+		 * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
 		 */		
-		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void
+		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
         {
 
             const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;

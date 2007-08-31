@@ -18,6 +18,7 @@ package sandy.materials
 {
 	import flash.display.Sprite;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	
 	/**
@@ -77,7 +78,7 @@ package sandy.materials
 		 *
 		 * <p>Implemented by sub classes</p>
 		 */
-		public function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void
+		public function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
 		{
 			;
 		}

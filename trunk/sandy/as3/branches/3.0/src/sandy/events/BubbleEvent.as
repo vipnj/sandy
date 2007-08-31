@@ -18,10 +18,7 @@
  * {@code BubbleEvent} defines specific event structure to work with
  * {@link BubbleEventBroadcaster}
  * 
- * <p>Based on {@link BasicEvent} class, {@code BubbleEvent} add access 
- * to his specific {@link #bubbles} and {@link #propagation} properties.
- * 
- * @author Francis Bourre
+ * @author Thomas PFEIFFER
  * @version 1.0
  */
  
@@ -31,8 +28,9 @@ package sandy.events
 	
 	public class BubbleEvent extends Event
 	{
-		private var m_oTarget:*;
-		
+		private var m_oEvt:Event;
+		private var m_oTarget:Object;
+		//private var m_sType:String;
 		//-------------------------------------------------------------------------
 		// Public API
 		//-------------------------------------------------------------------------
@@ -51,12 +49,23 @@ package sandy.events
 		 * @param e an {@link EventType} instance (event name).
 		 * @param oT event target.
 		 */
-		public function BubbleEvent( e : String, oT:* ) 
+		public function BubbleEvent( e : String, oT:Object, p_Evt:Event = null ) 
 		{
-			super(e, true, true);
+			super( e, true, true );
 			m_oTarget = oT;
+			m_oEvt = p_Evt;
 		}
 		
+		
+		public override function get target():Object
+		{
+			return m_oTarget;
+		}
+		
+		public function get event():Event
+		{
+			return m_oEvt;
+		}
 		
 		/**
 		 * Returns the string representation of this instance.

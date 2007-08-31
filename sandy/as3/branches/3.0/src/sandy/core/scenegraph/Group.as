@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,45 +14,45 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.core.scenegraph 
+package sandy.core.scenegraph
 {
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
-	
+
 	/**
 	 * The Group class is used for branch nodes in the Sandy object tree.
 	 *
 	 * <p>This class is fianl, and can not be sub classed</p>
 	 * <p>This group binds together, but can not transform its children.<br/>
 	 * To transform collections of objects, you should add them to a transform group.</p>
-	 * 
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		1.0
 	 * @date 		28.03.2006
 	 *
 	 * @see sandy.core.scenegraph.TransformGroup
 	 */
-	final public class Group extends Node
+	public class Group extends Node
 	{
 		/**
 		 * Creates a branch group.
 		 *
 		 * @param p_sName	A string identifier for this object
 		 */
-		public function Group( p_sName:String = "" ) 
+		public function Group( p_sName:String = "" )
 		{
 			super( p_sName );
 		}
-		
+
 		/**
 		 * Tests this node against the camera frustum to get its visibility.
 		 *
-		 * <p>If this node and its children are not within the frustum, 
+		 * <p>If this node and its children are not within the frustum,
 		 * the node is culled and will not be displayed.<p/>
 		 * <p>This method also updates the bounding volumes to make the more accurate culling system possible.<br/>
-		 * First the bounding sphere is updated, and if intersecting, 
+		 * First the bounding sphere is updated, and if intersecting,
 		 * the bounding box is updated to perform the more precise culling.</p>
 		 * <p><b>[MANDATORY] The update method must be called first!</b></p>
 		 *
@@ -64,8 +64,8 @@ package sandy.core.scenegraph
 		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			// TODO
-			// Parse the children, take their bounding volume and merge it with the current node recurssively. 
-			// After that call the super cull method to get the correct cull value.		
+			// Parse the children, take their bounding volume and merge it with the current node recurssively.
+			// After that call the super cull method to get the correct cull value.
 			const lChanged:Boolean = p_bChanged || changed;
 			for each( var l_oNode:Node in _aChilds )
 			    l_oNode.cull( p_oScene, p_oFrustum, p_oViewMatrix, lChanged );
@@ -77,7 +77,7 @@ package sandy.core.scenegraph
 		 *
 		 * @param p_oScene The current scene
 		 * @param p_oCamera	The current camera
-		 */	
+		 */
 		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
 			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;

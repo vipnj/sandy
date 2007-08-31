@@ -17,6 +17,7 @@ package
 	import sandy.primitive.PrimitiveMode;
 	import sandy.primitive.Sphere;
 	import sandy.primitive.Torus;
+	import sandy.materials.ZShaderMaterial;
 
 	[SWF(width="640", height="500", backgroundColor="#FFFFFF", frameRate=120)] 
 	public class BitmapTest extends Sprite
@@ -74,18 +75,18 @@ package
 			// --
 			m_oTorus = new Torus("myTorus", 30, 15, 6, 6 );
 			var lPic2:Bitmap = new Texture();
-			m_oTorus.appearance = new Appearance( new BitmapMaterial( lPic2.bitmapData ) );
+			m_oTorus.appearance = new Appearance( new ZShaderMaterial(1.4)/*new BitmapMaterial( lPic2.bitmapData )*/ );
 			m_oTorus.x = -50;
 			m_oTorus.y = 30;
 			m_oTorus.z = -120;
 			// --
-			m_oBox = new Box("myBox", 50, 50, 50, PrimitiveMode.TRI, 5);
+			m_oBox = new Box("myBox", 50, 50, 50, PrimitiveMode.TRI, 2);
 			m_oBox.y = 45;
 			m_oBox.appearance = new Appearance( new BitmapMaterial( lPic2.bitmapData ) );//new Appearance( new ColorMaterial( 0xFF0000, new LineAttributes() ));
 			// --
 			m_oSphere = new Sphere( "myShpere", 30, 10, 10 );
 			m_oSphere.y = 50;
-			m_oSphere.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );//new Appearance( new WireFrameMaterial( 0xFF ) );
+			m_oSphere.appearance = new Appearance( new ZShaderMaterial(1.5) );//new Appearance( new WireFrameMaterial( 0xFF ) );
 			m_oSphere.z = 70;
 			// --
 			lG.addChild( m_oPlane );
@@ -106,12 +107,13 @@ package
 			// --
 		//	stats.text = "Displayed polygons count:"+m_oScene.camera.nbPolygons+" Projected vertices count="+m_oScene.camera.nbVertices;
 			fps.nextFrame();
-			
+			/*
 			if( m_oBox.rotateX == 45 )
 			{
 				//m_oScene.root.destroy();
 				m_oScene.root.getChildByName( "rotationPivot" ).remove();
 			}
+			*/
 		}
 	}
 }

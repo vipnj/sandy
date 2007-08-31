@@ -52,7 +52,33 @@ package sandy.core.data
 			z = p_nZ;
 		}
 
+		/**
+		 * Reset the vector components to 0
+		 * after calling this method, x, y and z will be set to 0
+		 */
+		public function reset():void
+		{
+			x = y = z = 0;
+		}
+		
+		/**
+		 * Reset the vector components to the minimal value Flash can handle
+		 * after calling this method, x, y and z will be set to Number.NEGATIVE_INFINITY;
+		 */
+		public function resetToNegativeInfinity():void
+		{
+			x = y = z = Number.NEGATIVE_INFINITY;
+		}
 
+		/**
+		 * Reset the vector components to the maximal value Flash can handle
+		 * after calling this method, x, y and z will be set to Number.POSITIVE_INFINITY;
+		 */
+		public function resetToPositiveInfinity():void
+		{
+			x = y = z = Number.POSITIVE_INFINITY;
+		}
+		
 		/**
 		 * Returns a clone of thei vector.
 		 *

@@ -102,6 +102,19 @@ package sandy.core.data
 		 * Array of polygons that share an edge with the current polygon.
 		 */
 		public var aNeighboors:Array = new Array();
+		
+		/**
+		 * [READ-ONLY] property.
+		 */
+		public var minBounds:Vector = new Vector();
+		/**
+		 * [READ-ONLY] property.
+		 */
+		public var maxBounds:Vector = new Vector();
+		/**
+		 * [READ-ONLY] property.
+		 */
+		public var meanBounds:Vector = new Vector();
 
 		/**
 		 * Creates a new polygon.
@@ -119,7 +132,6 @@ package sandy.core.data
 			m_oGeometry = p_geometry;
 			// --
 			backfaceCulling = 1;
-			m_nDepth = 0;
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID, p_nEdgesID );
 			m_oContainer = new Sprite();
@@ -157,16 +169,55 @@ package sandy.core.data
 			m_oEB.removeEventListener(p_sEvent, oL);
 		}
 
+		
 		/**
-		 * Is this face visible?.
-		 *
-		 * @return 	true if this face is visible, false otherwise.
+		 * Pre-compute several properties of the polygon in the same time.
+		 * List of the computed properties :
+		 *  - visibility : if the polygon is visible
+		 *  - mean z depth : the mean z depth used for basic sorting
+		 *  - max bounds : the maximum bounds of the polygon
+		 *  - min bounds : the minimum bounds of the polygon
+		 *  - mean bounds : the mean of each components of the polygon. It is center actually.
 		 */
-		public function get visible(): Boolean
+		public function precompute():void
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
 			var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
 			m_bVisible = (( backfaceCulling ) * (l_nDot) < 0);
+			// --
+			const l_aVert:Array = vertices;
+			// --
+			meanBounds.reset();
+			minBounds.resetToPositiveInfinity();
+			maxBounds.resetToNegativeInfinity();
+			// --
+			for each ( var v:Vertex in l_aVert )
+			{
+				if( v.wx < minBounds.x ) minBounds.x = v.wx;
+				else if( v.wx > maxBounds.x ) maxBounds.x = v.wx;
+				// --
+				if( v.wy < minBounds.y ) minBounds.y = v.wy;
+				else if( v.wy > maxBounds.y ) maxBounds.y = v.wy;
+				// --
+				if( v.wz < minBounds.z ) minBounds.z = v.wz;
+				else if( v.wz > maxBounds.z ) maxBounds.z = v.wz;
+				// -- 
+				meanBounds.x += v.wx;
+				meanBounds.y += v.wy;
+				meanBounds.z += v.wz;
+			}
+			// -- We normalize the sum and return it
+			meanBounds.scale( 1 / l_aVert.length );
+		}
+		
+		
+		/**
+		 * Is this face visible?.
+		 * The method returns the visibility value pre computed after precompute method call. This getter shall be called afer the precompute call.
+		 * @return 	true if this face is visible, false otherwise.
+		 */
+		public function get visible(): Boolean
+		{
 			return m_bVisible;
 		}
 
@@ -250,19 +301,11 @@ package sandy.core.data
 		 */
 		public function getZAverage():Number
 		{
-			var l_aVert:Array = vertices;
-			m_nDepth = 0;
-			for each ( var v:Vertex in l_aVert )
-			{
-				m_nDepth += v.wz;
-			}
-			// -- We normalize the sum and return it
-			m_nDepth /= l_aVert.length;
-			return m_nDepth;
+			return meanBounds.z;
 		}
 
 		/**
-		 * Returns the depth minimum of this face.
+		 * Returns the minimum depth of this face.
 		 *
 		 * <p>Useful for z-sorting.</p>
 		 *
@@ -270,14 +313,7 @@ package sandy.core.data
 		 */
 		public function getZMinimum():Number
 		{
-			var l_aVert:Array = (isClipped) ? cvertices : vertices;
-			var lMin:Number = Number.MAX_VALUE;
-			for each ( var v:Vertex in l_aVert )
-			{
-				if( v.wz < lMin ) lMin = v.wz;
-			}
-			// -- We normalize the sum and return it
-			return lMin;
+			return minBounds.z;
 		}
 
 		/**
@@ -300,11 +336,11 @@ package sandy.core.data
 			// --
 			if( m_bVisible )
 			{
-				m_oAppearance.frontMaterial.renderPolygon( this, lContainer );
+				m_oAppearance.frontMaterial.renderPolygon( p_oScene, this, lContainer );
 			}
 			else
 			{
-				m_oAppearance.backMaterial.renderPolygon( this, lContainer );
+				m_oAppearance.backMaterial.renderPolygon( p_oScene, this, lContainer );
 			}
 		}
 
@@ -321,7 +357,7 @@ package sandy.core.data
 		 */
 		public function get depth():Number
 		{
-			return m_nDepth;
+			return meanBounds.z;
 		}
 
 		/**
@@ -329,7 +365,7 @@ package sandy.core.data
 		 */
 		public function set depth( p_nDepth:Number ):void
 		{
-			m_nDepth = p_nDepth;
+			meanBounds.z = p_nDepth;
 		}
 
 		/**
@@ -365,13 +401,13 @@ package sandy.core.data
 				container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
 				container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
 				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
-	    		}
-	    		mouseEvents = b;
+	    	}
+	    	mouseEvents = b;
 		}
 
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, p_oEvt.target ) );
+			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
 		}
 
 		/**
@@ -470,7 +506,6 @@ package sandy.core.data
 		private var m_aUVCoords:Array;
 		private var m_bVisible:Boolean = false;
 
-		protected var m_nDepth:Number;
 		protected var m_oContainer:Sprite;
 		protected var m_oVisibilityRef:Vertex;
 

@@ -233,13 +233,15 @@ package sandy.core.scenegraph
 				l_oVertex.projected = false;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-			m_aVisiblePoly.splice(0);
+			m_aVisiblePoly.splice( 0 );
 			m_nDepth = 0;
 			// --
 			for each( var l_oFace:Polygon in aPolygons )
 			{
-				l_bVisible = l_oFace.visible;
-				if ( l_bVisible || !m_bBackFaceCulling) 
+				// -- lauch precomputation
+				l_oFace.precompute();
+				// --
+				if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
 					// we process the frustum clipping
 					if( m_bClipped )
@@ -261,7 +263,6 @@ package sandy.core.scenegraph
 					}
 					else
 					{
-				    	
 				    	l_oFace.isClipped = false;
 				    	if( l_oFace.getZMinimum() > 0 )
 						{	
@@ -525,7 +526,7 @@ package sandy.core.scenegraph
 	
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, p_oEvt.target ) );
+			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
 		}
 		
 		/**

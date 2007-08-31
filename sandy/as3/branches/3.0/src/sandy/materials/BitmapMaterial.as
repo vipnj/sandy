@@ -24,6 +24,7 @@ package sandy.materials
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
 	import sandy.util.NumberUtil;
@@ -68,10 +69,11 @@ package sandy.materials
 		/**
 		 * Renders this material on the face it dresses
 		 *
+		  * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
 		 */
-		public override function renderPolygon( p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
+		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
 			const lGraphics:Graphics = p_mcContainer.graphics;
 			//
@@ -114,7 +116,7 @@ package sandy.materials
 			}
 		}
 		
-		// 
+
 		private function _drawPolygon( p_oPolygon:Polygon, p_aPoints:Array, p_aUv:Array, p_oGraphics:Graphics ):void
 		{
 			var l_points: Array = p_aPoints.slice();
@@ -123,10 +125,10 @@ package sandy.materials
 			{
 				l_points = l_points.slice( 0, 3 );
 				l_uv = l_uv.slice( 0, 3 );
-				//
+				// --
 				p_aPoints.splice( 1, 1 );
 				p_aUv.splice( 1, 1 );
-				//
+				// --
 				_drawPolygon( p_oPolygon, p_aPoints, p_aUv, p_oGraphics );
 			}
 
@@ -143,7 +145,7 @@ package sandy.materials
 			// --
 			matrix = lUv.clone();
 			matrix.concat(m_oTmp);
-			//
+			// --
 			p_oGraphics.lineStyle();
 			p_oGraphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
 			// --
@@ -151,14 +153,14 @@ package sandy.materials
 			// --
 			for each( var l_oPoint:Vertex in l_points )
 				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);
-			//	
+			// --
 			p_oGraphics.endFill();
 			
 			if( lineAttributes ) lineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
 			if( outlineAttributes ) outlineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
 		}	
 
-		//
+
 		private function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
 			var u0: Number = p_aUv[0].u * m_nWidth,

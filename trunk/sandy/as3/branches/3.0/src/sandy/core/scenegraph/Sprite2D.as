@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.core.scenegraph 
 {	
 	import flash.display.DisplayObject;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	
 	import sandy.bounds.BSphere;
@@ -33,6 +34,8 @@ package sandy.core.scenegraph
 	 * <p>A Sprite2D object is used to display a static or dynamic texture in the Sandy world.<br/>
 	 * The sprite always shows the same side to the camera. This is useful when you want to show more
 	 * or less complex images, without heavy calculations of perspective distortion.</p>
+	 * <p>The Sprite2D has a fixed bounding sphere radius, set by default to 30.<br />
+	 * In case your sprite is bigger, you can adjust it to avoid any frustum culling issue</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
@@ -47,7 +50,7 @@ package sandy.core.scenegraph
 		 * Creates a Sprite2D.
 		 *
 		 * @param p_sName	A string identifier for this object
-		 * @param p_oContent	The texture to display
+		 * @param p_oContent	The container containing all the pre-rendered picture
 		 * @param p_nScale 	A number used to change the scale of the displayed object.
 		 * 			In case that the object projected dimension
 		 *			isn't adapted to your needs. 
@@ -71,17 +74,25 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * The texture of this sprite.
+		 * The DisplayObject that will used as content of this Sprite2D. 
+		 * If this DisplayObject has already a screen position, it will be reseted to 0,0.
+		 * 
+		 * @param p_container The DisplayObject to attach to the Sprite2D#container. 
 		 */
 		public function set content( p_container:DisplayObject ):void
 		{
+			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
+			m_oContent = p_container;
+			p_container.x = 0;
+			p_container.y = 0;
 			m_oContainer.addChildAt( p_container, 0 );
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
 		}
 		
 		/**
-		 * @private
+		 * Get the content DisplayObject reference
+		 * @return The DisplayObject Sprite2D content reference
 		 */
 		public function get content():DisplayObject
 		{
@@ -227,5 +238,6 @@ package sandy.core.scenegraph
 		private var m_nDepth:Number;
 		private var _nScale:Number;
 		private var m_oContainer:Sprite;
+		private var m_oContent:DisplayObject;
 	}
 }

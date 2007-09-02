@@ -51,7 +51,7 @@ package sandy.core.scenegraph
 	 	 * Creates a Sprite3D
 		 *
 		 * @param p_sName 	A string identifier for this object
-		 * @param p_oContent	The Movieclip containing the textures
+		 * @param p_oContent	The Movieclip containing the pre-rendered textures
 		 * @param p_nScale 	A number used to change the scale of the displayed object.
 		 * 			In case that the object projected dimension
 		 *			isn't adapted to your needs.
@@ -68,9 +68,9 @@ package sandy.core.scenegraph
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
-	        	_oBBox 		= null;
-	        	setBoundingSphereRadius( 30 );
-	        	// --
+	        _oBBox 		= null;
+	        setBoundingSphereRadius( 30 );
+	        // --
 			_nScale = p_nScale;
 			// --
 			content = p_oContent;
@@ -82,10 +82,15 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * The MovieClip containg the texture for this sprite
+		 * The MovieClip that will used as content of this Sprite2D. 
+		 * If this MovieClip has already a scree position, it will be reseted to 0,0.
+		 * 
+		 * @param p_container The MovieClip to attach to the Sprite3D#container. 
 		 */
 		public function set content( p_container:MovieClip ):void
 		{
+			p_container.x = 0;
+			p_container.y = 0;
 			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
 			m_oContent = p_container;
 			m_oContainer.addChildAt( m_oContent, 0 );

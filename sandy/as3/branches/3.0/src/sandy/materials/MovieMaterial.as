@@ -20,6 +20,7 @@ package sandy.materials
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	
 	/**

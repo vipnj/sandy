@@ -224,6 +224,28 @@ package sandy.core.data
 		}
 
 		/**
+		 * Gives the biggest component of the current vector.
+		 * Example : var lMax:Number = new Vector(5, 6.7, -4).getMaxComponent(); //returns 6.7
+		 * 
+		 * @return The biggest component value of the vector
+		 */
+		public final function getMaxComponent():Number
+		{
+			return Math.max( x, Math.max( y, z ) );
+		}
+		
+		/**
+		 * Gives the smallest component of the current vector.
+		 * Example : var lMin:Number = new Vector(5, 6.7, -4).getMinComponent(); //returns -4
+		 * 
+		 * @return The smallest component value of the vector
+		 */
+		public final function getMinComponent():Number
+		{
+			return Math.min( x, Math.min( y, z ) );
+		}
+		
+		/**
 		 * Returns the angle between this vector and the specified vector.
 		 *
 		 * @param w	The vector making an angle with this one

@@ -1,7 +1,5 @@
 package
 {
-	import com.mir3.display.FPSMetter;
-	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
@@ -39,8 +37,6 @@ package
 			_mc = this;
 			// --
 			stage.scaleMode = StageScaleMode.NO_SCALE ;
-			// -- FPS
-			addChild(new FPSMetter(false, 110, stage));
 			// --
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
 			//

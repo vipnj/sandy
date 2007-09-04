@@ -1,8 +1,9 @@
-package sandy.materials 
+﻿package sandy.materials
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-	
+
+	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
 	import sandy.core.data.Vector;
@@ -11,7 +12,7 @@ package sandy.materials
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	import sandy.core.scenegraph.Camera3D;
-	
+
 	/**
 	 * Displays the faces of a 3D shape as a Cel Shaded Material (polygon based cel shading).
 	 *
@@ -21,7 +22,7 @@ package sandy.materials
 	 * @version		3.0
 	 * @date 		10.08.2007
 	 */
-	public final class CelShadeMaterial extends OutlineMaterial 
+	public final class CelShadeMaterial extends OutlineMaterial
 	{
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;
@@ -47,7 +48,7 @@ package sandy.materials
 			m_nAlpha = p_nAlpha/100;
 			// --
 			lineAttributes = p_oLineAttr;
-			
+
 			if(p_aColorMap)
 				lightingMap = p_aColorMap;
 			else
@@ -59,7 +60,7 @@ package sandy.materials
 		 * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
-		 */		
+		 */
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
         {
 
@@ -71,7 +72,7 @@ package sandy.materials
             var vc:Vector     = new Vector(c.x, c.y, c.z);// this should be normalized
             VectorMath.normalize(vc);
             var cp:Number    = 1;
- 
+
 
             var r:Number = ( l_nCol >> 16 ) & 0xFF;
             var g:Number = ( l_nCol >> 8  ) & 0xFF;
@@ -87,7 +88,7 @@ package sandy.materials
 
 
             l_nCol =  r << 16 | g << 8 |  b;
-            
+
 
 			outlineAttributes.draw( l_graphics, p_oPolygon, p_oPolygon.vertices );
 			if( lineAttributes ) lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
@@ -101,24 +102,24 @@ package sandy.materials
             for each (var l_oVertex:Vertex in l_points )
             {
                 l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-            }            
- 
+            }
+
             l_graphics.endFill();
         }
 
-		
+
 		public function get alpha():Number
 		{return m_nAlpha;}
-		
+
 		public function get color():Number
 		{return m_nColor;}
-	
-		
+
+
 		public function set alpha(p_nValue:Number):void
 		{m_nAlpha = p_nValue; m_bModified = true;}
-		
+
 		public function set color(p_nValue:Number):void
 		{m_nColor = p_nValue; m_bModified = true;}
-	
+
 	}
 }

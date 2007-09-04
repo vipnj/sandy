@@ -24,9 +24,9 @@ package sandy.parser
 	import sandy.core.scenegraph.*;
 	import sandy.events.QueueEvent;
 	import sandy.materials.*;
+	import sandy.math.Matrix4Math;
 	import sandy.util.LoaderQueue;
 	import sandy.util.NumberUtil;
-	import sandy.math.Matrix4Math;
 	
 	/**
 	 * Transforms a COLLADA XML Document into Sandy geometries. 

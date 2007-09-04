@@ -224,7 +224,7 @@ package sandy.core.data
 		/**
 		 * Returns an array containing the vertices, clipped by the camera frustum.
 		 *
-		 * @return 	The array of vertices
+		 * @return 	The array of clipped vertices
 		 */
 		public function clip( p_oFrustum:Frustum ):Array
 		{
@@ -235,6 +235,20 @@ package sandy.core.data
 			return cvertices;
 		}
 
+		/**
+		 * Perform a clipping against the near frustum plane.
+		 *
+		 * @return 	The array of clipped vertices
+		 */
+		public function clipFrontPlane( p_oFrustum:Frustum ):Array
+		{
+			isClipped = true;
+			cvertices = vertices.concat();
+			caUVCoord = aUVCoord.concat();
+			p_oFrustum.clipFrontPlane( cvertices, caUVCoord );
+			return cvertices;
+		}
+		
 		/**
 		 * Updates the vertices and normals for this polygon.
 		 *

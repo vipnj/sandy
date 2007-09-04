@@ -76,16 +76,18 @@ package sandy.core.scenegraph
 		/**
 		 * The DisplayObject that will used as content of this Sprite2D. 
 		 * If this DisplayObject has already a screen position, it will be reseted to 0,0.
-		 * 
+		 * If the DisplayObject has allready a parent, it will be unrelated from it automatically. (its transform matrix property is resetted to identity too).
 		 * @param p_container The DisplayObject to attach to the Sprite2D#container. 
 		 */
 		public function set content( p_container:DisplayObject ):void
 		{
+			if( p_container.parent ) p_container.parent.removeChild( p_container );
+			if( p_container.transform ) p_container.transform.matrix.identity();
 			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
 			m_oContent = p_container;
+			m_oContainer.addChildAt( p_container, 0 );
 			p_container.x = 0;
 			p_container.y = 0;
-			m_oContainer.addChildAt( p_container, 0 );
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
 		}

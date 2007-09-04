@@ -280,11 +280,19 @@ package sandy.view
 			if( p_aCvert.length <= 2 ) return;
 			clipPolygon( aPlanes[RIGHT], p_aCvert, p_aUVCoords ); // right
 			if( p_aCvert.length <= 2 ) return;
-	        	clipPolygon( aPlanes[BOTTOM], p_aCvert, p_aUVCoords ); // top
+	        clipPolygon( aPlanes[BOTTOM], p_aCvert, p_aUVCoords ); // top
 			if( p_aCvert.length <= 2 ) return;
-		    	clipPolygon( aPlanes[TOP], p_aCvert, p_aUVCoords ); // bottom	
+		    clipPolygon( aPlanes[TOP], p_aCvert, p_aUVCoords ); // bottom	
 		}
 	
+		/**
+		 * Clip the given vertex and UVCoords arrays against the frustum front plane
+		 */
+		public function clipFrontPlane( p_aCvert: Array, p_aUVCoords:Array ):void
+		{
+			if( p_aCvert.length <= 2 ) return;
+			clipPolygon( aPlanes[NEAR], p_aCvert, p_aUVCoords ); // near;
+		}
 	    
 		/**
 		 * Clips a polygon against one the frustum planes

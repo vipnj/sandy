@@ -17,7 +17,6 @@ package sandy.bounds
 {
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
 	
 	/**
 	 * The <code>BBox</code> object is used to clip the object faster.
@@ -67,20 +66,20 @@ package sandy.bounds
 		    var l:Number = p_aVertices.length;
 		    var l_min:Vector = new Vector();
 		    var l_max:Vector = new Vector();
-			l_min.x = Number.MAX_VALUE;l_max.x = Number.MIN_VALUE;
-			l_min.y = Number.MAX_VALUE;l_max.y = Number.MIN_VALUE;
-			l_min.z = Number.MAX_VALUE;l_max.z = Number.MIN_VALUE;
 			
-			for each( var v:Vertex in p_aVertices )
-			{
-				if( v.x < l_min.x )		l_min.x = v.x;
-				else if( v.x > l_max.x )	l_max.x = v.x;
-				if( v.y < l_min.y )		l_min.y = v.y;
-				else if( v.y > l_max.y )	l_max.y = v.y;
-				if( v.z < l_min.z )		l_min.z = v.z;
-				else if( v.z > l_max.z )	l_max.z = v.z;
-			}
-			
+			var lTmp:Array;
+			lTmp = p_aVertices.sortOn (["x"], [Array.NUMERIC|Array.RETURNINDEXEDARRAY ]);
+			l_min.x = p_aVertices[lTmp[0]].x;
+			l_max.x = p_aVertices[lTmp[lTmp.length-1]].x;
+			  
+			lTmp = p_aVertices.sortOn (["y"], [Array.NUMERIC|Array.RETURNINDEXEDARRAY ]);
+			l_min.y = p_aVertices[lTmp[0]].y;
+			l_max.y = p_aVertices[lTmp[lTmp.length-1]].y;
+			  
+			lTmp = p_aVertices.sortOn (["z"], [Array.NUMERIC|Array.RETURNINDEXEDARRAY ]);
+			l_min.z = p_aVertices[lTmp[0]].z;
+			l_max.z = p_aVertices[lTmp[lTmp.length-1]].z;
+			 
 			return new BBox( l_min, l_max );
 		}
 	

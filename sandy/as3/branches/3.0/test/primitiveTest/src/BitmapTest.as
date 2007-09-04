@@ -18,8 +18,10 @@ package
 	import sandy.primitive.Sphere;
 	import sandy.primitive.Torus;
 	import sandy.materials.ZShaderMaterial;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 
-	[SWF(width="640", height="500", backgroundColor="#FFFFFF", frameRate=120)] 
+	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=120)] 
 	public class BitmapTest extends Sprite
 	{
 		[Embed(source="assets/liquid-metal.jpg")]
@@ -36,6 +38,7 @@ package
 		private var m_oSphere:Sphere;
 		private var m_oPlane:Plane3D;
 		private var m_oTorus:Torus;
+		private var keyPressed:Array = new Array();
 		
 		public function BitmapTest()
 		{
@@ -55,21 +58,61 @@ package
 			m_oScene = World3D.getInstance();
 			m_oScene.container = this;
 			m_oScene.camera = lCamera ;
-			lCamera.z = -400;
-			lCamera.y = 100;
+			lCamera.z = -200;
+			lCamera.y = 30;
 			lCamera.lookAt( 0, 0, 0 );
 			m_oScene.root = _createScene3D();
 			m_oScene.root.addChild( lCamera );
 			// --
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
 		}
-		
+	
+		public function __onKeyDown(e:KeyboardEvent):void
+		{
+            keyPressed[e.keyCode]=true;
+        }
+
+        public function __onKeyUp(e:KeyboardEvent):void
+        {
+           keyPressed[e.keyCode]=false;
+        }
+  
+		private function enterFrameHandler( event : Event ) : void
+		{
+			var cam:Camera3D = m_oScene.camera;
+			// --
+			if( keyPressed[Keyboard.RIGHT] ) 
+			{   
+			    cam.rotateY -= 5;
+			}
+			if( keyPressed[Keyboard.LEFT] )     
+			{
+			    cam.rotateY += 5;
+			}		
+			if( keyPressed[Keyboard.UP] )
+			{ 
+			    cam.moveHorizontally( 10 );
+			}
+			if( keyPressed[Keyboard.DOWN] )
+			{ 
+			    cam.moveHorizontally( -10 );
+			}
+			m_oBox.rotateX ++;
+			m_oTorus.rotateY++ ;
+			if( m_oSphere.parent is TransformGroup ) 
+				(m_oSphere.parent as TransformGroup).rotateY ++;
+			m_oScene.render();
+			fps.nextFrame();
+		}
+			
 		private function _createScene3D():Group
 		{
 			var lG:Group = new Group("rootGroup");
 			var lTg:TransformGroup = new TransformGroup("rotationPivot");
 			// --
-			m_oPlane = new Plane3D("myPlane", 300, 300, 5, 8, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
+			m_oPlane = new Plane3D("myPlane", 300, 300, 3, 3, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			var lPic:Bitmap = new Texture2();
 			m_oPlane.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
 			// --
@@ -95,25 +138,6 @@ package
 			lG.addChild( lTg );
 			lTg.addChild( m_oSphere );
 			return lG;
-		}
-		
-		private function enterFrameHandler( event : Event ) : void
-		{
-			m_oBox.rotateX ++;
-			m_oTorus.rotateY++ ;
-			if( m_oSphere.parent is TransformGroup ) 
-				(m_oSphere.parent as TransformGroup).rotateY ++;
-			m_oScene.render();
-			// --
-		//	stats.text = "Displayed polygons count:"+m_oScene.camera.nbPolygons+" Projected vertices count="+m_oScene.camera.nbVertices;
-			fps.nextFrame();
-			/*
-			if( m_oBox.rotateX == 45 )
-			{
-				//m_oScene.root.destroy();
-				m_oScene.root.getChildByName( "rotationPivot" ).remove();
-			}
-			*/
 		}
 	}
 }

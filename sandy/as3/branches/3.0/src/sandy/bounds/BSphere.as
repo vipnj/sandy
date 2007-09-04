@@ -36,12 +36,12 @@ package sandy.bounds
 	 */
 	public final class BSphere
 	{
-		public var center:Vector;
-		public var radius:Number;
+		public var center:Vector = new Vector();
+		public var radius:Number = 1;
 		// -----------------------------
 		//    [TRANSFORMED]  -----------
-		public var m_oPosition:Vector;
-		public var m_nTRadius:Number;
+		public var m_oPosition:Vector = new Vector();
+		public var m_nTRadius:Number = 1;
 	
 		/**
 		 * Creates a bounding sphere that encloses a 3D object. This object's vertices are passed
@@ -54,7 +54,32 @@ package sandy.bounds
 		public static function create( p_aVertices:Array ):BSphere
 		{
 		    var l_sphere:BSphere = new BSphere();
-		    l_sphere.compute( p_aVertices );
+		    
+		    var l_min:Vector = new Vector();
+		    var l_max:Vector = new Vector();
+			
+			var lTmp:Array;
+			lTmp = p_aVertices.sortOn (["x"], [Array.NUMERIC|Array.RETURNINDEXEDARRAY ]);
+			l_min.x = p_aVertices[lTmp[0]].x;
+			l_max.x = p_aVertices[lTmp[lTmp.length-1]].x;
+			  
+			lTmp = p_aVertices.sortOn (["y"], [Array.NUMERIC|Array.RETURNINDEXEDARRAY ]);
+			l_min.y = p_aVertices[lTmp[0]].y;
+			l_max.y = p_aVertices[lTmp[lTmp.length-1]].y;
+			  
+			lTmp = p_aVertices.sortOn (["z"], [Array.NUMERIC|Array.RETURNINDEXEDARRAY ]);
+			l_min.z = p_aVertices[lTmp[0]].z;
+			l_max.z = p_aVertices[lTmp[lTmp.length-1]].z;
+			
+			l_sphere.center.copy( l_max );
+			l_sphere.center.add( l_min );
+			l_sphere.center.scale( 0.5 );
+			
+			// TODO : compare this method efficiency compared to the previous compute one
+			var lDiff:Vector = l_max.clone();
+			lDiff.sub( l_min );
+			l_sphere.radius = lDiff.getMaxComponent();
+		    //l_sphere.compute( p_aVertices );
 			return l_sphere;
 		}
 				
@@ -63,9 +88,7 @@ package sandy.bounds
 		 */ 	
 		public function BSphere()
 		{
-			center = new Vector();
-			m_oPosition = new Vector();
-			radius = 1.0;
+			;
 		}
 		
 		/**

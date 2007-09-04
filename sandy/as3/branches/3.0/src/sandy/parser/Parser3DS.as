@@ -28,7 +28,6 @@ package sandy.parser
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
-	import sandy.materials.WireFrameMaterial;
 	import sandy.math.ColorMath;
 
 	/**

@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.parser
 {
 	import flash.events.IEventDispatcher;
+	
 	import sandy.materials.Appearance;
 	
 	/**

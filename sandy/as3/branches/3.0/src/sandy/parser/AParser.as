@@ -31,7 +31,7 @@ package sandy.parser
 	/**
 	 * ABSTRACT CLASS - super class for all parser objects.
 	 * 
-	 * <p> This class should not be directly instatiated, but sub classed.<br/>
+	 * <p>This class should not be directly instatiated, but sub classed.<br/>
 	 * The AParser class is responsible for creating the root Group, loading files 
 	 * and handling the corresponding events.</p>
 	 * 
@@ -119,7 +119,7 @@ package sandy.parser
 		{
 			if( m_sUrl is String )
 			{
-				// Construction d'un objet URLRequest qui encapsule le chemin d'acc√É¬®s
+				// Construction d'un objet URLRequest qui encapsule le chemin d'acces
 				var urlRequest:URLRequest = new URLRequest( m_sUrl );
 				// Ecoute de l'evennement COMPLETE
 				m_oFileLoader.addEventListener( Event.COMPLETE, parseData );

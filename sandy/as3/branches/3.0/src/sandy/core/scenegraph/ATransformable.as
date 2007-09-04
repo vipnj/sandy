@@ -560,7 +560,7 @@ package sandy.core.scenegraph
 		/**
 		 * Pans this object around the local y axis.
 		 *
-		 * <p>The tilt angle interval is 0 to 360 degrees<br/>
+		 * <p>The pan angle interval is 0 to 360 degrees<br/>
 		 * Directions within the parent frame are: North = 0, East = 90, South = 180 nad West = 270 degrees.</p>
 		 *
 		 * @param p_nAngle 	The pan angle in degrees.

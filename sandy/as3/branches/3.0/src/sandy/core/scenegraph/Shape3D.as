@@ -27,6 +27,7 @@ package sandy.core.scenegraph
 	import sandy.core.data.Edge3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Polygon;
+	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.events.BubbleEvent;
 	import sandy.materials.Appearance;
@@ -250,7 +251,7 @@ package sandy.core.scenegraph
 						// -- We project the vertices
 				 		if( l_oFace.cvertices.length > 0 )
 				 		{
-				 			p_oCamera.projectArray( l_oFace.vertices );
+				 			p_oCamera.projectArray( l_oFace.vertices );  // not needed anymore exept bitmapmaterial with enableAccurateClipping set to false
 							p_oCamera.projectArray( l_oFace.cvertices );
 				 			if( !m_bEnableForcedDepth ) m_nDepth += l_oFace.getZAverage();
 				 			
@@ -276,10 +277,26 @@ package sandy.core.scenegraph
 							else
 								p_oCamera.addToDisplayList( l_oFace );
 						} 
+						// otherwise we can perform a clipping against the front plane only
+						else
+						{
+							l_oFace.clipFrontPlane( l_oFrustum );
+							// -- We project the vertices
+					 		if( l_oFace.cvertices.length > 0 )
+					 		{
+					 			p_oCamera.projectArray( l_oFace.vertices ); // not needed anymore exept bitmapmaterial with enableAccurateClipping set to false
+								p_oCamera.projectArray( l_oFace.cvertices );
+					 			if( !m_bEnableForcedDepth ) m_nDepth += l_oFace.getZAverage();
+					 			
+					 			// -- we manage the display list depending on the mode choosen
+								if( m_bUseSingleContainer )
+									m_aVisiblePoly.push( l_oFace );
+								else
+									p_oCamera.addToDisplayList( l_oFace );
+					 		} 
+						}
 				 	}
-		 
 				}
-				
 			}
 			// --
 			if( m_bUseSingleContainer )
@@ -322,20 +339,68 @@ package sandy.core.scenegraph
 
 		/**
 		 * The contianer for this object.
-		 *
-		 * [<b>Todo</b>: Explain when and how]
+		 * This container property exist if the useSingleContainer is set to true.
+		 * It is a direct access to the Shape3D container to, for example, apply nice effects such as filters etc.
 		 */
 		public function get container():Sprite
 		{return m_oContainer;}
 		
 		/**
 		 * The depth of this object.
-		 *
-		 * [<b>Todo</b>: Explain when and how]
+		 * In case the useSingleContainer mode is enabled (default mode), this value returns the means depth of the Shape in the camera frame.
+		 * This value is mainly used as a z-sorting value.
 		 */
 		public function get depth():Number
 		{return m_nDepth;}
-
+		
+		/**
+		 * This property call allows you to get the pivot offset vector of the Shape.
+		 * Modifying this vector will impact the way the shape is rendered, mainly its rotation center.
+		 * 
+		 * @return a vector which corresponds to the 2 directions offset.
+		 */
+		public function get pivot():Vector
+		{return m_oPivot;}
+		
+		/**
+		 * Change the pivot of the Shape3D.
+		 * To change the pivot point of a shape, simply set this pivot property.
+		 * The pivot property requires a vector. This vector is an position offset relative to the original geometry one.
+		 * For example, a Sphere primitive creates automatically a geometry which center is the 0,0,0 position. If you rotate this sphere as this,
+		 * it will rotate around its center.
+		 * Now if you set the property, this rotation center will change.
+		 * 
+		 * The updateBoundingVolumes method which does update the bounding volumes to enable a correct frustum culling is automatically called.
+		 * 
+		 * @example To change the pivot center at runtime
+		 * <listing version="3.0">
+		 *    var l_oSphere:Sphere = new Sphere("mySphere", 50, 3 );
+		 *    // Change the rotation reference to -50 offset in Y direction from the orinal one
+		 *    // and that corresponds to the bottom of the sphere
+		 *    l_oSphere.pivot = new Vector( 0, -50, 0 ); 
+		 *    l_oSphere.rotateZ = 45;
+		 * </listing>
+		 */
+		public function set pivot( p_oPivot:Vector ):void
+		{
+			var l_oDiff:Vector = p_oPivot.clone();
+			l_oDiff.sub( m_oPivot );
+			// --
+			if( m_oGeometry )
+			{
+				for each( var l_oVertex:Vertex in m_oGeometry.aVertex )
+				{
+					l_oVertex.x += l_oDiff.x;
+					l_oVertex.y += l_oDiff.y;
+					l_oVertex.z += l_oDiff.z;
+				}
+			}
+			// --
+			m_oPivot.copy( p_oPivot );	
+			// --
+			updateBoundingVolumes();	
+		}
+		
 		/**
 		 * The appearance of this object.
 		 */
@@ -648,6 +713,7 @@ package sandy.core.scenegraph
 		// [PRIVATE] DATA________________________________________________				
 		private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
 	    private var m_bEv:Boolean = false; // The event system state (enable or not)
+		protected var m_oPivot:Vector = new Vector();
 		private var m_bBackFaceCulling:Boolean;
 		private var m_bEnableClipping:Boolean;
 		private var m_bClipped:Boolean;

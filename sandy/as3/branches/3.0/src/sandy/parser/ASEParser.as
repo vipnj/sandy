@@ -22,7 +22,6 @@ package sandy.parser
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
-	import sandy.materials.WireFrameMaterial;
 
 	/**
 	 * Transforms an ASE file into Sandy geometries. 

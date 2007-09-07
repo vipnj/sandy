@@ -88,16 +88,30 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * @private
+		 * This property allows you to directly set the matrix you want to a transformable object.
+		 * But be careful with its use. It modifies the rotation AND the position.
+		 * WARNING : Please remove any scale from this matrix. This is not managed yet.
+		 * WARNING : Please think about call initFrame before changing this frame. Without calling this method first, the frame will stay local, and the transformation will be applied
+		 * locally.
+		 * @param p_oMatrix The new local matrix for this node
 		 */
 		public function set matrix( p_oMatrix:Matrix4 ):void
 		{
 			m_oMatrix = p_oMatrix;
-		    	//
-		    	m_oMatrix.vectorMult3x3(_vSide);
-		    	m_oMatrix.vectorMult3x3(_vUp);
-		    	m_oMatrix.vectorMult3x3(_vOut);
+		    // --
+		    m_oMatrix.vectorMult3x3(_vSide);
+		    m_oMatrix.vectorMult3x3(_vUp);
+		    m_oMatrix.vectorMult3x3(_vOut);
+		    // --
+		    _vSide.normalize();
+		    _vUp.normalize();
+		    _vOut.normalize();
+		    // --
+		    _p.x = p_oMatrix.n14;
+		    _p.y = p_oMatrix.n24;
+		    _p.z = p_oMatrix.n34;
 		}
+		
 
 		/**
 		 * @private
@@ -587,31 +601,6 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Rotates this object around a specified axis trough a reference point in the parent frame.
-		 *
-		 * <p>The axis is given as a Vector in global coordinates and must be normalized.<br/>
-		 * The reference point is given as a Vector in parent coordinates.<br/>
-		 *
-		 * @param p_oAxis 	The axis of rotation. <b>Must be normalized !!</b>
-		 * @param p_oRef 	The global reference point
-		 * @param p_nAngle 	The angle of rotation in degrees.
-		 */
-		public function rotAxisWithReference( p_oAxis:Vector, p_oRef:Vector, p_nAngle:Number ):void
-		{
-			var angle:Number = ( p_nAngle + 360 ) % 360;
-			// --
-			m_tmpMt.axisRotationWithReference( p_oAxis, p_oRef, p_nAngle );
-			m_tmpMt.vectorMult3x3( _vUp  );
-			m_tmpMt.vectorMult3x3( _vSide);
-			m_tmpMt.vectorMult3x3( _vOut );
-			// --
-			changed = true;
-		}
-
-
-
-
-		/**
 		 * Sets the position of this object in coordinates of its parent frame.
 		 *
 		 * @param p_nX 	The x coordinate
@@ -737,5 +726,6 @@ package sandy.core.scenegraph
 		protected var _p:Vector;
 		protected var _oScale:Vector;
 		protected var m_tmpMt:Matrix4; // temporary transform matrix used at updateTransform
+		protected var m_oPreviousOffsetRotation:Vector = new Vector();
 	}
 }

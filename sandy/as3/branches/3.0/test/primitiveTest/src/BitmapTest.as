@@ -20,6 +20,7 @@ package
 	import sandy.materials.ZShaderMaterial;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
+	import sandy.core.data.Vector;
 
 	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=120)] 
 	public class BitmapTest extends Sprite
@@ -58,8 +59,8 @@ package
 			m_oScene = World3D.getInstance();
 			m_oScene.container = this;
 			m_oScene.camera = lCamera ;
-			lCamera.z = -200;
-			lCamera.y = 30;
+			lCamera.z = -400;
+			lCamera.y = 130;
 			lCamera.lookAt( 0, 0, 0 );
 			m_oScene.root = _createScene3D();
 			m_oScene.root.addChild( lCamera );
@@ -99,8 +100,8 @@ package
 			{ 
 			    cam.moveHorizontally( -10 );
 			}
-			m_oBox.rotateX ++;
 			m_oTorus.rotateY++ ;
+			m_oBox.rotateAxisWithReference( new Vector( 0,1,0), new Vector( -150, 0, 0 ), 1);
 			if( m_oSphere.parent is TransformGroup ) 
 				(m_oSphere.parent as TransformGroup).rotateY ++;
 			m_oScene.render();

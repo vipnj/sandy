@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" frameRate="50">
+	<mx:Script>
+		<![CDATA[
+			import examples.*;
+	
+			private function switchExample(example:*):void
+			{
+				if (exampleCanvas.numChildren > 0)
+				{
+					var childBefore:* = exampleCanvas.getChildAt(0);
+					childBefore.remove();
+					exampleCanvas.removeChild(childBefore);
+					childBefore = null;
+				}
+				
+				//exampleCanvas.removeAllChildren();
+				
+				var child:* = new example();
+				exampleCanvas.addChild(child);
+				child.init();
+			}
+		]]>
+	</mx:Script>
+	<mx:HBox x="0" y="0" width="100%" height="100%">
+		<mx:Panel width="250" height="100%" layout="absolute" title="Examples">
+			<mx:VBox verticalGap="0" width="100%">
+				<mx:Button width="100%" label="Cube Panorama" click="switchExample(CubicPanorama)" toolTip="Cube panorama"/>
+				<mx:Button width="100%" label="Line" click="switchExample(LineExample)" toolTip="Simple Sandy primitive"/>				
+				<mx:Button width="100%" label="Cube" click="switchExample(CubeExample)" toolTip="Simple Sandy primitive"/>				
+				<mx:Button width="100%" label="Cylinder" click="switchExample(CylinderExample)" toolTip="Simple Sandy primitive"/>				
+				<mx:Button width="100%" label="Hedra" click="switchExample(HedraExample)" toolTip="Simple Sandy primitive"/>				
+				<mx:Button width="100%" label="Plane" click="switchExample(PlaneExample)" toolTip="Simple Sandy primitive"/>				
+				<mx:Button width="100%" label="Pyramid" click="switchExample(PyramidExample)" toolTip="Simple Sandy primitive"/>				
+				<mx:Button width="100%" label="Sphere" click="switchExample(SphereExample)" toolTip="Earth and moon"/>				
+				<mx:Button width="100%" label="Light Sphere" click="switchExample(LightExample)" toolTip="Not for slower CPUs, FPS!!!"/>				
+				<mx:Button width="100%" label="Animation" click="switchExample(AnimationExample)" toolTip="Kitty walk"/>				
+				<mx:Button width="100%" label="WRML Parser" click="switchExample(WRLExample)" toolTip=".wrml Parser"/>				
+				<mx:Button width="100%" label="3DS Parser" click="switchExample(Parser3DSExample)" toolTip=".3ds parser"/>				
+				<mx:Button width="100%" label="BVH Parser" click="switchExample(ParserBVHExample)" toolTip=".bvh parser - motion capture data"/>				
+			</mx:VBox>
+		</mx:Panel>
+		<mx:Panel width="100%" height="100%" layout="absolute" title="Current example: None">
+			<mx:Canvas id="exampleCanvas" width="600" height="600" backgroundColor="#eeeeee" borderColor="#666666" borderThickness="1">
+				
+			</mx:Canvas>
+		</mx:Panel>
+	</mx:HBox>
+	
+</mx:Application>

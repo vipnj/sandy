@@ -1,8 +1,10 @@
 package sandy.primitive
  {
+	import net.webbymx.projects.ndi.log.NDIDebug;
 	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
+	import sandy.core.data.Face;
 	
        	/**
 	 * The Cylinder class is used for creating a cylinder primitive or a truncated cone.
@@ -10,6 +12,7 @@ package sandy.primitive
 	 * <p>All credits go to Tim Knipt from suite75.net who created the AS2 implementation.
 	 * Original sources available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Cylinder.as</p>
 	 * 
+	 * @author		Xavier Martin ( ajout fonction getTop, getBottom, getTop )
 	 * @author		Thomas Pfeiffer ( adaption for Sandy )
 	 * @author		Tim Knipt
 	 * @version		3.0
@@ -83,6 +86,19 @@ package sandy.primitive
 		private var m_bIsBottomExcluded:Boolean;
 		
 		private var m_bIsWholeMappingEnabled:Boolean;
+		
+		/**
+		* Number of polygon for the base ( so bottom and top )
+		*/
+		private var m_nPolBase : uint;
+		
+		/**
+		* Number of polygon to jump to come back on the same face ( side ) you were on
+		* as the cylinder is rendered in rows
+		*/
+		private var m_nNextPolFace : uint;
+		
+		private var m_aFaces : Array;
 
 		/**
 		 * Creates a Cylinder primitive or truncated cone.
@@ -105,21 +121,27 @@ package sandy.primitive
 		 * @param	p_bExludeTop	[optional] - Exclude the creation of the top surface. Default false
 		 * @param   p_bWholeMapping [optional] - Specify if the material applied to the cylinder will map the whole cylinder (true and default) or each faces separately (false)
 		 */
-		public function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false, p_bWholeMapping:Boolean = true )
+		function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=0, p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false, p_bWholeMapping:Boolean = true )
 		{
 			super( p_sName );
 	
 			this.segmentsW = Math.max( MIN_SEGMENTSW, p_nSegmentsW || DEFAULT_SEGMENTSW); // Defaults to 8
 			this.segmentsH = Math.max( MIN_SEGMENTSH, p_nSegmentsH || DEFAULT_SEGMENTSH); // Defaults to 6
-			radius = p_nRadius;
-			height = p_nHeight;
-			topRadius = p_nTopRadius;
-	
+			radius = (p_nRadius==0) ? DEFAULT_RADIUS : p_nRadius; // Defaults to 100
+			height = (p_nHeight==0) ? DEFAULT_HEIGHT : p_nHeight; // Defaults to 100
+			topRadius = ( isNaN(p_nTopRadius) ) ? radius : p_nTopRadius;
+		
 			var scale :Number = DEFAULT_SCALE;
 			m_bIsBottomExcluded = p_bExcludeBottom;
 			m_bIsTopExcluded = p_bExludeTop;
 			m_bIsWholeMappingEnabled = p_bWholeMapping;
+			
+			/**/
+			m_nPolBase = !m_bIsBottomExcluded ? this.segmentsW - 2 : 0;
+			m_nNextPolFace = this.segmentsW * 2;
+			
 			geometry = generate();
+			_generateFaces();
 		}
 		
 		/**
@@ -247,6 +269,87 @@ package sandy.primitive
 			// --
 			return l_oGeometry3D;
 		}
+		
+		private function _generateFaces() : void
+		{
+			m_aFaces = new Array( this.segmentsW + 2 );
+			if ( !m_bIsBottomExcluded ) {
+				m_aFaces[ 0 ] = new Face( this );
+				for ( var ib : Number = 0; ib < m_nPolBase; ib++ )
+				{
+					Face( m_aFaces[ 0 ] ).addPolygon( ib );
+				}
+			} else m_aFaces[ 0 ] = undefined;
+			
+			if ( !m_bIsTopExcluded ) {
+				m_aFaces[ 1 ] = new Face( this );
+				for ( var it : Number = 0; it < m_nPolBase; it++ )
+				{
+					Face( m_aFaces[ 1 ] ).addPolygon( it + ( m_nPolBase ) + ( m_nNextPolFace * this.segmentsH ) );
+				}
+			} else m_aFaces[ 1 ] = undefined;
+			
+			for ( var i : Number = 0; i < this.segmentsW; i++ )
+			{
+				NDIDebug.INFO("i: " + i );
+				m_aFaces[ i + 2 ] = new Face( this );
+				for ( var j : Number = 0; j < this.segmentsH; j++ )
+				{
+					Face( m_aFaces[ i + 2 ] ).addPolygon( m_nPolBase + ( i * 2 ) + ( j * m_nNextPolFace ) );
+					Face( m_aFaces[ i + 2 ] ).addPolygon( m_nPolBase + ( i * 2 ) + ( j * m_nNextPolFace ) + 1 );
+				}
+			}
+		}
+		
+		/**
+		* Return an Array of Polygon defining the bottom of the cylinder
+		* @return	Array
+		*/
+		public function getBottom() : Face
+		{
+			return m_aFaces[ 0 ];
+		}
+
+		/**
+		* Return an Array of Polygon defining the top of the cylinder
+		* @return	Array
+		*/
+		public function getTop() : Face{
+			return m_aFaces[ 1 ]
+		}
+		
+		
+		/**
+		* Return an Array of Polygon defining the face selected
+		* @param	p_nFace
+		* @return	Array
+		*/
+		public function getFace( p_nFace : uint ) : Face
+		{
+			return m_aFaces[ 2 + p_nFace ];
+		}
+		
+		/**
+		* Calcul the radius depending of the number of side you want and their width
+		* @param	p_nSideNumber number of sides the cylinder has
+		* @param	p_nSideWidth width of a side
+		* @return	radius ( Number )
+		*/
+		public static function CALCUL_RADIUS_FROM_SIDE( p_nSideNumber : uint, p_nSideWidth : uint ) : Number 
+		{
+			/*	think sin( a - b) = sina cosb - cosa sinb
+			*	think sin( a + b) = sina cosb + cosa sinb
+			*	think sin2( a ) + cos2( a ) = 1
+			*	r = s * ( sin( alpha / 2 ) / sin ( alpha )
+			*	r = s * ( sin ( 180/2 - 180/n ) / sin ( 2 * 180 / n ) )
+			* 	r = s * ( cos ( 180 / n ) / ( 2 sin (180/n) cos (180/n )
+			* 	r = s * ( cos ( 180 / n ) / ( 2 sin (180/n) cos (180/n )
+			* 	r = s * ( 1 / ( 2sin 180/n )
+			* 	or 2r = s * ( 1 / sin 180/n )
+			*/
+			return ( p_nSideWidth / ( 2 * Math.sin( Math.PI / p_nSideNumber ) ) );
+		}		
+
 		public override function toString():String
 		{
 			return "sandy.primitive.Cylinder";

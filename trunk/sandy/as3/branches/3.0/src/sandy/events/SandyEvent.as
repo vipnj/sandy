@@ -28,9 +28,11 @@ package sandy.events
 	{
 		public static const LIGHT_ADDED:String = "lightAdded";
 		public static const LIGHT_UPDATED:String = "lightUpdated";
-		public static const RENDER:String = "render";
+		public static const SCENE_RENDER:String = "scene_render";
+		public static const SCENE_CULL:String = "scene_cull";
+		public static const SCENE_UPDATE:String = "scene_update";
+		public static const SCENE_RENDER_DISPLAYLIST:String = "scene_render_display_list";
 		public static const CONTAINER_CREATED:String = "containerCreated";
-		public static const SKIN_UPDATED:String = "skinUpdated";
 		public static const QUEUE_COMPLETE:String = "queueComplete";
 		public static const QUEUE_LOADER_ERROR:String = "queueLoaderError";
 		

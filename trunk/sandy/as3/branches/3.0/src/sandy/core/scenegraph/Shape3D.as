@@ -354,37 +354,37 @@ package sandy.core.scenegraph
 		{return m_nDepth;}
 		
 		/**
-		 * This property call allows you to get the pivot offset vector of the Shape.
+		 * This property call allows you to get the geometryCenter offset vector of the Shape.
 		 * Modifying this vector will impact the way the shape is rendered, mainly its rotation center.
 		 * 
 		 * @return a vector which corresponds to the 2 directions offset.
 		 */
-		public function get pivot():Vector
-		{return m_oPivot;}
+		public function get geometryCenter():Vector
+		{return m_oGeomCenter;}
 		
 		/**
-		 * Change the pivot of the Shape3D.
-		 * To change the pivot point of a shape, simply set this pivot property.
-		 * The pivot property requires a vector. This vector is an position offset relative to the original geometry one.
+		 * Change the geometryCenter of the Shape3D.
+		 * To change the geometryCenter point of a shape, simply set this geometryCenter property.
+		 * The geometryCenter property requires a vector. This vector is an position offset relative to the original geometry one.
 		 * For example, a Sphere primitive creates automatically a geometry which center is the 0,0,0 position. If you rotate this sphere as this,
 		 * it will rotate around its center.
-		 * Now if you set the property, this rotation center will change.
+		 * Now if you set the geometryCenter property, this rotation center will change.
 		 * 
 		 * The updateBoundingVolumes method which does update the bounding volumes to enable a correct frustum culling is automatically called.
 		 * 
-		 * @example To change the pivot center at runtime
+		 * @example To change the geometryCenter center at runtime
 		 * <listing version="3.0">
 		 *    var l_oSphere:Sphere = new Sphere("mySphere", 50, 3 );
 		 *    // Change the rotation reference to -50 offset in Y direction from the orinal one
 		 *    // and that corresponds to the bottom of the sphere
-		 *    l_oSphere.pivot = new Vector( 0, -50, 0 ); 
+		 *    l_oSphere.geometryCenter = new Vector( 0, -50, 0 ); 
 		 *    l_oSphere.rotateZ = 45;
 		 * </listing>
 		 */
-		public function set pivot( p_oPivot:Vector ):void
+		public function set geometryCenter( p_oGeomCenter:Vector ):void
 		{
-			var l_oDiff:Vector = p_oPivot.clone();
-			l_oDiff.sub( m_oPivot );
+			var l_oDiff:Vector = p_oGeomCenter.clone();
+			l_oDiff.sub( m_oGeomCenter );
 			// --
 			if( m_oGeometry )
 			{
@@ -396,7 +396,7 @@ package sandy.core.scenegraph
 				}
 			}
 			// --
-			m_oPivot.copy( p_oPivot );	
+			m_oGeomCenter.copy( p_oGeomCenter );	
 			// --
 			updateBoundingVolumes();	
 		}
@@ -713,7 +713,7 @@ package sandy.core.scenegraph
 		// [PRIVATE] DATA________________________________________________				
 		private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
 	    private var m_bEv:Boolean = false; // The event system state (enable or not)
-		protected var m_oPivot:Vector = new Vector();
+		protected var m_oGeomCenter:Vector = new Vector();
 		private var m_bBackFaceCulling:Boolean;
 		private var m_bEnableClipping:Boolean;
 		private var m_bClipped:Boolean;

@@ -87,6 +87,7 @@ package sandy.parser
 			var l_oAppearance:Appearance = m_oStandardAppearance;
 			var l_oGeometry:Geometry3D = null;
 			var l_oShape:Shape3D = null;
+			var l_oMatrix:Matrix4;
 			// --
 			var x:Number, y:Number, z:Number;
 			var l_qty:uint;
@@ -122,6 +123,7 @@ package sandy.parser
 				    	if( l_oGeometry )
 						{
 					        l_oShape = new Shape3D( currentObjectName, l_oGeometry, l_oAppearance );
+					        if( l_oMatrix ) _applyMatrixToShape( l_oShape, l_oMatrix );
 							m_oGroup.addChild( l_oShape );
 					    }
 					    // --
@@ -143,8 +145,8 @@ package sandy.parser
 			            for (var i:int=0; i<l_qty; i++)
 			            {
 			            	x = data.readFloat();
-			            	y = data.readFloat();
 			            	z = data.readFloat();
+			            	y = data.readFloat();
 			            	l_oGeometry.setVertex( i, x*m_nScale, y*m_nScale, z*m_nScale );
 			            }
 			            break;
@@ -181,16 +183,51 @@ package sandy.parser
 			         	//trace("0x4160 TRI_LOCAL");
 			         	
 			         	var localX:Vector = readVector();
-			         	var localY:Vector = readVector();
 			         	var localZ:Vector = readVector();
+			         	var localY:Vector = readVector();
 			         	var origin:Vector = readVector();
 			         	
+			         	/*
+			         	l_oMatrix = new Matrix4
+			         	( 
+			         		localX.x, localZ.x, localY.x, origin.x,
+			         		localX.z, localZ.z, localY.z, origin.z,
+			         		localX.y, localZ.y, localX.y, origin.y,
+			         		0, 0, 0, 1
+			         	);
+			         	*/
 			         	
-			         	var init_m:Matrix4 = new Matrix4(	localX.x, localX.y, localX.z,0,
-									         				localZ.x, localZ.y, localZ.z,0,
-									         				localY.x, localY.y, localY.z,0,
-									         				0,0,0,1 );
+			         	/*
+			         	l_oMatrix = new Matrix4
+			         	( 
+			         		localX.x, localX.z, localX.y, origin.x,
+			         		localY.x, localY.z, localY.y, origin.z,
+			         		localZ.x, localZ.z, localZ.y, origin.y,
+			         		0, 0, 0, 1
+			         	);
+			         	*/
+			         	
+			         	/*
+			         	l_oMatrix = new Matrix4
+			         	( 
+			         		1, 0, 0, origin.x,
+			         		0, 1, 0, origin.y,
+			         		0, 0, 1, origin.z,
+			         		0, 0, 0, 1
+			         	);*/
+			         
+			         	
+			         	
+			         	l_oMatrix = new Matrix4(	localX.x, localX.y, localX.z, origin.x,
+			         								localY.x, localY.y, localY.z, origin.y,
+			         								localZ.x, localZ.y, localZ.z, origin.z,
+									         		0,0,0,1 );
 						
+									         				
+						
+						//if( l_oShape )   _applyMatrixToShape( l_oShape, l_oMatrix );
+						
+						//l_oShape.setPosition(origin.x, -origin.y, origin.z );
 						//l_oShape.transform.matrix = init_m;
 						//l_oShape.setPosition( origin.x, -origin.y, origin.z );
 						/* _rot_m[currentObjectName] = init_m;
@@ -206,36 +243,40 @@ package sandy.parser
 			         	
 			         case Parser3DSChunkTypes.OBJ_LIGHT:		//Lights
 			         	//trace("0x4600 Light");
-			            var light:Vector = readVector();
+			            //var light:Vector = readVector();
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.LIT_SPOT:			//Light Spot
-			         	
+			         	/*
 			         	var tx:Number = data.readFloat();
 			            var ty:Number = data.readFloat();
 			            var tz:Number = data.readFloat();
 			            var hotspot:Number = data.readFloat();
 			            var falloff:Number = data.readFloat();
-			            
+			            */
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.COL_TRU:			//RGB color
+			         	/*
 			         	var r:Number = data.readFloat();
 			            y = data.readFloat();
 			            z = data.readFloat();
 			            l_oAppearance.frontMaterial = new ColorMaterial( ColorMath.rgb2hex( r, y, z ) );
+			            */
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.COL_RGB:			//RGB color
+			         	/*
 			         	x = data.readByte();
 			            y = data.readByte();
 			            z = data.readByte();
 			            l_oAppearance.frontMaterial = new ColorMaterial( ColorMath.rgb2hex( x, y, z ) );
+			            */
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.OBJ_CAMERA:		//Cameras
 			         	//trace("0x4700 Cameras");
-			         	
+			         	/*
 			         	x = data.readFloat();
 			            y = data.readFloat();
 			            z = data.readFloat();
@@ -246,26 +287,26 @@ package sandy.parser
 			            
 			            var angle:Number = data.readFloat();
 			            var fov:Number = data.readFloat();
-			            	
+			            */
 			         	break;
 			         
 			         // animation
 			         case Parser3DSChunkTypes.KEYF_FRAMES:
 			         	//trace("0xB008 KEYF_FRAMES");
-			         	startFrame = data.readInt();
-			         	endFrame = data.readInt();
+			         	//startFrame = data.readInt();
+			         	//endFrame = data.readInt();
 			         	break;
 			         	
 			         case Parser3DSChunkTypes.KEYF_OBJDES:
 			         	//trace("0xB002 KEYF_OBJDES");
-			         	startFrame = data.readInt();
-			         	endFrame = data.readInt();
+			         	//startFrame = data.readInt();
+			         	//endFrame = data.readInt();
 			         	break;
 			        
 			         case Parser3DSChunkTypes.NODE_ID:
 			         	//trace("0xB030 NODE_ID");
 
-			         	var node_id:uint = data.readUnsignedShort();
+			         	//var node_id:uint = data.readUnsignedShort();
 			         	/*
 			         	var keyframer:Keyframer = new Keyframer();
 
@@ -298,10 +339,11 @@ package sandy.parser
 			         
 			         case Parser3DSChunkTypes.PIVOT:
 			         	//trace("0xB013 PIVOTR");
+			         	/*
 			         	x = data.readFloat();
 			            y = data.readFloat();
 			            z = data.readFloat();
-			            
+			            */
 			            //keyframer.pivot = new Vector(x,z,y);
 			            //trace("PIVOT: " + keyframer.pivot);
 			         	//var endFrame:uint = data.readInt();
@@ -309,13 +351,14 @@ package sandy.parser
 			         	
 			         case Parser3DSChunkTypes.POS_TRACK_TAG:
 			         	//trace("0xB020 POS_TRACK_TAG");
-			         	
+			         	/*
 			         	var flag1:uint = data.readUnsignedShort();
 			         	for (var j:int=0; j<8; j++)
 			         	{
 			         		var unknown:Number = data.readByte();
 			         	}
 			            var keys:uint = data.readInt();
+			            */
 			            /*
 			           	var frame0pos:Vector;
 			            keyframer.track_data.pos_track_keys = keys;
@@ -343,13 +386,14 @@ package sandy.parser
 			         	
 			         case Parser3DSChunkTypes.ROT_TRACK_TAG:
 			         	//trace("0xB021 ROT_TRACK_TAG");
-			         	
+			         	/*
 			         	flag1 = data.readUnsignedShort();
 			         	for (j = 0; j<8; j++)
 			         	{
 			         		unknown = data.readByte();
 			         	}
 			            keys = data.readInt();
+			            */
 			            /*
 			            keyframer.track_data.rot_track_keys = keys;
 			            //keyframer.track_data.rot_track_data = new Array();
@@ -393,13 +437,14 @@ package sandy.parser
 			         	
 			         case Parser3DSChunkTypes.SCL_TRACK_TAG:
 			         	//trace("0xB022 SCL_TRACK_TAG");
-			         	
+			         	/*
 			         	flag1 = data.readUnsignedShort();
 			         	for (j=0; j<8; j++)
 			         	{
 			         		unknown = data.readByte();
 			         	}
 			            keys = data.readInt();
+			            */
 			            /*
 			            keyframer.track_data.scl_track_keys = keys;
 			            
@@ -432,6 +477,7 @@ package sandy.parser
 			}
 			// -- 
 			l_oShape = new Shape3D( currentObjectName, l_oGeometry, l_oAppearance);
+			if( l_oMatrix ) _applyMatrixToShape( l_oShape, l_oMatrix );
 			m_oGroup.addChild( l_oShape );
 			// -- Parsing is finished
 			var l_eOnInit:ParserEvent = new ParserEvent( ParserEvent.onInitEVENT );
@@ -439,6 +485,17 @@ package sandy.parser
 			dispatchEvent( l_eOnInit );
 		}
 
+		private function _applyMatrixToShape( p_oShape:Shape3D, p_oMatrix:Matrix4 ):void
+		{
+			/*
+			p_oShape.setBasis(	new Vector( p_oMatrix.n11, p_oMatrix.n12, p_oMatrix.n13 ),
+								new Vector( p_oMatrix.n21, p_oMatrix.n22, p_oMatrix.n23 ),
+								new Vector( p_oMatrix.n31, p_oMatrix.n32, p_oMatrix.n33 ) );
+			p_oShape.setPosition( p_oMatrix.n14, p_oMatrix.n24, p_oMatrix.n34 );
+			*/
+			p_oShape.matrix = p_oMatrix;
+		}
+		
 		/**
 		 * Reads a vector from a ByteArray
 		 * 

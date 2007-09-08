@@ -21,14 +21,15 @@ package
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	import sandy.core.data.Vector;
+	import sandy.materials.ColorMaterial;
 
 	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=120)] 
 	public class BitmapTest extends Sprite
 	{
-		[Embed(source="assets/liquid-metal.jpg")]
+		[Embed(source="assets/texture.jpg")]
 		private var Texture:Class;
 		
-		[Embed(source="assets/binpatt1.png")]
+		[Embed(source="assets/texture.jpg")]
 		private var Texture2:Class;
 		
 		private var fps: CustomFPS;
@@ -101,7 +102,7 @@ package
 			    cam.moveHorizontally( -10 );
 			}
 			m_oTorus.rotateY++ ;
-			m_oBox.rotateAxisWithReference( new Vector( 0,1,0), new Vector( -150, 0, 0 ), 1);
+			//m_oBox.rotateAxisWithReference( new Vector( 0,1,0), new Vector( -150, 0, 0 ), 1);
 			if( m_oSphere.parent is TransformGroup ) 
 				(m_oSphere.parent as TransformGroup).rotateY ++;
 			m_oScene.render();
@@ -130,7 +131,9 @@ package
 			// --
 			m_oSphere = new Sphere( "myShpere", 30, 10, 10 );
 			m_oSphere.y = 50;
-			m_oSphere.appearance = new Appearance( new ZShaderMaterial(1.5) );//new Appearance( new WireFrameMaterial( 0xFF ) );
+			var lMat:ColorMaterial = new ColorMaterial( 0xFF00 );
+			lMat.lightingEnable = true;
+			m_oSphere.appearance = new Appearance( lMat );//new Appearance( new WireFrameMaterial( 0xFF ) );
 			m_oSphere.z = 70;
 			// --
 			lG.addChild( m_oPlane );

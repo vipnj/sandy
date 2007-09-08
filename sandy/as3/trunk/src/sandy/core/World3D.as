@@ -68,7 +68,6 @@ package sandy.core
 			{
 				// default light
 				super( null, null, null, null );
-				_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 				container = null;
 			}
 			else

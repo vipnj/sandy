@@ -5,24 +5,22 @@ package
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
 	import flash.events.*;
+	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
+	import sandy.core.data.Vector;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.core.scenegraph.TransformGroup;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
 	import sandy.primitive.Box;
+	import sandy.primitive.Cylinder;
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.PrimitiveMode;
-	import flash.filters.GlowFilter;
-	import sandy.primitive.Cylinder;
-	import sandy.core.data.Vector;
-	import flash.text.TextField;
 
     [SWF(width="800", height="800", backgroundColor="#FFFFFF", frameRate="30")] 
     
@@ -114,14 +112,15 @@ package
 			
 			var lAppearance:Appearance = new Appearance( new BitmapMaterial( pic2.bitmapData ) ,
 											 			 new BitmapMaterial( pic.bitmapData ) );
-			box.appearance = lAppearance;
+			//box.appearance = new Appearance( ColorMaterial( 0xFF00) );//lAppearance;
+			//(box.appearance.frontMaterial as ColorMaterial).lightingEnable = true;
 			//lPlane.appearance = lAppearance;
 			
 			cylinder.appearance = new Appearance( new BitmapMaterial( pic2.bitmapData, new LineAttributes() ) );
 			BitmapMaterial(box.appearance.frontMaterial).enableAccurateClipping = true;
 			
 			// --			
-			g.addChild( lPlane );
+			g.addChild( lPlane ); 
 			g.addChild( cylinder );
 			g.addChild( box );
 			

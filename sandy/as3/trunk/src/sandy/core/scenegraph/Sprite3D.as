@@ -64,7 +64,7 @@ package sandy.core.scenegraph
 		{
 			super(p_sName);
 			m_oContainer = new Sprite();
-			World3D.getInstance().container.addChild( m_oContainer );
+			//World3D.getInstance().container.addChild( m_oContainer );
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();

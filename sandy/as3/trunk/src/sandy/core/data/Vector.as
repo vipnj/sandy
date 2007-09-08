@@ -164,8 +164,8 @@ package sandy.core.data
 		public final function pow( pow:Number ):void
 		{
 			x = Math.pow( x, pow );
-	        	y = Math.pow( y, pow );
-	        	z = Math.pow( z, pow );
+	        y = Math.pow( y, pow );
+	        z = Math.pow( z, pow );
 		}
 		/**
 		 * Multiplies this vector by the specified scalar.

@@ -205,11 +205,12 @@ package sandy.parser
 				}
 
 				// -- baked matrix
-				if( p_oNode.matrix.length() > 0 ) {
+				if( p_oNode.matrix.length() > 0 ) 
+				{
 					l_oMatrix.multiply(
 						stringToMatrix( p_oNode.matrix )
 					);
-					l_oShape.setPosition( l_oMatrix.n14, l_oMatrix.n34, l_oMatrix.n24 );
+					//l_oShape.setPosition( l_oMatrix.n14, l_oMatrix.n34, l_oMatrix.n24 );
 					l_oShape.scaleX = l_oMatrix.n11;
 					l_oShape.scaleY = l_oMatrix.n33;
 					l_oShape.scaleZ = l_oMatrix.n22;

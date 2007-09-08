@@ -23,8 +23,7 @@ package sandy.materials
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.core.light.Light3D;
-	import sandy.math.VectorMath;
+	import sandy.util.ColorUtil;
 	import sandy.util.NumberUtil;
 	
 	/**
@@ -78,23 +77,30 @@ package sandy.materials
 			var l_graphics:Graphics = p_mcContainer.graphics;
 			
 			var l_nCol:uint = m_nColor;
-			if( _useLight && p_oScene.light )
+			if( _useLight )
 			{
-				var l:Light3D 	= p_oScene.light;
-				var vn:Vector 	= p_oPolygon.normal.getWorldVector();
-				var vl:Vector 	= l.getDirectionVector()
-				var lp:Number	= l.getPower()/100;
-				// --
-				var r:uint = ( l_nCol >> 16 )& 0xFF;
-				var g:uint = ( l_nCol >> 8 ) & 0xFF;
-				var b:uint = ( l_nCol ) 	   & 0xFF;
-				// --
-				var dot:Number =  - ( VectorMath.dot( vl, vn ) );
-				r = NumberUtil.constrain( r*(dot+lp), 0, 255 );
-				g = NumberUtil.constrain( g*(dot+lp), 0, 255 );
-				b = NumberUtil.constrain( b*(dot+lp), 0, 255 );
-				// --
-				l_nCol =  r << 16 | g << 8 |  b;
+				var lightStrength:Number;
+				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
+				if(p_oScene.useBright)
+				{
+					lightStrength = p_oScene.light.calculate( l_oNormal ) + p_oScene.ambientLight;
+					// --
+					l_nCol = ColorUtil.calculateLitColour(l_nCol, lightStrength);
+				}
+				else
+				{
+					lightStrength = p_oScene.light.calculate( l_oNormal ) + p_oScene.ambientLight;
+					// --
+					var r:Number = ( l_nCol >> 16 )	& 0xFF;
+					var g:Number = ( l_nCol >> 8 )	& 0xFF;
+					var b:Number = ( l_nCol ) 	 	& 0xFF;
+					// --
+					r = NumberUtil.constrain( r*lightStrength, 0, 255 );
+					g = NumberUtil.constrain( g*lightStrength, 0, 255 );
+					b = NumberUtil.constrain( b*lightStrength, 0, 255 );
+					// --
+					l_nCol = r << 16 | g << 8 |  b;
+				}
 			}
 			// --
 			l_graphics.lineStyle();

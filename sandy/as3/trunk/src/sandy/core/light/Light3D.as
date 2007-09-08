@@ -38,8 +38,9 @@ package sandy.core.light
 	{
 		
 		/**
-		 * Maximum intensity value.
-		 */
+		* Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
+		* But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1 
+		*/
 		public static var MAX_POWER:Number = 150;
 	
 		/**
@@ -52,20 +53,22 @@ package sandy.core.light
 		public function Light3D ( p_oD:Vector, p_nPow:Number )
 		{
 			_dir = p_oD;
+			_dir.normalize();
 			setPower( p_nPow );
 		}
-		
+			
 		/**
-		 * Sets the the intensity of the light. 
-		 *
-		 * @param p_nPow 	Intensity of the emitted light.
+		 * The the power of the light. A number between 0 and MAX_POWER is necessary. 
+		 * The highter the power of the light is, the less the shadows are visibles.
+		 * @param n Number a Number between 0 and MAX_POWER. This number is the light intensity.
 		 */
 		public function setPower( p_nPow:Number ):void
 		{
 			_power =  NumberUtil.constrain( p_nPow, 0, Light3D.MAX_POWER );
+			_nPower = _power / Light3D.MAX_POWER;
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
-		
+	
 		/**
 		 * Returns the intensity of the light.
 		 *
@@ -74,6 +77,15 @@ package sandy.core.light
 		public function getPower():Number
 		{
 			return _power;
+		}
+		
+		/**
+		 * Returns the power of the light normalized to the range 0 -> 1
+		 * @return Number a number between 0 and 1
+		 */
+		public function getNormalizedPower():Number
+		{
+			return _nPower;
 		}
 		
 		/**
@@ -87,37 +99,51 @@ package sandy.core.light
 		}
 		
 		/**
-		 * Sets the direction of the light using components.
+		 * Set the position of the {@code Light3D}.
 		 * 
-		 * @param p_nX	the x component
-		 * @param p_nY	the y component
-		 * @param p_nZ	the z component
+		 * @param	x	the x coordinate
+		 * @param	y	the y coordinate
+		 * @param	z	the z coordinate
 		 */	
-		public function setDirection( p_nX:Number, p_nY:Number, p_nZ:Number ):void
+		public function setDirection( x:Number, y:Number, z:Number ):void
 		{
-			_dir.x = p_nX; _dir.y = p_nY; _dir.z = p_nZ;
+			_dir.x = x; _dir.y = y; _dir.z = z;
+			_dir.normalize();
+			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
+		}
+		
+		public function setDirectionVector( pDir:Vector ):void
+		{
+			_dir = pDir;
+			_dir.normalize();		
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
 		
 		/**
-		 * Sets the direction of the light using the vector.
-		 * 
-		 * @param p_oDir	The direction of the light
-		 */	
-		public function setDirectionVector( p_oDir:Vector ):void
+		 * Calculate the strength of this light based on the supplied normal
+		 * @return Number	the strength between 0 and 1
+		 */
+		public function calculate( normal:Vector ):Number
 		{
-			_dir = p_oDir;
-			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
+			var DP:Number = _dir.dot( normal);
+			DP = -DP;
+			// if DP is less than 0 then the face is facing away from the light
+			// so set it to zero
+			if(DP < 0) DP = 0;
+			return _nPower * DP;
 		}
+	
 		
 		public function destroy():void
 		{
-			;
+			//How clean the listeners here?
+			//removeEventListener(SandyEvent.LIGHT_UPDATED, );
 		}
 	
 		// Direction of the light. It is 3D vector. 
 		//Please refer to the Light tutorial to learn more about Sandy's lights.
 		private var _dir:Vector;	
 		private var _power : Number;
+		private var _nPower : Number;
 	}
 }

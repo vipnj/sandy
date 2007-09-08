@@ -20,7 +20,6 @@ package sandy.materials
 	import flash.display.Sprite;
 	
 	import sandy.core.Scene3D;
-	import sandy.core.World3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
@@ -81,8 +80,8 @@ package sandy.materials
 			var l_nCol:uint = m_nColor;
 			if( _useLight )
 			{
-				var l:Light3D 	= World3D.getInstance().light;
-				var vn:Vector 	= p_oPolygon.normal.getVector();
+				var l:Light3D 	= p_oScene.light;
+				var vn:Vector 	= new Vector( p_oPolygon.normal.wx, p_oPolygon.normal.wy, p_oPolygon.normal.wz );
 				var vl:Vector 	= l.getDirectionVector()
 				var lp:Number	= l.getPower()/100;
 				// --

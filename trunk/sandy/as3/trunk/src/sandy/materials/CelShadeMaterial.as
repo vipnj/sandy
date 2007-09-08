@@ -67,7 +67,7 @@
             const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
             const l_graphics:Graphics = p_mcContainer.graphics;
             var l_nCol:uint = m_nColor;
-            var c:Camera3D     = World3D.getInstance().camera;
+            var c:Camera3D     = p_oScene.camera;
             var vn:Vector     = p_oPolygon.normal.getWorldVector(); // Normalized
             var vc:Vector     = new Vector(c.x, c.y, c.z);// this should be normalized
             VectorMath.normalize(vc);

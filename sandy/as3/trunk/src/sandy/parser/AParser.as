@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -22,24 +22,25 @@ package sandy.parser
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
-	
+
 	import sandy.core.scenegraph.Group;
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.LineAttributes;
-	
+
 	/**
 	 * ABSTRACT CLASS - super class for all parser objects.
-	 * 
+	 *
 	 * <p>This class should not be directly instatiated, but sub classed.<br/>
-	 * The AParser class is responsible for creating the root Group, loading files 
+	 * The AParser class is responsible for creating the root Group, loading files
 	 * and handling the corresponding events.</p>
-	 * 
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
-	 * @version		1.0
-	 * @date 		04.08.2007
-	 **/
-	internal class AParser extends EventDispatcher implements IParser
+	 * @since		1.0
+	 * @version		3.0
+	 * @date 		26.07.2007
+	 */
+	public class AParser extends EventDispatcher implements IParser
 	{
 		protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.onProgressEVENT );
 		protected const m_oLoader:URLLoader = new URLLoader();
@@ -49,9 +50,9 @@ package sandy.parser
 		protected var m_sDataFormat:String;
 		protected var m_nScale:Number;
 		protected var m_oStandardAppearance : Appearance;
-		
+
 		private var m_sUrl:String;
-	
+
 		/**
 		 * Creates a parser object. Creates a root Group, default appearance
 		 * and sets up an URLLoader.
@@ -59,9 +60,9 @@ package sandy.parser
 		 * @param p_sFile		Must be either a text string containing the location
 		 * 						to a file or an embedded object
 		 * @param p_nScale		The scale amount
-		 */			
+		 */
 		public function AParser( p_sFile:*, p_nScale:Number )
-		{ 
+		{
 			m_oGroup = new Group('parser');
 			m_nScale = p_nScale;
 			if( p_sFile is String )
@@ -69,40 +70,40 @@ package sandy.parser
 				m_sUrl = p_sFile;
 				m_oFileLoader = new URLLoader();
 				m_sDataFormat = URLLoaderDataFormat.TEXT;
-			} 
-			else 
+			}
+			else
 			{
 				m_oFile = p_sFile;
 			}
-			
+
 			standardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
 		}
-		
+
 		/**
 		 * Set the standard appearance for all the parsed objects.
-		 * 
+		 *
 		 * @param p_oAppearance		The standard appearance
-		 */		
+		 */
 		public function set standardAppearance( p_oAppearance:Appearance ):void
 		{
 			m_oStandardAppearance = p_oAppearance;
 		}
-		
+
 		/**
 		* Called when an I/O error occurs.
-		 * 
+		 *
 		* @param	e	The error event
 		*/
 		private function _io_error( e:IOErrorEvent ):void
 		{
 			dispatchEvent( new ParserEvent( ParserEvent.onFailEVENT ) );
 		}
-		
+
 		/**
 		 * This method is called when all files are loaded and initialized
-		 * 
+		 *
 		 * @param e		The event object
-		 */		
+		 */
 		protected function parseData( e:Event=null ):void
 		{
 			if( e != null )
@@ -111,9 +112,9 @@ package sandy.parser
 				m_oFile = m_oFileLoader.data;
 			}
 		}
-		
+
 	    /**
-	     * Load the file that needs to be parsed. When done, call the parseData method. 
+	     * Load the file that needs to be parsed. When done, call the parseData method.
 	     */
 	    public function parse():void
 		{
@@ -127,8 +128,8 @@ package sandy.parser
 				// Lancer le chargement
 				m_oFileLoader.dataFormat = m_sDataFormat;
 				m_oFileLoader.load(urlRequest);
-			} 
-			else 
+			}
+			else
 			{
 				parseData();
 			}

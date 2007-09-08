@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="PlaneMath,sandy.math.PlaneMath,NEGATIVE,ON_PLANE,POSITIVE,getInstance,normalizePlane,distanceToPoint,classifyPoint,computePlaneFromPoints,createFromNormalAndPoint" name="keywords">
+<title>sandy.math.PlaneMath</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'PlaneMath - Sandy 3.0 API Documentation';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Sandy 3.0 beta</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?sandy/math/PlaneMath.html&amp;sandy/math/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;PlaneMath</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class PlaneMath"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">sandy.math</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class PlaneMath</td>
+</tr>
+</table>
+<p></p>
+  Math functions for planes.
+   
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#NEGATIVE">NEGATIVE</a> : Number<div class="summaryTableDescription">[static][read-only]
+   Defines the numeric value -1
+   </div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ON_PLANE">ON_PLANE</a> : Number<div class="summaryTableDescription">[static][read-only]
+   Defines the numeric value 0
+   </div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#POSITIVE">POSITIVE</a> : Number<div class="summaryTableDescription">[static][read-only]
+   Defines the numeric value 1   </div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#PlaneMath()">PlaneMath</a>()</div>
+<div class="summaryTableDescription">
+   Creates a PlaneMath object.</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#classifyPoint()">classifyPoint</a>(p_oPlane:<a href="../core/data/Plane.html">Plane</a>, p_oPoint:<a href="../core/data/Vector.html">Vector</a>):Number</div>
+<div class="summaryTableDescription">[static]
+   Returns a classification constant depending on a points position relative to a plane.</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#computePlaneFromPoints()">computePlaneFromPoints</a>(p_oPointA:<a href="../core/data/Vector.html">Vector</a>, p_oPointB:<a href="../core/data/Vector.html">Vector</a>, p_oPointC:<a href="../core/data/Vector.html">Vector</a>):<a href="../core/data/Plane.html">Plane</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Computes a plane from three specified points.</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#createFromNormalAndPoint()">createFromNormalAndPoint</a>(p_oNormal:<a href="../core/data/Vector.html">Vector</a>, p_nPoint:Number):<a href="../core/data/Plane.html">Plane</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Computes a plane from a normal vector and a specified point.</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#distanceToPoint()">distanceToPoint</a>(p_oPlane:<a href="../core/data/Plane.html">Plane</a>, p_oPoint:<a href="../core/data/Vector.html">Vector</a>):Number</div>
+<div class="summaryTableDescription">[static]
+   Computes the distance between a plane and a 3D point (a vector here).</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getInstance()">getInstance</a>():<a href="../math/PlaneMath.html">PlaneMath</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Returns an instance of this class.</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#normalizePlane()">normalizePlane</a>(p_oPlane:<a href="../core/data/Plane.html">Plane</a>):void</div>
+<div class="summaryTableDescription">[static]
+   Normalizes the plane.</div>
+</td><td class="summaryTableOwnerCol">PlaneMath</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="NEGATIVE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">NEGATIVE</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>NEGATIVE:Number</code>&nbsp;&nbsp;[read-only]<p>
+   Defines the numeric value -1
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get NEGATIVE():Number</code>
+<br>
+</div>
+<a name="ON_PLANE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ON_PLANE</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>ON_PLANE:Number</code>&nbsp;&nbsp;[read-only]<p>
+   Defines the numeric value 0
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get ON_PLANE():Number</code>
+<br>
+</div>
+<a name="POSITIVE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">POSITIVE</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>POSITIVE:Number</code>&nbsp;&nbsp;[read-only]<p>
+   Defines the numeric value 1   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get POSITIVE():Number</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="PlaneMath()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">PlaneMath</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function PlaneMath()</code><p>
+   Creates a PlaneMath object.
+   
+   </p><p>This is a singleton constructor, and should not be called directly.<br />
+   If called from outside the PlaneMath class, it throws a SingletonError.</p>
+   [<strong>ToDo</strong>: Why instantiate this at all? - all methods are class methods! ]
+   </div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="classifyPoint()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">classifyPoint</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function classifyPoint(p_oPlane:<a href="../core/data/Plane.html">Plane</a>, p_oPoint:<a href="../core/data/Vector.html">Vector</a>):Number</code><p>
+   Returns a classification constant depending on a points position relative to a plane.
+   
+   </p><p>The classification is one of PlaneMath.NEGATIVE PlaneMath.POSITIVE PlaneMath.ON_PLANE</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPlane</span>:<a href="../core/data/Plane.html">Plane</a></code> &mdash;  The reference plane
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPoint</span>:<a href="../core/data/Vector.html">Vector</a></code> &mdash;   The point we want to classify
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;   The classification of the point
+   </td>
+</tr>
+</table>
+</div>
+<a name="computePlaneFromPoints()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">computePlaneFromPoints</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function computePlaneFromPoints(p_oPointA:<a href="../core/data/Vector.html">Vector</a>, p_oPointB:<a href="../core/data/Vector.html">Vector</a>, p_oPointC:<a href="../core/data/Vector.html">Vector</a>):<a href="../core/data/Plane.html">Plane</a></code><p>
+   Computes a plane from three specified points.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPointA</span>:<a href="../core/data/Vector.html">Vector</a></code> &mdash; The first point
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPointB</span>:<a href="../core/data/Vector.html">Vector</a></code> &mdash; The second point
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPointC</span>:<a href="../core/data/Vector.html">Vector</a></code> &mdash; The third point
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../core/data/Plane.html">Plane</a></code> &mdash; 
+                         The Plane object   
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="createFromNormalAndPoint()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">createFromNormalAndPoint</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function createFromNormalAndPoint(p_oNormal:<a href="../core/data/Vector.html">Vector</a>, p_nPoint:Number):<a href="../core/data/Plane.html">Plane</a></code><p>
+   Computes a plane from a normal vector and a specified point.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oNormal</span>:<a href="../core/data/Vector.html">Vector</a></code> &mdash; The normal vector
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nPoint</span>:Number</code> &mdash;  The point
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../core/data/Plane.html">Plane</a></code> &mdash; 
+                          The Plane object
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="distanceToPoint()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">distanceToPoint</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function distanceToPoint(p_oPlane:<a href="../core/data/Plane.html">Plane</a>, p_oPoint:<a href="../core/data/Vector.html">Vector</a>):Number</code><p>
+   Computes the distance between a plane and a 3D point (a vector here).
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPlane</span>:<a href="../core/data/Plane.html">Plane</a></code> &mdash; The plane we want to compute the distance from
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPoint</span>:<a href="../core/data/Vector.html">Vector</a></code> &mdash;  The point in space
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The distance between the point and the plane.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getInstance()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getInstance</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function getInstance():<a href="../math/PlaneMath.html">PlaneMath</a></code><p>
+   Returns an instance of this class.
+      </p><p>Call this method to get an instance of ColorMath</p>
+   <p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../math/PlaneMath.html">PlaneMath</a></code></td>
+</tr>
+</table>
+</div>
+<a name="normalizePlane()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">normalizePlane</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function normalizePlane(p_oPlane:<a href="../core/data/Plane.html">Plane</a>):void</code><p>
+   Normalizes the plane. 
+   
+   </p><p>Often before making some calculations with a plane you have to normalize it.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPlane</span>:<a href="../core/data/Plane.html">Plane</a></code> &mdash;  The plane to normalize.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">ASDoc: Preliminary documentation for Sandy 3.0 beta</center>
+</div>
+</body>
+</html>
+<!--ASDoc: Preliminary documentation for Sandy 3.0 beta-->

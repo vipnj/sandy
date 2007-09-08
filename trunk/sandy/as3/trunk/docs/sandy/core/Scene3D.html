@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="Scene3D,sandy.core.Scene3D,camera,root,container,light,render,dispose" name="keywords">
+<meta content="Scene3D,sandy.core.Scene3D,camera,root,container,useBright,ambientLight,light,render,dispose" name="keywords">
 <title>sandy.core.Scene3D</title>
 </head>
 <body>
@@ -45,7 +45,25 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+  The Scene3D object is the central point of a Sandy world.
+    <p>You can have multiple Scene3D objects in the same application.<br/>
+  The older World3D is a singleton special case of Scene3D.<br />
+  The scene contains the object tree with groups, a camera, a light source and a canvas to draw on.</p>
+    <p></p>
+<br>
+<span class="label">Example</span>
+<br>To create a scene, you pass a container, a camera and a root group to its constructor.<br/>
+  The rendering of the world is driven by a "heart beat", which may be a Timer or the Event.ENTER_FRAME event.
+    <div class='listing'><pre>
+   var camera:Camera3D = new Camera3D( 400, 300 );
+   camera.z = -200;
+   // The call to createScene() will create the root Group of this scene
+   var scene:Scene3D = new Scene3D('Scene 1',this, camera, createScene());
+   scene.root.addChild( camera );
+   //The handler calls the world.render() method to render the world for each frame.
+   addEventListener( Event.ENTER_FRAME, enterFrameHandler );
+  </pre></div>
+    <p></p>
 <br>
 <hr>
 </div>
@@ -57,23 +75,36 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#camera">camera</a> : <a href="scenegraph/Camera3D.html">Camera3D</a>
-<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ambientLight">ambientLight</a> : Number = 0.3<div class="summaryTableDescription">
+   Level of ambient light, added to the scene if lighting is enabled.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#container">container</a> : DisplayObjectContainer<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#camera">camera</a> : <a href="scenegraph/Camera3D.html">Camera3D</a>
+<div class="summaryTableDescription">
+   The camera looking at this scene.</div>
+</td><td class="summaryTableOwnerCol">Scene3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#container">container</a> : DisplayObjectContainer<div class="summaryTableDescription">
+   The container that stores all displayabel objects for this scene.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#light">light</a> : <a href="light/Light3D.html">Light3D</a>
 <div class="summaryTableDescription">
-   The simple light of this world.</div>
+   The simple light of this scene.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#root">root</a> : <a href="scenegraph/Group.html">Group</a>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+   The root of the scene graph for this scene.</div>
+</td><td class="summaryTableOwnerCol">Scene3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#useBright">useBright</a> : Boolean = false<div class="summaryTableDescription">
+   Flag for lightening mode.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 </table>
@@ -90,7 +121,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#Scene3D()">Scene3D</a>(p_sName:String, p_oContainer:DisplayObjectContainer, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a>, p_oRootNode:<a href="scenegraph/Group.html">Group</a>)</div>
 <div class="summaryTableDescription">
-   Create a new Scene.</div>
+   Creates a new Scene.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 <tr class="">
@@ -104,9 +135,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#render()">render</a>(e:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</div>
+<a class="signatureLink" href="#render()">render</a>(p_oEvt:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</div>
 <div class="summaryTableDescription">
-   Render the scene into the display object container.</div>
+   Renders this scene into its display object container.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 </table>
@@ -118,15 +149,26 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="camera"></a>
+<a name="ambientLight"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">camera</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">ambientLight</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public var camera:<a href="scenegraph/Camera3D.html">Camera3D</a></code>
-</div>
+<code>public var ambientLight:Number = 0.3</code><p>
+   Level of ambient light, added to the scene if lighting is enabled.
+   </p></div>
+<a name="camera"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">camera</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var camera:<a href="scenegraph/Camera3D.html">Camera3D</a></code><p>
+   The camera looking at this scene.
+   </p></div>
 <a name="container"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -134,8 +176,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var container:DisplayObjectContainer</code>
-</div>
+<code>public var container:DisplayObjectContainer</code><p>
+   The container that stores all displayabel objects for this scene.
+   </p></div>
 <a name="light"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -144,7 +187,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>light:<a href="light/Light3D.html">Light3D</a></code>&nbsp;&nbsp;[read-write]<p>
-   The simple light of this world.
+   The simple light of this scene.
       </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get light():<a href="light/Light3D.html">Light3D</a></code>
@@ -165,8 +208,21 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var root:<a href="scenegraph/Group.html">Group</a></code>
-</div>
+<code>public var root:<a href="scenegraph/Group.html">Group</a></code><p>
+   The root of the scene graph for this scene.
+   </p></div>
+<a name="useBright"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">useBright</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var useBright:Boolean = false</code><p>
+   Flag for lightening mode.
+   </p><p>If true, the lit objects use full light range from black to white.<b />
+   If false (the default) they just range from black to their normal appearance.</p>
+   </div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="Scene3D()"></a>
@@ -177,31 +233,36 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function Scene3D(p_sName:String, p_oContainer:DisplayObjectContainer, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a>, p_oRootNode:<a href="scenegraph/Group.html">Group</a>)</code><p>
-   Create a new Scene.
-   Each scene has its own container where its 2D representation will be drawn.
-      </p><span class="label">Parameters</span>
+   Creates a new Scene.
+      </p><p>Each scene has its own container where its 2D representation will be drawn.<br />
+   The scene is automatically registered with the SceneLocator.</p>
+   <p>Remember to give the scenes different names if you want to use the SceneLocator registry</p>
+      <span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> &mdash; The container that will store all the
+<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> &mdash; The name of this scene
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oContainer</span>:DisplayObjectContainer</code></td>
+<td width="20px"></td><td><code><span class="label">p_oContainer</span>:DisplayObjectContainer</code> &mdash;  The container that will store all displayable objects for this scene
+   </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oCamera</span>:<a href="scenegraph/Camera3D.html">Camera3D</a></code></td>
+<td width="20px"></td><td><code><span class="label">p_oCamera</span>:<a href="scenegraph/Camera3D.html">Camera3D</a></code> &mdash; The single camera for this scene
+   </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oRootNode</span>:<a href="scenegraph/Group.html">Group</a></code></td>
+<td width="20px"></td><td><code><span class="label">p_oRootNode</span>:<a href="scenegraph/Group.html">Group</a></code> &mdash; The root group of the object tree for this scene
+   </td>
 </tr>
 </table>
 </div>
@@ -216,8 +277,8 @@ showHideInherited();
 <div class="detailBody">
 <code>public function dispose():Boolean</code><p>
    Dispose all the resources of this given scene.
-   TODO : Test it
-   </p><p></p>
+      </p><p>[<strong>ToDo</strong>: Test it ]</p>
+   <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -232,13 +293,13 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function render(e:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</code><p>
-   Render the scene into the display object container.
-   </p><p></p>
-   <span class="label">Parameters</span>
+<code>public function render(p_oEvt:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</code><p>
+   Renders this scene into its display object container.
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">e</span>:<a href="../events/SandyEvent.html">SandyEvent</a></code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">p_oEvt</span>:<a href="../events/SandyEvent.html">SandyEvent</a></code> (default = <code>null</code>)<code></code> &mdash; An eventual event - defaults to null
+   </td>
 </tr>
 </table>
 </div>

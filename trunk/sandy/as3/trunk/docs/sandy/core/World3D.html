@@ -43,7 +43,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
   The Sandy 3D world.
-    <p>The World3D object is the central point of Sandy.<br/>
+    <p>The World3D object is the central point of a Sandy world.<br/>
   World3D is a singleton class, which means that you can have only one World3D instance.<br/>
   It contains the object tree with groups, a camera, a light source and a canvas to draw on</p>
     <p></p>
@@ -59,7 +59,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
   world.root.addChild( world.camera );
   // Go on to create the 3D objects and transforms
   world.root = createScene();
-  // Listen for the ENTER-FRAME event. 
+  // Listen for the ENTER-FRAME event.
   //The handler calls the world.render() method to render the world for each frame.
   addEventListener( Event.ENTER_FRAME, enterFrameHandler );
    </pre></div>
@@ -83,23 +83,36 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#camera">camera</a> : <a href="scenegraph/Camera3D.html">Camera3D</a>
-<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#ambientLight">ambientLight</a> : Number = 0.3<div class="summaryTableDescription">
+   Level of ambient light, added to the scene if lighting is enabled.</div>
 </td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#container">container</a> : DisplayObjectContainer<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#camera">camera</a> : <a href="scenegraph/Camera3D.html">Camera3D</a>
+<div class="summaryTableDescription">
+   The camera looking at this scene.</div>
+</td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#container">container</a> : DisplayObjectContainer<div class="summaryTableDescription">
+   The container that stores all displayabel objects for this scene.</div>
 </td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#light">light</a> : <a href="light/Light3D.html">Light3D</a>
 <div class="summaryTableDescription">
-   The simple light of this world.</div>
+   The simple light of this scene.</div>
 </td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#root">root</a> : <a href="scenegraph/Group.html">Group</a>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+   The root of the scene graph for this scene.</div>
+</td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Scene3D.html#useBright">useBright</a> : Boolean = false<div class="summaryTableDescription">
+   Flag for lightening mode.</div>
 </td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
 </tr>
 </table>
@@ -147,9 +160,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="Scene3D.html#render()">render</a>(e:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</div>
+<a class="signatureLink" href="Scene3D.html#render()">render</a>(p_oEvt:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</div>
 <div class="summaryTableDescription">
-   Render the scene into the display object container.</div>
+   Renders this scene into its display object container.</div>
 </td><td class="summaryTableOwnerCol"><a href="Scene3D.html">Scene3D</a></td>
 </tr>
 <tr class="">
@@ -208,8 +221,8 @@ showHideInherited();
 <code>public function World3D()</code><p>
    Creates a specific Scene3D called World3D.
    This is done for backward compatibility
-      </p><p>You can have only one World3D instance ( singleton ) in a Flash movie.</p>
-   
+      </p><p>You can have only one World3D instance ( singleton ) in a Flash movie.<br/>
+   You should not call this constructor directly, but use the static getInstance() method</p>
    </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
@@ -222,8 +235,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public static function getInstance():<a href="../core/World3D.html">World3D</a></code><p>
    Returns an instance of World3D.
-   
-   </p><p></p>
+      </p><p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>

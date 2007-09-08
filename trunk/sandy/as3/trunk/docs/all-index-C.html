@@ -41,12 +41,26 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 <td width="20"></td><td></td>
 </tr>
 <tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/core/light/class-list.html');" href="sandy/core/light/Light3D.html#calculate()">calculate</a>(normal:<a href="sandy/core/data/Vector.html" onclick="javascript:loadClassListFrame('sandy/core/data./class-list.html');">sandy.core.data:Vector</a>) &mdash; Method in class sandy.core.light.<a onclick="javascript:loadClassListFrame('sandy/core/light/class-list.html');" href="sandy/core/light/Light3D.html">Light3D</a></td>
+</tr>
+<tr>
+<td width="20"></td><td>
+   Calculate the strength of this light based on the supplied normal
+   </td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/util/class-list.html');" href="sandy/util/ColorUtil.html#calculateLitColour()">calculateLitColour</a>(col, lightStrength) &mdash; Static method in class sandy.util.<a onclick="javascript:loadClassListFrame('sandy/util/class-list.html');" href="sandy/util/ColorUtil.html">ColorUtil</a></td>
+</tr>
+<tr>
+<td width="20"></td><td>
+   Calculate the colour for a particular lighting strength.</td>
+</tr>
+<tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Cylinder.html#CALCUL_RADIUS_FROM_SIDE()">CALCUL_RADIUS_FROM_SIDE</a>(p_nSideNumber, p_nSideWidth) &mdash; Static method in class sandy.primitive.<a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Cylinder.html">Cylinder</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
-  Calcul the radius depending of the number of side you want and their width
-  </td>
+  Calculates the radius depending on the number of sides you want and their width.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/commands/class-list.html');" href="sandy/commands/Delegate.html#callFunction()">callFunction</a>() &mdash; Method in class sandy.commands.<a onclick="javascript:loadClassListFrame('sandy/commands/class-list.html');" href="sandy/commands/Delegate.html">Delegate</a></td>
@@ -58,7 +72,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/core/class-list.html');" href="sandy/core/Scene3D.html#camera">camera</a> &mdash; Property in class sandy.core.<a onclick="javascript:loadClassListFrame('sandy/core/class-list.html');" href="sandy/core/Scene3D.html">Scene3D</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+   The camera looking at this scene.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/parser/class-list.html');" href="sandy/parser/Parser3DSChunkTypes.html#CAMERA">CAMERA</a> &mdash; Constant static property in class sandy.parser.<a onclick="javascript:loadClassListFrame('sandy/parser/class-list.html');" href="sandy/parser/Parser3DSChunkTypes.html">Parser3DSChunkTypes</a></td>
@@ -425,6 +440,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
    Creates a ColorMath object.</td>
 </tr>
 <tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/util/class-list.html');" href="sandy/util/ColorUtil.html">ColorUtil</a> &mdash; Final class in package <a onclick="javascript:loadClassListFrame('sandy/util/class-list.html');" href="sandy/util/package-detail.html">sandy.util</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/parser/class-list.html');" href="sandy/parser/Parser3DSChunkTypes.html#COL_RGB">COL_RGB</a> &mdash; Constant static property in class sandy.parser.<a onclick="javascript:loadClassListFrame('sandy/parser/class-list.html');" href="sandy/parser/Parser3DSChunkTypes.html">Parser3DSChunkTypes</a></td>
 </tr>
 <tr>
@@ -521,7 +542,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/core/class-list.html');" href="sandy/core/Scene3D.html#container">container</a> &mdash; Property in class sandy.core.<a onclick="javascript:loadClassListFrame('sandy/core/class-list.html');" href="sandy/core/Scene3D.html">Scene3D</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+   The container that stores all displayabel objects for this scene.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/core/data/class-list.html');" href="sandy/core/data/Polygon.html#container">container</a> &mdash; Property in class sandy.core.data.<a onclick="javascript:loadClassListFrame('sandy/core/data/class-list.html');" href="sandy/core/data/Polygon.html">Polygon</a></td>
@@ -764,7 +786,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 </tr>
 <tr>
 <td width="20"></td><td>
-  The Cylinder class is used for creating a cylinder primitive or a truncated cone.</td>
+  The Cylinder class is used for creating a cylinder primitive, a cone or a truncated cone.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Cylinder.html#Cylinder()">Cylinder</a>(p_sName, p_nRadius, p_nHeight, p_nSegmentsW, p_nSegmentsH, p_nTopRadius, p_bExcludeBottom, p_bExludeTop, p_bWholeMapping) &mdash; Constructor in class sandy.primitive.<a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Cylinder.html">Cylinder</a></td>

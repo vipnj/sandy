@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -18,23 +18,23 @@ package sandy.core
 {
 	import flash.utils.Dictionary;
 
-	public class SceneLocator 
+	public class SceneLocator
 	{
 
 		private static var _oI	: SceneLocator;
 		private var _m		 	: Dictionary;
 
-		public function SceneLocator( access : PrivateConstructorAccess ) 
+		public function SceneLocator( access : PrivateConstructorAccess )
 		{
 			_m = new Dictionary( true );
 		}
-		
+
 		public static function getInstance() : SceneLocator
 		{
 			if ( !_oI ) _oI = new SceneLocator( new PrivateConstructorAccess() );
 			return _oI
 		}
-		
+
 
 		/**
 		 * Get the Scene3D object by using its name
@@ -46,17 +46,17 @@ package sandy.core
 			if ( !(isRegistered( key )) ) trace( "Can't locate scene instance with '" + key + "' name in " + this );
 			return _m[ key ] as Scene3D;
 		}
-		
+
 		/**
 		 * Check if the scene is registered already
 		 * @param	key : String, name
 		 * @return	Boolean
 		 */
-		public function isRegistered( key : String ) : Boolean 
+		public function isRegistered( key : String ) : Boolean
 		{
 			return _m[ key ] == null;
-		}	
-		
+		}
+
 		/**
 		 * Register a scene to the SceneLocator
 		 * @param	key : String, name of the scene to register
@@ -69,15 +69,15 @@ package sandy.core
 			{
 				trace( "scene instance is already registered with '" + key + "' name in " + this );
 				return false;
-				
-			} 
+
+			}
 			else
 			{
 				_m[ key ] = o;
 				return true;
 			}
 		}
-		
+
 		/**
 		 * Unregister a scene
 		 * @param	key : String, name of the scene to unregister
@@ -86,7 +86,7 @@ package sandy.core
 		{
 			_m[ key ] = null;
 		}
-		
+
 	}
 }
 

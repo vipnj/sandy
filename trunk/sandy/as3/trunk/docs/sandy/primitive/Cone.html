@@ -183,6 +183,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Shape3D.html">Shape3D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Shape3D.html#geometryCenter">geometryCenter</a> : <a href="../core/data/Vector.html">Vector</a>
+<div class="summaryTableDescription">
+   This property call allows you to get the geometryCenter offset vector of the Shape.</div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Shape3D.html">Shape3D</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Node.html#id">id</a> : Number<div class="summaryTableDescription">
    The unique id of this node in the node graph.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
@@ -225,12 +231,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    The parent node of this node.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Shape3D.html#pivot">pivot</a> : <a href="../core/data/Vector.html">Vector</a>
-<div class="summaryTableDescription">
-   This property call allows you to get the pivot offset vector of the Shape.</div>
-</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Shape3D.html">Shape3D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/ATransformable.html#roll">roll</a> : Number<div class="summaryTableDescription">
@@ -364,9 +364,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Shape3D.html#m_oPivot">m_oPivot</a> : <a href="../core/data/Vector.html">Vector</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Shape3D.html#m_oGeomCenter">m_oGeomCenter</a> : <a href="../core/data/Vector.html">Vector</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Shape3D.html">Shape3D</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/ATransformable.html#m_oPreviousOffsetRotation">m_oPreviousOffsetRotation</a> : <a href="../core/data/Vector.html">Vector</a>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/ATransformable.html#m_tmpMt">m_tmpMt</a> : <a href="../core/data/Matrix4.html">Matrix4</a>
@@ -462,6 +467,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="Cylinder.html#CALCUL_RADIUS_FROM_SIDE()">CALCUL_RADIUS_FROM_SIDE</a>(p_nSideNumber:uint, p_nSideWidth:uint):Number</div>
+<div class="summaryTableDescription">[static]
+  Calcul the radius depending of the number of side you want and their width
+  </div>
+</td><td class="summaryTableOwnerCol"><a href="Cylinder.html">Cylinder</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../core/scenegraph/Shape3D.html#clear()">clear</a>():void</div>
 <div class="summaryTableDescription">
   Clears the graphics object of this object's container.</div>
@@ -525,6 +539,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="Cylinder.html#getBottom()">getBottom</a>():<a href="../core/data/PrimitiveFace.html">PrimitiveFace</a>
+</div>
+<div class="summaryTableDescription">
+  Return an Array of Polygon defining the bottom of the cylinder
+  </div>
+</td><td class="summaryTableOwnerCol"><a href="Cylinder.html">Cylinder</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../core/scenegraph/Node.html#getBSphere()">getBSphere</a>():<a href="../bounds/BSphere.html">BSphere</a>
 </div>
 <div class="summaryTableDescription">
@@ -560,11 +584,31 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="Cylinder.html#getFace()">getFace</a>(p_nFace:uint):<a href="../core/data/PrimitiveFace.html">PrimitiveFace</a>
+</div>
+<div class="summaryTableDescription">
+  Return an Array of Polygon defining the face selected
+  </div>
+</td><td class="summaryTableOwnerCol"><a href="Cylinder.html">Cylinder</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../core/scenegraph/ATransformable.html#getPosition()">getPosition</a>(p_sMode:String = "local"):<a href="../core/data/Vector.html">Vector</a>
 </div>
 <div class="summaryTableDescription">
    Returns the position of this group or object.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Cylinder.html#getTop()">getTop</a>():<a href="../core/data/PrimitiveFace.html">PrimitiveFace</a>
+</div>
+<div class="summaryTableDescription">
+  Return an Array of Polygon defining the top of the cylinder
+  </div>
+</td><td class="summaryTableOwnerCol"><a href="Cylinder.html">Cylinder</a></td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -692,14 +736,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="../core/scenegraph/ATransformable.html#rotateAxis()">rotateAxis</a>(p_nX:Number, p_nY:Number, p_nZ:Number, p_nAngle:Number):void</div>
 <div class="summaryTableDescription">
    Rotate this object around the specified axis in the parent frame by the specified angle.</div>
-</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="../core/scenegraph/ATransformable.html#rotAxisWithReference()">rotAxisWithReference</a>(p_oAxis:<a href="../core/data/Vector.html">Vector</a>, p_oRef:<a href="../core/data/Vector.html">Vector</a>, p_nAngle:Number):void</div>
-<div class="summaryTableDescription">
-   Rotates this object around a specified axis trough a reference point in the parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedMethod">

@@ -54,7 +54,7 @@ package sandy.core
 		 */
 		public function isRegistered( key : String ) : Boolean
 		{
-			return _m[ key ] == null;
+			return _m[ key ] != null;
 		}
 
 		/**

@@ -98,7 +98,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#dispose()">dispose</a>():Boolean</div>
 <div class="summaryTableDescription">
-   Dispose all the ressources of the given scene.</div>
+   Dispose all the resources of this given scene.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 <tr class="">
@@ -106,7 +106,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#render()">render</a>(e:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</div>
 <div class="summaryTableDescription">
-   Render the scene into the container display object container.</div>
+   Render the scene into the display object container.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 </table>
@@ -179,8 +179,7 @@ showHideInherited();
 <code>public function Scene3D(p_sName:String, p_oContainer:DisplayObjectContainer, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a>, p_oRootNode:<a href="scenegraph/Group.html">Group</a>)</code><p>
    Create a new Scene.
    Each scene has its own container where its 2D representation will be drawn.
-   
-   </p><span class="label">Parameters</span>
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> &mdash; The container that will store all the
@@ -216,7 +215,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function dispose():Boolean</code><p>
-   Dispose all the ressources of the given scene.
+   Dispose all the resources of this given scene.
    TODO : Test it
    </p><p></p>
 <span class="label">Returns</span>
@@ -234,7 +233,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function render(e:<a href="../events/SandyEvent.html">SandyEvent</a> = null):void</code><p>
-   Render the scene into the container display object container. 
+   Render the scene into the display object container.
    </p><p></p>
    <span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">

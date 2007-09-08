@@ -30,8 +30,19 @@ package sandy.core
 		public var camera:Camera3D;
 		public var root:Group;
 		public var container:DisplayObjectContainer;
+		
+		/**
+		 * Flag to control lighting model. If true then lit objects have full range from black to white.
+		 * If its false (the default) they just range from black to their normal appearance.
+		 */ 
+		public var useBright:Boolean = false;
+	
+		/**
+		 * Ambient light that will be added to the scene light once added to a material
+		 */
+		public var ambientLight:Number = 0.3;
 
-		private var _light : Light3D; 	//the unique light instance of the world
+		private var _light:Light3D; 	//the unique light instance of the world
 
 		/**
 		 * Create a new Scene.
@@ -39,8 +50,8 @@ package sandy.core
 		 *
 		 * @param p_oContainer The container that will store all the
 		 */
-		public function Scene3D( p_sName : String, p_oContainer:DisplayObjectContainer,
-					 p_oCamera:Camera3D, p_oRootNode:Group )
+		public function Scene3D( 	p_sName : String, p_oContainer:DisplayObjectContainer,
+					 				p_oCamera:Camera3D, p_oRootNode:Group )
 		{
 			if ( p_sName != null )
 			{
@@ -54,7 +65,6 @@ package sandy.core
 			}
 			// --
 			_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
-
 		}
 
 

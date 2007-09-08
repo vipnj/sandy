@@ -199,12 +199,11 @@ package sandy.core.data
 		public final function cross( v:Vector):Vector
 		{
 			// cross product vector that will be returned
-	        	// calculate the components of the cross product
 			return new Vector(
-						(y * v.z) - (z * v.y) ,
-	                 			(z * v.x) - (x * v.z) ,
-	                            		(x * v.y) - (y * v.x)
-	                            	  );
+								(y * v.z) - (z * v.y) ,
+			                 	(z * v.x) - (x * v.z) ,
+			               		(x * v.y) - (y * v.x)
+	                           );
 		}
 
 		/**

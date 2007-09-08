@@ -1,12 +1,27 @@
+/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author Thomas PFEIFFER
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
 package sandy.primitive
- {
-	import net.webbymx.projects.ndi.log.NDIDebug;
+{
+	import sandy.core.data.PrimitiveFace;
 	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-	import sandy.core.data.Face;
 	
-       	/**
+    /**
 	 * The Cylinder class is used for creating a cylinder primitive or a truncated cone.
 	 *
 	 * <p>All credits go to Tim Knipt from suite75.net who created the AS2 implementation.
@@ -273,30 +288,34 @@ package sandy.primitive
 		private function _generateFaces() : void
 		{
 			m_aFaces = new Array( this.segmentsW + 2 );
-			if ( !m_bIsBottomExcluded ) {
-				m_aFaces[ 0 ] = new Face( this );
+			// --
+			if ( !m_bIsBottomExcluded ) 
+			{
+				m_aFaces[ 0 ] = new PrimitiveFace( this );
 				for ( var ib : Number = 0; ib < m_nPolBase; ib++ )
 				{
-					Face( m_aFaces[ 0 ] ).addPolygon( ib );
+					PrimitiveFace( m_aFaces[ 0 ] ).addPolygon( ib );
 				}
-			} else m_aFaces[ 0 ] = undefined;
+			} 
+			else m_aFaces[ 0 ] = undefined;
 			
-			if ( !m_bIsTopExcluded ) {
-				m_aFaces[ 1 ] = new Face( this );
+			if ( !m_bIsTopExcluded ) 
+			{
+				m_aFaces[ 1 ] = new PrimitiveFace( this );
 				for ( var it : Number = 0; it < m_nPolBase; it++ )
 				{
-					Face( m_aFaces[ 1 ] ).addPolygon( it + ( m_nPolBase ) + ( m_nNextPolFace * this.segmentsH ) );
+					PrimitiveFace( m_aFaces[ 1 ] ).addPolygon( it + ( m_nPolBase ) + ( m_nNextPolFace * this.segmentsH ) );
 				}
-			} else m_aFaces[ 1 ] = undefined;
+			} 
+			else m_aFaces[ 1 ] = undefined;
 			
 			for ( var i : Number = 0; i < this.segmentsW; i++ )
 			{
-				NDIDebug.INFO("i: " + i );
-				m_aFaces[ i + 2 ] = new Face( this );
+				m_aFaces[ i + 2 ] = new PrimitiveFace( this );
 				for ( var j : Number = 0; j < this.segmentsH; j++ )
 				{
-					Face( m_aFaces[ i + 2 ] ).addPolygon( m_nPolBase + ( i * 2 ) + ( j * m_nNextPolFace ) );
-					Face( m_aFaces[ i + 2 ] ).addPolygon( m_nPolBase + ( i * 2 ) + ( j * m_nNextPolFace ) + 1 );
+					PrimitiveFace( m_aFaces[ i + 2 ] ).addPolygon( m_nPolBase + ( i * 2 ) + ( j * m_nNextPolFace ) );
+					PrimitiveFace( m_aFaces[ i + 2 ] ).addPolygon( m_nPolBase + ( i * 2 ) + ( j * m_nNextPolFace ) + 1 );
 				}
 			}
 		}
@@ -305,7 +324,7 @@ package sandy.primitive
 		* Return an Array of Polygon defining the bottom of the cylinder
 		* @return	Array
 		*/
-		public function getBottom() : Face
+		public function getBottom() : PrimitiveFace
 		{
 			return m_aFaces[ 0 ];
 		}
@@ -314,7 +333,8 @@ package sandy.primitive
 		* Return an Array of Polygon defining the top of the cylinder
 		* @return	Array
 		*/
-		public function getTop() : Face{
+		public function getTop() : PrimitiveFace
+		{
 			return m_aFaces[ 1 ]
 		}
 		
@@ -324,7 +344,7 @@ package sandy.primitive
 		* @param	p_nFace
 		* @return	Array
 		*/
-		public function getFace( p_nFace : uint ) : Face
+		public function getFace( p_nFace : uint ) : PrimitiveFace
 		{
 			return m_aFaces[ 2 + p_nFace ];
 		}

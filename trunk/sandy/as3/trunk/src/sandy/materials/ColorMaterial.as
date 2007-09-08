@@ -78,16 +78,16 @@ package sandy.materials
 			var l_graphics:Graphics = p_mcContainer.graphics;
 			
 			var l_nCol:uint = m_nColor;
-			if( _useLight )
+			if( _useLight && p_oScene.light )
 			{
 				var l:Light3D 	= p_oScene.light;
-				var vn:Vector 	= new Vector( p_oPolygon.normal.wx, p_oPolygon.normal.wy, p_oPolygon.normal.wz );
+				var vn:Vector 	= p_oPolygon.normal.getWorldVector();
 				var vl:Vector 	= l.getDirectionVector()
 				var lp:Number	= l.getPower()/100;
 				// --
-				var r:Number = ( l_nCol >> 16 )& 0xFF;
-				var g:Number = ( l_nCol >> 8 ) & 0xFF;
-				var b:Number = ( l_nCol ) 	   & 0xFF;
+				var r:uint = ( l_nCol >> 16 )& 0xFF;
+				var g:uint = ( l_nCol >> 8 ) & 0xFF;
+				var b:uint = ( l_nCol ) 	   & 0xFF;
 				// --
 				var dot:Number =  - ( VectorMath.dot( vl, vn ) );
 				r = NumberUtil.constrain( r*(dot+lp), 0, 255 );

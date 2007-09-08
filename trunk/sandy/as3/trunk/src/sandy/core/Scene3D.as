@@ -18,7 +18,8 @@ package sandy.core
 {
 	import flash.display.DisplayObjectContainer;
 	import flash.events.EventDispatcher;
-
+	
+	import sandy.core.data.Vector;
 	import sandy.core.light.Light3D;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
@@ -51,6 +52,8 @@ package sandy.core
 					if ( root != null && camera != null ) root.addChild( camera );
 				}
 			}
+			// --
+			_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
 
 		}
 

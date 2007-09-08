@@ -18,39 +18,81 @@ package sandy.core
 {
 	import flash.display.DisplayObjectContainer;
 	import flash.events.EventDispatcher;
-	
+
 	import sandy.core.data.Vector;
 	import sandy.core.light.Light3D;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.events.SandyEvent;
 
+	/**
+	 * The Scene3D object is the central point of a Sandy world.
+	 *
+	 * <p>You can have multiple Scene3D objects in the same application.<br/>
+	 * The older World3D is a singleton special case of Scene3D.<br />
+	 * The scene contains the object tree with groups, a camera, a light source and a canvas to draw on.</p>
+	 *
+	 * @example	To create a scene, you pass a container, a camera and a root group to its constructor.<br/>
+	 * The rendering of the world is driven by a "heart beat", which may be a Timer or the Event.ENTER_FRAME event.
+	 *
+	 * <listing version="3.0">
+	 * 	var camera:Camera3D = new Camera3D( 400, 300 );
+	 * 	camera.z = -200;
+	 * 	// The call to createScene() will create the root Group of this scene
+	 * 	var scene:Scene3D = new Scene3D('Scene 1',this, camera, createScene());
+	 * 	scene.root.addChild( camera );
+	 * 	//The handler calls the world.render() method to render the world for each frame.
+	 * 	addEventListener( Event.ENTER_FRAME, enterFrameHandler );
+	 * </listing>
+	 *
+	 * @author		Thomas Pfeiffer - kiroukou
+	 * @version		3.0
+	 * @date 		07.09.2007
+	 */
 	public class Scene3D extends EventDispatcher
 	{
+		/**
+		 * The camera looking at this scene.
+		 */
 		public var camera:Camera3D;
+
+		/**
+		 * The root of the scene graph for this scene.
+		 */
 		public var root:Group;
+
+		/**
+		 * The container that stores all displayabel objects for this scene.
+		 */
 		public var container:DisplayObjectContainer;
-		
+
 		/**
-		 * Flag to control lighting model. If true then lit objects have full range from black to white.
-		 * If its false (the default) they just range from black to their normal appearance.
-		 */ 
+		 * Flag for lightening mode.
+		 * <p>If true, the lit objects use full light range from black to white.<b />
+		 * If false (the default) they just range from black to their normal appearance.</p>
+		 */
 		public var useBright:Boolean = false;
-	
+
 		/**
-		 * Ambient light that will be added to the scene light once added to a material
+		 * Level of ambient light, added to the scene if lighting is enabled.
 		 */
 		public var ambientLight:Number = 0.3;
 
 		private var _light:Light3D; 	//the unique light instance of the world
 
 		/**
-		 * Create a new Scene.
-		 * Each scene has its own container where its 2D representation will be drawn.
+		 * Creates a new Scene.
 		 *
-		 * @param p_oContainer The container that will store all the
+		 * <p>Each scene has its own container where its 2D representation will be drawn.<br />
+		 * The scene is automatically registered with the SceneLocator.</p>
+		 * <p>Remember to give the scenes different names if you want to use the SceneLocator registry</p>
+		 *
+		 * @param p_sName	The name of this scene
+		 * @param p_oContainer 	The container that will store all displayable objects for this scene
+		 * @param p_oCamera	The single camera for this scene
+		 * @param p_oRootNode	The root group of the object tree for this scene
 		 */
-		public function Scene3D( 	p_sName : String, p_oContainer:DisplayObjectContainer,
+		public function Scene3D( p_sName : String, p_oContainer:DisplayObjectContainer,
 					 				p_oCamera:Camera3D, p_oRootNode:Group )
 		{
 			if ( p_sName != null )
@@ -64,15 +106,16 @@ package sandy.core
 				}
 			}
 			// --
-			_light = new Light3D( new Vector( 0, 0, 1 ), 50 );
+			_light = new Light3D( new Vector( 0, 0, 1 ), 100 );
 		}
 
 
 		/**
-		 * Render the scene into the display object container.
-		 * <p></p>
+		 * Renders this scene into its display object container.
+		 *
+		 * @param p_oEvt	An eventual event - defaults to null
 		 */
-		public function render( e : SandyEvent = null ):void
+		public function render( p_oEvt : SandyEvent = null ):void
 		{
 			if( root && camera && container )
 			{
@@ -102,7 +145,7 @@ package sandy.core
 		}
 
 		/**
-		 * The simple light of this world.
+		 * The simple light of this scene.
 		 *
 		 * @see sandy.core.light.Light3D
 		 */
@@ -113,7 +156,8 @@ package sandy.core
 
 		/**
 		 * Dispose all the resources of this given scene.
-		 * TODO : Test it
+		 *
+		 * <p>[<strong>ToDo</strong>: Test it ]</p>
 		 */
 		public function dispose():Boolean
 		{

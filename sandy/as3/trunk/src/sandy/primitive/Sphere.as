@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,14 +13,15 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive 
+package sandy.primitive
 {
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
        	/**
 	 * The Sphere class is used for creating a sphere primitive
-	 * 
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
+	 * @since		1.0
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 *
@@ -31,70 +32,61 @@ package sandy.primitive
 	 *     var mySphere:Sphere = new Sphere( "theSphere", 150);
 	 *  </listing>
 	 */
-	
-	
-	/**
-	* Generate a Sphere 3D coordinates. The Sphere generated is a 3D object that can be rendered by Sandy's engine.
-	* You can play with the constructor's parameters to ajust it to your needs.  
-	* @author		Thomas Pfeiffer - kiroukou
-	* @version		1.0
-	* @date 		12.07.2006 
-	**/
 	public class Sphere extends Shape3D implements Primitive3D
 	{
 		private var radius:Number;
-		
+
 		/**
-		* Number of segments horizontally. Defaults to 8.
-		*/
+		 * Number of segments horizontally. Defaults to 8.
+		 */
 		public var segmentsW :Number;
-	
+
 		/**
-		* Number of segments vertically. Defaults to 6.
-		*/
+		 * Number of segments vertically. Defaults to 6.
+		 */
 		public var segmentsH :Number;
-	
+
 		/**
-		* Default radius
-		*/
+		 * Default radius
+		 */
 		static public var DEFAULT_RADIUS :Number = 100;
-	
+
 		/**
-		* Default scale
-		*/
+		 * Default scale
+		 */
 		static public var DEFAULT_SCALE :Number = 1;
-	
+
 		/**
-		* Default value for number of segments horizontally
-		*/
+		 * Default value for number of segments horizontally
+		 */
 		static public var DEFAULT_SEGMENTSW :Number = 8;
-	
+
 		/**
-		* Default value for number of segments vertically
-		*/
+		 * Default value for number of segments vertically
+		 */
 		static public var DEFAULT_SEGMENTSH :Number = 6;
-	
+
 		/**
-		* Minimum value for number of segments horizontally
-		*/
+		 * Minimum value for number of segments horizontally
+		 */
 		static public var MIN_SEGMENTSW :Number = 3;
-	
+
 		/**
-		* Minimum value for number of segments vertically
-		*/
+		 * Minimum value for number of segments vertically
+		 */
 		static public var MIN_SEGMENTSH :Number = 2;
-	
+
 		/**
-		* Creates a Sphere primitive.
-		*
-		* <p>The sphere is created centered at the origin of the world coordinate system, 
-		* with its poles on the y axis</p>
-		*
-		* @param	p_sName 	A String identifier of this object
-		* @param	p_nRadius	[optional] - Desired radius.
-		* @param	p_nSegmentsW	[optional] - Number of segments horizontally. Defaults to 8.
-		* @param	p_nSegmentsH	[optional] - Number of segments vertically. Defaults to 6.
-		*/
+		 * Creates a Sphere primitive.
+		 *
+		 * <p>The sphere is created centered at the origin of the world coordinate system,
+		 * with its poles on the y axis</p>
+		 *
+		 * @param	p_sName 	A String identifier of this object
+		 * @param	p_nRadius	[optional] - Desired radius.
+		 * @param	p_nSegmentsW	[optional] - Number of segments horizontally. Defaults to 8.
+		 * @param	p_nSegmentsH	[optional] - Number of segments vertically. Defaults to 6.
+		 */
 		function Sphere( p_sName:String=null , p_nRadius:Number=100, p_nSegmentsW:Number=8, p_nSegmentsH:Number=6 )
 		{
 			super( p_sName );
@@ -125,19 +117,19 @@ package sandy.primitive
 			var iVer:Number = Math.max(2,this.segmentsH);
 			// --
 			var aVtc:Array = new Array();
-			for ( j=0; j<(iVer+1) ;j++ ) 
+			for ( j=0; j<(iVer+1) ;j++ )
 			{ // vertical
 				var fRad1:Number = Number(j/iVer);
 				var fZ:Number = -radius*Math.cos(fRad1*Math.PI);
 				var fRds:Number = radius*Math.sin(fRad1*Math.PI);
 				var aRow:Array = new Array();
 				var oVtx:Number;
-				for ( i=0; i<iHor ; i++ ) 
+				for ( i=0; i<iHor ; i++ )
 				{ // horizontal
 					var fRad2:Number = Number(2*i/iHor);
 					var fX:Number = fRds*Math.sin(fRad2*Math.PI);
 					var fY:Number = fRds*Math.cos(fRad2*Math.PI);
-					if (!((j==0||j==iVer)&&i>0)) 
+					if (!((j==0||j==iVer)&&i>0))
 					{ // top||bottom = 1 vertex
 						oVtx = l_oGeometry.setVertex( l_oGeometry.getNextVertexID(), fY, fZ, fX );//fY, -fZ, fX );
 					}
@@ -147,12 +139,12 @@ package sandy.primitive
 			}
 			// --
 			var iVerNum:Number = aVtc.length;
-			for ( j=0; j<iVerNum; j++ ) 
+			for ( j=0; j<iVerNum; j++ )
 			{
 				var iHorNum:Number = aVtc[j].length;
-				if (j>0) 
+				if (j>0)
 				{ // &&i>=0
-					for ( i=0; i<iHorNum; i++ ) 
+					for ( i=0; i<iHorNum; i++ )
 					{
 						// select vertices
 						var bEnd:Boolean = i==(iHorNum-0);
@@ -166,13 +158,13 @@ package sandy.primitive
 						var fJ1:Number = (j-1)	/ iVerNum;
 						var fI0:Number = (i+1)	/ iHorNum;
 						var fI1:Number = i		/ iHorNum;
-						
+
 						var l_nUV4:Number = l_oGeometry.setUVCoords( l_oGeometry.getNextUVCoordID(), fI0, 1-fJ1 );
 						var l_nUV1:Number = l_oGeometry.setUVCoords( l_oGeometry.getNextUVCoordID(), fI0, 1-fJ0 );
 						var l_nUV2:Number = l_oGeometry.setUVCoords( l_oGeometry.getNextUVCoordID(), fI1, 1-fJ0 );
 						var l_nUV3:Number = l_oGeometry.setUVCoords( l_oGeometry.getNextUVCoordID(), fI1, 1-fJ1 );
 						var l_nF:Number;
-						
+
 						// 2 faces
 						if (j<(aVtc.length-1))
 						{
@@ -186,7 +178,7 @@ package sandy.primitive
 							l_oGeometry.setFaceUVCoordsIds( l_nF, l_nUV1, l_nUV3, l_nUV4 );
 							//aFace.push( new Face3D(new Array(aP1,aP3,aP4), new Array(aP1uv,aP3uv,aP4uv)) );
 						}
-	
+
 					}
 				}
 			}
@@ -196,7 +188,7 @@ package sandy.primitive
 		public override function toString():String
 		{
 			return "sandy.primitive.Sphere";
-		}		
+		}
 
 	}
 }

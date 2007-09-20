@@ -171,6 +171,8 @@ package sandy.core.scenegraph
 		 */
 		public function addChild( p_oChild:Node ):void
 		{
+			if( p_oChild.parent ) p_oChild.parent.removeChildById( p_oChild.id );
+			// --
 			p_oChild.parent = this;
 			changed =  true ;
 			_aChilds.push( p_oChild );

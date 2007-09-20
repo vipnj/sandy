@@ -10,6 +10,8 @@ package
 	import sandy.core.scenegraph.*;
 	import sandy.events.BubbleEvent;
 	import sandy.materials.*;
+	import sandy.materials.attributes.LineAttributes;
+	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.math.*;
 	import sandy.primitive.*;
 	
@@ -106,7 +108,7 @@ package
 				
 			// --
 			var line:Line3D = new Line3D( "myLine", new Vector( 50, 50), new Vector( 100, 50 ), new Vector( 100, 100 ), new Vector( 75, 50 ), new Vector( 50, 100 ), new Vector( 50, 50 ) );
-			line.appearance = new Appearance( new ColorMaterial( 0, 0, new LineAttributes( 1, 0xFF ) ) );
+			line.appearance = new Appearance( new ColorMaterial( 0, 0, new MaterialAttributes( new LineAttributes( 1, 0xFF ) ) ) );
 			// -- Tree creation
 
 			tgTranslation.addChild( box );

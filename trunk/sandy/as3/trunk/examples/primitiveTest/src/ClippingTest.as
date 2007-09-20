@@ -16,7 +16,7 @@ package
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
-	import sandy.materials.LineAttributes;
+	import sandy.materials.attributes.*;
 	import sandy.primitive.Box;
 	import sandy.primitive.Cylinder;
 	import sandy.primitive.Plane3D;
@@ -112,12 +112,13 @@ package
 			
 			var lAppearance:Appearance = new Appearance( new BitmapMaterial( pic2.bitmapData ) ,
 											 			 new BitmapMaterial( pic.bitmapData ) );
-			//box.appearance = new Appearance( ColorMaterial( 0xFF00) );//lAppearance;
-			//(box.appearance.frontMaterial as ColorMaterial).lightingEnable = true;
-			//lPlane.appearance = lAppearance;
 			
-			cylinder.appearance = new Appearance( new BitmapMaterial( pic2.bitmapData, new LineAttributes() ) );
-			BitmapMaterial(box.appearance.frontMaterial).enableAccurateClipping = true;
+			box.appearance = lAppearance;
+			//(box.appearance.frontMaterial as ColorMaterial).lightingEnable = true;
+			lPlane.appearance = new Appearance( new ColorMaterial() );
+			
+			cylinder.appearance = new Appearance( new BitmapMaterial( pic2.bitmapData, new MaterialAttributes( new LineAttributes() ) ) );
+			BitmapMaterial(cylinder.appearance.frontMaterial).enableAccurateClipping = true;
 			
 			// --			
 			g.addChild( lPlane ); 

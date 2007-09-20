@@ -51,9 +51,9 @@ package sandy.materials
 		 * @param p_nUpdateMS	The update interval
 		 * @param p_nFillColor	The fill color
 		 */
-		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000 )
+		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oMovie.width, p_oMovie.height, false, 0xFF000000 ) );
+			super( new BitmapData( p_oMovie.width, p_oMovie.height, false, 0xFF000000 ), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
 			m_nFillColor = p_nFillColor;

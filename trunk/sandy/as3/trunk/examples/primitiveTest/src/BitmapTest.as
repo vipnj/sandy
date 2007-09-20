@@ -22,6 +22,10 @@ package
 	import flash.ui.Keyboard;
 	import sandy.core.data.Vector;
 	import sandy.materials.ColorMaterial;
+	import sandy.materials.attributes.LineAttributes;
+	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.materials.attributes.LightAttributes;
+	import sandy.materials.attributes.OutlineAttributes;
 
 	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=120)] 
 	public class BitmapTest extends Sprite
@@ -61,10 +65,11 @@ package
 			m_oScene.container = this;
 			m_oScene.camera = lCamera ;
 			lCamera.z = -400;
-			lCamera.y = 130;
+			lCamera.y = 30;
 			lCamera.lookAt( 0, 0, 0 );
 			m_oScene.root = _createScene3D();
 			m_oScene.root.addChild( lCamera );
+			//m_oScene.useBright = true;
 			// --
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
@@ -115,12 +120,14 @@ package
 			var lTg:TransformGroup = new TransformGroup("rotationPivot");
 			// --
 			m_oPlane = new Plane3D("myPlane", 300, 300, 3, 3, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
-			var lPic:Bitmap = new Texture2();
-			m_oPlane.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
+			//var lPic:Bitmap = new Texture2();
+			//m_oPlane.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
+			var lMat1:ColorMaterial = new ColorMaterial( 0xFF00, 100, new MaterialAttributes( new LineAttributes() ) );
+			m_oPlane.appearance = new Appearance( lMat1 );
 			// --
 			m_oTorus = new Torus("myTorus", 30, 15, 6, 6 );
 			var lPic2:Bitmap = new Texture();
-			m_oTorus.appearance = new Appearance( new ZShaderMaterial(1.4)/*new BitmapMaterial( lPic2.bitmapData )*/ );
+			m_oTorus.appearance = new Appearance( new ZShaderMaterial(1)/*new BitmapMaterial( lPic2.bitmapData )*/ );
 			m_oTorus.x = -50;
 			m_oTorus.y = 30;
 			m_oTorus.z = -120;
@@ -131,7 +138,10 @@ package
 			// --
 			m_oSphere = new Sphere( "myShpere", 30, 10, 10 );
 			m_oSphere.y = 50;
+			
+			var l_oMatAttr:MaterialAttributes = new MaterialAttributes( new LightAttributes()/*, new LineAttributes()*/ );
 			var lMat:ColorMaterial = new ColorMaterial( 0xFF00 );
+			lMat.attributes = l_oMatAttr;
 			lMat.lightingEnable = true;
 			m_oSphere.appearance = new Appearance( lMat );//new Appearance( new WireFrameMaterial( 0xFF ) );
 			m_oSphere.z = 70;

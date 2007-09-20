@@ -1,6 +1,6 @@
 /*
 # ***** BEGIN LICENSE BLOCK *****
-Copyright the original author or authors.
+Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -14,24 +14,24 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.materials 
+package sandy.materials.attributes
 {
 	import flash.display.Graphics;
 	
-	import sandy.core.data.Edge3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.data.Vertex;
 	
 	/**
-	 * Holds all outline attributes data for a material.
+	 * Holds all line attribute data for a material.
 	 *
-	 * <p>Each material can have an outline attribute to outline the whole 3D shape.<br/>
-	 * The OutlineAttributes class stores all the information to draw this outline shape</p>
+	 * <p>Some materials have line attributes to outline the faces of a 3D shape.<br/>
+	 * In these cases a LineAttributes object holds all line attribute data</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
-	 * @date 		09.09.2007
+	 * @date 		26.07.2007
 	 */
-	public final class OutlineAttributes 
+	public final class LineAttributes implements IAttributes
 	{
 		private var m_nThickness:Number;
 		private var m_nColor:Number;
@@ -40,16 +40,16 @@ package sandy.materials
 		public var modified:Boolean;
 		
 		/**
-		 * Creates a new OutlineAttributes object.
+		 * Creates a new LineAttributes object.
 		 *
 		 * @param p_nThickness	The line thickness - Defaoult 1
-		 * @param p_nColor	The line color - Default 0 ( black )
-		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
+		 * @param p_nColor	The line color - Defaoult 0 ( black )
+		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
 		 */
-		public function OutlineAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 100 )
+		public function LineAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1 )
 		{
 			m_nThickness = p_nThickness;
-			m_nAlpha = p_nAlpha/100;
+			m_nAlpha = p_nAlpha;
 			m_nColor = p_nColor;
 			// --
 			modified = true;
@@ -110,41 +110,14 @@ package sandy.materials
 		
 		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_aPoints:Array ):void
 		{
-			var l_oEdge:Edge3D;
-			var l_oPolygon:Polygon;
-			var l_bFound:Boolean;
-			// --
+			const l_points:Array = p_aPoints;
+			var l_oVertex:Vertex;
 			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
-			p_oGraphics.beginFill(0);
 			// --
-			for each( l_oEdge in p_oPolygon.aEdges )
-        	{
-        		l_bFound = false;
-        		// --
-        		for each( l_oPolygon in p_oPolygon.aNeighboors )
-				{
-	        		// aNeighboor not visible, does it share an edge?
-					// if so, we draw it
-					if( l_oPolygon.aEdges.indexOf( l_oEdge ) > -1 )
-	        		{
-						if( l_oPolygon.visible == false )
-						{
-							p_oGraphics.moveTo( l_oEdge.vertex1.sx, l_oEdge.vertex1.sy );
-							p_oGraphics.lineTo( l_oEdge.vertex2.sx, l_oEdge.vertex2.sy );
-						}
-						l_bFound = true;
-					}
-	   			}
-	   			// -- if not shared with any neighboor, it is an extremity edge that shall be drawn
-	   			if( l_bFound == false )
-	   			{
-		   			p_oGraphics.moveTo( l_oEdge.vertex1.sx, l_oEdge.vertex1.sy );
-					p_oGraphics.lineTo( l_oEdge.vertex2.sx, l_oEdge.vertex2.sy );
-	   			}
-        	}
-        	
-        	p_oGraphics.endFill();
-        }
-        
+			p_oGraphics.moveTo( l_points[0].sx, l_points[0].sy );
+			var lId:int = l_points.length;
+			while( l_oVertex = l_points[ --lId ] )
+				p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
+		}
 	}
 }

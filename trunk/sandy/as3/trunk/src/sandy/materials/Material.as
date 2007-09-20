@@ -20,6 +20,7 @@ package sandy.materials
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.materials.attributes.MaterialAttributes;
 	
 	/**
 	 * ABSTRACT CLASS - base class for all materials.
@@ -33,15 +34,9 @@ package sandy.materials
 	public class Material
 	{
 		/**
-		 * The line attributes of this material.
+		 * The attributes of this material.
 		 */
-		public var lineAttributes:LineAttributes;
-		
-		
-		/**
-		 * The outline attributes of this material.
-		 */
-		public var outlineAttributes:OutlineAttributes;
+		public var attributes:MaterialAttributes;
 		
 		/**
 		 * Specify if the material use the vertex normal information
@@ -53,13 +48,14 @@ package sandy.materials
 		 * Creates a matrial.
 		 *
 		 * <p>This constructor is never called directly - but by sub class constructors</p>
+		 * @param p_oAttr	The attributes for this material
 		 */
-		public function Material()
+		public function Material( p_oAttr:MaterialAttributes = null )
 		{
 			_filters 	= [];
 			_useLight 	= false;
 			_id = _ID_++;
-			lineAttributes = null;
+			attributes = (p_oAttr == null) ? new MaterialAttributes() : p_oAttr;
 			m_bModified = true;
 			m_nType = MaterialType.NONE;
 		}
@@ -142,7 +138,7 @@ package sandy.materials
 		 */
 		public function get modified():Boolean
 		{
-			return (m_bModified && ((lineAttributes) ? lineAttributes.modified : true));
+			return (m_bModified);// && ((lineAttributes) ? lineAttributes.modified : true));
 		}
 				
 		/**

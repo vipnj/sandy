@@ -93,7 +93,7 @@ package sandy.core
 		 * @param p_oRootNode	The root group of the object tree for this scene
 		 */
 		public function Scene3D( p_sName : String, p_oContainer:DisplayObjectContainer,
-					 				p_oCamera:Camera3D, p_oRootNode:Group )
+					 			 p_oCamera:Camera3D, p_oRootNode:Group )
 		{
 			if ( p_sName != null )
 			{

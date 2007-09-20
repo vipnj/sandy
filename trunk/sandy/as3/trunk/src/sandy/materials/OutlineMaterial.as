@@ -20,6 +20,9 @@ package sandy.materials
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.materials.attributes.OutlineAttributes;
+	
 	/**
 	 * Displays the outline of a 3D shape in wireframe.
 	 *
@@ -37,17 +40,16 @@ package sandy.materials
 		 *
 		 * @param p_nThickness	The thickness of the lines - Default 1
 		 * @param p_nColor 	The color of the lines - Default 0
-		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
+		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
 		 * @param p_oLineAttr The line attributes object
 		 */
-		public function OutlineMaterial( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:LineAttributes = null )
+		public function OutlineMaterial( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes = null )
 		{
-			super();
+			super( p_oAttr );
 			// --
 			m_nType = MaterialType.OUTLINE;
 			// --
-			outlineAttributes = new OutlineAttributes( p_nThickness, p_nColor, p_nAlpha );
-			lineAttributes = p_oLineAttr;
+			attributes.outlineAttributes = new OutlineAttributes( p_nThickness, p_nColor, p_nAlpha );
 		}
 
 		/**
@@ -59,8 +61,8 @@ package sandy.materials
 		 */		
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
-			if( lineAttributes ) lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			attributes.outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
 		}
 
 	}

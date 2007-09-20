@@ -23,6 +23,7 @@ package sandy.materials
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
+	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.util.ColorUtil;
 	import sandy.util.NumberUtil;
 	
@@ -44,21 +45,17 @@ package sandy.materials
 		 * Creates a new ColorMaterial.
 		 *
 		 * @param p_nColor 	The color for this material in hexadecimal notation
-		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
-		 * @param p_oLineAttr	The line attributes for this material
-		 * @param p_oOutlineAttr The outlie attributes settings for this material
+		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
+		 * @param p_oAttr	The attributes for this material
 		 */
-		public function ColorMaterial( p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:LineAttributes = null, p_oOutlineAttr:OutlineAttributes = null )
+		public function ColorMaterial( p_nColor:uint = 0x00, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes = null )
 		{
-			super();
+			super(p_oAttr);
 			// --
 			m_nType = MaterialType.COLOR;
 			// --
 			m_nColor = p_nColor;
-			m_nAlpha = p_nAlpha/100;
-			// --
-			lineAttributes = p_oLineAttr;
-			outlineAttributes = p_oOutlineAttr;
+			m_nAlpha = p_nAlpha;
 		}
 
 		/**
@@ -77,19 +74,20 @@ package sandy.materials
 			var l_graphics:Graphics = p_mcContainer.graphics;
 			
 			var l_nCol:uint = m_nColor;
-			if( _useLight )
+			if( _useLight && attributes.lightAttributes )
 			{
 				var lightStrength:Number;
 				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
-				if(p_oScene.useBright)
+				
+				if( attributes.lightAttributes.bUseBright )
 				{
-					lightStrength = p_oScene.light.calculate( l_oNormal ) + p_oScene.ambientLight;
+					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.nAmbient;
 					// --
 					l_nCol = ColorUtil.calculateLitColour(l_nCol, lightStrength);
 				}
 				else
 				{
-					lightStrength = p_oScene.light.calculate( l_oNormal ) + p_oScene.ambientLight;
+					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.nAmbient;
 					// --
 					var r:Number = ( l_nCol >> 16 )	& 0xFF;
 					var g:Number = ( l_nCol >> 8 )	& 0xFF;
@@ -110,8 +108,8 @@ package sandy.materials
 				l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
 			l_graphics.endFill();
 			// --
-			if( lineAttributes ) lineAttributes.draw( l_graphics, p_oPolygon, l_points );
-			if( outlineAttributes ) outlineAttributes.draw( l_graphics, p_oPolygon, l_points );
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( l_graphics, p_oPolygon, l_points );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( l_graphics, p_oPolygon, l_points );
 		}
 
 		/**

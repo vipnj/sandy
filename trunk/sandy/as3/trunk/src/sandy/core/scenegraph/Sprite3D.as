@@ -34,7 +34,7 @@ package sandy.core.scenegraph
 	 * The Sprite3D class is use to create a 3D sprite.
 	 *
 	 * <p>A Sprite3D can be seen as a special Sprite2D.<br/>
-	 * It has an appearance that is a movie clip containing 360 frames (at least!) with texture.</p>
+	 * It has an appearance that is a movie clip containing 360 frames (as maximum!) with texture.</p>
 	 *
 	 * <p>Depending on the camera position, a different frame of the clip is shown, givin a 3D effect.<p/>
 	 *
@@ -64,7 +64,6 @@ package sandy.core.scenegraph
 		{
 			super(p_sName);
 			m_oContainer = new Sprite();
-			//World3D.getInstance().container.addChild( m_oContainer );
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
@@ -96,6 +95,8 @@ package sandy.core.scenegraph
 			m_oContainer.addChildAt( m_oContent, 0 );
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
+			// --
+			m_nAutoOffset = m_oContent.totalFrames / 360;
 		}
 
 		/**
@@ -204,9 +205,9 @@ package sandy.core.scenegraph
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 
-	        	_dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13;
-			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23;
-			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33;
+	        _dir.wx = _dir.x * m11 + _dir.y * m12 + _dir.z * m13 + m14;
+			_dir.wy = _dir.x * m21 + _dir.y * m22 + _dir.z * m23 + m24;
+			_dir.wz = _dir.x * m31 + _dir.y * m32 + _dir.z * m33 + m34;
 
 			_v.wx = _v.x * m11 + _v.y * m12 + _v.z * m13 + m14;
 			_v.wy = _v.x * m21 + _v.y * m22 + _v.z * m23 + m24;
@@ -215,11 +216,10 @@ package sandy.core.scenegraph
 			m_nDepth = _v.wz;
 			m_nPerspScale = _nScale * 100/m_nDepth;
 			// --
+			p_oCamera.projectVertex( _v );
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
-			p_oCamera.addToProjectionList( [_v] );
-			// --
-	        	var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
+	        var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
 			var angle:Number = VectorMath.getAngle( _vView, vNormale );
 			if( vNormale.x == 0 ) angle = Math.PI;
 			else if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
@@ -248,18 +248,20 @@ package sandy.core.scenegraph
 		 */
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
-			//FIXME I don't like the way the perspective is applied here...
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-			m_oContainer.x = _v.sx - m_nW2;
-			m_oContainer.y = _v.sy - m_nH2;
+			m_oContainer.x = _v.sx;// - m_nW2;
+			m_oContainer.y = _v.sy;// - m_nH2;
 		}
 
 		// Returns the frame to show at the current camera angle
-		private function __frameFromAngle(a:Number):Number
+		private function __frameFromAngle(a:Number):uint
 		{
+			trace(a);
 			a = NumberUtil.toDegree( a );
 			a = (( a + _nOffset )+360) % 360;
-			return a;
+			// -- we have a frame for a 360 content, let's make it fit the current one
+			a = uint( a * m_nAutoOffset );
+			return uint(a);
 		}
 
 
@@ -284,6 +286,7 @@ package sandy.core.scenegraph
 		private var _vView:Vector;
 		private var _dir:Vertex;
 
+		private var m_nAutoOffset:Number;
 		private var m_nPerspScale:Number=0;
 		private var m_nW2:Number=0;
 		private var m_nH2:Number=0;

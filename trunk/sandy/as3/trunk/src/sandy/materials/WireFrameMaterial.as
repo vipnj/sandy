@@ -20,6 +20,8 @@ package sandy.materials
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.materials.attributes.LineAttributes;
+	import sandy.materials.attributes.MaterialAttributes;
 	/**
 	 * Displays the faces of a 3D shape as a wire frame.
 	 *
@@ -37,17 +39,17 @@ package sandy.materials
 		 *
 		 * @param p_nThickness	The thickness of the lines - Default 1
 		 * @param p_nColor 	The color of the lines - Default 0
-		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 100 )
-		 * @param p_oOutLineAtt The outlie attributes object
+		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
+		 * @param p_oAttr	The attributes for this material
 		 */
-		public function WireFrameMaterial( p_nThickness:uint=1, p_nColor:uint = 0, p_nAlpha:uint = 100, p_oOutLineAtt:OutlineAttributes=null )
+		public function WireFrameMaterial( p_nThickness:uint=1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes=null )
 		{
-			super();
+			super(p_oAttr);
 			// --
 			m_nType = MaterialType.WIREFRAME;
 			// --
-			lineAttributes = new LineAttributes( p_nThickness, p_nColor,p_nAlpha ) ;
-			outlineAttributes = p_oOutLineAtt;
+			attributes.lineAttributes = new LineAttributes( p_nThickness, p_nColor,p_nAlpha ) ;
+
 		}
 
 		/**
@@ -59,8 +61,8 @@ package sandy.materials
 		 */		
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
-			if( outlineAttributes ) outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
 		}
 
 	}

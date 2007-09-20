@@ -22,11 +22,11 @@ package sandy.parser
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
-
+	
 	import sandy.core.scenegraph.Group;
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
-	import sandy.materials.LineAttributes;
+	import sandy.materials.attributes.*;
 
 	/**
 	 * ABSTRACT CLASS - super class for all parser objects.
@@ -76,7 +76,7 @@ package sandy.parser
 				m_oFile = p_sFile;
 			}
 
-			standardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new LineAttributes() ) );
+			standardAppearance = new Appearance( new ColorMaterial( 0xFF, 100, new MaterialAttributes( new LineAttributes() ) ) );
 		}
 
 		/**

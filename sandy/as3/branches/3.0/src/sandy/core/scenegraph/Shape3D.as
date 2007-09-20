@@ -103,20 +103,20 @@ package sandy.core.scenegraph
     		{
     			for each( l_oFace in aPolygons )
     			{
-					if( World3D.getInstance().container.contains( l_oFace.container ) ) 
+					if( l_oFace.container.parent ) 
 					{
 						l_oFace.container.graphics.clear();
-						World3D.getInstance().container.removeChild( l_oFace.container );
+						l_oFace.container.parent.removeChild( l_oFace.container );
 						this.broadcaster.removeChild( l_oFace.broadcaster );
 					}
     			}
     		}
     		else
     		{
-    			if( World3D.getInstance().container.contains(m_oContainer) )
+    			if( m_oContainer.parent )
     			{
     				m_oContainer.graphics.clear();
-    				World3D.getInstance().container.removeChild( m_oContainer );
+    				m_oContainer.parent.removeChild( m_oContainer );
     			}
     			// --
     			for each( l_oFace in aPolygons )

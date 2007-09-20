@@ -123,7 +123,7 @@ package sandy.core.data
 		public function compile():void
 		{
 			_nNbPoints = _aContainer.length;
-			if( _nNbPoints >= 3 &&  _nNbPoints%2 == 0 )
+			if( _nNbPoints >= 3 &&  _nNbPoints%2 == 1 )
 			{
 				trace('sandy.core.data.BezierPath ERROR: Number of points incompatible');
 				return;
@@ -141,10 +141,10 @@ package sandy.core.data
 			if( _bBoucle )
 			{
 				_aSegments.push([
-						_aContainer[ int(_nNbPoints) ],
-						BezierUtil.getQuadControlPoints(_aContainer[ int(_nNbPoints) ],_aContainer[ 0 ],_aContainer[ 1 ]),
-						_aContainer[ 0 ]
-						]);
+								_aContainer[ int(_nNbPoints) ],
+								BezierUtil.getQuadControlPoints(_aContainer[ int(_nNbPoints) ],_aContainer[ 0 ],_aContainer[ 1 ]),
+								_aContainer[ 0 ]
+								]);
 			}
 			// --
 			_nNbSegments = _aSegments.length;

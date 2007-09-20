@@ -43,27 +43,7 @@ package sandy.materials
 			m_oFrontMaterial = (p_oFront != null) 	? p_oFront :	new ColorMaterial();
 			m_oBackMaterial  = (p_oBack != null) 	? p_oBack  :	p_oFront;
 		}
-		
-		/**
-		 * The material which is visible from the camera.
-		 *
-		 * <p>If the camera looks at the front page, this is the front material, <br>
-		 * otherwise this is the back material.[<strong>ToDo</strong>: Is this really a propery? ]</p>
-		 */
-		public function get material():Material
-		{
-			return (oRef.visible) ? m_oFrontMaterial : m_oBackMaterial;
-		}
-		/**
-		 * The line attributes which is visible from the camera.
-		 *
-		 * <p>If the camera looks at the front page, this is the line attributes for the front material,<br/>
-		 * otherwise for the back material.[<b>ToDo</b>: Is this really a propery? ]</p>
-		 */
-		public function get lineAttributes():LineAttributes
-		{
-			return (oRef.visible) ? LineAttributes(m_oFrontMaterial.lineAttributes) : LineAttributes(m_oBackMaterial.lineAttributes);
-		}
+
 		/**
 		 * The modified state of this appearance.
 		 *

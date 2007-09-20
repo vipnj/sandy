@@ -18,10 +18,9 @@ package sandy.core.scenegraph
 {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-
+	
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
-	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
@@ -46,7 +45,8 @@ package sandy.core.scenegraph
 	{
 		// FIXME Create a Sprite as the spriteD container,
 		// and offer a method to attach a visual content as a child of the sprite
-
+		public var offset:uint = 0;
+		
 		 /**
 	 	 * Creates a Sprite3D
 		 *
@@ -77,7 +77,7 @@ package sandy.core.scenegraph
 			_dir = new Vertex( 0, 0, -1 );
 			_vView = new Vector( 0, 0, 1 );
 			// -- set the offset
-			_nOffset = p_nOffset;
+			offset = p_nOffset;
 		}
 
 		/**
@@ -256,33 +256,14 @@ package sandy.core.scenegraph
 		// Returns the frame to show at the current camera angle
 		private function __frameFromAngle(a:Number):uint
 		{
-			trace(a);
 			a = NumberUtil.toDegree( a );
-			a = (( a + _nOffset )+360) % 360;
+			a = (( a + offset )+360) % 360;
 			// -- we have a frame for a 360 content, let's make it fit the current one
 			a = uint( a * m_nAutoOffset );
 			return uint(a);
 		}
 
-
-		/**
-		* The frame offset into the content MovieClip
-		*/
-		public function getOffset():Number
-		{
-			return _nOffset;
-		}
-
-		/**
-		 * @private
-		 */
-		public function setOffset( n:Number ):void
-		{
-			_nOffset = n;
-		}
-
 		// -- frames offset
-		private var _nOffset:Number;
 		private var _vView:Vector;
 		private var _dir:Vertex;
 

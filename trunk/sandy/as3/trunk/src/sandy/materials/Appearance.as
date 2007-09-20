@@ -43,28 +43,7 @@ package sandy.materials
 			m_oFrontMaterial = (p_oFront != null) 	? p_oFront :	new ColorMaterial();
 			m_oBackMaterial  = (p_oBack != null) 	? p_oBack  :	p_oFront;
 		}
-		
-		/**
-		 * The material which is visible from the camera.
-		 *
-		 * <p>If the camera looks at the front page, this is the front material, <br>
-		 * otherwise this is the back material.[<strong>ToDo</strong>: Is this really a propery? ]</p>
-		 */
-		public function get material():Material
-		{
-			return (oRef.visible) ? m_oFrontMaterial : m_oBackMaterial;
-		}
-
-		/**
-		 * The modified state of this appearance.
-		 *
-		 * <p>true if both front and back materials are modified since last rendered, false otherwise.</p>
-		 * <p>[<strong>ToDo</strong>: Should it be 'front <strong>or</strong> back material'?]</p>
-		 */		
-		public function get modified():Boolean
-		{ 
-			return Boolean(m_oBackMaterial.modified && m_oFrontMaterial.modified); 
-		}
+	
 		
 		/**
 		 * Get the use of vertex normal feature of the appearance
@@ -122,11 +101,7 @@ package sandy.materials
 		{
 			return "sandy.materials.Appearance";
 		}
-
-		/**
-		 * A reference to to the face dressed in this appearance.
-		 */
-		public var oRef:Polygon;
+		
 		// --
 		private var m_oFrontMaterial:Material;
 		private var m_oBackMaterial:Material;

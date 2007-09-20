@@ -50,9 +50,9 @@ package sandy.materials
 		 * @param p_oVideo 	The video to be shown by this material
 		 * @param p_nUpdateMS	The update interval
 		 */
-		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40 )
+		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oVideo.width, p_oVideo.height, false, 0xFF000000 ) );
+			super( new BitmapData( p_oVideo.width, p_oVideo.height, false, 0xFF000000 ), p_oAttr );
 			m_oVideo = p_oVideo;
 			m_nType = MaterialType.VIDEO;
 			// --

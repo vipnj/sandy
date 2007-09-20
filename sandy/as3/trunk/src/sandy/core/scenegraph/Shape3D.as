@@ -208,9 +208,9 @@ package sandy.core.scenegraph
 			// -- Now we transform the normals.
 			for each( var l_oNormal:Vertex in l_aNormals )
 			{
-				l_oNormal.wx = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
-				l_oNormal.wy = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
-				l_oNormal.wz = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
+				l_oNormal.wx  = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
+				l_oNormal.wy  = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
+				l_oNormal.wz  = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
 			}
 			
 			// -- Only is required by the apperance, we are going to transform the vertex normals
@@ -227,7 +227,7 @@ package sandy.core.scenegraph
 			
 			// -- Now we can transform the objet vertices into the camera coordinates
 			for each( var l_oVertex:Vertex in l_aPoints )
-			{
+			{					
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;

@@ -8,11 +8,13 @@ package
 	import sandy.core.data.*;
 	import sandy.core.scenegraph.*;
 	import sandy.materials.*;
+	import sandy.materials.attributes.LineAttributes;
+	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.materials.attributes.OutlineAttributes;
 	import sandy.parser.*;
 	import sandy.primitive.Cylinder;
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.Sphere;
-	import sandy.primitive.Torus;
 
 	[SWF(width="400", height="400", backgroundColor='#FFFFFF', frameRate='30')]
 	
@@ -59,7 +61,7 @@ package
 			lSphere2.z = -300;
 			lSphere2.y = 100;
 			lSphere2.appearance = new Appearance(
-				new ColorMaterial( 0xff, 100, new LineAttributes(), new OutlineAttributes(8, 0xFFFF) )
+				new ColorMaterial( 0xff, 100, new MaterialAttributes( new LineAttributes(), new OutlineAttributes(8, 0xFFFF) ) )
 			);
 			world.root.addChild( lSphere2 );
 			
@@ -80,7 +82,7 @@ package
 			lSphere3.z = 100;
 			lSphere3.y = 100;
 			lSphere3.appearance = new Appearance(
-				new BitmapMaterial( lPic.bitmapData , null, new OutlineAttributes(5, 0xFF) )
+				new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new OutlineAttributes(5, 0xFF) ) )
 			);
 			world.root.addChild( lSphere3 );
 			
@@ -104,7 +106,7 @@ package
 			*/
 			var l_oPlane:Plane3D = new Plane3D( "myPlane", 800, 800, 6, 6, Plane3D.ZX_ALIGNED );
 			l_oPlane.appearance = new Appearance(
-				new OutlineMaterial( 5, 0xff0000, 100, new LineAttributes() )
+				new OutlineMaterial( 5, 0xff0000, 100, new MaterialAttributes(  new LineAttributes() ) )
 			);
 			world.root.addChild( l_oPlane );
 			// -- start animating

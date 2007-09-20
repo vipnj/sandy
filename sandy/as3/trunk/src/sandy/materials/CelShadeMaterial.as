@@ -2,16 +2,14 @@
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
-	import sandy.core.data.Vertex;
 	import sandy.core.data.Vector;
-	import sandy.core.light.Light3D;
-	import sandy.core.World3D;
-	import sandy.math.VectorMath;
-	import sandy.util.NumberUtil;
+	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Camera3D;
+	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.math.VectorMath;
 
 	/**
 	 * Displays the faces of a 3D shape as a Cel Shaded Material (polygon based cel shading).
@@ -36,18 +34,18 @@
 		 * @param p_nOutlineColor	The color of the outline - Default 0
 		 * @param p_nOutlineAlpha	The alpha of the outline - Default 100, value range ( 0 - 100 )
 		 * @param p_nOutlineColor	The color map of the fills. Must be an array of 11 values. Fractional numbers from (0 - 2) work best. - Default null
-		 * @param p_oLineAttr The line attributes object
+		 * @param p_oAttr	The attributes for this material
 		 */
-		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:uint = 100, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:uint = 100, p_aColorMap:Array = null, p_oLineAttr:LineAttributes = null )
+		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:uint = 100, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:uint = 100, p_aColorMap:Array = null, p_oAttr:MaterialAttributes = null )
 		{
-			super(p_nOutlineThickness, p_nOutlineColor, p_nOutlineAlpha);
+			super(p_nOutlineThickness, p_nOutlineColor, p_nOutlineAlpha, p_oAttr);
 			// --
 			m_nType = MaterialType.COLOR;
 			// --
 			m_nColor = p_nColor;
 			m_nAlpha = p_nAlpha/100;
 			// --
-			lineAttributes = p_oLineAttr;
+			attributes = p_oAttr;
 
 			if(p_aColorMap)
 				lightingMap = p_aColorMap;
@@ -90,12 +88,14 @@
             l_nCol =  r << 16 | g << 8 |  b;
 
 
-			outlineAttributes.draw( l_graphics, p_oPolygon, p_oPolygon.vertices );
-			if( lineAttributes ) lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			if( attributes.outlineAttributes) attributes.outlineAttributes.draw( l_graphics, p_oPolygon, p_oPolygon.vertices );
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+           
             if( lineAttributes )
                 l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
             else
             	l_graphics.lineStyle(0,0,0);
+            
             l_graphics.beginFill( l_nCol, m_nAlpha );
 
             l_graphics.moveTo( l_points[0].sx, l_points[0].sy );

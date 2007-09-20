@@ -227,10 +227,9 @@ package sandy.core.scenegraph
 		 */
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
-			//FIXME I don't like the way the perspective is applied here...
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-			m_oContainer.x = _v.sx - m_nW2;
-			m_oContainer.y = _v.sy - m_nH2;
+			m_oContainer.x = _v.sx;// - m_nW2;
+			m_oContainer.y = _v.sy;// - m_nH2;
 		}
 		
 		private var m_nPerspScale:Number=0;

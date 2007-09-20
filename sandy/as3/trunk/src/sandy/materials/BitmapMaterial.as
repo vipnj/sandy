@@ -27,12 +27,14 @@ package sandy.materials
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
+	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.util.NumberUtil;
 	
 	/**
 	 * Displays a bitmap on the faces of a 3D shape.
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
+	 * @author		Xavier Martin - zeflasher - transparency managment
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
@@ -48,19 +50,17 @@ package sandy.materials
 		 * Creates a new BitmapMaterial.
 		 *
 		 * @param p_oTexture 	The bitmapdata for this material
-		 * @param p_oLineAttr	The line attributes for this material
-		 * @param p_oOutlineAttr The outlie attributes settings for this material
+		 * @param p_oAttr	The attributes for this material
 		 */
-		public function BitmapMaterial( p_oTexture:BitmapData, p_oLineAttr:LineAttributes = null, p_oOutlineAttr:OutlineAttributes = null )
+		public function BitmapMaterial( p_oTexture:BitmapData, p_oAttr:MaterialAttributes = null )
 		{
-			super();
+			super(p_oAttr);
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
-			lineAttributes = p_oLineAttr;
-			outlineAttributes = p_oOutlineAttr;
-			// --
-			texture = p_oTexture;
+			m_orgTexture = p_oTexture;
+			texture = m_orgTexture.clone();
+
 			// --
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
@@ -111,8 +111,8 @@ package sandy.materials
 				//	--
 				lGraphics.endFill();
 				
-				if( lineAttributes ) lineAttributes.draw( lGraphics, p_oPolygon, l_points );
-				if( outlineAttributes ) outlineAttributes.draw( lGraphics, p_oPolygon, l_points );
+				if( attributes.lineAttributes ) attributes.lineAttributes.draw( lGraphics, p_oPolygon, l_points );
+				if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( lGraphics, p_oPolygon, l_points );
 			}
 		}
 		
@@ -156,8 +156,8 @@ package sandy.materials
 			// --
 			p_oGraphics.endFill();
 			
-			if( lineAttributes ) lineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
-			if( outlineAttributes ) outlineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
 		}	
 
 
@@ -213,22 +213,21 @@ package sandy.materials
 		 *
 		 * <p>The passed value is the percentage of opacity.</p>
 		 *
-		 * @param p_nValue 	A value between 0 and 100. (automatically constrained)
+		 * @param p_nValue 	A value between 0 and 1. (automatically constrained)
 		 */
 		public function setTransparency( p_nValue:Number ):void
 		{
-			p_nValue = NumberUtil.constrain( p_nValue/100, 0, 1 );
+			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
 			if( m_oCmf ) m_oCmf = null;
-			var matrix:Array = [	1, 0, 0, 0, 0,
-					 	0, 1, 0, 0, 0, 
-					 	0, 0, 1, 0, 0, 
-					 	0, 0, 0, p_nValue, 0];
+			var matrix:Array = [1, 0, 0, 0, 0,
+							 	0, 1, 0, 0, 0, 
+							 	0, 0, 1, 0, 0, 
+							 	0, 0, 0, p_nValue, 0];
 	 
 			m_oCmf = new ColorMatrixFilter( matrix );
-			texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
+			texture.applyFilter( m_orgTexture, texture.rect, m_oPoint, m_oCmf );
 		}
-		
-
+	
 		/**
 		 * Initiates this material.
 		 *
@@ -275,6 +274,7 @@ package sandy.materials
 		}
 		
 		protected var m_oTexture:BitmapData;
+		protected var m_orgTexture:BitmapData;
 		private var m_nHeight:Number;
 		private var m_nWidth:Number;
 		private var m_nInvHeight:Number;

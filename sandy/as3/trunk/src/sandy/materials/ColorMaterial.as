@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,11 +14,11 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.materials 
+package sandy.materials
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-	
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -26,7 +26,7 @@ package sandy.materials
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.util.ColorUtil;
 	import sandy.util.NumberUtil;
-	
+
 	/**
 	 * Displays a color with on the faces of a 3D shape.
 	 *
@@ -36,11 +36,11 @@ package sandy.materials
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
-	public final class ColorMaterial extends Material 
+	public final class ColorMaterial extends Material
 	{
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;
-		
+
 		/**
 		 * Creates a new ColorMaterial.
 		 *
@@ -48,7 +48,7 @@ package sandy.materials
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
 		 * @param p_oAttr	The attributes for this material
 		 */
-		public function ColorMaterial( p_nColor:uint = 0x00, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes = null )
+		public function ColorMaterial( p_nColor:uint = 0x00, p_nAlpha:Number = 1, p_oAttr:MaterialAttributes = null )
 		{
 			super(p_oAttr);
 			// --
@@ -64,21 +64,21 @@ package sandy.materials
 		 * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
-		 */		
-		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
+		 */
+		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
 		{
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			if( !l_points.length ) return;
 			var l_oVertex:Vertex;
 			var lId:int = l_points.length;
 			var l_graphics:Graphics = p_mcContainer.graphics;
-			
+
 			var l_nCol:uint = m_nColor;
 			if( _useLight && attributes.lightAttributes )
 			{
 				var lightStrength:Number;
 				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
-				
+
 				if( attributes.lightAttributes.bUseBright )
 				{
 					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.nAmbient;
@@ -100,6 +100,7 @@ package sandy.materials
 					l_nCol = r << 16 | g << 8 |  b;
 				}
 			}
+			trace('col: '+ l_nCol + ' alpha: ' +m_nAlpha);
 			// --
 			l_graphics.lineStyle();
 			l_graphics.beginFill( l_nCol, m_nAlpha );
@@ -114,12 +115,12 @@ package sandy.materials
 
 		/**
 		 * @private
-		 */		
+		 */
 		public function get alpha():Number
 		{
 			return m_nAlpha;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -127,8 +128,8 @@ package sandy.materials
 		{
 			return m_nColor;
 		}
-	
-		
+
+
 		/**
 		 * The alpha value for this material ( 0 - 1 )
 		 *
@@ -136,18 +137,18 @@ package sandy.materials
 		 */
 		public function set alpha(p_nValue:Number):void
 		{
-			m_nAlpha = p_nValue; 
+			m_nAlpha = p_nValue;
 			m_bModified = true;
 		}
-		
+
 		/**
 		 * The color of this material
 		 */
 		public function set color(p_nValue:Number):void
 		{
-			m_nColor = p_nValue; 
+			m_nColor = p_nValue;
 			m_bModified = true;
 		}
-	
+
 	}
 }

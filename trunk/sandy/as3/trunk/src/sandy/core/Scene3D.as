@@ -66,18 +66,6 @@ package sandy.core
 		 */
 		public var container:DisplayObjectContainer;
 
-		/**
-		 * Flag for lightening mode.
-		 * <p>If true, the lit objects use full light range from black to white.<b />
-		 * If false (the default) they just range from black to their normal appearance.</p>
-		 */
-		public var useBright:Boolean = false;
-
-		/**
-		 * Level of ambient light, added to the scene if lighting is enabled.
-		 */
-		public var ambientLight:Number = 0.3;
-
 		private var _light:Light3D; 	//the unique light instance of the world
 
 		/**

@@ -43,6 +43,16 @@ package sandy.bounds
 		public var m_oPosition:Vector = new Vector();
 		public var m_nTRadius:Number = 1;
 	
+		public function isIntersectingBSphere( p_oBSphere:BSphere ):Boolean
+		{
+    		var l_oVec:Vector = m_oPosition.clone();
+    		l_oVec.sub( p_oBSphere.m_oPosition );
+    		var l_nDist:Number = m_nTRadius + p_oBSphere.m_nTRadius;
+     		// --
+    		var l_nNorm:Number = l_oVec.getNorm();
+   			return (l_nNorm <= l_nDist);
+		}
+		
 		/**
 		 * Creates a bounding sphere that encloses a 3D object. This object's vertices are passed
 		 * to the <code>create</code> method in the form of an <code>Array</code>. Very useful 

@@ -32,7 +32,16 @@ package sandy.materials.attributes
 	 */
 	public final class LightAttributes implements IAttributes
 	{
+		/**
+		 * Flag for lightening mode.
+		 * <p>If true, the lit objects use full light range from black to white.<b />
+		 * If false (the default) they just range from black to their normal appearance.</p>
+		 */
 		public var bUseBright:Boolean = false;
+		
+		/**
+		 * Level of ambient light, added to the scene if lighting is enabled.
+		 */
 		public var nAmbient:Number = 0.3;
 		// --
 		public var modified:Boolean;

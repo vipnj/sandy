@@ -48,7 +48,8 @@ package sandy.materials
 	
 		/**
 		 * Creates a new BitmapMaterial.
-		 *
+		 * <p>Please note that we ue internally a copy of the constructor bitmapdata. Thatea mns in case you need to access this bitmapdata, you can't just use the same reference
+		 * but you shall use the BitmapMaterial#texture getter property to make it work.</p>
 		 * @param p_oTexture 	The bitmapdata for this material
 		 * @param p_oAttr	The attributes for this material
 		 */

@@ -67,6 +67,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#attributes">attributes</a> : <a href="attributes/MaterialAttributes.html">MaterialAttributes</a>
+<div class="summaryTableDescription">
+   The attributes of this material.</div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#filters">filters</a> : Array<div class="summaryTableDescription">
    The array of filters for this material.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
@@ -83,20 +89,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lineAttributes">lineAttributes</a> : <a href="../materials/LineAttributes.html">LineAttributes</a>
-<div class="summaryTableDescription">
-   The line attributes of this material.</div>
-</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
-</tr>
-<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#modified">modified</a> : Boolean<div class="summaryTableDescription">
    The modified state of this material.</div>
-</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#outlineAttributes">outlineAttributes</a> : <a href="../materials/OutlineAttributes.html">OutlineAttributes</a>
-<div class="summaryTableDescription">
-   The outline attributes of this material.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -166,7 +160,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#OutlineMaterial()">OutlineMaterial</a>(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:<a href="LineAttributes.html">LineAttributes</a> = null)</div>
+<a class="signatureLink" href="#OutlineMaterial()">OutlineMaterial</a>(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</div>
 <div class="summaryTableDescription">
    Creates a new OutlineMaterial.</div>
 </td><td class="summaryTableOwnerCol">OutlineMaterial</td>
@@ -203,7 +197,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function OutlineMaterial(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 100, p_oLineAttr:<a href="LineAttributes.html">LineAttributes</a> = null)</code><p>
+<code>public function OutlineMaterial(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</code><p>
    Creates a new OutlineMaterial.
       </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -222,14 +216,14 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nAlpha</span>:uint</code> (default = <code>100</code>)<code></code> &mdash; The alpha value in percent of full opacity ( 0 - 100 )
+<td width="20px"></td><td><code><span class="label">p_nAlpha</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; The alpha value in percent of full opacity ( 0 - 1 )
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oLineAttr</span>:<a href="LineAttributes.html">LineAttributes</a></code> (default = <code>null</code>)<code></code> &mdash; The line attributes object
+<td width="20px"></td><td><code><span class="label">p_oAttr</span>:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a></code> (default = <code>null</code>)<code></code> &mdash; The line attributes object
    </td>
 </tr>
 </table>

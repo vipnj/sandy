@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -19,10 +19,11 @@ package sandy.materials
 	import flash.display.*;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
-	
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
-	
+	import sandy.materials.attributes.MaterialAttributes;
+
 	/**
 	 * Displays a MovieClip on the faces of a 3D shape.
 	 *
@@ -39,7 +40,7 @@ package sandy.materials
 		private var m_oTimer :Timer;
 		private var m_oMovie : MovieClip;
 		private var m_nFillColor : uint;
-			
+
 		/**
 		 * Creates a new MovieMaterial.
 		 *
@@ -62,7 +63,7 @@ package sandy.materials
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
 			m_oTimer.start();
 		}
-		
+
 
 		/**
 		 * Renders this material on the face it dresses.
@@ -70,12 +71,12 @@ package sandy.materials
 		 * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
-		 */		
+		 */
 		public override function renderPolygon ( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ) : void
 		{
 			super.renderPolygon( p_oScene, p_oPolygon, p_mcContainer );
 		}
-		
+
 		/**
 		 * Updates this material each internal timer cycle.
 		 */

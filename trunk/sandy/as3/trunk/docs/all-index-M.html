@@ -41,13 +41,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
 <td width="20"></td><td></td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Appearance.html#material">material</a> &mdash; Property in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Appearance.html">Appearance</a></td>
-</tr>
-<tr>
-<td width="20"></td><td>
-   The material which is visible from the camera.</td>
-</tr>
-<tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html">Material</a> &mdash; Class in package <a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/package-detail.html">sandy.materials</a></td>
 </tr>
 <tr>
@@ -55,11 +48,23 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
   ABSTRACT CLASS - base class for all materials.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html#Material()">Material</a>() &mdash; Constructor in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html">Material</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html#Material()">Material</a>(p_oAttr:<a href="sandy/materials/attributes/MaterialAttributes.html" onclick="javascript:loadClassListFrame('sandy/materials/attributes./class-list.html');">sandy.materials.attributes:MaterialAttributes</a>) &mdash; Constructor in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html">Material</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
    Creates a matrial.</td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/MaterialAttributes.html">MaterialAttributes</a> &mdash; Class in package <a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/package-detail.html">sandy.materials.attributes</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/MaterialAttributes.html#MaterialAttributes()">MaterialAttributes</a>(... rest) &mdash; Constructor in class sandy.materials.attributes.<a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/MaterialAttributes.html">MaterialAttributes</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/MaterialType.html">MaterialType</a> &mdash; Class in package <a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/package-detail.html">sandy.materials</a></td>
@@ -198,8 +203,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
 </tr>
 <tr>
 <td width="20"></td><td>
-  Minimum value for number of segments vertically
-  </td>
+   Minimum value for number of segments vertically
+   </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Torus.html#MIN_SEGMENTSH">MIN_SEGMENTSH</a> &mdash; Static property in class sandy.primitive.<a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Torus.html">Torus</a></td>
@@ -222,8 +227,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
 </tr>
 <tr>
 <td width="20"></td><td>
-  Minimum value for number of segments horizontally
-  </td>
+   Minimum value for number of segments horizontally
+   </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Torus.html#MIN_SEGMENTSW">MIN_SEGMENTSW</a> &mdash; Static property in class sandy.primitive.<a onclick="javascript:loadClassListFrame('sandy/primitive/class-list.html');" href="sandy/primitive/Torus.html">Torus</a></td>
@@ -277,19 +282,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
    The model matrix of this camera.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Appearance.html#modified">modified</a> &mdash; Property in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Appearance.html">Appearance</a></td>
-</tr>
-<tr>
-<td width="20"></td><td>
-   The modified state of this appearance.</td>
-</tr>
-<tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/LineAttributes.html#modified">modified</a> &mdash; Property in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/LineAttributes.html">LineAttributes</a></td>
-</tr>
-<tr>
-<td width="20"></td><td></td>
-</tr>
-<tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html#modified">modified</a> &mdash; Property in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/Material.html">Material</a></td>
 </tr>
 <tr>
@@ -297,7 +289,19 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
    The modified state of this material.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/OutlineAttributes.html#modified">modified</a> &mdash; Property in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/OutlineAttributes.html">OutlineAttributes</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/LightAttributes.html#modified">modified</a> &mdash; Property in class sandy.materials.attributes.<a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/LightAttributes.html">LightAttributes</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/LineAttributes.html#modified">modified</a> &mdash; Property in class sandy.materials.attributes.<a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/LineAttributes.html">LineAttributes</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/OutlineAttributes.html#modified">modified</a> &mdash; Property in class sandy.materials.attributes.<a onclick="javascript:loadClassListFrame('sandy/materials/attributes/class-list.html');" href="sandy/materials/attributes/OutlineAttributes.html">OutlineAttributes</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
@@ -352,6 +356,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/core/scenegraph/class-list.html');" href="sandy/core/scenegraph/ATransformable.html#m_oPreviousOffsetRotation">m_oPreviousOffsetRotation</a> &mdash; Property in class sandy.core.scenegraph.<a onclick="javascript:loadClassListFrame('sandy/core/scenegraph/class-list.html');" href="sandy/core/scenegraph/ATransformable.html">ATransformable</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/BitmapMaterial.html#m_orgTexture">m_orgTexture</a> &mdash; Property in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
@@ -438,7 +448,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MÂ
   Displays a MovieClip on the faces of a 3D shape.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/MovieMaterial.html#MovieMaterial()">MovieMaterial</a>(p_oMovie, p_nUpdateMS, p_nFillColor) &mdash; Constructor in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/MovieMaterial.html">MovieMaterial</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/MovieMaterial.html#MovieMaterial()">MovieMaterial</a>(p_oMovie, p_nUpdateMS, p_nFillColor, p_oAttr:<a href="sandy/materials/attributes/MaterialAttributes.html" onclick="javascript:loadClassListFrame('sandy/materials/attributes./class-list.html');">sandy.materials.attributes:MaterialAttributes</a>) &mdash; Constructor in class sandy.materials.<a onclick="javascript:loadClassListFrame('sandy/materials/class-list.html');" href="sandy/materials/MovieMaterial.html">MovieMaterial</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>

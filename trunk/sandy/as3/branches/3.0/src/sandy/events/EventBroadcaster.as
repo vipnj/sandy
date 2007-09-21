@@ -1,29 +1,57 @@
+﻿/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package sandy.events
 {
 	import flash.events.Event;
 	import flash.utils.Dictionary;
-	
+
 	import sandy.commands.Delegate;
-	
-	public class EventBroadcaster 
+
+	/**
+	 *
+	 *
+	 */
+	public class EventBroadcaster
 	{
 	    private var m_oAll:Dictionary = new Dictionary(true);
 	    private var m_oType:Dictionary = new Dictionary(true);
 	    private var m_oEventListener:Dictionary = new Dictionary(true);
 	    private var listeners:Array;
-	
-	    public function EventBroadcaster() 
-	    {
-	        ;
-	    }
-	    
-	    public function isRegistered( listener : Object, type : String = null ) : Boolean
+
+		/**
+		 *
+		 *
+		 */
+		public function EventBroadcaster()
+		{
+	  		;
+		}
+
+		/**
+		 *
+		 *
+		 */
+	    	public function isRegistered( listener : Object, type : String = null ) : Boolean
 		{
 			if (type == null)
 			{
 				return m_oAll[listener];
 
-			} 
+			}
 			else
 			{
 				if ( m_oType[type] )
@@ -31,38 +59,50 @@ package sandy.events
 					for each( var lElt:* in m_oType[type] )
 						if( lElt == listener ) return true;
 					return false;
-				} 
+				}
 				else
 				{
 					return false;
 				}
 			}
 		}
-		
-	    public function removeListenerCollection( type : String ) : void
+
+		/**
+		 *
+		 *
+		 */
+	    	public function removeListenerCollection( type : String ) : void
 		{
 			delete m_oType[ type ];
 		}
-	    
-	    public function getListenerCollection( type : String = null ) : Dictionary
+
+		/**
+		 *
+		 *
+		 */
+	    	public function getListenerCollection( type : String = null ) : Dictionary
 		{
 			return ( type != null ) ? m_oType[type] : m_oAll;
 		}
-		
+
+		/**
+		 *
+		 *
+		 */
 		public function addEventListener( type : String, listener : Object, ...rest ) : Boolean
 		{
 			if ( listener is Function)
-			{ 
+			{
 				var d : Delegate = new Delegate( listener as Function );
 				if ( rest ) d.setArgumentsArray( rest );
 				listener = d;
 
-			} 
+			}
 			else if ( listener.hasOwnProperty( type ) && ( listener[type] is Function ) )
 			{
 				//
-	
-			} 
+
+			}
 			else if ( listener.hasOwnProperty( "handleEvent" ) && listener.handleEvent is Function )
 			{
 				//
@@ -72,30 +112,38 @@ package sandy.events
 			{
 				return false;	//ERROR CASE
 			}
-			
+
 			if ( !( isRegistered( listener ) ) )
 			{
-				if ( !(m_oType[type]) ) 
+				if ( !(m_oType[type]) )
 					m_oType[type] = new Dictionary(true);
 				// --
 				var lDico:Dictionary = getListenerCollection(type);
 
-				if ( ! lDico[ listener ] ) 
+				if ( ! lDico[ listener ] )
 				{
 					lDico[listener] = listener;
 					_storeRef( type, listener );
 					return true;
-				} 
-			}	
-			
-			return false;	
+				}
+			}
+
+			return false;
 		}
 
+		/**
+		 *
+		 *
+		 */
 		public function hasListenerCollection( type : String ) : Boolean
 		{
 			return ( m_oType[ type ] != null );
 		}
-		
+
+		/**
+		 *
+		 *
+		 */
 		public function removeEventListener( type : String, listener : Object ) : Boolean
 		{
 			if ( hasListenerCollection( type ) )
@@ -107,7 +155,7 @@ package sandy.events
 					if ( isDicoEmpty( c ) ) removeListenerCollection( type );
 					return true;
 
-				} 
+				}
 				else
 				{
 					return false;
@@ -123,11 +171,11 @@ package sandy.events
 		{
 			var m : Dictionary = m_oEventListener[ listener ];
 			delete m[ type ];
-			
+
 			if( isDicoEmpty( m ) )
 				delete m_oEventListener[ listener ];
 		}
-		
+
 		private function _storeRef( type : String, listener : Object ) : void
 		{
 			if ( !(m_oEventListener[ listener ] ) ) m_oEventListener[listener]= new Dictionary(true);
@@ -136,10 +184,10 @@ package sandy.events
 
 		public function broadcastEvent( e : Event ) : void
 		{
-			if ( hasListenerCollection(e.type) ) 
+			if ( hasListenerCollection(e.type) )
 				_broadcastEvent( getListenerCollection(e.type), e );
 			//
-			if ( ! (isDicoEmpty( m_oAll) ) ) 
+			if ( ! (isDicoEmpty( m_oAll) ) )
 				_broadcastEvent( m_oAll, e );
 		}
 
@@ -150,7 +198,7 @@ package sandy.events
 				i++;
 			return (i == 0);
 		}
-		
+
 		public function _broadcastEvent( c : Dictionary, e : Event ) : void
 		{
 			var type : String = e.type;
@@ -160,16 +208,16 @@ package sandy.events
 				if ( listener.hasOwnProperty( type ) && listener[ type ] is Function )
 				{
 					listener[type](e);
-					
+
 				} else if ( listener.hasOwnProperty( "handleEvent" ) && listener.handleEvent is Function )
 				{
 					listener.handleEvent(e);
 
-				} else 
+				} else
 				{
 					//ERROR
 				}
 			}
-		}   
+		}
 	}
 }

@@ -2,7 +2,7 @@
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-	
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -88,14 +88,14 @@
             l_nCol =  r << 16 | g << 8 |  b;
 
 
-			if( attributes.outlineAttributes) attributes.outlineAttributes.draw( l_graphics, p_oPolygon, p_oPolygon.vertices );
-			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
-           
-            if( lineAttributes )
-                l_graphics.lineStyle( lineAttributes.thickness, lineAttributes.color, lineAttributes.alpha );
+	if( attributes.outlineAttributes) attributes.outlineAttributes.draw( l_graphics, p_oPolygon, p_oPolygon.vertices );
+	if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+
+        if( attributes.lineAttributes )
+                l_graphics.lineStyle( attributes.lineAttributes.thickness, attributes.lineAttributes.color, attributes.lineAttributes.alpha );
             else
             	l_graphics.lineStyle(0,0,0);
-            
+
             l_graphics.beginFill( l_nCol, m_nAlpha );
 
             l_graphics.moveTo( l_points[0].sx, l_points[0].sy );

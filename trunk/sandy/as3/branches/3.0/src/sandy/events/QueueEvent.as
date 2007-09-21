@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -18,35 +18,63 @@ package sandy.events
 {
 	import flash.events.Event;
 
+	/**
+	 *
+	 *
+	 */
 	public class QueueEvent extends Event
 	{
 		private var _loaders : Object;
-		
+
+		/**
+		 *
+		 *
+		 */
 		public static const QUEUE_COMPLETE : String = "queueComplete";
+		/**
+		 *
+		 *
+		 */
 		public static const QUEUE_LOADER_ERROR : String = "queueLoaderError";
-		
+
+		/**
+		 *
+		 *
+		 */
 		public function QueueEvent( type : String, bubbles : Boolean = false,
 								   cancelable : Boolean = false)
 		{
 			super(type, bubbles, cancelable);
 			_loaders = loaders;
 		}
-		
+
+		/**
+		 *
+		 *
+		 */
 		public function set loaders( loaderObject : Object ) : void
 		{
 			_loaders = loaderObject;
 		}
-		
+
+		/**
+		 *
+		 *
+		 */
 		public function get loaders() : Object
 		{
 			return _loaders;
 		}
-		
+
+		/**
+		 *
+		 *
+		 */
 		override public function clone():Event
-	    {
-	    	var e : QueueEvent = new QueueEvent( type, bubbles, cancelable );
-	    	e.loaders = _loaders;
-	        return e;
-	    }
+	    	{
+	    		var e : QueueEvent = new QueueEvent( type, bubbles, cancelable );
+	    		e.loaders = _loaders;
+	        	return e;
+	    	}
 	}
 }

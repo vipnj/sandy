@@ -43,7 +43,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
   The Light3D class is used for creating the light of the world.
-    <p>The light in Sandy is a light source at infinity, emitting parallel white light.<br/>
+  
+  <p>The light in Sandy is a light source at infinity, emitting parallel whit light.<br/>
   The direction of light and the intensity can be varied</p>
     <p></p>
 <br>
@@ -177,7 +178,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public static var MAX_POWER:Number = 150</code><p>
   Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
-  But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1
+  But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1 
   </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
@@ -190,7 +191,8 @@ showHideInherited();
 <div class="detailBody">
 <code>public function Light3D(p_oD:<a href="../data/Vector.html">Vector</a>, p_nPow:Number)</code><p>
    Creates a new light source.
-      </p><span class="label">Parameters</span>
+   
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_oD</span>:<a href="../data/Vector.html">Vector</a></code> &mdash;  The direction of the emitted light.
@@ -201,7 +203,8 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nPow</span>:Number</code> &mdash; Intensity of the emitted light.
-      </td>
+   
+   </td>
 </tr>
 </table>
 </div>
@@ -349,7 +352,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function setPower(p_nPow:Number):void</code><p>
-   The the power of the light. A number between 0 and MAX_POWER is necessary.
+   The the power of the light. A number between 0 and MAX_POWER is necessary. 
    The highter the power of the light is, the less the shadows are visibles.
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">

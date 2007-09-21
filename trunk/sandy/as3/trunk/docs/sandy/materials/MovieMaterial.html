@@ -64,6 +64,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#attributes">attributes</a> : <a href="attributes/MaterialAttributes.html">MaterialAttributes</a>
+<div class="summaryTableDescription">
+   The attributes of this material.</div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#enableAccurateClipping">enableAccurateClipping</a> : Boolean = false<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
@@ -84,24 +90,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lineAttributes">lineAttributes</a> : <a href="../materials/LineAttributes.html">LineAttributes</a>
-<div class="summaryTableDescription">
-   The line attributes of this material.</div>
-</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
-</tr>
-<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#matrix">matrix</a> : Matrix<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#modified">modified</a> : Boolean<div class="summaryTableDescription">
    The modified state of this material.</div>
-</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#outlineAttributes">outlineAttributes</a> : <a href="../materials/OutlineAttributes.html">OutlineAttributes</a>
-<div class="summaryTableDescription">
-   The outline attributes of this material.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -158,6 +152,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#m_orgTexture">m_orgTexture</a> : BitmapData<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#m_oTexture">m_oTexture</a> : BitmapData<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
@@ -185,7 +183,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#MovieMaterial()">MovieMaterial</a>(p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000)</div>
+<a class="signatureLink" href="#MovieMaterial()">MovieMaterial</a>(p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</div>
 <div class="summaryTableDescription">
    Creates a new MovieMaterial.</div>
 </td><td class="summaryTableOwnerCol">MovieMaterial</td>
@@ -237,7 +235,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function MovieMaterial(p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000)</code><p>
+<code>public function MovieMaterial(p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</code><p>
    Creates a new MovieMaterial.
       </p><p>The MovieClip used for the material may contain animation.<br/>
    It is converted to a bitmap to give it a perspective distortion.<br/>
@@ -261,6 +259,12 @@ showHideInherited();
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nFillColor</span>:uint</code> (default = <code>0xFF000000</code>)<code></code> &mdash; The fill color
    </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oAttr</span>:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a></code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 </div>

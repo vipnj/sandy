@@ -167,7 +167,7 @@ package sandy.parser
 						Matrix4Math.scale(
 							l_oVector.x,
 							l_oVector.z,
-							l_oVector.y )
+							l_oVector.y
 						)
 					);
 				}

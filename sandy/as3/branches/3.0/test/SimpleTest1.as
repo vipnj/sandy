@@ -1,4 +1,4 @@
-package
+﻿package
 {
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -70,6 +70,7 @@ package
 			box.appearance = new Appearance(new ColorMaterial( 0xff00, 20, new LineAttributes( 2, 0xFF0000, 100 ) ),
 											new ColorMaterial( 0xFF, 50, new LineAttributes( 2, 0xFF00, 100 ) ) );
 			box.enableBackFaceCulling = false;
+			box.enableClipping = true;
 			// --			
 			g.addChild( box );
 			world.root = g;
@@ -100,11 +101,20 @@ package
 			{
 			    cam.rotateY += 1;
 			}		
-			if( keyPressed[Keyboard.UP] )
-			{ 
+			if( keyPressed[Keyboard.UP] ) 
+			{   
+			    cam.rotateX -= 1;
+			}
+			if( keyPressed[Keyboard.DOWN] )     
+			{
+			    cam.rotateX += 1;
+			}		
+
+			if( keyPressed[Keyboard.HOME] )
+			{ trace("Home");
 			    cam.moveForward( 2 );
 			}
-			if( keyPressed[Keyboard.DOWN] )
+			if( keyPressed[Keyboard.END] )
 			{ 
 			    cam.moveForward( -2 );
 			}	

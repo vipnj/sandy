@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -17,13 +17,19 @@ limitations under the License.
 package sandy.events
 {
 	/**
-	* Sandy custom events
-	*
-	* @author		Dennis Ippel
-	* @version		1.0
-	**/
+	 * Sandy custom events
+	 *
+	 * @author		Dennis Ippel
+	 * @since		1.0
+	 * @version		3.0
+	 * @date 		24.08.2007
+	 */
 	import flash.events.Event;
 
+	/**
+	 *
+	 *
+	 */
 	public class SandyEvent extends Event
 	{
 		public static const LIGHT_ADDED:String = "lightAdded";
@@ -35,16 +41,24 @@ package sandy.events
 		public static const CONTAINER_CREATED:String = "containerCreated";
 		public static const QUEUE_COMPLETE:String = "queueComplete";
 		public static const QUEUE_LOADER_ERROR:String = "queueLoaderError";
-		
+
+		/**
+		 *
+		 *
+		 */
 		public function SandyEvent(type:String, bubbles:Boolean = false,
 								   cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
 		}
-		
+
+		/**
+		 *
+		 *
+		 */
 		override public function clone():Event
-	    {
-	        return new SandyEvent(type, bubbles, cancelable);
-	    }
+	    	{
+	    	    return new SandyEvent(type, bubbles, cancelable);
+	    	}
 	}
 }

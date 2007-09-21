@@ -100,7 +100,6 @@ package sandy.materials
 					l_nCol = r << 16 | g << 8 |  b;
 				}
 			}
-			trace('col: '+ l_nCol + ' alpha: ' +m_nAlpha);
 			// --
 			l_graphics.lineStyle();
 			l_graphics.beginFill( l_nCol, m_nAlpha );

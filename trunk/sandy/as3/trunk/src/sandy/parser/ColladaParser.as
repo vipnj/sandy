@@ -162,17 +162,24 @@ package sandy.parser
 
 				// -- scale
 				if( p_oNode.scale.length() > 0 ) {
-
 					l_oVector = stringToVector( p_oNode.scale );
-					l_oShape.scaleX = l_oVector.x;
-					l_oShape.scaleY = l_oVector.z;
-					l_oShape.scaleZ = l_oVector.y;
+					l_oMatrix.multiply(
+						Matrix4Math.scale(
+							l_oVector.x,
+							l_oVector.z,
+							l_oVector.y )
+						)
+					);
 				}
 				// -- translation
 				if( p_oNode.translate.length() > 0 ) {
 					l_oVector = stringToVector( p_oNode.translate );
-					l_oShape.setPosition( l_oVector.x, l_oVector.z, l_oVector.y );
-
+					l_oMatrix.multiply(
+						Matrix4Math.translation(
+							l_oVector.x,
+							l_oVector.z,
+							l_oVector.y )
+					);
 				}
 				// -- rotate
  				if( p_oNode.rotate.length() == 1 ) {

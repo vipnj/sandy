@@ -217,6 +217,16 @@ package sandy.core.scenegraph
 			;//m_oContainer.graphics.clear();
 		}
 		
+		
+		/**
+		 * Provide the classical remove behaviour, plus remove the container to the display list.
+		 */
+		public override function remove():void
+		{
+			if( m_oContainer.parent ) m_oContainer.parent.removeChild( m_oContainer );
+			super.remove();
+		}
+		
 		/**
 		 * Displays this sprite xxx.
 		 *

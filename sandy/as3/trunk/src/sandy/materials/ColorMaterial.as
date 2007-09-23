@@ -79,15 +79,15 @@ package sandy.materials
 				var lightStrength:Number;
 				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
 
-				if( attributes.lightAttributes.bUseBright )
+				if( attributes.lightAttributes.useBright )
 				{
-					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.nAmbient;
+					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
 					// --
 					l_nCol = ColorUtil.calculateLitColour(l_nCol, lightStrength);
 				}
 				else
 				{
-					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.nAmbient;
+					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
 					// --
 					var r:Number = ( l_nCol >> 16 )	& 0xFF;
 					var g:Number = ( l_nCol >> 8 )	& 0xFF;

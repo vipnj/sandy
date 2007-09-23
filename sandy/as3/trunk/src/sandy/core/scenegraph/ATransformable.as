@@ -39,7 +39,12 @@ package sandy.core.scenegraph
 	 **/
 	public class ATransformable extends Node
 	{
-
+		/**
+		 * Disable the local transformations applied to this Node if set to false.
+		 * They will be applied back once et back to true.
+		 */
+		public var disable:Boolean = false;
+		
 		/**
 		 * Creates a transformable node in the object tree of the world.
 		 *
@@ -498,19 +503,6 @@ package sandy.core.scenegraph
 			return _vRotation.z;
 		}
 
-		/* Test but may be useful later
-		private function _upateRotation():void
-		{
-			m_tmpMt = Matrix4Math.rotationX ( m_RotationOffset.x );
-			m_tmpMt = Matrix4Math.multiply3x3( m_tmpMt, Matrix4Math.rotationY( m_RotationOffset.y ) );
-			m_tmpMt = Matrix4Math.multiply3x3( m_tmpMt, Matrix4Math.rotationZ( m_RotationOffset.z ) );
-			// --
-			_vUp   = Matrix4Math.vectorMult3x3( m_tmpMt, _vUp  );
-			_vSide = Matrix4Math.vectorMult3x3( m_tmpMt, _vSide );
-			_vOut  = Matrix4Math.vectorMult3x3( m_tmpMt, _vOut );
-		}
-		*/
-
 		/**
 		 * Rolls this object around the local z axis.
 		 *
@@ -564,7 +556,7 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * @private
+		 * Getter for the tilt value
 		 */
 		public function get tilt():Number
 		{
@@ -615,8 +607,7 @@ package sandy.core.scenegraph
 			_p.y = p_nY;
 			_p.z = p_nZ;
 		}
-
-
+		
 		/**
 		 * Updates this node or object.
 		 *
@@ -630,9 +621,10 @@ package sandy.core.scenegraph
 		public override function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			updateTransform();
+			// --
 			if( p_bChanged || changed )
 			{
-				 if( p_oModelMatrix )
+				 if( p_oModelMatrix && !disable )
 				 {
 					_oModelCacheMatrix.copy(p_oModelMatrix);
 					_oModelCacheMatrix.multiply4x3( m_oMatrix );
@@ -642,7 +634,7 @@ package sandy.core.scenegraph
 					_oModelCacheMatrix.copy( m_oMatrix );
 				 }
 			}
-			//
+			// --
 			super.update( p_oScene, _oModelCacheMatrix, p_bChanged );
 		}
 

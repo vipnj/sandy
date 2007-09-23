@@ -37,12 +37,12 @@ package sandy.materials.attributes
 		 * <p>If true, the lit objects use full light range from black to white.<b />
 		 * If false (the default) they just range from black to their normal appearance.</p>
 		 */
-		public var bUseBright:Boolean = false;
+		public var useBright:Boolean = false;
 		
 		/**
 		 * Level of ambient light, added to the scene if lighting is enabled.
 		 */
-		public var nAmbient:Number = 0.3;
+		public var ambient:Number = 0.3;
 		// --
 		public var modified:Boolean;
 		
@@ -54,8 +54,8 @@ package sandy.materials.attributes
 		 */
 		public function LightAttributes( p_bBright:Boolean = false, p_nAmbient:Number = 0.3 )
 		{
-			bUseBright = p_bBright;
-			nAmbient = p_nAmbient;
+			useBright = p_bBright;
+			ambient = p_nAmbient;
 			// --
 			modified = true;
 		}

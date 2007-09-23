@@ -68,7 +68,6 @@ package sandy.core.scenegraph
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
 	        _oBBox 		= null;
-	        setBoundingSphereRadius( 30 );
 	        // --
 			_nScale = p_nScale;
 			// --
@@ -78,6 +77,8 @@ package sandy.core.scenegraph
 			_vView = new Vector( 0, 0, 1 );
 			// -- set the offset
 			offset = p_nOffset;
+			
+			setBoundingSphereRadius( 30 );
 		}
 
 		/**
@@ -259,8 +260,8 @@ package sandy.core.scenegraph
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-			m_oContainer.x = _v.sx;// - m_nW2;
-			m_oContainer.y = _v.sy;// - m_nH2;
+			m_oContainer.x = _v.sx - m_oContainer.width/2;// - m_nW2;
+			m_oContainer.y = _v.sy - m_oContainer.height/2;// - m_nH2;
 		}
 
 		// Returns the frame to show at the current camera angle

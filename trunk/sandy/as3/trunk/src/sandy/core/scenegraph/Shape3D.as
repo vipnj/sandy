@@ -195,6 +195,10 @@ package sandy.core.scenegraph
 		 */		
 		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
+			// IF no appearance has bene applied, no display
+			if( m_oAppearance == null ) return;
+			
+			
 			var l_bVisible:Boolean;
 			var l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
 	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 

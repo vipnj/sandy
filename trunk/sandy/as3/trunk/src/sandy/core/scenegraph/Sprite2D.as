@@ -61,16 +61,16 @@ package sandy.core.scenegraph
 		{
 			super(p_sName);
 			m_oContainer = new Sprite();
-			//World3D.getInstance().container.addChild( m_oContainer );
 			// --
 			_v = new Vertex();
 			_oBSphere 	= new BSphere();
 	        _oBBox 		= null;
-	        setBoundingSphereRadius( 30 );
 	        // --
 			_nScale = p_nScale;
 			// --
 			content = p_oContent;
+			
+			setBoundingSphereRadius( 30 );
 		}
 
 		/**
@@ -238,8 +238,8 @@ package sandy.core.scenegraph
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-			m_oContainer.x = _v.sx;// - m_nW2;
-			m_oContainer.y = _v.sy;// - m_nH2;
+			m_oContainer.x = _v.sx - m_oContainer.width/2;// - m_nW2;
+			m_oContainer.y = _v.sy - m_oContainer.height/2;// - m_nH2;
 		}
 		
 		private var m_nPerspScale:Number=0;

@@ -26,6 +26,7 @@ package
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.materials.attributes.LightAttributes;
 	import sandy.materials.attributes.OutlineAttributes;
+	import sandy.core.scenegraph.Shape3D;
 
 	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=120)] 
 	public class BitmapTest extends Sprite
@@ -41,7 +42,7 @@ package
 		
 		private var m_oScene:World3D;
 		private var m_oBox:Box;
-		private var m_oSphere:Sphere;
+		private var m_oSphere:Shape3D;
 		private var m_oPlane:Plane3D;
 		private var m_oTorus:Torus;
 		private var keyPressed:Array = new Array();
@@ -136,19 +137,19 @@ package
 			m_oBox.y = 45;
 			m_oBox.appearance = new Appearance( new BitmapMaterial( lPic2.bitmapData ) );//new Appearance( new ColorMaterial( 0xFF0000, new LineAttributes() ));
 			// --
-			m_oSphere = new Sphere( "myShpere", 30, 10, 10 );
+			m_oSphere = new Box("myBox", 50, 50, 50, PrimitiveMode.TRI, 2);//new Sphere( "myShpere", 30, 10, 10 );
 			m_oSphere.y = 50;
 			
-			var l_oMatAttr:MaterialAttributes = new MaterialAttributes( new LightAttributes()/*, new LineAttributes()*/ );
-			var lMat:ColorMaterial = new ColorMaterial( 0xFF00 );
+			var l_oMatAttr:MaterialAttributes = new MaterialAttributes( new LightAttributes(false, 0)/*, new LineAttributes()*/ );
+			var lMat:BitmapMaterial = new BitmapMaterial( lPic2.bitmapData );
 			lMat.attributes = l_oMatAttr;
 			lMat.lightingEnable = true;
 			m_oSphere.appearance = new Appearance( lMat );//new Appearance( new WireFrameMaterial( 0xFF ) );
 			m_oSphere.z = 70;
 			// --
-			lG.addChild( m_oPlane );
-			lG.addChild( m_oBox );
-			lG.addChild( m_oTorus );
+			//lG.addChild( m_oPlane );
+			//lG.addChild( m_oBox );
+			//lG.addChild( m_oTorus );
 			lG.addChild( lTg );
 			lTg.addChild( m_oSphere );
 			return lG;

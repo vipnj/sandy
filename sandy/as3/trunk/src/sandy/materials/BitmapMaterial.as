@@ -20,12 +20,15 @@ package sandy.materials
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.filters.ColorMatrixFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.util.NumberUtil;
@@ -40,6 +43,8 @@ package sandy.materials
 	 */
 	public class BitmapMaterial extends Material
 	{
+		public static const ORIGIN:Point = new Point();	
+		
 		public var matrix:Matrix = new Matrix();
 		// --
 		public var smooth:Boolean = false;
@@ -77,16 +82,34 @@ package sandy.materials
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
 			const lGraphics:Graphics = p_mcContainer.graphics;
-			//
+			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
+			if( !l_points.length ) return;
+			
+			// -- If there's a light, we prepare the texture
+			if( _useLight && attributes.lightAttributes )
+			{
+				var lightStrength:Number;
+				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
+				// --
+				lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
+				// --
+				var l_oRectangle:Rectangle = p_oPolygon.uvBounds;
+				var l_oTextureRectangle:Rectangle = new Rectangle(	l_oRectangle.x * m_nWidth, l_oRectangle.y * m_nHeight,
+																	l_oRectangle.width * m_nWidth, l_oRectangle.height * m_nHeight );
+				//l_oTextureRectangle = m_oTexture.rect;
+				// --
+				m_oCmf.matrix = __getBrightnessTransform( lightStrength );
+			    //m_oCmf.matrix = lmatrix;
+				m_oTexture.applyFilter( m_oTexture, l_oTextureRectangle, ORIGIN, m_oCmf );
+			}
+			// --
 			if( p_oPolygon.isClipped && enableAccurateClipping )
 			{
 				if( p_oPolygon.cvertices.length )
-					_drawPolygon( p_oPolygon, p_oPolygon.cvertices, p_oPolygon.caUVCoord, lGraphics );
+					_drawPolygon( p_oPolygon, l_points, p_oPolygon.caUVCoord, lGraphics );
 			}
 			else
 			{
-				const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
-				if( !l_points.length ) return;
 				// -- we prepare the texture
 				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
 				const x0:Number = p_oPolygon.vertices[0].sx, y0:Number = p_oPolygon.vertices[0].sy;
@@ -101,19 +124,12 @@ package sandy.materials
 				matrix = lUv.clone();
 				matrix.concat(m_oTmp);
 				// --
-				lGraphics.lineStyle();
-				lGraphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
-				// --
-				// --
-				lGraphics.moveTo( l_points[0].sx, l_points[0].sy );
-				// --
-				for each( var l_oPoint:Vertex in l_points )
-					lGraphics.lineTo( l_oPoint.sx, l_oPoint.sy );
-				//	--
-				lGraphics.endFill();
-				
-				if( attributes.lineAttributes ) attributes.lineAttributes.draw( lGraphics, p_oPolygon, l_points );
-				if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( lGraphics, p_oPolygon, l_points );
+				_processPolygonDraw( p_oPolygon, lGraphics, matrix, l_points );
+			}
+			
+			if( _useLight && attributes.lightAttributes )
+			{
+				m_oTexture.copyPixels( m_orgTexture, l_oTextureRectangle, ORIGIN );
 			}
 		}
 		
@@ -147,20 +163,24 @@ package sandy.materials
 			matrix = lUv.clone();
 			matrix.concat(m_oTmp);
 			// --
+			_processPolygonDraw( p_oPolygon, p_oGraphics, matrix, p_aPoints );
+		}	
+
+		private function _processPolygonDraw( p_oPolygon:Polygon, p_oGraphics:Graphics, p_oMatrix:Matrix, p_aPoints:Array ):void
+		{
 			p_oGraphics.lineStyle();
-			p_oGraphics.beginBitmapFill( m_oTexture, matrix, false, smooth );
+			p_oGraphics.beginBitmapFill( m_oTexture, p_oMatrix, false, smooth );
 			// --
-			p_oGraphics.moveTo( x0, y0 );
+			p_oGraphics.moveTo( p_aPoints[0].sx, p_aPoints[0].sy );
 			// --
-			for each( var l_oPoint:Vertex in l_points )
+			for each( var l_oPoint:Vertex in p_aPoints )
 				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);
 			// --
 			p_oGraphics.endFill();
-			
-			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
-			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_oGraphics, p_oPolygon, l_points );
-		}	
-
+			// --
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );
+		}
 
 		private function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
@@ -252,23 +272,33 @@ package sandy.materials
 				m_oPolygonMatrixMap[p_oPolygon] = m;
 			}
 		}
-
-		//
-		private function __getBrightnessTransform( scale:Number ) : Array
+		
+		private function __getBrightnessTransform( brightness:Number ):Array
 		{
-			var s:Number = scale;
-			var o:Number = 0;
-			//
-			return new Array 
-			(
-				s	, 0.0	, 0.0	, 0.0	, o,
-				0.0	, s		, 0.0	, 0.0	, o,
-				0.0	, 0.0	, s		, 0.0	, o,
-				0.0	, 0.0	, 0.0	, 1.0	, o
-			);
+			if( attributes.lightAttributes.useBright )
+			{
+				var o:Number = (brightness * 512) - 256;
+				return new Array 
+				(
+					1	, 0.0	, 0.0	, 0.0	, o,
+					0.0	, 1		, 0.0	, 0.0	, o,
+					0.0	, 0.0	, 1		, 0.0	, o,
+					0.0	, 0.0	, 0.0	, 1.0	, 0
+				);
+			}
+			else
+			{
+				var s:Number = brightness;
+				return new Array 
+				(
+					s	, 0.0	, 0.0	, 0.0	, 0,
+					0.0	, s	, 0.0	, 0.0	, 0,
+					0.0	, 0.0	, s	, 0.0	, 0,
+					0.0	, 0.0	, 0.0	, 1.0	, 0
+				);
+			}
 		}
-	
-
+		
 		public function toString():String
 		{
 			return 'sandy.materials.BitmapMaterial' ;

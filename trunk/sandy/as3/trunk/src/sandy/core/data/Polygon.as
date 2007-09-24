@@ -19,6 +19,7 @@ package sandy.core.data
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.scenegraph.Geometry3D;
@@ -92,6 +93,12 @@ package sandy.core.data
 		 */
 		public var caUVCoord:Array;
 
+		/**
+		 * [READ-ONLY] property.
+		 * This property contains the texture bounds as a Rectangle.
+		 */
+		public var uvBounds:Rectangle;
+		
 		/**
 		 *  Normal backface culling side is 1. -1 means that the opposite side is culled.
 		 */
@@ -278,13 +285,25 @@ package sandy.core.data
 			// -- every polygon does not have some texture coordinates
 			if( p_aUVCoordsID )
 			{
+				var l_nMinU:Number = Number.POSITIVE_INFINITY, l_nMinV:Number = Number.POSITIVE_INFINITY,
+									l_nMaxU:Number = Number.NEGATIVE_INFINITY, l_nMaxV:Number = Number.NEGATIVE_INFINITY;
+				// --
 				aUVCoord = new Array();
 				i = 0;
 				for each( var p:* in p_aVertexID )
 				{
-					aUVCoord[i] = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
+					var l_oUV:UVCoord = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
+					aUVCoord[i] = l_oUV;
+					if( l_oUV.u < l_nMinU ) l_nMinU = l_oUV.u;
+					if( l_oUV.u > l_nMaxU ) l_nMaxU = l_oUV.u;
+					// --
+					if( l_oUV.v < l_nMinV ) l_nMinV = l_oUV.v;
+					if( l_oUV.v > l_nMaxV ) l_nMaxV = l_oUV.v;
+					// --
 					i++;
 				}
+				// --
+				uvBounds = new Rectangle( l_nMinU, l_nMinV, l_nMaxU-l_nMinU, l_nMaxV-l_nMinV );
 			}
 			// --
 			normal = Vertex( m_oGeometry.aFacesNormals[ p_nFaceNormalID ] );

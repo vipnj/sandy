@@ -137,10 +137,10 @@ package
 			m_oBox.y = 45;
 			m_oBox.appearance = new Appearance( new BitmapMaterial( lPic2.bitmapData ) );//new Appearance( new ColorMaterial( 0xFF0000, new LineAttributes() ));
 			// --
-			m_oSphere = new Box("myBox", 50, 50, 50, PrimitiveMode.TRI, 2);//new Sphere( "myShpere", 30, 10, 10 );
+			m_oSphere = new Torus("myTorus", 30, 15, 6, 6 );//new Sphere( "myShpere", 30, 10, 10 );
 			m_oSphere.y = 50;
 			
-			var l_oMatAttr:MaterialAttributes = new MaterialAttributes( new LightAttributes(false, 0)/*, new LineAttributes()*/ );
+			var l_oMatAttr:MaterialAttributes = new MaterialAttributes( new LightAttributes(true, 0.2)/*, new LineAttributes()*/ );
 			var lMat:BitmapMaterial = new BitmapMaterial( lPic2.bitmapData );
 			lMat.attributes = l_oMatAttr;
 			lMat.lightingEnable = true;

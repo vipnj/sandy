@@ -95,7 +95,7 @@ package sandy.materials
 				var l_oRectangle:Rectangle = p_oPolygon.uvBounds;
 				var l_oTextureRectangle:Rectangle = new Rectangle(	l_oRectangle.x * m_nWidth, l_oRectangle.y * m_nHeight,
 																	l_oRectangle.width * m_nWidth, l_oRectangle.height * m_nHeight );
-				// Hack to fix a small thing
+				// Hack to fix a small thing with drawing lines
 				l_oTextureRectangle.inflate( 1, 1 );
 				var l_oFilterOrigin:Point = new Point( l_oTextureRectangle.x, l_oTextureRectangle.y );
 				// -- l_oTextureRectangle = m_oTexture.rect;
@@ -125,11 +125,6 @@ package sandy.materials
 				matrix.concat(m_oTmp);
 				// --
 				_processPolygonDraw( p_oPolygon, lGraphics, matrix, l_points );
-			}
-			
-			if( _useLight && attributes.lightAttributes )
-			{
-				//m_oTexture.copyPixels( m_orgTexture, l_oTextureRectangle, l_oFilterOrigin );
 			}
 		}
 		
@@ -170,7 +165,7 @@ package sandy.materials
 		private function _processPolygonDraw( p_oPolygon:Polygon, p_oGraphics:Graphics, p_oMatrix:Matrix, p_aPoints:Array ):void
 		{
 			p_oGraphics.lineStyle();
-			p_oGraphics.beginBitmapFill( m_oTexture, p_oMatrix, true, smooth );
+			p_oGraphics.beginBitmapFill( m_oTexture, p_oMatrix, false, smooth );
 			// --
 			p_oGraphics.moveTo( p_aPoints[0].sx, p_aPoints[0].sy );
 			// --
@@ -178,7 +173,6 @@ package sandy.materials
 				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);
 			// --
 			p_oGraphics.endFill();
-			//p_oGraphics.beginFill(0,0);
 			// --
 			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );
 			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );

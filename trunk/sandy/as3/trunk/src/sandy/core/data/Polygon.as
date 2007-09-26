@@ -290,7 +290,7 @@ package sandy.core.data
 				// --
 				aUVCoord = new Array();
 				i = 0;
-				for each( var p:* in p_aVertexID )
+				for each( var p:* in p_aUVCoordsID )
 				{
 					var l_oUV:UVCoord = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
 					aUVCoord[i] = l_oUV;

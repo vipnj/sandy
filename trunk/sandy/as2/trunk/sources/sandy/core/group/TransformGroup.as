@@ -17,8 +17,9 @@ limitations under the License.
 import sandy.core.group.Node;
 import sandy.core.group.INode;
 import sandy.core.buffer.MatrixBuffer;
-import sandy.core.transform.Transform3D;
+import sandy.core.transform.ITransform3D;
 import sandy.core.data.Matrix4;
+
 
 /**
 * @author		Thomas Pfeiffer - kiroukou
@@ -27,15 +28,15 @@ import sandy.core.data.Matrix4;
 * @version		1.2.1
 * @date 		07.08.2007
 **/
-class sandy.core.group.TransformGroup extends Node implements INode  
+class sandy.core.group.TransformGroup extends Node implements INode
 {
 	/**
 	* Create a new TransformGroup.
 	* This class is one of the most important because it represents a node in the tree scene representation in Sandy.
 	* It has a matrix which is in fact its Transform3D property matrix.
 	* @param [OPTIONNAL] transform Transform3D The transformation to apply to this transformGroup
-	*/ 	
-	public function TransformGroup( transform:Transform3D, inName:String )  //  Changed from ITransform3D to Transform3D?
+	*/
+	public function TransformGroup( transform:ITransform3D, inName:String )  // Changed back to ITransform3D
 	{
 		super();
 		_t = (undefined == transform) ? null : transform;
@@ -43,28 +44,28 @@ class sandy.core.group.TransformGroup extends Node implements INode
 		_bPop = false;
 		name = (inName == undefined) ? "TransformGroup name" : inName;
 	}
-	
+
 	/**
 	 * Add a transformation to the current TransformGroup. This allows to apply a transformation to all the childs of the Node.
 	 * @param t		The transformation to add
 	 */
-	public function setTransform( t:Transform3D ):Void // Changed to Transform3D
+	public function setTransform( t:ITransform3D ):Void // Changed back to ITransform3D
 	{
 		_t = t;
 		setModified( true );
 	}
-	
+
 	/**
 	 * Get the current TransformGroup transformation. This allows to manipulate the node transformation.
-	 * @return	The transformation 
+	 * @return	The transformation
 	 */
-	public function getTransform( Void ):Transform3D // Changed to Transform3D
+	public function getTransform( Void ):ITransform3D // Changed back to ITransform3D
 	{
 		return _t;
 	}
-	
+
 	/**
-	* Allows you to know if this node has been modified (true value) or not (false value). 
+	* Allows you to know if this node has been modified (true value) or not (false value).
 	* Mainly usefull for the cache system.
 	* After this method call the property hasn't changed it's value. It remains the current returned value.
 	* @return	Boolean Value specifying the statut of the node. A true value means the node has been modified, it it should be rendered again
@@ -73,14 +74,14 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	{
 		return _modified || _t.isModified();
 	}
-	
+
 	public function setModified( b:Boolean ):Void
 	{
 		//trace ("TransformGroup setModified " + b + " " +  name);
 		super.setModified( b );
 		_t.setModified( b );
 	}
-	
+
 	/**
 	 * Render the actual node. Object3D's node are rendered, TransformGroup concat (multiply) their matrix to
 	 * update the 3D transformations view.
@@ -97,7 +98,7 @@ class sandy.core.group.TransformGroup extends Node implements INode
 			}
 		}
 	}
-	
+
 	/**
 	 * Dispose the actual node. Object3D's node are rendered, TransformGroup concat (multiply) their matrix to
 	 * update the 3D transformations view.
@@ -112,28 +113,28 @@ class sandy.core.group.TransformGroup extends Node implements INode
 	}
 
 	/**
-	* 
+	*
 	*/
 	public function destroy( Void ):Void
 	{
 		super.destroy();
 		_t.destroy();
 	}
-	
+
 	/**
 	* Get a String represntation of the {@code TransformGroup}.
-	* 
+	*
 	* @return	A String representing the {@code TransformGroup}.
-	*/ 
+	*/
 	public function toString( Void ):String
 	{
 		return "sandy.core.group.TransformGroup";
-	}	
-	
+	}
+
 	/**
 	* The transformation of this TransformGroup
 	*/
-	private var _t:Transform3D; // Changed to Transform3D
+	private var _t:ITransform3D; // Changed to Transform3D
 	private var _bPop:Boolean;
 
 }

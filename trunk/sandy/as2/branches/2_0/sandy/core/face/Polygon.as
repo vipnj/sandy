@@ -69,12 +69,11 @@ class sandy.core.face.Polygon implements IDisplayable
 	/** Boolean representing the state of the event activation */
 	private var mouseEvents:Boolean;
 	/** Unique face id */
-	private var id:Number;
+
 	private var m_bIsVisible:Boolean;
 	
 	public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array, p_nFaceNormalID:Number )
 	{
-		id = Polygon._ID_ ++;
 		// --
 		owner = p_oOwner;
 		m_oGeometry = p_geometry;
@@ -85,7 +84,8 @@ class sandy.core.face.Polygon implements IDisplayable
 		// --
 		__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID );
 		// Add this graphical object to the World display list
-		originalContainer = container = World3D.getInstance().container.createEmptyMovieClip( "polygon_"+id.toString(), id );
+		var l_mc:MovieClip = World3D.getInstance().container;
+		originalContainer = container = World3D.getInstance().container.createEmptyMovieClip( "polygon_"+l_mc.getNextHighestDepth(), l_mc.getNextHighestDepth() );		
 		broadcaster = new BubbleEventBroadcaster( this, owner.broadcaster );
 	}
 
@@ -197,7 +197,7 @@ class sandy.core.face.Polygon implements IDisplayable
 	 */
 	public function toString( Void ):String
 	{
-		return "sandy.core.face.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
+		return "sandy.core.face.Polygon:: [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
 	}
 
 	/**

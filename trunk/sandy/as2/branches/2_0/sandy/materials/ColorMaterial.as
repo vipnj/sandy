@@ -1,7 +1,9 @@
-﻿import sandy.core.face.Polygon;
+﻿import com.bourre.log.Logger;
+
+import sandy.core.face.Polygon;
+import sandy.materials.LineAttributes;
 import sandy.materials.Material;
 import sandy.materials.MaterialType;
-import sandy.materials.LineAttributes;
 
 /**
  * @author thomaspfeiffer
@@ -24,7 +26,7 @@ class sandy.materials.ColorMaterial extends Material
 		super.renderPolygon( p_oPolygon, p_mcContainer );
 		//
 		var mc:MovieClip = p_mcContainer;
-		var l_points:Array = p_oPolygon.cvertices;
+		var l_points:Array = p_oPolygon.cvertices;		
 		// --
 		mc.beginFill( m_nColor, m_nAlpha );
 		// --

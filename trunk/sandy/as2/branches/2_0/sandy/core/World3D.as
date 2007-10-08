@@ -19,7 +19,6 @@ import com.bourre.events.BasicEvent;
 import com.bourre.events.EventBroadcaster;
 import com.bourre.events.EventType;
 
-import sandy.core.data.Matrix4;
 import sandy.core.data.Vector;
 import sandy.core.light.Light3D;
 import sandy.core.scenegraph.Camera3D;
@@ -137,6 +136,7 @@ class sandy.core.World3D
 		if( root && camera && _container )
 		{
 			_oEB.broadcastEvent( _eOnRender );
+		
 			// --
 			root.update( null, false );
 			root.cull( camera.frustrum, camera.modelMatrix, camera.changed );

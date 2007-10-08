@@ -44,7 +44,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		m_aVisiblePoly = new Array();
 		m_bEv = false;
 		// -- create the geometry and the bounding volumes
-        geometry = p_geometry;
+        if( p_geometry) geometry = p_geometry;
         // -- attach an appearance to the shape
 		appearance = (p_oAppearance == null) ? new Appearance( new ColorMaterial() ) : p_oAppearance;
     }
@@ -101,9 +101,7 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
     {
     	var i:Number, l:Number;
     	//
-    	Logger.LOG("create from geometry, nomber of vertices :"+p_oGeometry.aFacesVertexID.length);
     	aPolygons = new Array( l = p_oGeometry.aFacesVertexID.length );
-    	Logger.LOG("aPolygons="+aPolygons+" "+aPolygons.length);
     	//
     	for( i=0; i<l; i++ )
     	{
@@ -280,15 +278,11 @@ class sandy.core.scenegraph.Shape3D extends ATransformable implements ITransform
 		// Now we register to the update event
 		m_oAppearance = p_oApp;
 		//
-		Logger.LOG("shape::set appearance : "+p_oApp+" "+m_oGeometry);
-		
 		if( m_oGeometry )
 		{
 			var l_faces:Array = aPolygons;
 			var l:Number = l_faces.length;
-			
-			Logger.LOG("shape::set appearance tableau: "+l_faces);
-			Logger.LOG("shape::set appearance taille: "+l);
+
 			while( --l > -1 )
 			{
 				l_faces[int(l)].appearance = m_oAppearance;

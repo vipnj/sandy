@@ -103,11 +103,12 @@ package sandy.math
 		 */
 		public static function addVertex( p_oV:Vertex, p_oW:Vertex ): Vertex
 		{
-			return new Vertex(	
-						p_oV.x + p_oW.x ,
-	                	           	p_oV.y + p_oW.y ,
-	                	        	p_oV.z + p_oW.z 
-	                        	);
+			return new Vertex(	p_oV.x + p_oW.x ,
+	                	        p_oV.y + p_oW.y ,
+	                	        p_oV.z + p_oW.z,
+	                	        p_oV.wx + p_oW.wx ,
+	                	        p_oV.wy + p_oW.wy ,
+	                	        p_oV.wz + p_oW.wz );
 		}
 		
 		/**

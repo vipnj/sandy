@@ -165,7 +165,7 @@ package sandy.materials
 		private function _processPolygonDraw( p_oPolygon:Polygon, p_oGraphics:Graphics, p_oMatrix:Matrix, p_aPoints:Array ):void
 		{
 			p_oGraphics.lineStyle();
-			p_oGraphics.beginBitmapFill( m_oTexture, p_oMatrix, false, smooth );
+			p_oGraphics.beginBitmapFill( m_oTexture, p_oMatrix, true, smooth );
 			// --
 			p_oGraphics.moveTo( p_aPoints[0].sx, p_aPoints[0].sy );
 			// --

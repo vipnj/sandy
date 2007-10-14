@@ -67,8 +67,10 @@ package sandy.primitive
 		 *    	                  	"tri" generates faces with 3 vertices, 
 		 * 				"quad" generates faces with 4 vertices.
 		 */
-		public function Plane3D( p_sName:String=null, p_nHeight:Number = 100, p_nWidth:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint=1, p_sType:String = Plane3D.XY_ALIGNED, p_sMode:String = PrimitiveMode.TRI )
+		public function Plane3D(p_sName:String=null, p_nHeight:Number = 100, p_nWidth:Number = 100, p_nQualityH:uint = 1, 
+								p_nQualityV:uint=1, p_sType:String=Plane3D.XY_ALIGNED, p_sMode:String=null )
 		{
+			
 			super( p_sName ) ;
 			_h = p_nHeight;
 			_lg = p_nWidth;

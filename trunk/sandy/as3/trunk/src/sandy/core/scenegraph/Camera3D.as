@@ -16,7 +16,7 @@ limitations under the License.
 
 package sandy.core.scenegraph 
 {
-	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
@@ -91,6 +91,7 @@ package sandy.core.scenegraph
 			_viewport = p_oVP;
 			_perspectiveChanged = true;
 			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			// TODO FIX THAT
 			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
 		}
 		
@@ -103,6 +104,7 @@ package sandy.core.scenegraph
 			_viewport.update();
 			_perspectiveChanged = true;
 			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			// TODO FIX THAT
 			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
 		}
 		
@@ -115,6 +117,7 @@ package sandy.core.scenegraph
 			_viewport.update();
 			_perspectiveChanged = true;
 			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
+			// TODO FIX THAT
 			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
 		}
 				
@@ -175,10 +178,10 @@ package sandy.core.scenegraph
 			{
 				l_oShape.clear();
 			}
-		    
+		    // --
 		    nbPolygons = m_aDisplayList.length;
 		    // --
-		    var l_nId:int=0, l_mcContainer:DisplayObjectContainer = p_oScene.container;
+		    const l_mcContainer:Sprite = p_oScene.container;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
@@ -222,6 +225,7 @@ package sandy.core.scenegraph
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+				l_oVertex.sz = 1 / l_oVertex.wz;
 			}	
 			m_oProjList.splice( 0 );
 		}
@@ -255,6 +259,7 @@ package sandy.core.scenegraph
 			const l_nCste:Number = 	1 / ( p_oVertex.wx * mp41 + p_oVertex.wy * mp42 + p_oVertex.wz * mp43 + mp44 );
 			p_oVertex.sx =  l_nCste * ( p_oVertex.wx * mp11 + p_oVertex.wy * mp12 + p_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 			p_oVertex.sy = -l_nCste * ( p_oVertex.wx * mp21 + p_oVertex.wy * mp22 + p_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+			p_oVertex.sz = 1 / p_oVertex.wz;
 		}
 		
 		/**

@@ -42,9 +42,9 @@ package sandy.materials
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
 		 * @param p_oAttr	The attributes for this material
 		 */
-		public function WireFrameMaterial( p_nThickness:uint=1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes=null )
+		public function WireFrameMaterial( p_nThickness:uint=1, p_nColor:uint = 0, p_nAlpha: Number = 1, p_oAttr:MaterialAttributes=null )
 		{
-			super(p_oAttr);
+			super( p_oAttr );
 			// --
 			m_nType = MaterialType.WIREFRAME;
 			// --
@@ -61,8 +61,8 @@ package sandy.materials
 		 */		
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
-			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices );
 		}
 
 	}

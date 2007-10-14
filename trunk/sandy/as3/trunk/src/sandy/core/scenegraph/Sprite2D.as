@@ -235,7 +235,7 @@ package sandy.core.scenegraph
 		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
+		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null  ):void
 		{
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
 			m_oContainer.x = _v.sx - m_oContainer.width/2;// - m_nW2;

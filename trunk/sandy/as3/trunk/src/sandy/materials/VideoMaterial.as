@@ -21,7 +21,7 @@ package sandy.materials
 	import flash.events.TimerEvent;
 	import flash.media.Video;
 	import flash.utils.Timer;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
@@ -59,7 +59,7 @@ package sandy.materials
 			// --
 			m_oTimer = new Timer( p_nUpdateMS );
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
-			m_oTimer.start();
+			start();
 		}
 
 		/**
@@ -82,6 +82,23 @@ package sandy.materials
 			//m_oTexture.dispose();
 			// --
 			m_oTexture.draw( m_oVideo );
+		}
+		
+		/**
+		 * Call this method when you want to start the material update.
+		 * This is automatically called at the material creation so basically it is used only when the VideoMaterial::stop() method has been called
+		 */
+		public function start():void
+		{
+			m_oTimer.start();
+		}
+		
+		/**
+		 * Call this method is case you would like to stop the automatic video material graphics update.
+		 */
+		public function stop():void
+		{
+			m_oTimer.stop();
 		}
 
 	}

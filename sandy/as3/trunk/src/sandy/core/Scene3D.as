@@ -17,8 +17,9 @@ limitations under the License.
 package sandy.core
 {
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
-
+	
 	import sandy.core.data.Vector;
 	import sandy.core.light.Light3D;
 	import sandy.core.scenegraph.Camera3D;
@@ -64,7 +65,7 @@ package sandy.core
 		/**
 		 * The container that stores all displayabel objects for this scene.
 		 */
-		public var container:DisplayObjectContainer;
+		public var container:Sprite;
 
 		private var _light:Light3D; 	//the unique light instance of the world
 
@@ -80,7 +81,7 @@ package sandy.core
 		 * @param p_oCamera	The single camera for this scene
 		 * @param p_oRootNode	The root group of the object tree for this scene
 		 */
-		public function Scene3D( p_sName : String, p_oContainer:DisplayObjectContainer,
+		public function Scene3D( p_sName : String, p_oContainer:Sprite,
 					 			 p_oCamera:Camera3D, p_oRootNode:Group )
 		{
 			if ( p_sName != null )

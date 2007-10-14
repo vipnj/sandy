@@ -86,5 +86,23 @@ package sandy.materials
 			// --
 			m_oTexture.draw( m_oMovie );
 		}
+		
+		/**
+		 * Call this method when you want to start the material update.
+		 * This is automatically called at the material creation so basically it is used only when the MovieMaterial::stop() method has been called
+		 */
+		public function start():void
+		{
+			m_oTimer.start();
+		}
+		
+		/**
+		 * Call this method is case you would like to stop the automatic MovieMaterial texture update.
+		 */
+		public function stop():void
+		{
+			m_oTimer.stop();
+		}
+		
 	}
 }

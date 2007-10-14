@@ -293,6 +293,60 @@ package sandy.view
 			if( p_aCvert.length <= 2 ) return;
 			clipPolygon( aPlanes[NEAR], p_aCvert, p_aUVCoords ); // near;
 		}
+		
+
+	
+		/**
+		 * Clip the given vertex and UVCoords arrays against the frustum front plane
+		 */
+		public function clipLineFrontPlane( p_aCvert: Array ):void
+		{
+			var l_oPlane:Plane = aPlanes[NEAR];
+			var tmp:Array = p_aCvert.splice(0);
+			
+			var v0:Vertex = tmp[0];
+			var v1:Vertex = tmp[1];
+						
+			var l_nDist0:Number = l_oPlane.a * v0.wx + l_oPlane.b * v0.wy + l_oPlane.c * v0.wz + l_oPlane.d; 
+			var l_nDist1:Number = l_oPlane.a * v1.wx + l_oPlane.b * v1.wy + l_oPlane.c * v1.wz + l_oPlane.d;
+			
+			var d:Number = 0;
+			var t:Vertex = new Vertex();
+			
+			if ( l_nDist0 < 0 && l_nDist1 >=0 )		// Coming in
+			{	 
+				d = l_nDist0/(l_nDist0-l_nDist1);
+				t.wx = (v0.wx+(v1.wx-v0.wx)*d);
+				t.wy = (v0.wy+(v1.wy-v0.wy)*d);
+				t.wz = (v0.wz+(v1.wz-v0.wz)*d);
+				//
+				p_aCvert.push( t );
+				p_aCvert.push( v1 );
+			} 
+			else if ( l_nDist1 < 0 && l_nDist0 >=0 )		// Going out
+			{	
+				d = l_nDist0/(l_nDist0-l_nDist1);
+				//
+				t.wx = (v0.wx+(v1.wx-v0.wx)*d);
+				t.wy = (v0.wy+(v1.wy-v0.wy)*d);
+				t.wz = (v0.wz+(v1.wz-v0.wz)*d);
+				
+				p_aCvert.push( v0 );
+				p_aCvert.push( t );
+			} 
+			else if( l_nDist1 < 0 && l_nDist0 < 0 ) // ALL OUT
+			{
+				p_aCvert = null;
+			}
+			else if( l_nDist1 > 0 && l_nDist0 > 0 ) // ALL IN
+			{
+				
+				p_aCvert.push( v0 );
+				p_aCvert.push( v1 );
+			}
+		}
+		
+				
 	    
 		/**
 		 * Clips a polygon against one the frustum planes

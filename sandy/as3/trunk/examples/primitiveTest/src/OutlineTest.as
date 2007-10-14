@@ -61,7 +61,7 @@ package
 			lSphere2.z = -300;
 			lSphere2.y = 100;
 			lSphere2.appearance = new Appearance(
-				new ColorMaterial( 0xff, 100, new MaterialAttributes( new LineAttributes(), new OutlineAttributes(8, 0xFFFF) ) )
+				new ColorMaterial( 0xff, 0.5, new MaterialAttributes( new LineAttributes(1, 0xFF, 1), new OutlineAttributes(8, 0xFFFF) ) )
 			);
 			world.root.addChild( lSphere2 );
 			
@@ -71,7 +71,7 @@ package
 			capsule.x = -200;
 			capsule.z = -200;
 			capsule.appearance = new Appearance(
-				new OutlineMaterial( 8, 0xffff00, 100 )
+				new WireFrameMaterial( 1, 0xffff00, 0.3)
 			);
 			// -- add the collada object to the world
 			world.root.addChild( capsule );

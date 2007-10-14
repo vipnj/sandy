@@ -64,7 +64,7 @@ package sandy.bounds
 		public static function create( p_aVertices:Array ):BSphere
 		{
 		    var l_sphere:BSphere = new BSphere();
-		    
+		    /*
 		    var l_min:Vector = new Vector();
 		    var l_max:Vector = new Vector();
 			
@@ -88,8 +88,10 @@ package sandy.bounds
 			// TODO : compare this method efficiency compared to the previous compute one
 			var lDiff:Vector = l_max.clone();
 			lDiff.sub( l_min );
-			l_sphere.radius = lDiff.getMaxComponent();
-		    //l_sphere.compute( p_aVertices );
+			l_sphere.radius = lDiff.getMaxComponent()/2;
+		    */
+		    
+		    l_sphere.compute( p_aVertices );
 			return l_sphere;
 		}
 				

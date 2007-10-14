@@ -16,7 +16,7 @@ limitations under the License.
 
 package sandy.primitive
 {
-       	/**
+    /**
 	 * The PrimitiveMode class defines modes of creation for some primitives.
 	 * 
 	 *<p>Some of the Sandy primitives are created in one of two modes,

@@ -236,9 +236,17 @@ package sandy.core.data
 		public function clip( p_oFrustum:Frustum ):Array
 		{
 			isClipped = true;
-			cvertices = vertices.concat();
-			caUVCoord = aUVCoord.concat();
-			p_oFrustum.clipFrustum( cvertices, caUVCoord );
+			// For lines we only apply front plane clipping
+			if( vertices.length < 3 )
+			{
+				clipFrontPlane( p_oFrustum );
+			} 
+			else
+			{
+				cvertices = vertices.concat();
+				caUVCoord = aUVCoord.concat();
+				p_oFrustum.clipFrustum( cvertices, caUVCoord );
+			}
 			return cvertices;
 		}
 
@@ -251,8 +259,16 @@ package sandy.core.data
 		{
 			isClipped = true;
 			cvertices = vertices.concat();
-			caUVCoord = aUVCoord.concat();
-			p_oFrustum.clipFrontPlane( cvertices, caUVCoord );
+			// If line
+			if( vertices.length < 3 ) 
+			{
+				p_oFrustum.clipLineFrontPlane( cvertices );
+			}
+			else
+			{
+				caUVCoord = aUVCoord.concat();
+				p_oFrustum.clipFrontPlane( cvertices, caUVCoord );
+			}
 			return cvertices;
 		}
 		
@@ -295,10 +311,10 @@ package sandy.core.data
 					var l_oUV:UVCoord = UVCoord( m_oGeometry.aUVCoords[ p_aUVCoordsID[i] ] );
 					aUVCoord[i] = l_oUV;
 					if( l_oUV.u < l_nMinU ) l_nMinU = l_oUV.u;
-					if( l_oUV.u > l_nMaxU ) l_nMaxU = l_oUV.u;
+					else if( l_oUV.u > l_nMaxU ) l_nMaxU = l_oUV.u;
 					// --
 					if( l_oUV.v < l_nMinV ) l_nMinV = l_oUV.v;
-					if( l_oUV.v > l_nMaxV ) l_nMaxV = l_oUV.v;
+					else if( l_oUV.v > l_nMaxV ) l_nMaxV = l_oUV.v;
 					// --
 					i++;
 				}
@@ -365,15 +381,14 @@ package sandy.core.data
 		 */
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
-			var lContainer:Sprite = (p_oContainer == null) ? m_oContainer : p_oContainer as Sprite;
-			// --
+			const lCont:Sprite = (p_oContainer)?p_oContainer:m_oContainer;
 			if( m_bVisible )
 			{
-				m_oAppearance.frontMaterial.renderPolygon( p_oScene, this, lContainer );
+				m_oAppearance.frontMaterial.renderPolygon( p_oScene, this, lCont );
 			}
 			else
 			{
-				m_oAppearance.backMaterial.renderPolygon( p_oScene, this, lContainer );
+				m_oAppearance.backMaterial.renderPolygon( p_oScene, this, lCont );
 			}
 		}
 

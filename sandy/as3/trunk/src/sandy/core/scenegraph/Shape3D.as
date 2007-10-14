@@ -31,6 +31,8 @@ package sandy.core.scenegraph
 	import sandy.core.data.Vertex;
 	import sandy.events.BubbleEvent;
 	import sandy.materials.Appearance;
+	import sandy.materials.Material;
+	import sandy.materials.WireFrameMaterial;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 
@@ -49,6 +51,15 @@ package sandy.core.scenegraph
 	public class Shape3D extends ATransformable implements IDisplayable
 	{ 
 		/**
+		 * Default material for the DEFAULT_APPEARANCE object
+		 */
+		public static var DEFAULT_MATERIAL:Material = new WireFrameMaterial();
+		/**
+		 * Default appearance for Shape3D instances. If no apperance is given, this default one will be applied using the DEFAULT_MATERIAL as front and back material
+		 */
+		public static var DEFAULT_APPEARANCE:Appearance = new Appearance( DEFAULT_MATERIAL );
+		
+		/**
 		 * The array of polygons building this object.
 		 */		
 		public var aPolygons:Array = new Array();
@@ -60,10 +71,10 @@ package sandy.core.scenegraph
 		 *
 		 * @param p_sName		A string identifier for this object
 		 * @param p_oGeometry		The geometry of this object
-		 * @param p_oAppearance		The appearance of this objec
+		 * @param p_oAppearance		The appearance of this object. If no apperance is given, the DEFAULT_APPEARANCE will be applied.
 		 * @param p_bUseSingleContainer	Whether tis object should use a single container to draw on
 		 */	
-		public function Shape3D( p_sName:String="", p_oGeometry:Geometry3D=null, p_oAppearance:Appearance=null, p_bUseSingleContainer:Boolean=true )
+		public function Shape3D( p_sName:String="", p_oGeometry:Geometry3D = null, p_oAppearance:Appearance = null, p_bUseSingleContainer:Boolean=true )
 		{
 			super( p_sName );
 			// -- Add this graphical object to the World display list
@@ -73,14 +84,8 @@ package sandy.core.scenegraph
 	        // -- HACK to make sure that the correct container system will be applied
 			m_bUseSingleContainer = !p_bUseSingleContainer;
 			useSingleContainer = p_bUseSingleContainer;
-	        // --
-	        m_bBackFaceCulling = true;
-			m_bEnableForcedDepth = false;
-			m_bEnableClipping = false;
-			m_bClipped = false;
-			m_nDepth = m_nForcedDepth = 0;
 			// --
-			if( p_oAppearance ) appearance = p_oAppearance;
+			appearance = ( p_oAppearance ) ? p_oAppearance : Shape3D.DEFAULT_APPEARANCE;
 			// -- 
 			updateBoundingVolumes();
 	    }
@@ -180,7 +185,7 @@ package sandy.core.scenegraph
 			// -- FIXME TO SIMPLIFY THIS BECUASE IT CERTAINLY COST A LOT FOR NOTHING!
 			if( culled == CullingState.INTERSECT )
 			{
-				if( m_bEnableClipping ) 
+				if( m_bEnableClipping || m_bEnableNearClipping ) 
 				{
 					m_bClipped = true;
 				}
@@ -250,7 +255,7 @@ package sandy.core.scenegraph
 				if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
 					// we process the frustum clipping
-					if( m_bClipped )
+					if( m_bClipped && m_bEnableClipping )
 					{
 						l_oFace.clip( l_oFrustum );
 						// -- We project the vertices
@@ -282,7 +287,7 @@ package sandy.core.scenegraph
 								p_oCamera.addToDisplayList( l_oFace );
 						} 
 						// otherwise we can perform a clipping against the front plane only
-						else
+						else if( m_bClipped && m_bEnableNearClipping )
 						{
 							l_oFace.clipFrontPlane( l_oFrustum );
 							// -- We project the vertices
@@ -331,7 +336,7 @@ package sandy.core.scenegraph
 		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display(  p_oScene:Scene3D, p_oContainer:Sprite = null ):void
+		public function display(  p_oScene:Scene3D, p_oContainer:Sprite = null  ):void
 		{
 			m_aVisiblePoly.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
@@ -454,9 +459,14 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * Should this object be clipped?.
+		 * <p>
+		 * Enable the Frustum clipping on the visible polygons.
+		 * Enable this when you need a perfect intersection between the camera and some object shapes.
+		 * In case you need to make the camera look inside and outide a box, or other immerssive things.</p>
+		 * 
+		 * <p>Important: Enable the clipping makes process a bit slower, especially with big scenes.</p>
 		 *
-		 * <p>Determins if this object should be clipped against the camrea frustum and the near and far planes.</p>
+		 * <p>Specify if this object polygons should be clipped against the camera frustum planes.</p>
 		 */
 		public function set enableClipping( b:Boolean ):void
 		{
@@ -469,6 +479,28 @@ package sandy.core.scenegraph
 		public function get enableClipping():Boolean
 		{
 			return m_bEnableClipping;
+		}
+		
+
+		/**
+		 * <p>
+		 * Enable the Frustum near plane clipping on the visible polygons.
+		 * Enable this when you need a perfect intersection between the front camera plane.
+		 * This is mainly used when you need the camera to move on a long plane.</p>
+		 * 
+		 * <p>Important: Enable the clipping makes process a bit slower, especially with big scenes.</p>
+		 */
+		public function set enableNearClipping( b:Boolean ):void
+		{
+			m_bEnableNearClipping = b;
+		}
+			
+		/**
+		 * @private
+		 */
+		public function get enableNearClipping():Boolean
+		{
+			return m_bEnableNearClipping;
 		}
 			
 		/**
@@ -718,16 +750,17 @@ package sandy.core.scenegraph
 		private var m_oAppearance:Appearance ; // The Appearance of this Shape3D		
 	    private var m_bEv:Boolean = false; // The event system state (enable or not)
 		protected var m_oGeomCenter:Vector = new Vector();
-		private var m_bBackFaceCulling:Boolean;
-		private var m_bEnableClipping:Boolean;
-		private var m_bClipped:Boolean;
-		private var m_bEnableForcedDepth:Boolean;
-		private var m_nForcedDepth:Number;
+		private var m_bBackFaceCulling:Boolean = true;
+		private var m_bEnableClipping:Boolean = false;
+		private var m_bEnableNearClipping:Boolean = false;
+		private var m_bClipped:Boolean = false;
+		private var m_bEnableForcedDepth:Boolean = false;
+		private var m_nForcedDepth:Number = 0;
 		/** Geometry of this object */
 		private var m_oGeometry:Geometry3D;
 		
-		protected var m_bUseSingleContainer:Boolean;
-		protected var m_nDepth:Number;
+		protected var m_bUseSingleContainer:Boolean = true;
+		protected var m_nDepth:Number = 0;
 		protected var m_oContainer:Sprite;
 
 		private var m_aToProject:Array = new Array();

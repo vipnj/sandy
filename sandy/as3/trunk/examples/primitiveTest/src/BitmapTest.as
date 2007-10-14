@@ -27,6 +27,11 @@ package
 	import sandy.materials.attributes.LightAttributes;
 	import sandy.materials.attributes.OutlineAttributes;
 	import sandy.core.scenegraph.Shape3D;
+	import sandy.materials.PreciseBitmapMaterial;
+	import sandy.primitive.Line3D;
+	import sandy.materials.WireFrameMaterial;
+	import sandy.materials.PerspectiveBitmapMaterial;
+	import sandy.materials.QuadBitmapMaterial;
 
 	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=120)] 
 	public class BitmapTest extends Sprite
@@ -34,7 +39,7 @@ package
 		[Embed(source="assets/texture.jpg")]
 		private var Texture:Class;
 		
-		[Embed(source="assets/texture.jpg")]
+		[Embed(source="assets/PTest.gif")]
 		private var Texture2:Class;
 		
 		private var fps: CustomFPS;
@@ -66,7 +71,7 @@ package
 			m_oScene.container = this;
 			m_oScene.camera = lCamera ;
 			lCamera.z = -400;
-			lCamera.y = 30;
+			lCamera.y = 90;
 			lCamera.lookAt( 0, 0, 0 );
 			m_oScene.root = _createScene3D();
 			m_oScene.root.addChild( lCamera );
@@ -119,21 +124,27 @@ package
 		{
 			var lG:Group = new Group("rootGroup");
 			var lTg:TransformGroup = new TransformGroup("rotationPivot");
+			
+			var l_oLine:Line3D = new Line3D( "myLine", new Vector( - 0, +80, -500 ), new Vector( 0, 0, 800 ) );
+			l_oLine.appearance = new Appearance( new WireFrameMaterial( 2, 0xFF0000, 1 ) );
+			l_oLine.enableClipping = true;
 			// --
-			m_oPlane = new Plane3D("myPlane", 300, 300, 3, 3, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
-			//var lPic:Bitmap = new Texture2();
-			//m_oPlane.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
-			var lMat1:ColorMaterial = new ColorMaterial( 0xFF00, 100, new MaterialAttributes( new LineAttributes() ) );
-			m_oPlane.appearance = new Appearance( lMat1 );
+			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
+			var lPic:Bitmap = new Texture2();
+			m_oPlane.appearance = new Appearance( new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 3 ) );
+			//m_oPlane.appearance = new Appearance( new QuadBitmapMaterial( lPic.bitmapData, null, 3 ) );
+			//m_oPlane.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ) ) );
+			//m_oPlane.appearance = new Appearance( new PerspectiveBitmapMaterial( lPic.bitmapData, null, 3 ) );
+			//m_oPlane.enableNearClipping = true;
 			// --
 			m_oTorus = new Torus("myTorus", 30, 15, 6, 6 );
 			var lPic2:Bitmap = new Texture();
-			m_oTorus.appearance = new Appearance( new ZShaderMaterial(1)/*new BitmapMaterial( lPic2.bitmapData )*/ );
+			m_oTorus.appearance = new Appearance( new ZShaderMaterial(1.5)/*new BitmapMaterial( lPic2.bitmapData )*/ );
 			m_oTorus.x = -50;
 			m_oTorus.y = 30;
 			m_oTorus.z = -120;
 			// --
-			m_oBox = new Box("myBox", 50, 50, 50, PrimitiveMode.QUAD, 2);
+			m_oBox = new Box("myBox", 50, 50, 50, PrimitiveMode.QUAD, 1);
 			m_oBox.y = 45;
 			m_oBox.appearance = /* new Appearance( new BitmapMaterial( lPic2.bitmapData ) );//*/new Appearance( new ColorMaterial( 0xFF0000, 1, new MaterialAttributes( new LineAttributes() )));
 			
@@ -149,9 +160,10 @@ package
 			m_oSphere.appearance = new Appearance( lMat );//new Appearance( new WireFrameMaterial( 0xFF ) );
 			m_oSphere.z = 70;
 			// --
-			//lG.addChild( m_oPlane );
-			lG.addChild( m_oBox );
-			//lG.addChild( m_oTorus );
+			lG.addChild( m_oPlane );
+			//lG.addChild( m_oBox );
+			lG.addChild( m_oTorus );
+			//lG.addChild( l_oLine );
 			lG.addChild( lTg );
 			lTg.addChild( m_oSphere );
 			return lG;

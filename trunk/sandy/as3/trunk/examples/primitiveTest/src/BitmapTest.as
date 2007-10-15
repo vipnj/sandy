@@ -131,7 +131,7 @@ package
 			// --
 			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			var lPic:Bitmap = new Texture2();
-			m_oPlane.appearance = new Appearance( new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 3 ) );
+			m_oPlane.appearance = new Appearance( new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5, 10) );
 			//m_oPlane.appearance = new Appearance( new QuadBitmapMaterial( lPic.bitmapData, null, 3 ) );
 			//m_oPlane.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ) ) );
 			//m_oPlane.appearance = new Appearance( new PerspectiveBitmapMaterial( lPic.bitmapData, null, 3 ) );

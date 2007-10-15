@@ -57,15 +57,13 @@ package sandy.materials
 		 * @param p_oTexture 	The bitmapdata for this material
 		 * @param p_oAttr	The attributes for this material
 		 */
-		public function BitmapMaterial( p_oTexture:BitmapData, p_oAttr:MaterialAttributes = null )
+		public function BitmapMaterial( p_oTexture:BitmapData = null, p_oAttr:MaterialAttributes = null )
 		{
 			super(p_oAttr);
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
-			m_orgTexture = p_oTexture;
-			texture = m_orgTexture.clone();
-
+			texture = p_oTexture;
 			// --
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
@@ -80,6 +78,7 @@ package sandy.materials
 		 */
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
+			if( m_oTexture == null ) return;
 			const lGraphics:Graphics = p_mcContainer.graphics;
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			if( !l_points.length ) return;
@@ -96,9 +95,9 @@ package sandy.materials
 				var l_oTextureRectangle:Rectangle = new Rectangle(	l_oRectangle.x * m_nWidth, l_oRectangle.y * m_nHeight,
 																	l_oRectangle.width * m_nWidth, l_oRectangle.height * m_nHeight );
 				// Hack to fix a small thing with drawing lines
-				l_oTextureRectangle.inflate( 1, 1 );
 				var l_oFilterOrigin:Point = new Point( l_oTextureRectangle.x, l_oTextureRectangle.y );
 				// -- l_oTextureRectangle = m_oTexture.rect;
+				l_oTextureRectangle.inflate( 1, 1 );
 				m_oCmf.matrix = __getBrightnessTransform( lightStrength );
 				m_oTexture.applyFilter( m_orgTexture, l_oTextureRectangle, l_oFilterOrigin, m_oCmf );
 			}
@@ -159,7 +158,7 @@ package sandy.materials
 			matrix = lUv.clone();
 			matrix.concat(m_oTmp);
 			// --
-			_processPolygonDraw( p_oPolygon, p_oGraphics, matrix, p_aPoints );
+			_processPolygonDraw( p_oPolygon, p_oGraphics, matrix, l_points );
 		}	
 
 		private function _processPolygonDraw( p_oPolygon:Polygon, p_oGraphics:Graphics, p_oMatrix:Matrix, p_aPoints:Array ):void
@@ -178,7 +177,7 @@ package sandy.materials
 			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );
 		}
 
-		private function _createTextureMatrix( p_aUv:Array ):Matrix
+		protected function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
 			var u0: Number = p_aUv[0].u * m_nWidth,
 				v0: Number = p_aUv[0].v * m_nHeight,
@@ -222,7 +221,7 @@ package sandy.materials
 			m_nInvHeight = 1/m_nHeight;
 			m_nInvWidth = 1/m_nWidth;
 			m_oTexture.lock(); // not sure it is faster but it should....
-			// FIXME do the init for all the registered polygons
+			m_orgTexture = p_oTexture.clone();
 		}
 	
 		/**
@@ -307,9 +306,9 @@ package sandy.materials
 		private var m_nInvHeight:Number;
 		private var m_nInvWidth:Number;
 		
-		private var m_oPolygonMatrixMap:Dictionary;
+		protected var m_oPolygonMatrixMap:Dictionary;
 		private var m_oPoint:Point = new Point();
 		private var m_oCmf:ColorMatrixFilter;
-		private var m_oTmp:Matrix = new Matrix();
+		protected var m_oTmp:Matrix = new Matrix();
 	}
 }

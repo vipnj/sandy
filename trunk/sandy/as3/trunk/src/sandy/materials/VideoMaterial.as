@@ -79,7 +79,7 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			//m_oTexture.dispose();
+			m_oTexture.fillRect( m_oTexture.rect, m_nFillColor );
 			// --
 			m_oTexture.draw( m_oVideo );
 		}

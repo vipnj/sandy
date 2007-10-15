@@ -90,6 +90,18 @@ package sandy.core.data
 			// --
 			sy = sx = sz = 0;
 		}
+		
+		
+		/**
+		 * Returns the 2D position of this vertex.
+		 * This 2D position is the position on the screen after the camera projection.
+		 * WARNING: There's actually a third value (the z one) which correspond to the depth screen position.
+		 * @return Vector The 2D position of this vertex once projected.
+		 */
+		public function getScreenPoint():Vector
+		{
+			return new Vector( sx, sy, wz );
+		}
 
 		/**
 		* Returns the transformed vertex in world coordinates.

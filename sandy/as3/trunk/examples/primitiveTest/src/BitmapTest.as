@@ -112,10 +112,10 @@ package
 			{ 
 			    cam.moveHorizontally( -10 );
 			}
-			m_oTorus.rotateY++ ;
+			//m_oTorus.rotateY++ ;
 			//m_oBox.rotateAxisWithReference( new Vector( 0,1,0), new Vector( -150, 0, 0 ), 1);
-			if( m_oSphere.parent is TransformGroup ) 
-				(m_oSphere.parent as TransformGroup).rotateY ++;
+			//if( m_oSphere.parent is TransformGroup ) 
+			//	(m_oSphere.parent as TransformGroup).rotateY ++;
 			m_oScene.render();
 			fps.nextFrame();
 		}
@@ -130,6 +130,7 @@ package
 			l_oLine.enableClipping = true;
 			// --
 			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
+			m_oPlane.enableNearClipping = true;
 			var lPic:Bitmap = new Texture2();
 			m_oPlane.appearance = new Appearance( new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5, 10) );
 			//m_oPlane.appearance = new Appearance( new QuadBitmapMaterial( lPic.bitmapData, null, 3 ) );
@@ -162,10 +163,10 @@ package
 			// --
 			lG.addChild( m_oPlane );
 			//lG.addChild( m_oBox );
-			lG.addChild( m_oTorus );
+			//lG.addChild( m_oTorus );
 			//lG.addChild( l_oLine );
-			lG.addChild( lTg );
-			lTg.addChild( m_oSphere );
+			//lG.addChild( lTg );
+			//lTg.addChild( m_oSphere );
 			return lG;
 		}
 	}

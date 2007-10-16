@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -23,8 +23,8 @@ import sandy.core.transform.TransformType;
 /**
  * @author 		Thomas Pfeiffer - kiroukou
  * @since		0.2
- * @version		0.2
- * @date 		12.01.2006
+ * @version		1.2.1
+ * @date 		23.08.2007
  */
 class sandy.events.TransformEvent extends BasicEvent
 {
@@ -50,7 +50,7 @@ class sandy.events.TransformEvent extends BasicEvent
 	 * Return the type of transformation
 	 * @return TransformType The transformation ID
 	 */
-	public function geTransformType( Void ):TransformType
+	public function getTransformType( Void ):TransformType
 	{
 		return _nType;
 	}

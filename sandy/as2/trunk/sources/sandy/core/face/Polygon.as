@@ -313,7 +313,7 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 	{		
 		_bEv = b;
 		
-		// If events are enabled on this poly, then tell the parent Object3D (owner) to enable separate events
+		// If events are enabled on this poly, then tell the parent Object3D (owner) to enable separate events.
 		// If _bEv is false, we can't undo this, as there may be other polys for who are setting it to true.
 		// So it is the programmer's responsibility to invoke _o.setSeparatePolys(false) manually, if desired.
 		if (_bEv) {
@@ -380,7 +380,8 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 			_vn = VectorMath.cross( v, w );//new Vector( (w.y * v.z) - (w.z * v.y) , (w.z * v.x) - (w.x * v.z) , (w.x * v.y) - (w.y * v.x) );
 			// -- we normalize the resulting vector
 			VectorMath.normalize( _vn ) ;
-			// -- we return the resulting vertex
+			// -- we return the resulting vector
+			//trace ("Creating normal " + _vn);
 			return _vn;
 		}
 		else
@@ -392,7 +393,7 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 	/**
 	 * Set the normal vector of the face.
 	 *
-	 * @param	Vertex
+	 * @param	Vector
 	 */
 	public function setNormale( n:Vector ):Void
 	{
@@ -485,6 +486,7 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 	{
 		//if (!_inited) { // Can't use this, as the clips are recreated and deleted repeatedly
 			//_inited = true
+		
 			mc.onPress = Delegate.create( this, __onPressed );
 			mc.onRollOver = Delegate.create( this, __onRollOver );
 			mc.onRollOut = Delegate.create( this, __onRollOut );
@@ -493,14 +495,17 @@ class sandy.core.face.Polygon extends EventBroadcaster implements IPolygon
 
 	private function __onPressed( e:BasicEvent ):Void
 	{
+		//trace ("Broadcasting ObjectEvent.onPressEVENT");
 		broadcastEvent( new ObjectEvent( ObjectEvent.onPressEVENT, this ) );
 	}
 	private function __onRollOver( e:BasicEvent ):Void
 	{
+		//trace ("Broadcasting ObjectEvent.onRollOverEVENT");
 		broadcastEvent( new ObjectEvent( ObjectEvent.onRollOverEVENT, this ) );
 	}	
 	private function __onRollOut( e:BasicEvent ):Void
 	{
+		//trace ("Broadcasting ObjectEvent.onRollOutEVENT");
 		broadcastEvent( new ObjectEvent( ObjectEvent.onRollOutEVENT, this ) );
 	}	
 	

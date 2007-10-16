@@ -316,6 +316,20 @@ class sandy.view.Camera3D
 		Matrix4Math.vectorMult3x3( m, _vUp);
 	}	
 
+	public function getLookUp( Void ):Vector
+	{
+		return _vUp;
+	}
+	public function getLookOut( Void ):Vector
+	{
+		return _vOut;
+	}
+	public function getLookSide( Void ):Vector
+	{
+		return _vSide;
+	}
+	
+	
 	public function getRoll( Void ):Number
 	{
 		return _nRoll;
@@ -341,6 +355,7 @@ class sandy.view.Camera3D
 	{
 		return _nNear;
 	}
+	
 	public function getFarPlane( Void ):Number
 	{
 		return _nFar;

@@ -43,9 +43,9 @@ class sandy.core.group.Node extends EventBroadcaster
 	 * <p>Example
 	 * <code>
 	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
-	 *   oEB.addEventListener( myClass.onSometingEVENT, myFirstObject);
-	 *   oEB.addEventListener( myClass.onSometingElseEVENT, this, __onSomethingElse);
-	 *   oEB.addEventListener( myClass.onSometingElseEVENT, this, Delegate.create(this, __onSomething) );
+	 *   oEB.addEventListener( myClass.onSomethingEVENT, myFirstObject);
+	 *   oEB.addEventListener( myClass.onSomethingElseEVENT, this, __onSomethingElse);
+	 *   oEB.addEventListener( myClass.onSomehtingElseEVENT, this, Delegate.create(this, __onSomething) );
 	 * </code>
 	 * 
 	 * @param t Name of the Event.
@@ -63,8 +63,8 @@ class sandy.core.group.Node extends EventBroadcaster
 	 * <p>Example
 	 * <code>
 	 *   var oEB : IEventDispatcher = new EventBroadcaster(this);
-	 *   oEB.removeEventListener( myClass.onSometingEVENT, myFirstObject);
-	 *   oEB.removeEventListener( myClass.onSometingElseEVENT, this);
+	 *   oEB.removeEventListener( myClass.onSomethingEVENT, myFirstObject);
+	 *   oEB.removeEventListener( myClass.onSomethingElseEVENT, this);
 	 * </code>
 	 * 
 	 * @param t Name of the Event.

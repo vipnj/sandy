@@ -39,7 +39,6 @@ package sandy.materials
 	{
 		private var m_oTimer :Timer;
 		private var m_oMovie : MovieClip;
-		private var m_nFillColor : uint;
 
 		/**
 		 * Creates a new MovieMaterial.
@@ -50,14 +49,13 @@ package sandy.materials
 		 *
 		 * @param p_oMovie 	The Movieclip to be shown by this material
 		 * @param p_nUpdateMS	The update interval
-		 * @param p_nFillColor	The fill color
+		 * @param p_oAttr	The material attributes
 		 */
-		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_nFillColor:uint = 0xFF000000, p_oAttr:MaterialAttributes = null )
+		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oMovie.width, p_oMovie.height, false, 0xFF000000 ), p_oAttr );
+			super( new BitmapData( p_oMovie.width, p_oMovie.height, true, 0xFF000000 ), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
-			m_nFillColor = p_nFillColor;
 			// --
 			m_oTimer = new Timer( p_nUpdateMS );
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
@@ -82,7 +80,7 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, m_nFillColor );
+			m_oTexture.fillRect( m_oTexture.rect, 0xFF0000 );
 			// --
 			m_oTexture.draw( m_oMovie );
 		}

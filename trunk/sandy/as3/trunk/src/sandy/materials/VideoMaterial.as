@@ -41,7 +41,7 @@ package sandy.materials
 	{
 		private var m_oTimer:Timer;
 		private var m_oVideo : Video;
-
+		
 		/**
 		 * Creates a new VideoMaterial.
 		 *
@@ -50,10 +50,11 @@ package sandy.materials
 		 *
 		 * @param p_oVideo 	The video to be shown by this material
 		 * @param p_nUpdateMS	The update interval
+		 * @param p_oAttr	The material attributes
 		 */
 		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oVideo.width, p_oVideo.height, false, 0xFF000000 ), p_oAttr );
+			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, 0xFF0000 ), p_oAttr );
 			m_oVideo = p_oVideo;
 			m_nType = MaterialType.VIDEO;
 			// --
@@ -79,9 +80,9 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, m_nFillColor );
+			m_oTexture.fillRect( m_oTexture.rect, 0xFF0000 );
 			// --
-			m_oTexture.draw( m_oVideo );
+			m_oTexture.draw( m_oVideo, null, null, null, null, true );
 		}
 		
 		/**

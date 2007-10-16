@@ -61,6 +61,7 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	public function rotX ( pAngle:Number ):Void
 	{
 		var angle:Number = ( pAngle + 360 ) % 360;
+		_rotX = angle;
 		_m = Matrix4Math.rotationX( angle );
 		_type = TransformType.ROTATION;
 		__dispatch();
@@ -73,6 +74,7 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	public function rotY ( pAngle:Number ):Void
 	{
 		var angle:Number = ( pAngle + 360 ) % 360;
+		_rotY = angle;
 		_m = Matrix4Math.rotationY( angle );
 		_type = TransformType.ROTATION;
 		__dispatch();
@@ -85,6 +87,7 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	public function rotZ ( pAngle:Number ):Void
 	{
 		var angle:Number = ( pAngle + 360 ) % 360;
+		_rotZ = angle;
 		_m = Matrix4Math.rotationZ( angle );
 		_type = TransformType.ROTATION;
 		__dispatch();
@@ -101,6 +104,9 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 		px = ( px + 360 ) % 360;
 		py = ( py + 360 ) % 360;
 		pz = ( pz + 360 ) % 360;
+		_rotX = px;
+		_rotY = py;
+		_rotZ = pz;
 		//
 		_m = Matrix4Math.eulerRotation( px, py, pz );
 		_type = TransformType.ROTATION;;
@@ -125,12 +131,20 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	
 	/**
 	* Realize the euler rotation matrix thanks to angles defined in the vector argument
-	* @param	v Vector The vector containing the eulers angles
+	* @param	v Vector The vector containing the euler angles
 	*/
 	public function rotVector( v:Vector ):Void
 	{
 		rot( v.x, v.y, v.z );
 		__dispatch(); // seems redundant, since rot() function also dispatches...
+	}
+	
+	public function getRotation (Void):Vector {
+		// FIXME - this isn't as reliable as Euler angles and may fail if rotAxis was used(even with a cardinal vector)
+		// Return the current rotation
+		var v:Vector =  new Vector (_rotX, _rotY, _rotZ);
+		trace ("Transform3D.getRotation returning rotation " + v);
+		return v;
 	}
 		
 	/**
@@ -138,6 +152,7 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	 * @param pAxis A 3D Vector representing the axis of rtation. This axis will be normalized inside the method.
 	 * @param pAngle Number The angle of rotation in degrees.
 	 */
+	  // FIXME - This method makes _rotX, _rotY, and _rotZ useless if the pAxis vector is not a cardinal axis, such as (0, 1, 0)
 	public function rotAxis ( pAxis:Vector, pAngle:Number ):Void
 	{
 		var angle:Number = ( pAngle + 360 ) % 360;
@@ -315,7 +330,7 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	* you must also take under consideration that it is the first matrix which is multiplied by the one in argument.
 	* @param	m Transform3D The matrix you want to combine with the current transformation one.
 	*/
-	public function combineTransform( t:Transform3D ):Void
+	public function combineTransform( t:ITransform3D ):Void
 	{
 		_m = Matrix4Math.multiply( _m, t.getMatrix() );
 		_type = TransformType.MIXED;
@@ -365,5 +380,9 @@ class sandy.core.transform.Transform3D extends EventBroadcaster implements ITran
 	private var _m:Matrix4;
 	private var _type:TransformType;
 	private var _name:String; // For debug purposes.
+	private var _rotX:Number; // Not necessarily useful for retrieving rotations. Better to use Euler matrix.
+	private var _rotY:Number;
+	private var _rotZ:Number;
+	
 
 }

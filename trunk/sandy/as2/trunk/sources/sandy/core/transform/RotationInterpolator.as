@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -71,12 +71,17 @@ class sandy.core.transform.RotationInterpolator extends BasicInterpolator implem
 	
 	/**
 	 * Allows you to change the axis of rotation. This axis will be automatically be normalized!
-	 * If the axis components are very small the rotation will be paused automatically until you change the axis.
+	 * If the axis components are very small, or the axis is undefined, the rotation will be paused automatically until you change the axis.
 	 * @param v Vector the vector that contains the axis components.
 	 * @return Boolean false if the the given axis is not good.
 	 */
 	public function setAxisOfRotation ( v:Vector ):Boolean
 	{
+		if (v == undefined) {
+			trace ("Warning: vector passed to RotationInterpolator.as was undefined.");
+			return false;
+		}
+		
 		if( Math.abs( v.x ) < 0.001 && Math.abs( v.y ) < 0.001 && Math.abs( v.z ) < 0.001 )
 		{
 			return false;

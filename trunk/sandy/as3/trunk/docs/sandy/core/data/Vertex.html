@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Vertex,sandy.core.data.Vertex,id,x,y,z,wx,wy,wz,sx,sy,sz,projected,nbFaces,aFaces,getWorldVector,getVector,clone,clone2,createFromVector,equals,copy,getNorm,negate,add,sub,pow,scale,dot,cross,normalize,getAngle,toString,serialize,deserialize" name="keywords">
+<meta content="Vertex,sandy.core.data.Vertex,id,x,y,z,wx,wy,wz,sx,sy,sz,projected,nbFaces,aFaces,getScreenPoint,getWorldVector,getVector,clone,clone2,createFromVector,equals,copy,getNorm,negate,add,sub,pow,scale,dot,cross,normalize,getAngle,toString,serialize,deserialize" name="keywords">
 <title>sandy.core.data.Vertex</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">Sandy 3.0 RC0</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/data/Vertex.html&amp;sandy/core/data/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">Sandy 3.0 RC1</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/data/Vertex.html&amp;sandy/core/data/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Vertex</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -213,6 +213,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="#getNorm()">getNorm</a>():Number</div>
 <div class="summaryTableDescription">
    Returns the norm of this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getScreenPoint()">getScreenPoint</a>():<a href="../data/Vector.html">Vector</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the 2D position of this vertex.</div>
 </td><td class="summaryTableOwnerCol">Vertex</td>
 </tr>
 <tr class="">
@@ -722,6 +731,29 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="getScreenPoint()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getScreenPoint</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getScreenPoint():<a href="../data/Vector.html">Vector</a></code><p>
+   Returns the 2D position of this vertex.
+   This 2D position is the position on the screen after the camera projection.
+   WARNING: There's actually a third value (the z one) which correspond to the depth screen position.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vector.html">Vector</a></code> &mdash; 
+                        Vector The 2D position of this vertex once projected.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
 <a name="getVector()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -913,8 +945,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc: Preliminary documentation for Sandy 3.0 RC0</center>
+<center class="copyright">ASDoc: Preliminary documentation for Sandy 3.0 RC1</center>
 </div>
 </body>
 </html>
-<!--ASDoc: Preliminary documentation for Sandy 3.0 RC0-->
+<!--ASDoc: Preliminary documentation for Sandy 3.0 RC1-->

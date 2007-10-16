@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">Sandy 3.0 RC0</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/light/Light3D.html&amp;sandy/core/light/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">Sandy 3.0 RC1</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/light/Light3D.html&amp;sandy/core/light/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Light3D</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td>
@@ -43,7 +43,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
   The Light3D class is used for creating the light of the world.
-    <p>The light in Sandy is a light source at infinity, emitting parallel whit light.<br/>
+  
+  <p>The light in Sandy is a light source at infinity, emitting parallel whit light.<br/>
   The direction of light and the intensity can be varied</p>
     <p></p>
 <br>
@@ -177,7 +178,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public static var MAX_POWER:Number = 150</code><p>
   Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
-  But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1
+  But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1 
   </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
@@ -190,7 +191,8 @@ showHideInherited();
 <div class="detailBody">
 <code>public function Light3D(p_oD:<a href="../data/Vector.html">Vector</a>, p_nPow:Number)</code><p>
    Creates a new light source.
-      </p><span class="label">Parameters</span>
+   
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_oD</span>:<a href="../data/Vector.html">Vector</a></code> &mdash;  The direction of the emitted light.
@@ -201,7 +203,8 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nPow</span>:Number</code> &mdash; Intensity of the emitted light.
-      </td>
+   
+   </td>
 </tr>
 </table>
 </div>
@@ -349,7 +352,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function setPower(p_nPow:Number):void</code><p>
-   The the power of the light. A number between 0 and MAX_POWER is necessary.
+   The the power of the light. A number between 0 and MAX_POWER is necessary. 
    The highter the power of the light is, the less the shadows are visibles.
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -376,8 +379,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc: Preliminary documentation for Sandy 3.0 RC0</center>
+<center class="copyright">ASDoc: Preliminary documentation for Sandy 3.0 RC1</center>
 </div>
 </body>
 </html>
-<!--ASDoc: Preliminary documentation for Sandy 3.0 RC0-->
+<!--ASDoc: Preliminary documentation for Sandy 3.0 RC1-->

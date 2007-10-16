@@ -35,6 +35,8 @@ package sandy.materials
 	{
         public var precision:Number = 1;
 		public var threshold:Number = 10;
+		// Changing this value makes the player not crash...
+		public static var MAX_LEVEL:uint = 20;
 		
 		/**
 		 * precision : the lower, the more accurate it is !
@@ -55,7 +57,7 @@ package sandy.materials
         
         public function createVertexArray():void
         {
-        	var index:Number = 100;
+        	var index:Number = MAX_LEVEL;
         	while (index--) 
         	{
         		svArray.push(new Vector());
@@ -66,11 +68,11 @@ package sandy.materials
         {
         	if( m_oTexture == null ) return;
         	// --
-        	polygon = p_oPolygon;
-        	graphics = p_mcContainer.graphics;
-        	// --
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			if( !l_points.length ) return;
+			// --
+			polygon = p_oPolygon;
+        	graphics = p_mcContainer.graphics;
 			// --
 			if( p_oPolygon.isClipped && enableAccurateClipping )
 			{
@@ -160,7 +162,7 @@ package sandy.materials
         {
         	ax = a.x;
         	ay = a.y;
-        	az = a.z; // OU WZ?
+        	az = a.z;
         	bx = b.x;
         	by = b.y;
         	bz = b.z;
@@ -168,7 +170,7 @@ package sandy.materials
         	cy = c.y;
         	cz = c.z;
 
-            if (index >= 100 || (Math.max(Math.max(ax, bx), cx) - Math.min(Math.min(ax, bx), cx) < threshold) || (Math.max(Math.max(ay, by), cy) - Math.min(Math.min(ay, by), cy) < threshold))
+            if (index >= (MAX_LEVEL-3) || (Math.max(Math.max(ax, bx), cx) - Math.min(Math.min(ax, bx), cx) < threshold) || (Math.max(Math.max(ay, by), cy) - Math.min(Math.min(ay, by), cy) < threshold))
             {
                 renderTriangle( map, ax, ay, bx, by, cx, cy );
                 return;
@@ -209,101 +211,114 @@ package sandy.materials
         	var sv1:Vector;
         	var sv2:Vector;
         	var sv3:Vector = svArray[index++];
-        	sv3.x = mbcx/2;
-        	sv3.y = mbcy/2;
-        	sv3.z = (bz+cz)/2;
+        	if( sv3 )
+        	{
+	        	sv3.x = mbcx/2;
+	        	sv3.y = mbcy/2;
+	        	sv3.z = (bz+cz)/2;
+        	}
+        	else return;
         	
             if ((dsab > precision) && (dsca > precision) && (dsbc > precision))
             {
             	sv1 = svArray[index++];
-            	sv1.x = mabx/2;
-	        	sv1.y = maby/2;
-	        	sv1.z = (az+bz)/2;
-	        	
-	        	sv2 = svArray[index++];
-	        	sv2.x = mcax/2;
-		        sv2.y = mcay/2;
-		        sv2.z = (cz+az)/2;
-	        	
-            	map.a = map_a*=2;
-            	map.b = map_b*=2;
-            	map.c = map_c*=2;
-            	map.d = map_d*=2;
-            	map.tx = map_tx*=2;
-            	map.ty = map_ty*=2;
-                renderRec(a, sv1, sv2, index);
-	        	
-				map.a = map_a;
-            	map.b = map_b;
-            	map.c = map_c;
-            	map.d = map_d;
-            	map.tx = map_tx-1;
-            	map.ty = map_ty;
-                renderRec(sv1, b, sv3, index);
-	        	
-				map.a = map_a;
-            	map.b = map_b;
-            	map.c = map_c;
-            	map.d = map_d;
-            	map.tx = map_tx;
-            	map.ty = map_ty-1;
-                renderRec(sv2, sv3, c, index);
-	        	
-				map.a = -map_a;
-            	map.b = -map_b;
-            	map.c = -map_c;
-            	map.d = -map_d;
-            	map.tx = 1-map_tx;
-            	map.ty = 1-map_ty;
-                renderRec(sv3, sv2, sv1, index);
-				
-                return;
+            	if( sv1 )
+            	{
+	            	sv1.x = mabx/2;
+		        	sv1.y = maby/2;
+		        	sv1.z = (az+bz)/2;
+		        	
+		        	sv2 = svArray[index++];
+		        	if( sv2 )
+		        	{
+			        	sv2.x = mcax/2;
+				        sv2.y = mcay/2;
+				        sv2.z = (cz+az)/2;
+			        	
+		            	map.a = map_a*=2;
+		            	map.b = map_b*=2;
+		            	map.c = map_c*=2;
+		            	map.d = map_d*=2;
+		            	map.tx = map_tx*=2;
+		            	map.ty = map_ty*=2;
+		                renderRec(a, sv1, sv2, index);
+			        	
+						map.a = map_a;
+		            	map.b = map_b;
+		            	map.c = map_c;
+		            	map.d = map_d;
+		            	map.tx = map_tx-1;
+		            	map.ty = map_ty;
+		                renderRec(sv1, b, sv3, index);
+			        	
+						map.a = map_a;
+		            	map.b = map_b;
+		            	map.c = map_c;
+		            	map.d = map_d;
+		            	map.tx = map_tx;
+		            	map.ty = map_ty-1;
+		                renderRec(sv2, sv3, c, index);
+			        	
+						map.a = -map_a;
+		            	map.b = -map_b;
+		            	map.c = -map_c;
+		            	map.d = -map_d;
+		            	map.tx = 1-map_tx;
+		            	map.ty = 1-map_ty;
+		                renderRec(sv3, sv2, sv1, index);
+	          		}
+            	}
+            	return;
             }
 
             dmax = Math.max(dsab, Math.max(dsca, dsbc));
             if (dsab == dmax)
             {
             	sv1 = svArray[index++];
-            	sv1.x = mabx/2;
-	        	sv1.y = maby/2;
-	        	sv1.z = (az+bz)/2;
-	        	
-            	map.a = map_a*=2;
-            	map.c = map_c*=2;
-            	map.tx = map_tx*=2;
-                renderRec(a, sv1, c, index);
-	        	
-				map.a = map_a + map_b;
-            	map.b = map_b;
-            	map.c = map_c + map_d;
-            	map.d = map_d;
-            	map.tx = map_tx + map_ty - 1;
-            	map.ty = map_ty;
-                renderRec(sv1, b, c, index);
-            	
+            	if( sv1 )
+            	{
+	            	sv1.x = mabx/2;
+		        	sv1.y = maby/2;
+		        	sv1.z = (az+bz)/2;
+		        	
+	            	map.a = map_a*=2;
+	            	map.c = map_c*=2;
+	            	map.tx = map_tx*=2;
+	                renderRec(a, sv1, c, index);
+		        	
+					map.a = map_a + map_b;
+	            	map.b = map_b;
+	            	map.c = map_c + map_d;
+	            	map.d = map_d;
+	            	map.tx = map_tx + map_ty - 1;
+	            	map.ty = map_ty;
+	                renderRec(sv1, b, c, index);
+            	}
                 return;
             }
 
             if (dsca == dmax)
             {
             	sv2 = svArray[index++];
-            	sv2.x = mcax/2;
-	        	sv2.y = mcay/2;
-	        	sv2.z = (cz+az)/2;
-            	
-            	map.b = map_b*=2;
-            	map.d = map_d*=2;
-            	map.ty = map_ty*=2;
-                renderRec(a, b, sv2, index);
-	        	
-				map.a = map_a;
-            	map.b = map_b + map_a;
-            	map.c = map_c;
-            	map.d = map_d + map_c;
-            	map.tx = map_tx;
-            	map.ty = map_ty + map_tx - 1;
-                renderRec(sv2, b, c, index);
-            	
+            	if( sv2 )
+            	{
+	            	sv2.x = mcax/2;
+		        	sv2.y = mcay/2;
+		        	sv2.z = (cz+az)/2;
+	            	
+	            	map.b = map_b*=2;
+	            	map.d = map_d*=2;
+	            	map.ty = map_ty*=2;
+	                renderRec(a, b, sv2, index);
+		        	
+					map.a = map_a;
+	            	map.b = map_b + map_a;
+	            	map.c = map_c;
+	            	map.d = map_d + map_c;
+	            	map.tx = map_tx;
+	            	map.ty = map_ty + map_tx - 1;
+	                renderRec(sv2, b, c, index);
+            	}
                 return;
             }
 	        	
@@ -325,13 +340,12 @@ package sandy.materials
             renderRec(a, sv3, c, index);
         }
         
-        protected function renderTriangle(	p_oMatrix:Matrix,
-        									v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void
+        protected function renderTriangle(	p_oMatrix:Matrix, v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void
 		{
-			var a2:Number = v1x - v0x;
-			var b2:Number = v1y - v0y;
-			var c2:Number = v2x - v0x;
-			var d2:Number = v2y - v0y;
+			const a2:Number = v1x - v0x;
+			const b2:Number = v1y - v0y;
+			const c2:Number = v2x - v0x;
+			const d2:Number = v2y - v0y;
 								   
 			matrix.a = p_oMatrix.a*a2 + p_oMatrix.b*c2;
 			matrix.b = p_oMatrix.a*b2 + p_oMatrix.b*d2;

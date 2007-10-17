@@ -269,7 +269,10 @@ package sandy.core.scenegraph
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
 							else
+							{
+								if( m_bEnableForcedDepth ) l_oFace.depth = m_nForcedDepth;
 								p_oCamera.addToDisplayList( l_oFace );
+							}
 				 		} 
 					}
 					else
@@ -284,7 +287,10 @@ package sandy.core.scenegraph
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
 							else
+							{
+								if( m_bEnableForcedDepth ) l_oFace.depth = m_nForcedDepth;
 								p_oCamera.addToDisplayList( l_oFace );
+							}
 						} 
 						// otherwise we can perform a clipping against the front plane only
 						else if( m_bClipped && m_bEnableNearClipping )
@@ -301,7 +307,10 @@ package sandy.core.scenegraph
 								if( m_bUseSingleContainer )
 									m_aVisiblePoly.push( l_oFace );
 								else
+								{
+									if( m_bEnableForcedDepth ) l_oFace.depth = m_nForcedDepth;
 									p_oCamera.addToDisplayList( l_oFace );
+								}
 					 		} 
 						}
 				 	}
@@ -675,7 +684,9 @@ package sandy.core.scenegraph
 		 */
 		public function clone( p_sName:String="" ):Shape3D
 		{
-			return new Shape3D( p_sName, geometry.clone(), appearance, m_bUseSingleContainer );
+			var l_oClone:Shape3D = new Shape3D( p_sName, geometry.clone(), appearance, m_bUseSingleContainer );
+			l_oClone.matrix = this.matrix;
+			return l_oClone;
 		}
 		
 		/**

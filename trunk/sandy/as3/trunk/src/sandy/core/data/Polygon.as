@@ -423,7 +423,7 @@ package sandy.core.data
 		 */
 		public function toString():String
 		{
-			return "sandy.core.data.Polygon::id=" +id+ " [Points: " + vertices.length + ", Clipped: " + cvertices.length + "]";
+			return "sandy.core.data.Polygon::id=" +id+ " [Points: " + vertices.length + "]";
 		}
 
 		/**

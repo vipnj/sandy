@@ -51,6 +51,36 @@ package sandy.core.data
 			v = p_nV;
 		}
 
+
+		/**
+		 * Substract the UVCoord passed as parameter to the current UVCoord.
+		 * @param p_oUVCoord The UVCoord to substract
+		 */ 
+		public function sub( p_oUV:UVCoord ):void
+		{
+			u -= p_oUV.u;
+			v -= p_oUV.v;
+		}
+		
+		/**
+		 * Add the UVCoord passed as parameter with the current UVCoord.
+		 * @param p_oUVCoord The UVCoord to add
+		 */ 
+		public function add( p_oUV:UVCoord ):void
+		{
+			u += p_oUV.u;
+			v += p_oUV.v;
+		}
+		/**
+		 * Scale the texture coords values by a factor.
+		 * @param p_nFactor The factor
+		 */
+		public function scale( p_nFactor:Number ):void
+		{
+			u *= p_nFactor;
+			v *= p_nFactor;
+		}
+		
 		/**
 		* Returns a string representing this UVCoord.
 		*
@@ -69,6 +99,15 @@ package sandy.core.data
 		public function clone():UVCoord
 		{
 			return new UVCoord(u, v);
+		}
+		
+		/**
+		 * Realize a copy of the UVCoord object passed in parameter to the local object.
+		 */
+		public function copy( p_oUV:UVCoord ):void
+		{
+			u = p_oUV.u;
+			v = p_oUV.v;
 		}
 	}
 }

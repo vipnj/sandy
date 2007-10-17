@@ -69,6 +69,7 @@ package sandy.materials
         	if( m_oTexture == null ) return;
         	// --
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
+			const l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord : p_oPolygon.aUVCoord;
 			if( !l_points.length ) return;
 			// --
 			polygon = p_oPolygon;
@@ -76,11 +77,11 @@ package sandy.materials
 			// --
 			if( p_oPolygon.isClipped && enableAccurateClipping )
 			{
-				_drawPolygon( l_points, p_oPolygon.caUVCoord );
+				_drawPolygon( l_points, l_uv );
 			}
 			else
 			{
-				_drawPolygon( l_points, p_oPolygon.aUVCoord );
+				_drawPolygon( l_points, l_uv );
 	  		}
         }
         

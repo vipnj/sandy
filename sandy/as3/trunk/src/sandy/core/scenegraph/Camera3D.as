@@ -83,6 +83,11 @@ package sandy.core.scenegraph
 		//////////////////////
 		///// ACCESSORS //////
 		//////////////////////		
+		public function get viewport():ViewPort
+		{
+			return _viewport;
+		}
+		
 		/**
 		 * The viewport of this camera.
 		 */
@@ -215,7 +220,9 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * [<b>Todo</b>: Explain this ;-)].
+		 * <p>Project the vertices added to the projection list during rendering time.
+		 * The vertices are projected to the screen, as a 2D position.
+		 * </p>
 		 */
 		public function project():void
 		{
@@ -231,7 +238,9 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * [<b>Todo</b>: Explain this ;-)].
+		 * <p>Project the vertices list given in parameter.
+		 * The vertices are projected to the screen, as a 2D position.
+		 * </p>
 		 */
 		public function projectArray( p_oList:Array ):void
 		{
@@ -252,7 +261,9 @@ package sandy.core.scenegraph
 		}
 				
 		/**
-		 * [<b>Todo</b>: Explain this ;-)].
+		 * <p>Project the vertex passed as parameter.
+		 * The vertices are projected to the screen, as a 2D position.
+		 * </p>
 		 */
 		public function projectVertex( p_oVertex:Vertex ):void
 		{
@@ -263,7 +274,7 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * Nothing to do - the camera is not rendered
+		 * Nothing is done here - the camera is not rendered
 		 */
 		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D):void
 		{

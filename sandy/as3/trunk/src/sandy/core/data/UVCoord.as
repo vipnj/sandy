@@ -51,6 +51,17 @@ package sandy.core.data
 			v = p_nV;
 		}
 
+		public function length():Number
+		{
+			return Math.sqrt( u*u + v*v );
+		}
+		
+		public function normalize():void
+		{
+			var l_nLength:Number = length();
+			u /= l_nLength;
+			v /= l_nLength;
+		}
 
 		/**
 		 * Substract the UVCoord passed as parameter to the current UVCoord.

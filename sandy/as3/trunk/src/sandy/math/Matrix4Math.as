@@ -38,6 +38,9 @@ package sandy.math
 		 */
 		public static var USE_FAST_MATH:Boolean = false;
 		
+		// we force initialization of the fast math table
+		private const _fastMathInitialized:Boolean = FastMath.initialized;
+		
 		/**
 		 * Computes the multiplication of two Matrix4 matrices, as if they were 3x3.
 		 *

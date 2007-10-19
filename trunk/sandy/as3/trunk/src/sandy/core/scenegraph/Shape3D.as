@@ -678,14 +678,20 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * This method returns a clone of this object
+		 * This method returns a clone of this Shape3D.
+		 * The current appearance will be applied, and the geometry is cloned (not referenced to curent one).
+		 * 
+		 * @param p_sName The name of the new shape you are going to create
+		 * @param p_bKeepTransform Boolean value which, if set to true, applies the current local transformations to the cloned shape. Default value is false.
 		 *
 		 * @return 	The clone
 		 */
-		public function clone( p_sName:String="" ):Shape3D
+		public function clone( p_sName:String="", p_bKeepTransform:Boolean = false ):Shape3D
 		{
 			var l_oClone:Shape3D = new Shape3D( p_sName, geometry.clone(), appearance, m_bUseSingleContainer );
-			l_oClone.matrix = this.matrix;
+			// --
+			if( p_bKeepTransform == true ) l_oClone.matrix = this.matrix;
+			// --
 			return l_oClone;
 		}
 		

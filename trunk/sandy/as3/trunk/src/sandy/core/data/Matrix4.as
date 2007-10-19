@@ -34,7 +34,10 @@ package sandy.core.data
 		 * Should we use fast math.
 		 */
 		public static var USE_FAST_MATH:Boolean = true;
-
+		
+		// we force initialization of the fast math table
+		private const _fastMathInitialized:Boolean = FastMath.initialized;
+		
 		/**
 		 * Matrix4 cell.
 		 * <p><code>1 0 0 0 <br>

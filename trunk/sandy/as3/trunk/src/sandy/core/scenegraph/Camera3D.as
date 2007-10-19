@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.core.scenegraph 
 {
 	import flash.display.Sprite;
+	import flash.display.StageQuality;
 	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
@@ -187,6 +188,8 @@ package sandy.core.scenegraph
 		    nbPolygons = m_aDisplayList.length;
 		    // --
 		    const l_mcContainer:Sprite = p_oScene.container;
+		    // we go high quality for drawing part
+		    //l_mcContainer.stage.quality = StageQuality.HIGH;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
@@ -195,6 +198,8 @@ package sandy.core.scenegraph
 				l_oShape.display( p_oScene );
 				l_mcContainer.addChild( l_oShape.container );
 			}
+			// -- back to low quality
+			//l_mcContainer.stage.quality = StageQuality.LOW;
 			// --
 			m_aDisplayedList = m_aDisplayList.splice(0);
 		}

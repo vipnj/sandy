@@ -70,6 +70,7 @@ package sandy.materials
         	// --
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			const l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord : p_oPolygon.aUVCoord;
+			
 			if( !l_points.length ) return;
 			// --
 			polygon = p_oPolygon;

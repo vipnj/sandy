@@ -17,17 +17,18 @@ limitations under the License.
 package sandy.util
 {
 	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
+	import flash.utils.Dictionary;
 	
 	import sandy.events.QueueEvent;
 	import sandy.events.SandyEvent;
-	import flash.display.LoaderInfo;
 
-	[Event(name="queueComplete", type="sandy.events.SandyEvent")]
-	[Event(name="queueLoaderError", type="sandy.events.SandyEvent")]
+	[Event(name="queueComplete", type="sandy.events.QueueEvent")]
+	[Event(name="queueLoaderError", type="sandy.events.QueueEvent")]
 
        	/**
 	 * Utility class for loading resources.
@@ -44,6 +45,7 @@ package sandy.util
 		private var m_nLoaders : int;
 		private var m_oQueueEvent : QueueEvent;
 		
+		public var data:Dictionary = new Dictionary( true );
 		/**
 		 * Creates a new loader queue.
 		 *
@@ -65,14 +67,19 @@ package sandy.util
 		 */
 		public function add( p_sID : String, p_oURLRequest : URLRequest ) : void
 		{
-			m_oLoaders[ p_sID ] = 
-			{
-				ID : p_sID,
-				loader : new Loader(),
-				request : p_oURLRequest
-			};
-			
+			m_oLoaders[ p_sID ] = new QueueElement( p_sID, new Loader(), p_oURLRequest );
+			// --
 			m_nLoaders++;
+		}
+		
+		private function getIDFromLoader( p_oLoader:Loader ):String
+		{
+			for each( var l_oElement:QueueElement in m_oLoaders )
+			{
+				if( p_oLoader == l_oElement.loader )
+					return l_oElement.name;
+			}
+			return null;
 		}
 		
 		/**
@@ -82,11 +89,11 @@ package sandy.util
 		 */
 		public function start() : void
 		{
-			for each( var l_oLoader : Object in m_oLoaders )
+			for each( var l_oLoader:QueueElement in m_oLoaders )
 			{
-				l_oLoader.loader.load( l_oLoader.request );
+				l_oLoader.loader.load( l_oLoader.urlRequest );
 				l_oLoader.loader.contentLoaderInfo.addEventListener( Event.COMPLETE, completeHandler );
-	            		l_oLoader.loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, ioErrorHandler );
+	            l_oLoader.loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, ioErrorHandler );
 			}
 		}
 		
@@ -94,10 +101,16 @@ package sandy.util
 		 * Fires a QueueEvent, once all requested resources are loaded.
 		 * Type QUEUE_COMPLETE
 		 */
-		private function completeHandler( p_oEvent : Event ) : void
-		{
-			m_nLoaders--;
+		private function completeHandler( p_oEvent:Event ) : void
+		{		
+			var l_oLoaderInfos:LoaderInfo = p_oEvent.target as LoaderInfo;
+			var l_oLoader:Loader = l_oLoaderInfos.loader;
 			
+			var l_sName:String = getIDFromLoader( l_oLoader );
+			data[ l_sName ] = l_oLoaderInfos.content;
+			// --
+			m_nLoaders--;
+			// --
 			if( m_nLoaders == 0 ) 
 			{
 				m_oQueueEvent.loaders = m_oLoaders;
@@ -121,5 +134,22 @@ package sandy.util
 				dispatchEvent( m_oQueueEvent );
 			}
 		}
+	}
+}
+
+import flash.display.Loader;
+import flash.net.URLRequest;
+
+internal class QueueElement
+{
+	public var name:String;
+	public var loader:Loader;
+	public var urlRequest:URLRequest;
+	// --
+	public function QueueElement( p_sName:String, p_oLoader:Loader, p_oURLRequest : URLRequest )
+	{
+		name = p_sName;
+		loader = p_oLoader;
+		urlRequest = p_oURLRequest;
 	}
 }

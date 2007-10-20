@@ -446,11 +446,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#clone()">clone</a>(p_sName:String = ""):<a href="../scenegraph/Shape3D.html">Shape3D</a>
+<a class="signatureLink" href="#clone()">clone</a>(p_sName:String = "", p_bKeepTransform:Boolean = false):<a href="../scenegraph/Shape3D.html">Shape3D</a>
 </div>
 <div class="summaryTableDescription">
-   This method returns a clone of this object
-      </div>
+   This method returns a clone of this Shape3D.</div>
 </td><td class="summaryTableOwnerCol">Shape3D</td>
 </tr>
 <tr class="">
@@ -1109,12 +1108,22 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function clone(p_sName:String = ""):<a href="../scenegraph/Shape3D.html">Shape3D</a></code><p>
-   This method returns a clone of this object
-      </p><span class="label">Parameters</span>
+<code>public function clone(p_sName:String = "", p_bKeepTransform:Boolean = false):<a href="../scenegraph/Shape3D.html">Shape3D</a></code><p>
+   This method returns a clone of this Shape3D.
+   The current appearance will be applied, and the geometry is cloned (not referenced to curent one).
+   
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> (default = "<code></code>")<code></code></td>
+<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> (default = "<code></code>")<code></code> &mdash; The name of the new shape you are going to create
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_bKeepTransform</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Boolean value which, if set to true, applies the current local transformations to the cloned shape. Default value is false.
+      </td>
 </tr>
 </table>
 <p></p>

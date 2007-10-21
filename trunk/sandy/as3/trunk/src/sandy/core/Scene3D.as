@@ -16,7 +16,6 @@ limitations under the License.
 
 package sandy.core
 {
-	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	
@@ -67,8 +66,7 @@ package sandy.core
 		 */
 		public var container:Sprite;
 
-		private var _light:Light3D; 	//the unique light instance of the world
-
+		
 		/**
 		 * Creates a new Scene.
 		 *
@@ -99,6 +97,20 @@ package sandy.core
 		}
 
 
+		public function get rectClipping():Boolean
+		{return m_bRectClipped;}
+		
+		/**
+		 * Enable this property (default value is false) to perfectly clip your 3D scene to the viewport dimension.
+		 * Once enabled, even if you don't have enableClipping set to true for each of your objects, nothing will be drawn outside
+		 */
+		public function set rectClipping( p_bEnableClipping:Boolean ):void
+		{ 
+			m_bRectClipped = p_bEnableClipping;
+			// -- we force the new state of the rectClipping property to be applied
+			camera.viewport.hasChanged = true;
+		}
+
 		/**
 		 * Renders this scene into its display object container.
 		 *
@@ -108,18 +120,18 @@ package sandy.core
 		{
 			if( root && camera && container )
 			{
-				container.stage.frameRate *= 1.5;
+				//container.stage.frameRate *= 1.5;
 				
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_UPDATE ) );
 				root.update( this, null, false );
 				// --
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_CULL ) );
-				root.cull( this, camera.frustrum, camera.modelMatrix, camera.changed );
+				root.cull( this, camera.frustrum, camera.invModelMatrix, camera.changed );
 				// --
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_RENDER ) );
 				root.render( this, camera );
 				
-				container.stage.frameRate /= 1.5;
+				//container.stage.frameRate /= 1.5;
 				
 				// -- clear the polygon's container and the projection vertices list
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_RENDER_DISPLAYLIST ) );
@@ -158,5 +170,8 @@ package sandy.core
 			root.destroy();
 			return true;
 		}
+		
+		private var m_bRectClipped:Boolean = false;
+		private var _light:Light3D; 	//the unique light instance of the world
 	}
 }

@@ -47,8 +47,7 @@ package sandy.materials
 		public var matrix:Matrix = new Matrix();
 		// --
 		public var smooth:Boolean = false;
-		
-		public var enableAccurateClipping:Boolean = false;
+
 	
 		/**
 		 * Creates a new BitmapMaterial.
@@ -72,17 +71,22 @@ package sandy.materials
 		/**
 		 * Renders this material on the face it dresses
 		 *
-		  * @param p_oScene		The current scene
+		 * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
 		 */
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			if( m_oTexture == null ) return;
-			const lGraphics:Graphics = p_mcContainer.graphics;
+        	if( m_oTexture == null ) return;
+        	// --
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
+			const l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord : p_oPolygon.aUVCoord;
+			// --
 			if( !l_points.length ) return;
-			
+			// --
+			polygon = p_oPolygon;
+        	graphics = p_mcContainer.graphics;
+
 			// -- If there's a light, we prepare the texture
 			if( _useLight && attributes.lightAttributes )
 			{
@@ -102,33 +106,22 @@ package sandy.materials
 				m_oTexture.applyFilter( m_orgTexture, l_oTextureRectangle, l_oFilterOrigin, m_oCmf );
 			}
 			// --
-			if( p_oPolygon.isClipped && enableAccurateClipping )
+			if( polygon.isClipped )
 			{
-				if( p_oPolygon.cvertices.length )
-					_drawPolygon( p_oPolygon, l_points, p_oPolygon.caUVCoord, lGraphics );
+				_tesselatePolygon( l_points, l_uv );
 			}
 			else
 			{
-				// -- we prepare the texture
-				const lUv:Matrix = m_oPolygonMatrixMap[p_oPolygon];
-				const x0:Number = p_oPolygon.vertices[0].sx, y0:Number = p_oPolygon.vertices[0].sy;
-				//--
-				m_oTmp.a = p_oPolygon.vertices[1].sx - x0;
-				m_oTmp.b = p_oPolygon.vertices[1].sy - y0;
-				m_oTmp.c = p_oPolygon.vertices[2].sx - x0;
-				m_oTmp.d = p_oPolygon.vertices[2].sy - y0;
-				m_oTmp.tx = x0;
-				m_oTmp.ty = y0;
-				// --
-				matrix = lUv.clone();
-				matrix.concat(m_oTmp);
-				// --
-				_processPolygonDraw( p_oPolygon, lGraphics, matrix, l_points );
+				map = (m_oPolygonMatrixMap[polygon] as Matrix );
+				drawPolygon( l_points );
 			}
+			// --
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( graphics, polygon, l_points );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
 		}
 		
 
-		private function _drawPolygon( p_oPolygon:Polygon, p_aPoints:Array, p_aUv:Array, p_oGraphics:Graphics ):void
+		protected function _tesselatePolygon ( p_aPoints:Array, p_aUv:Array ):void
 		{
 			var l_points: Array = p_aPoints.slice();
 			var l_uv: Array = p_aUv.slice();
@@ -141,40 +134,46 @@ package sandy.materials
 				p_aPoints.splice( 1, 1 );
 				p_aUv.splice( 1, 1 );
 				// --
-				_drawPolygon( p_oPolygon, p_aPoints, p_aUv, p_oGraphics );
+				_tesselatePolygon( p_aPoints, p_aUv );
 			}
 			// --
-			const lUv:Matrix = _createTextureMatrix( l_uv );
-			// -- we prepare the texture
-			const x0:Number = l_points[0].sx, y0:Number = l_points[0].sy;
-			//--
-			m_oTmp.a = l_points[1].sx - x0;
-			m_oTmp.b = l_points[1].sy - y0;
-			m_oTmp.c = l_points[2].sx - x0;
-			m_oTmp.d = l_points[2].sy - y0;
-			m_oTmp.tx = x0;
-			m_oTmp.ty = y0;
-			// --
-			matrix = lUv.clone();
-			matrix.concat(m_oTmp);
-			// --
-			_processPolygonDraw( p_oPolygon, p_oGraphics, matrix, l_points );
-		}	
+			map = ( polygon.isClipped ) ? _createTextureMatrix( p_aUv ) : (m_oPolygonMatrixMap[polygon] as Matrix );
+	        // --
+	        drawPolygon( p_aPoints );
+	 	}
 
-		private function _processPolygonDraw( p_oPolygon:Polygon, p_oGraphics:Graphics, p_oMatrix:Matrix, p_aPoints:Array ):void
+
+        protected function drawPolygon( p_aPoints:Array ):void
 		{
-			p_oGraphics.lineStyle();
-			p_oGraphics.beginBitmapFill( m_oTexture, p_oMatrix, true, smooth );
+			const x0:Number = p_aPoints[0].sx, y0:Number = p_aPoints[0].sy;
+			const x1:Number = p_aPoints[1].sx, y1:Number = p_aPoints[1].sy;
+			const x2:Number = p_aPoints[2].sx, y2:Number = p_aPoints[2].sy;
+			//--
+			const a2:Number = x1 - x0;
+			const b2:Number = y1 - y0;
+			const c2:Number = x2 - x0;
+			const d2:Number = y2 - y0;
+			// --					   
+			matrix.a = map.a*a2 + map.b*c2;
+			matrix.b = map.a*b2 + map.b*d2;
+			matrix.c = map.c*a2 + map.d*c2;
+			matrix.d = map.c*b2 + map.d*d2;
+			matrix.tx = map.tx*a2 + map.ty*c2 + x0;
+			matrix.ty = map.tx*b2 + map.ty*d2 + y0;
 			// --
-			p_oGraphics.moveTo( p_aPoints[0].sx, p_aPoints[0].sy );
+			graphics.lineStyle();
+			graphics.beginBitmapFill( m_oTexture, matrix, repeat, smooth );
 			// --
-			for each( var l_oPoint:Vertex in p_aPoints )
-				p_oGraphics.lineTo( l_oPoint.sx, l_oPoint.sy);
+			graphics.moveTo( x0, y0 );
 			// --
-			p_oGraphics.endFill();
+			var l_oPoint:Vertex;
+			for( var id:int = 1; id < p_aPoints.length; id +=1 )
+			{
+				l_oPoint = p_aPoints[int(id)];
+				graphics.lineTo( l_oPoint.sx, l_oPoint.sy);
+			}
 			// --
-			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );
-			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_oGraphics, p_oPolygon, p_aPoints );
+			graphics.endFill();
 		}
 
 		protected function _createTextureMatrix( p_aUv:Array ):Matrix
@@ -208,7 +207,8 @@ package sandy.materials
 		public function get texture():BitmapData
 		{
 			return m_oTexture;
-		}
+		
+		}0
 		
 		/**
 		 * @private
@@ -222,6 +222,12 @@ package sandy.materials
 			m_nInvWidth = 1/m_nWidth;
 			m_oTexture.lock(); // not sure it is faster but it should....
 			m_orgTexture = p_oTexture.clone();
+			// -- We reinitialize the precomputed matrix
+			for( var l_sID:String in m_oPolygonMatrixMap )
+			{
+				var l_oPoly:Polygon = m_oPolygonMatrixMap[ l_sID ] as Polygon;
+				init( l_oPoly );
+			}
 		}
 	
 		/**
@@ -299,6 +305,10 @@ package sandy.materials
 			return 'sandy.materials.BitmapMaterial' ;
 		}
 		
+		internal var polygon:Polygon;
+        internal var graphics:Graphics;
+        internal var map:Matrix = new Matrix();
+        
 		protected var m_oTexture:BitmapData;
 		protected var m_orgTexture:BitmapData;
 		private var m_nHeight:Number;
@@ -309,6 +319,5 @@ package sandy.materials
 		protected var m_oPolygonMatrixMap:Dictionary;
 		private var m_oPoint:Point = new Point();
 		private var m_oCmf:ColorMatrixFilter;
-		protected var m_oTmp:Matrix = new Matrix();
 	}
 }

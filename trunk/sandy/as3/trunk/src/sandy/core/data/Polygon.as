@@ -19,6 +19,7 @@ package sandy.core.data
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
@@ -28,6 +29,7 @@ package sandy.core.data
 	import sandy.events.BubbleEvent;
 	import sandy.events.BubbleEventBroadcaster;
 	import sandy.materials.Appearance;
+	import sandy.math.IntersectionMath;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
 
@@ -57,7 +59,14 @@ package sandy.core.data
 		/**
 		 * [READ-ONLY] property.
 		 */
-		public var owner:Shape3D;
+		public var shape:Shape3D;
+		
+		/**
+		 * [READ-ONLY] property.
+		 * Refers to the Scene3D the shape is linked to.
+		 */
+		public var scene:Scene3D;
+		
 		/**
 		 * [READ-ONLY] property.
 		 */
@@ -126,7 +135,7 @@ package sandy.core.data
 		/**
 		 * Creates a new polygon.
 		 *
-		 * @param p_oOwner		The shape this polygon belongs to
+		 * @param p_oShape		    The shape this polygon belongs to
 		 * @param p_geometry		The geometry this polygon is part of
 		 * @param p_aVertexID		The vertexID array of this polygon
 		 * @param p_aUVCoordsID		The UVCoordsID array of this polygon
@@ -135,7 +144,7 @@ package sandy.core.data
 		 */
 		public function Polygon( p_oOwner:Shape3D, p_geometry:Geometry3D, p_aVertexID:Array, p_aUVCoordsID:Array=null, p_nFaceNormalID:Number=0, p_nEdgesID:uint=0 )
 		{
-			owner = p_oOwner;
+			shape = p_oOwner;
 			m_oGeometry = p_geometry;
 			// --
 			backfaceCulling = 1;
@@ -190,7 +199,8 @@ package sandy.core.data
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
 			var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
-			m_bVisible = (( backfaceCulling ) * (l_nDot) < 0);
+			l_nDot *= backfaceCulling;
+			m_bVisible = ( l_nDot < 0 );
 			// --
 			const l_aVert:Array = vertices;
 			// --
@@ -217,7 +227,6 @@ package sandy.core.data
 			meanBounds.scale( 1 / l_aVert.length );
 		}
 		
-		
 		/**
 		 * Is this face visible?.
 		 * The method returns the visibility value pre computed after precompute method call. This getter shall be called afer the precompute call.
@@ -228,6 +237,110 @@ package sandy.core.data
 			return m_bVisible;
 		}
 
+		/**
+		 * Returns the real 3D position of the 2D screen position.
+		 * The 2D position is usually coming from :
+		 * <listing version="3.0">
+		 * var l_nClicX:Number = m_oScene.container.mouseX;
+         * var l_nClicY:Number = m_oScene.container.mouseY;
+         * </listing>
+         * 
+         * @return the real 3D position which correspond to the intersection onto that polygone
+         */
+		public function get3DFrom2D( p_oScreenPoint:Point ):Vector
+		{
+			var l_nX:Number = (p_oScreenPoint.x - scene.camera.viewport.width2)/ scene.camera.viewport.width2;
+            var l_nY:Number = -(p_oScreenPoint.y - scene.camera.viewport.height2)/scene.camera.viewport.height2;
+            var l_oPoint:Vector = new Vector( l_nX, l_nY, 0 );
+
+            // -- on prend la matrice de projection inverse
+            var l_oMatrix:Matrix4 = scene.camera.invProjectionMatrix;
+            l_oMatrix.vectorMult( l_oPoint );
+            l_oMatrix = scene.camera.matrix;
+            l_oMatrix.vectorMult( l_oPoint );
+
+            // -- maintenant nous avons la direction du rayon logiquement.
+            // -- reste a calculer son intersection avec le polygone
+            var l_oNormale:Vector = normal.getVector();
+            var l_oOrigineRayon:Vector = scene.camera.getPosition();
+                 
+            l_oPoint.sub( l_oOrigineRayon );
+            //on normalise le vecteur car c'est lui qui sert de vecteur directeur du rayon qui part
+            l_oPoint.normalize();
+ 
+            // on chope la constante du plan
+            var l_nPlaneConst:Number = VectorMath.dot( (vertices[0] as Vertex).getVector(), l_oNormale );
+         
+            // Calcul le produit scalaire Normale du plan avec le vecteur directeur du rayon
+            var PScalaireNormalePlanRayon:Number = l_oNormale.dot( l_oPoint );
+
+            // In case the ray is parallel to the plane
+            if( PScalaireNormalePlanRayon >= -0.0000000001 && PScalaireNormalePlanRayon <= 0.0000000001 )
+                return null;
+         
+            // distance from ray to plane
+            var DistanceRayonPlan:Number = (l_oOrigineRayon.dot( l_oNormale ))/(l_oNormale.getNorm());         
+     
+            // lpane distance
+            var t:Number =  - DistanceRayonPlan / PScalaireNormalePlanRayon
+     
+            // No collision
+            if( t < 0.0000000001 )
+                return null;
+         
+            // -- intersection point
+          return new Vector( 	l_oOrigineRayon.x + t * l_oPoint.x,
+								l_oOrigineRayon.y + t * l_oPoint.y,
+                      			l_oOrigineRayon.z + t * l_oPoint.z );;
+		}
+		
+		/**
+		 * Get the UVCoord under the 2D screen position after a mouse click or something
+		 * The 2D position is usually coming from :
+		 * <listing version="3.0">
+		 * var l_nClicX:Number = m_oScene.container.mouseX;
+         * var l_nClicY:Number = m_oScene.container.mouseY;
+         * </listing>
+         * 
+         * @return the UVCoord under the 2D screen point
+         */
+		public function getUVFrom2D( p_oScreenPoint:Point ):UVCoord
+		{
+			var p0:Point = new Point(vertices[0].sx, vertices[0].sy);
+            var p1:Point = new Point(vertices[1].sx, vertices[1].sy);
+            var p2:Point = new Point(vertices[2].sx, vertices[2].sy);
+          
+            var u0:UVCoord = aUVCoord[0];
+            var u1:UVCoord = aUVCoord[1];
+            var u2:UVCoord = aUVCoord[2];
+          
+            var v01:Point = new Point(p1.x - p0.x, p1.y - p0.y );
+           
+            var vn01:Point = v01.clone();
+            vn01.normalize(1);
+           
+            var v02:Point = new Point(p2.x - p0.x, p2.y - p0.y );
+            var vn02:Point = v02.clone(); vn02.normalize(1);
+           
+            // sub that from click point
+            var v4:Point = new Point( p_oScreenPoint.x - v01.x, p_oScreenPoint.y - v01.y );
+            
+            // we now have everything to find 1 intersection
+            var l_oInter:Point = IntersectionMath.intersectionLine2D( p0, p2, p_oScreenPoint, v4 );
+            
+            // find vectors to intersection
+            var vi02:Point = new Point( l_oInter.x - p0.x, l_oInter.y - p0.y );      
+            var vi01:Point = new Point( p_oScreenPoint.x - l_oInter.x , p_oScreenPoint.y - l_oInter.y );
+
+            // interpolation coeffs
+            var d1:Number = vi01.length / v01.length ;
+            var d2:Number = vi02.length / v02.length;
+                     
+            // -- on interpole linéairement pour trouver la position du point dans repere de la texture (normalisé)
+            return new UVCoord( u0.u + d1*(u1.u - u0.u) + d2*(u2.u - u0.u),
+				                u0.v + d1*(u1.v - u0.v) + d2*(u2.v - u0.v));
+		}
+		
 		/**
 		 * Returns an array containing the vertices, clipped by the camera frustum.
 		 *
@@ -342,30 +455,6 @@ package sandy.core.data
 		}
 
 		/**
-		 * Returns the depth average of this face.
-		 *
-		 * <p>Useful for z-sorting.</p>
-		 *
-		 * @return	A number representing the depth average.
-		 */
-		public function getZAverage():Number
-		{
-			return meanBounds.z;
-		}
-
-		/**
-		 * Returns the minimum depth of this face.
-		 *
-		 * <p>Useful for z-sorting.</p>
-		 *
-		 * @return	A number representing the depth minimum.
-		 */
-		public function getZMinimum():Number
-		{
-			return minBounds.z;
-		}
-
-		/**
 		 * Clears the container of this polygon from graphics.
 		 */
 		public function clear():void
@@ -381,6 +470,8 @@ package sandy.core.data
 		 */
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null ):void
 		{
+			scene = p_oScene;
+			// --
 			const lCont:Sprite = (p_oContainer)?p_oContainer:m_oContainer;
 			if( m_bVisible )
 			{

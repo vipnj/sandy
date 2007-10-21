@@ -17,9 +17,10 @@ limitations under the License.
 package sandy.materials 
 {
 	import flash.display.BitmapData;
-	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
@@ -63,30 +64,34 @@ package sandy.materials
         		svArray.push(new Vector());
         	}
         }
-        
-        public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
-        {
+          
+
+		/**
+		 * Renders this material on the face it dresses
+		 *
+		 * @param p_oScene		The current scene
+		 * @param p_oPolygon	The face to be rendered
+		 * @param p_mcContainer	The container to draw on
+		 */
+		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
+		{
         	if( m_oTexture == null ) return;
         	// --
 			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			const l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord : p_oPolygon.aUVCoord;
-			
+			// --
 			if( !l_points.length ) return;
 			// --
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
 			// --
-			if( p_oPolygon.isClipped && enableAccurateClipping )
-			{
-				_drawPolygon( l_points, l_uv );
-			}
-			else
-			{
-				_drawPolygon( l_points, l_uv );
-	  		}
-        }
-        
-        private function _drawPolygon( p_aPoints:Array, p_aUv:Array ):void
+			_tesselatePolygon( l_points, l_uv );
+			// --
+			if( attributes.lineAttributes ) attributes.lineAttributes.draw( graphics, polygon, l_points );
+			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
+		}
+		       
+        protected override function _tesselatePolygon(p_aPoints:Array, p_aUv:Array ):void
 		{
 			var l_points: Array = p_aPoints.slice();
 			var l_uv: Array = p_aUv.slice();
@@ -99,29 +104,17 @@ package sandy.materials
 				p_aPoints.splice( 1, 1 );
 				p_aUv.splice( 1, 1 );
 				// --
-				_drawPolygon( p_aPoints, p_aUv );
+				_tesselatePolygon( p_aPoints, p_aUv );
 			}
 			// --
-			if( enableAccurateClipping == false )
-				m_oTmp = (m_oPolygonMatrixMap[polygon] as Matrix );
-			else
-				m_oTmp = _createTextureMatrix( l_uv );
-			// --
-			map.a = m_oTmp.a;
-	        map.b = m_oTmp.b;
-	        map.c = m_oTmp.c;
-	        map.d = m_oTmp.d;
-	        map.tx = m_oTmp.tx;
-	        map.ty = m_oTmp.ty;	
+			map = ( polygon.isClipped ) ? _createTextureMatrix( l_uv ).clone() : (m_oPolygonMatrixMap[polygon] as Matrix ).clone();
 	        // --
 	        renderRec( l_points[0].getScreenPoint(), l_points[1].getScreenPoint(), l_points[2].getScreenPoint(), 0 );
+	        // --
+	        map = null;
 		}
-        
-        internal var polygon:Polygon;
-        internal var map:Matrix = new Matrix();        
+             
         internal var svArray:Array = new Array();
-        internal var graphics:Graphics;
-        
 		internal var faz:Number;
         internal var fbz:Number;
         internal var fcz:Number;
@@ -152,12 +145,12 @@ package sandy.materials
         
         internal var ax:Number;
         internal var ay:Number;
-        internal var az:Number;
         internal var bx:Number;
         internal var by:Number;
-        internal var bz:Number;
         internal var cx:Number;
         internal var cy:Number;
+		internal var az:Number;
+        internal var bz:Number;
         internal var cz:Number;
         
         protected function renderRec( a:Vector, b:Vector, c:Vector, index:Number):void
@@ -356,13 +349,14 @@ package sandy.materials
 			matrix.tx = p_oMatrix.tx*a2 + p_oMatrix.ty*c2 + v0x;
 			matrix.ty = p_oMatrix.tx*b2 + p_oMatrix.ty*d2 + v0y;
 			
-			graphics.lineStyle( 1, 0xFF);
+			graphics.lineStyle( 0 );
 			graphics.beginBitmapFill(m_oTexture, matrix, repeat, smooth);
 			graphics.moveTo(v0x, v0y);
 			graphics.lineTo(v1x, v1y);
 			graphics.lineTo(v2x, v2y);
 			graphics.endFill();
 		}
+		
 	}
 	
 }

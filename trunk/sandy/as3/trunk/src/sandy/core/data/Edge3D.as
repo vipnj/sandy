@@ -19,7 +19,9 @@ package sandy.core.data
 	
 	
 	/**
-	 * <p>[<strong>ToDo</strong>: Explain how to use this creature! ]</p>
+	 * <p>The Edge3D represent a shape3D.
+	 * It stores information concerning related 2 Vertex.
+	 * A polygon is defined by some vertex, but also by some edges. Polygons are sharing edges between them.</p>
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @since		1.0

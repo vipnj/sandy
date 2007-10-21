@@ -65,7 +65,7 @@ package sandy.core.scenegraph
 			// Parse the children, take their bounding volume and merge it with the current node recurssively.
 			// After that call the super cull method to get the correct cull value.
 			const lChanged:Boolean = p_bChanged || changed;
-			for each( var l_oNode:Node in _aChilds )
+			for each( var l_oNode:Node in children )
 			    l_oNode.cull( p_oScene, p_oFrustum, p_oViewMatrix, lChanged );
 			// --
 			//super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
@@ -81,7 +81,7 @@ package sandy.core.scenegraph
 		{
 			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
 			// --
-			for each( var l_oNode:Node in _aChilds )
+			for each( var l_oNode:Node in children )
 			{
 			    if( l_oNode.culled != l_oCStateOut )
 			    	l_oNode.render( p_oScene, p_oCamera );

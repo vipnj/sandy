@@ -69,7 +69,7 @@ package sandy.materials
 			var x2: Number = v2.sx;
 			var y2: Number = v2.sy;
 
-			var zM: Number = p_oPolygon.owner.getBBox().m_oTMin.z;
+			var zM: Number = p_oPolygon.shape.boundingBox.m_oTMin.z;
 			
 			//-- get projected normal
 			var normal: Vertex = p_oPolygon.normal;
@@ -79,7 +79,7 @@ package sandy.materials
 			var ny: Number = normal.sy;
 			
 			//-- compute gray values
-			var zR: Number = p_oPolygon.owner.getBBox().m_oTMax.z - p_oPolygon.owner.getBBox().m_oTMin.z;
+			var zR: Number = p_oPolygon.shape.boundingBox.m_oTMax.z - p_oPolygon.shape.boundingBox.m_oTMin.z;
 			
 			var g0: Number = 0xff - ( v0.wz - zM ) / zR * zCoef * 0xff;
 			var g1: Number = 0xff - ( v2.wz - zM ) / zR * zCoef * 0xff;

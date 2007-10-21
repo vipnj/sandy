@@ -205,8 +205,8 @@ package sandy.view
 		 */
 		public function sphereInFrustum( p_oS:BSphere ):CullingState
 		{
-	        var d:Number, c:Number;
-	        const x:Number=p_oS.m_oPosition.x, y:Number=p_oS.m_oPosition.y, z:Number=p_oS.m_oPosition.z, radius:Number = p_oS.m_nTRadius;
+	        var d:Number = 0, c:int=0;
+	        const x:Number=p_oS.position.x, y:Number=p_oS.position.y, z:Number=p_oS.position.z, radius:Number = p_oS.radius;
 	        // --
 	        for each( var plane:Plane in aPlanes ) 
 	        { 
@@ -295,7 +295,6 @@ package sandy.view
 		}
 		
 
-	
 		/**
 		 * Clip the given vertex and UVCoords arrays against the frustum front plane
 		 */
@@ -303,17 +302,17 @@ package sandy.view
 		{
 			var l_oPlane:Plane = aPlanes[NEAR];
 			var tmp:Array = p_aCvert.splice(0);
-			
+			// --
 			var v0:Vertex = tmp[0];
 			var v1:Vertex = tmp[1];
-						
+			// --		
 			var l_nDist0:Number = l_oPlane.a * v0.wx + l_oPlane.b * v0.wy + l_oPlane.c * v0.wz + l_oPlane.d; 
 			var l_nDist1:Number = l_oPlane.a * v1.wx + l_oPlane.b * v1.wy + l_oPlane.c * v1.wz + l_oPlane.d;
-			
+			// --
 			var d:Number = 0;
 			var t:Vertex = new Vertex();
-			
-			if ( l_nDist0 < 0 && l_nDist1 >=0 )		// Coming in
+			// --
+			if ( l_nDist0 < 0 && l_nDist1 >=0 )	// Coming in
 			{	 
 				d = l_nDist0/(l_nDist0-l_nDist1);
 				t.wx = (v0.wx+(v1.wx-v0.wx)*d);
@@ -323,7 +322,7 @@ package sandy.view
 				p_aCvert.push( t );
 				p_aCvert.push( v1 );
 			} 
-			else if ( l_nDist1 < 0 && l_nDist0 >=0 )		// Going out
+			else if ( l_nDist1 < 0 && l_nDist0 >=0 ) // Going out
 			{	
 				d = l_nDist0/(l_nDist0-l_nDist1);
 				//
@@ -346,8 +345,7 @@ package sandy.view
 			}
 		}
 		
-				
-	    
+   
 		/**
 		 * Clips a polygon against one the frustum planes
 		 *

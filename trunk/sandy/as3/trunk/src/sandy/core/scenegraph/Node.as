@@ -36,15 +36,64 @@ package sandy.core.scenegraph
 	 **/
 	public class Node
 	{
-		// This property set the cache status of the current node.
-		public var changed:Boolean;
-		// This property represent the culling state of the current node
-		public var culled:CullingState;
+		/**
+		 * This property represent the culling state of the current node.
+		 * This state is defined during the culling phasis as it refers to the position of the object against the viewing frustum.
+		 */
+		public var culled:CullingState = CullingState.OUTSIDE;
 
-		protected var m_oEB:BubbleEventBroadcaster;
+		/**
+		 * Name of this node.
+		 * Of no name is specified, the unique ID of the node will be used
+		 */
+		public var name:String;
+		
+		/**
+		 * The children of this node are stored inside this array.
+		 * IMPORTANT: Use this property mainly as READ ONLY. To add, delete or search a specific child, you can use the specific method to do that
+		 */
+		public var children:Array = new Array();
+		
+		/**
+		 *  Cached matrix corresponding to the transformation to the 0,0,0 frame system
+		 */
+		public var modelMatrix:Matrix4 = new Matrix4();
+		
+		/**
+		 * Cached matrix corresponding to the transformation to the camera frame system
+		 */
+		public var viewMatrix:Matrix4 = new Matrix4();
+		
+		/**
+		 * The bounding box of this node
+		 * IMPORTANT: Do not modify it unless you perfectly know what you are doing
+		 */
+		public var boundingBox:BBox;
+		
+		/**
+		 * The bounding sphere of this node
+		 * IMPORTANT: Do not modify it unless you perfectly know what you are doing
+		 */
+		public var boundingSphere:BSphere;
+		
+		/**
+		 * The unique id of this node in the node graph.
+		 * <p>This value is very useful to retrieve a specific node.</p>
+		 */
+		public const id:uint = _ID_++;
+		
+		/**
+		 * Specify the visibility of this node.
+		 * If true, the node is visible, if fase, it will not be displayed.
+		 */
+		public var visible : Boolean = true;
 
-		// The class should not be instatiated, but AS3 doesn't allow private constructors
-
+		/**
+		 * Reference to the scene is it linked to.
+		 * Initialized at null.
+		 */
+		public var scene:Scene3D = null;
+		
 		/**
 		 * Creates a node in the object tree of the world.
 		 *
@@ -55,20 +104,13 @@ package sandy.core.scenegraph
 		public function Node( p_sName:String = "" )
 		{
 			parent = null;
-			_aChilds = [];
-			_id = Node._ID_++;
 			// --
-			if(p_sName)		name = p_sName;
-			else         	name = String( _id.toString() );
+			if( p_sName != "" )	name = p_sName;
+			else name = (id).toString();
+			// --
 			changed = true;
-			_visible = true;
-			_oBBox = new BBox();
-			_oBSphere = new BSphere();
 			m_oEB = new BubbleEventBroadcaster();
 			// --
-			_oModelCacheMatrix = new Matrix4();
-			_oViewCacheMatrix = new Matrix4();
-			//
 			culled = CullingState.INSIDE;
 		}
 
@@ -105,17 +147,6 @@ package sandy.core.scenegraph
 		public function removeEventListener(p_sEvt:String, p_oL:*) : void
 		{
 			m_oEB.removeEventListener(p_sEvt, p_oL);
-		}
-
-		// This is a FINAL method, IT CAN NOT BE OVERLOADED.
-		/**
-		 * The unique id of this node in the node graph.
-		 *
-		 * <p>This value is very useful to retrieve a specific node.</p>
-		 */
-		final public function get id():Number
-		{
-			return _id;
 		}
 
 		/**
@@ -175,7 +206,7 @@ package sandy.core.scenegraph
 			// --
 			p_oChild.parent = this;
 			changed =  true ;
-			_aChilds.push( p_oChild );
+			children.push( p_oChild );
 			m_oEB.addChild( p_oChild.broadcaster );
 		}
 
@@ -186,15 +217,7 @@ package sandy.core.scenegraph
 		 */
 		public function getChildList():Array
 		{
-			return _aChilds;
-		}
-
-		/**
-		 * The child nodes array of this node.
-		 */
-		public function get children():Array
-		{
-			return _aChilds;
+			return children;
 		}
 
 		/**
@@ -208,7 +231,7 @@ package sandy.core.scenegraph
 		public function getChildFromId( p_nId:Number, p_bRecurs:Boolean=false ):Node
 		{
 			var l_oNode:Node, l_oNode2:Node;
-			for each( l_oNode in _aChilds )
+			for each( l_oNode in children )
 			{
 				if( l_oNode.id == p_nId )
 				{
@@ -217,7 +240,7 @@ package sandy.core.scenegraph
 			}
 			if( p_bRecurs )
 			{
-				for each( l_oNode in _aChilds )
+				for each( l_oNode in children )
 				{
 					l_oNode2 = l_oNode.getChildFromId( p_nId, p_bRecurs );
 					if( l_oNode2 != null ) return l_oNode2;
@@ -237,7 +260,7 @@ package sandy.core.scenegraph
 		public function getChildByName( p_sName:String, p_bRecurs:Boolean=false ):Node
 		{
 			var l_oNode:Node, l_oNode2:Node;
-			for each( l_oNode in _aChilds )
+			for each( l_oNode in children )
 			{
 				if( l_oNode.name == p_sName )
 				{
@@ -247,7 +270,7 @@ package sandy.core.scenegraph
 			if( p_bRecurs )
 			{
 				var node:Node = null;
-				for each( l_oNode in _aChilds )
+				for each( l_oNode in children )
 				{
 					node = l_oNode.getChildByName( p_sName, p_bRecurs );
 					if( node != null ) return node;
@@ -271,14 +294,14 @@ package sandy.core.scenegraph
 		public function removeChildById( p_nId:Number ):Boolean
 		{
 			var found:Boolean = false;
-			var i:int, l:int = _aChilds.length;
+			var i:int, l:int = children.length;
 
 			while( i < l && !found )
 		    {
-				if( _aChilds[int(i)].id == p_nId  )
+				if( children[int(i)].id == p_nId  )
 				{
-					broadcaster.removeChild( _aChilds[int(i)].broadcaster);
-					_aChilds.splice( i, 1 );
+					broadcaster.removeChild( children[int(i)].broadcaster);
+					children.splice( i, 1 );
 					changed = true;
 					found = true;
 				}
@@ -315,13 +338,13 @@ package sandy.core.scenegraph
 		{
 			var found:Boolean = false;
 			var i:int;
-			var l:int = _aChilds.length;
+			var l:int = children.length;
 			while( i < l && !found )
 			{
-				if( _aChilds[int(i)].name == p_sName  )
+				if( children[int(i)].name == p_sName  )
 				{
-					broadcaster.removeChild( _aChilds[int(i)].broadcaster );
-					_aChilds.splice( i, 1 );
+					broadcaster.removeChild( children[int(i)].broadcaster );
+					children.splice( i, 1 );
 					changed = true;
 					found = true;
 				}
@@ -341,14 +364,14 @@ package sandy.core.scenegraph
 		public function destroy():void
 		{
 			// the unlink this node to his parent
-			if( hasParent() == true ) parent.removeChildById( this._id );
+			if( hasParent() == true ) parent.removeChildById( id );
 
 			// should we kill all the childs, or just make them childs of current node parent ?
-			for each( var lNode:Node in _aChilds )
+			for each( var lNode:Node in children )
 			{
 				lNode.destroy();
 			}
-			_aChilds = null;
+			children = null;
 			m_oEB = null;
 		}
 
@@ -363,36 +386,16 @@ package sandy.core.scenegraph
 		{
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
-			parent.removeChildById( this._id );
+			parent.removeChildById( id );
 			// now we make current node children the current parent's node children
-			for each( var lNode:Node in _aChilds )
+			for each( var lNode:Node in children )
 			{
 				parent.addChild( lNode );
 			}
-			_aChilds = null;
+			children = null;
 			m_oEB = null;
 			changed = true;
 		}
-
-		/**
-		 * @private
-		 */
-		public function set visible( b:Boolean ):void
-		{
-			_visible = b;
-			changed = true;
-		}
-		/**
-		 * Visibility of this node ( associated object ).
-		 *
-		 * <p>A true value ( the default ) means that the object is visible<br/>
-		 * false that it is hidden</p>
-		 */
-		public function get visible():Boolean
-		{
-			return _visible;
-		}
-
 
 		/**
 		 * Updates this node.
@@ -407,10 +410,11 @@ package sandy.core.scenegraph
 		 */
 		public function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
+			scene = p_oScene;
 			/* Shall be overriden */
 			changed = changed || p_bChanged;
 			var l_oNode:Node;
-			for each( l_oNode in _aChilds )
+			for each( l_oNode in children )
 				l_oNode.update( p_oScene, p_oModelMatrix, changed );
 		}
 
@@ -433,7 +437,7 @@ package sandy.core.scenegraph
 		 */
 		public function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
-			if( _visible == false )
+			if( visible == false )
 			{
 				culled = CullingState.OUTSIDE;
 			}
@@ -441,8 +445,8 @@ package sandy.core.scenegraph
 			{
 				if( p_bChanged || changed )
 				{
-					_oViewCacheMatrix.copy( p_oViewMatrix );
-					_oViewCacheMatrix.multiply4x3( _oModelCacheMatrix );
+					viewMatrix.copy( p_oViewMatrix );
+					viewMatrix.multiply4x3( modelMatrix );
 				}
 			}
 		}
@@ -460,27 +464,6 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Returns the bounding box of this object.
-		 *
-		 * @return 	The bounding box.
-		 */
-		public function getBBox():BBox
-		{
-			return _oBBox;
-		}
-
-		/**
-		 * Returns the bounding sphere of this object.
-		 *
-		 * @return  The bounding sphere
-		 */
-		public function getBSphere():BSphere
-		{
-			return _oBSphere;
-		}
-
-
-		/**
 		 * Returns a string representation of this object
 		 *
 		 * @return	The fully qualified name of this class
@@ -493,18 +476,13 @@ package sandy.core.scenegraph
 		////////////////////
 		//// PRIVATE PART
 		////////////////////
-
-		private static var _ID_:Number = 0;
-		private var _id:Number;
+		private static var _ID_:uint = 0;
 		private var _parent:Node;
-		private var _visible : Boolean;
-		public 	var name:String;
-		protected var _aChilds:Array;
-		// Cached matrix corresponding to the transformation to the 0,0,0 frame system
-		protected var _oModelCacheMatrix:Matrix4;
-		// Cached matrix corresponding to the transformation to the camera frame system
-		protected var _oViewCacheMatrix:Matrix4;
-		protected var _oBBox:BBox;
-		protected var _oBSphere:BSphere;
+		protected var m_oEB:BubbleEventBroadcaster = new BubbleEventBroadcaster();
+		/**
+		 * This property set the cache status of the current node.
+		 * IMPORTANT Currently this property isn't used!
+		 */
+		public var changed:Boolean = false;
 	}
 }

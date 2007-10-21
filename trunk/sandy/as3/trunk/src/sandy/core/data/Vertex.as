@@ -49,7 +49,6 @@ package sandy.core.data
 		*/
 		public var sx:Number;
 		public var sy:Number;
-		public var sz:Number;
 
 		/**
 		 * Has this vertex been projected? State flag.
@@ -88,7 +87,7 @@ package sandy.core.data
 			wy = (rest[1])?rest[1]:y;
 			wz = (rest[2])?rest[2]:z;
 			// --
-			sy = sx = sz = 0;
+			sy = sx = 0;
 		}
 		
 		
@@ -133,7 +132,7 @@ package sandy.core.data
 		    var l_oV:Vertex = new Vertex( x, y, z );
 		    l_oV.wx = wx;    l_oV.sx = sx;
 		    l_oV.wy = wy;    l_oV.sy = sy;
-		    l_oV.wz = wz;    l_oV.sz = sz;
+		    l_oV.wz = wz;
 		    return l_oV;
 		}
 
@@ -174,7 +173,7 @@ package sandy.core.data
 		{
 			return Boolean( p_vertex.x  ==  x && p_vertex.y  ==  y && p_vertex.z  ==  z &&
 					p_vertex.wx == wx && p_vertex.wy == wy && p_vertex.wz == wz &&
-					p_vertex.sx == wx && p_vertex.sy );
+					p_vertex.sx == wx && p_vertex.sy == sy);
 		}
 
 		/**
@@ -194,7 +193,6 @@ package sandy.core.data
 			wz = p_oVector.wz;
 			sx = p_oVector.sx;
 			sy = p_oVector.sy;
-			sz = p_oVector.sz;
 		}
 
 		/**
@@ -382,8 +380,7 @@ package sandy.core.data
 					NumberUtil.roundTo(wy, decPlaces) + ", " +
 					NumberUtil.roundTo(wz, decPlaces) + ", " +
 					NumberUtil.roundTo(sx, decPlaces) + ", " +
-					NumberUtil.roundTo(sy, decPlaces) + ", " +
-					NumberUtil.roundTo(sz, decPlaces) + "}";
+					NumberUtil.roundTo(sy, decPlaces) + "}";
 		}
 
 
@@ -410,8 +407,7 @@ package sandy.core.data
 					 NumberUtil.roundTo(wy, decPlaces) + "," +
 					 NumberUtil.roundTo(wz, decPlaces) + "," +
 					 NumberUtil.roundTo(sx, decPlaces) + "," +
-					 NumberUtil.roundTo(sy, decPlaces) + "," +
-					 NumberUtil.roundTo(sz, decPlaces) );
+					 NumberUtil.roundTo(sy, decPlaces));
 		}
 
 		// Useful for XML output
@@ -440,9 +436,6 @@ package sandy.core.data
 
 			sx = tmp[6];
 			sy = tmp[7];
-			sz = tmp[8];
 		}
-
-
 	}
 }

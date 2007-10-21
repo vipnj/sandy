@@ -40,8 +40,8 @@ package sandy.bounds
 		public var radius:Number = 1;
 		// -----------------------------
 		//    [TRANSFORMED]  -----------
-		public var m_oPosition:Vector = new Vector();
-		public var m_nTRadius:Number = 1;
+		public var position:Vector = new Vector();
+		//public var tRadius:Number = 1;
 		
 		/**
 		 * Creates a bounding sphere that encloses a 3D object. This object's vertices are passed
@@ -100,10 +100,10 @@ package sandy.bounds
 	     */	
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
-	        m_oPosition.copy( center );
-	        p_oMatrix.vectorMult( m_oPosition );
+	        position.copy( center );
+	        p_oMatrix.vectorMult( position );
 	        //var l_ncale:Number = Math.sqrt( p_oMatrix.n11 * p_oMatrix.n11 + p_oMatrix.n22 * p_oMatrix.n22 + p_oMatrix.n33 * p_oMatrix.n33 );
-	        m_nTRadius = radius;// * l_ncale;
+	        //tRadius = radius;// * l_ncale;
 	    }
 	    
 		/**

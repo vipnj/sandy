@@ -65,6 +65,47 @@ package sandy.core.scenegraph
 		public var aPolygons:Array = new Array();
 
 		/**
+		 * <p>
+		 * Enable the Frustum near plane clipping on the visible polygons.
+		 * Enable this when you need a perfect intersection between the front camera plane.
+		 * This is mainly used when you need the camera to move on a long plane.</p>
+		 * 
+		 * <p>Important: Enable the clipping makes process a bit slower, especially with big scenes.</p>
+		 */ 
+		public var enableNearClipping:Boolean = false;
+		
+		/**
+		 * <p>
+		 * Enable the Frustum clipping on the visible polygons.
+		 * Enable this when you need a perfect intersection between the camera and some object shapes.
+		 * In case you need to make the camera look inside and outide a box, or other immerssive things.</p>
+		 * 
+		 * <p>Important: Enable the clipping makes process a bit slower, especially with big scenes.</p>
+		 *
+		 * <p>Specify if this object polygons should be clipped against the camera frustum planes.</p>
+		 */
+		public var enableClipping:Boolean = false;
+
+		/**
+		 * Should forced depth be enable for this object?.
+		 *
+		 * <p>If true it is possible to force this object to be drawn at a specific depth,<br/>
+		 * if false the normal Z-sorting algorithm is applied.</p>
+		 * <p>When correctly used, this feature allows you to avoid some Z-sorting problems.</p>
+		 */
+		public var enableForcedDepth:Boolean = false;
+		
+
+		
+		/**
+		 * The forced depth for this object.
+		 *
+		 * <p>To make this feature work, you must enable the ForcedDepth system too.<br/>
+		 * The higher the depth is, the sooner the more far the object will be represented.</p>
+		 */
+		public var forcedDepth:Number = 0;	
+
+		/**
 		 * Creates a 3D object
 		 *
 		 * <p>[<b>Todo</b>: some more explanations]</p>
@@ -141,8 +182,8 @@ package sandy.core.scenegraph
     	{
     	    if( m_oGeometry )
     	    {
-    	        _oBSphere 	= BSphere.create( m_oGeometry.aVertex );
-    	        _oBBox 		= BBox.create( m_oGeometry.aVertex );
+    	        boundingSphere 	= BSphere.create( m_oGeometry.aVertex );
+    	        boundingBox	= BBox.create( m_oGeometry.aVertex );
     	    }
     	}
 		  
@@ -168,16 +209,16 @@ package sandy.core.scenegraph
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
 	        /////////////////////////
-        	_oBSphere.transform( _oViewCacheMatrix );
-        	culled = p_oFrustum.sphereInFrustum( _oBSphere );
+        	boundingSphere.transform( viewMatrix );
+        	culled = p_oFrustum.sphereInFrustum( boundingSphere );
 			// --
-			if( culled == Frustum.INTERSECT && _oBBox )
+			if( culled == Frustum.INTERSECT && boundingBox )
 			{
 				////////////////////////
 				////  BOUNDING BOX  ////
 				////////////////////////
-				_oBBox.transform( _oViewCacheMatrix );
-				culled = p_oFrustum.boxInFrustum( _oBBox );
+				boundingBox.transform( viewMatrix );
+				culled = p_oFrustum.boxInFrustum( boundingBox );
 			}
 			
 			// -- We update the clipped property if necessary and requested by the user.
@@ -185,7 +226,7 @@ package sandy.core.scenegraph
 			// -- FIXME TO SIMPLIFY THIS BECUASE IT CERTAINLY COST A LOT FOR NOTHING!
 			if( culled == CullingState.INTERSECT )
 			{
-				if( m_bEnableClipping || m_bEnableNearClipping ) 
+				if( enableClipping || enableNearClipping ) 
 				{
 					m_bClipped = true;
 				}
@@ -203,10 +244,9 @@ package sandy.core.scenegraph
 			// IF no appearance has bene applied, no display
 			if( m_oAppearance == null ) return;
 			
-			
 			var l_bVisible:Boolean;
 			var l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
-	        const 	l_oMatrix:Matrix4 = _oViewCacheMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
+	        const 	l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
 					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
 					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
@@ -255,7 +295,7 @@ package sandy.core.scenegraph
 				if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
 					// we process the frustum clipping
-					if( m_bClipped && m_bEnableClipping )
+					if( m_bClipped && enableClipping )
 					{
 						l_oFace.clip( l_oFrustum );
 						// -- We project the vertices
@@ -263,23 +303,23 @@ package sandy.core.scenegraph
 				 		{
 				 			p_oCamera.projectArray( l_oFace.vertices );  // not needed anymore except bitmapmaterial with enableAccurateClipping set to false
 							p_oCamera.projectArray( l_oFace.cvertices );
-				 			if( !m_bEnableForcedDepth ) m_nDepth += l_oFace.getZAverage();
+				 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 				 			
 				 			// -- we manage the display list depending on the mode choosen
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
 							else
 							{
-								if( m_bEnableForcedDepth ) l_oFace.depth = m_nForcedDepth;
+								if( enableForcedDepth ) l_oFace.depth = forcedDepth;
 								p_oCamera.addToDisplayList( l_oFace );
 							}
 				 		} 
 					}
 					else
 					{
-				    	if( l_oFace.getZMinimum() > 0 )
+				    	if( l_oFace.minBounds.z > 0 )
 						{	
-					    	if( !m_bEnableForcedDepth ) m_nDepth += l_oFace.getZAverage();
+					    	if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 					    	
 					    	// -- We project the vertices
 					 		p_oCamera.projectArray( l_oFace.vertices );
@@ -288,12 +328,12 @@ package sandy.core.scenegraph
 								m_aVisiblePoly.push( l_oFace );
 							else
 							{
-								if( m_bEnableForcedDepth ) l_oFace.depth = m_nForcedDepth;
+								if( enableForcedDepth ) l_oFace.depth = forcedDepth;
 								p_oCamera.addToDisplayList( l_oFace );
 							}
 						} 
 						// otherwise we can perform a clipping against the front plane only
-						else if( m_bClipped && m_bEnableNearClipping )
+						else if( m_bClipped && enableNearClipping )
 						{
 							l_oFace.clipFrontPlane( l_oFrustum );
 							// -- We project the vertices
@@ -301,14 +341,14 @@ package sandy.core.scenegraph
 					 		{
 					 			p_oCamera.projectArray( l_oFace.vertices ); // not needed anymore exept bitmapmaterial with enableAccurateClipping set to false
 								p_oCamera.projectArray( l_oFace.cvertices );
-					 			if( !m_bEnableForcedDepth ) m_nDepth += l_oFace.getZAverage();
+					 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 					 			
 					 			// -- we manage the display list depending on the mode choosen
 								if( m_bUseSingleContainer )
 									m_aVisiblePoly.push( l_oFace );
 								else
 								{
-									if( m_bEnableForcedDepth ) l_oFace.depth = m_nForcedDepth;
+									if( enableForcedDepth ) l_oFace.depth = forcedDepth;
 									p_oCamera.addToDisplayList( l_oFace );
 								}
 					 		} 
@@ -319,7 +359,7 @@ package sandy.core.scenegraph
 			// --
 			if( m_bUseSingleContainer )
 			{
-				if(m_bEnableForcedDepth)m_nDepth = m_nForcedDepth;
+				if(enableForcedDepth)m_nDepth = forcedDepth;
 				else 					m_nDepth /= m_aVisiblePoly.length;
 				p_oCamera.addToDisplayList( this );
 			}
@@ -466,96 +506,7 @@ package sandy.core.scenegraph
 		{
 			return m_oGeometry;
 		}
-		
-		/**
-		 * <p>
-		 * Enable the Frustum clipping on the visible polygons.
-		 * Enable this when you need a perfect intersection between the camera and some object shapes.
-		 * In case you need to make the camera look inside and outide a box, or other immerssive things.</p>
-		 * 
-		 * <p>Important: Enable the clipping makes process a bit slower, especially with big scenes.</p>
-		 *
-		 * <p>Specify if this object polygons should be clipped against the camera frustum planes.</p>
-		 */
-		public function set enableClipping( b:Boolean ):void
-		{
-			m_bEnableClipping = b;
-		}
-	
-		/**
-		 * @private
-		 */
-		public function get enableClipping():Boolean
-		{
-			return m_bEnableClipping;
-		}
-		
 
-		/**
-		 * <p>
-		 * Enable the Frustum near plane clipping on the visible polygons.
-		 * Enable this when you need a perfect intersection between the front camera plane.
-		 * This is mainly used when you need the camera to move on a long plane.</p>
-		 * 
-		 * <p>Important: Enable the clipping makes process a bit slower, especially with big scenes.</p>
-		 */
-		public function set enableNearClipping( b:Boolean ):void
-		{
-			m_bEnableNearClipping = b;
-		}
-			
-		/**
-		 * @private
-		 */
-		public function get enableNearClipping():Boolean
-		{
-			return m_bEnableNearClipping;
-		}
-			
-		/**
-		 * Should forced depth be enable for this object?.
-		 *
-		 * <p>If true it is possible to force this object to be drawn at a specific depth,<br/>
-		 * if false the normal Z-sorting algorithm is applied.</p>
-		 * <p>When correctly used, this feature allows you to avoid some Z-sorting problems.</p>
-		 */
-		public function	set enableForcedDepth( b:Boolean ):void
-		{
-			if( b != m_bEnableForcedDepth )
-			{
-				m_bEnableForcedDepth = b;
-				changed = true;
-			}
-		}
-		
-		/**
-		 * @private
-		 */
-		public function	get enableForcedDepth():Boolean
-		{
-			return m_bEnableForcedDepth;
-		}
-		
-		/**
-		 * The forced depth for this object.
-		 *
-		 * <p>To make this feature work, you must enable the ForcedDepth system too.<br/>
-		 * The higher the depth is, the sooner the more far the object will be represented.</p>
-		 * <p>[<b>ToDo</b>: clarify this a bit]</p>
-		 */
-		public function set forcedDepth( pDepth:Number ):void
-		{
-			m_nForcedDepth = pDepth; 
-			changed = true;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function get forcedDepth():Number
-		{
-			return m_nForcedDepth;
-		}
 	
 		/**
 		 * Should back face culling be enabled for this object?.
@@ -768,11 +719,8 @@ package sandy.core.scenegraph
 	    private var m_bEv:Boolean = false; // The event system state (enable or not)
 		protected var m_oGeomCenter:Vector = new Vector();
 		private var m_bBackFaceCulling:Boolean = true;
-		private var m_bEnableClipping:Boolean = false;
-		private var m_bEnableNearClipping:Boolean = false;
 		private var m_bClipped:Boolean = false;
-		private var m_bEnableForcedDepth:Boolean = false;
-		private var m_nForcedDepth:Number = 0;
+	
 		/** Geometry of this object */
 		private var m_oGeometry:Geometry3D;
 		

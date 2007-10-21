@@ -66,8 +66,8 @@ package sandy.core.scenegraph
 			m_oContainer = new Sprite();
 			// --
 			_v = new Vertex();
-			_oBSphere 	= new BSphere();
-	        _oBBox 		= null;
+			boundingSphere 	= new BSphere();
+	        boundingBox 	= null;
 	        // --
 			_nScale = p_nScale;
 			// --
@@ -123,7 +123,7 @@ package sandy.core.scenegraph
 		 */
 		public function setBoundingSphereRadius( p_nRadius:Number ):void
 		{
-			_oBSphere.radius = p_nRadius;
+			boundingSphere.radius = p_nRadius;
 		}
 
 		/**
@@ -170,22 +170,13 @@ package sandy.core.scenegraph
 		{
 			super.cull(p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
 			//
-			if( _oViewCacheMatrix )
+			if( viewMatrix )
 			{
 				/////////////////////////
 		        //// BOUNDING SPHERE ////
 		        /////////////////////////
-		        _oBSphere.transform( _oViewCacheMatrix );
-		        culled = p_oFrustum.sphereInFrustum( _oBSphere );
-				// --
-				if( culled == Frustum.INTERSECT && _oBBox )
-				{
-		            ////////////////////////
-		            ////  BOUNDING BOX  ////
-		            ////////////////////////
-		            _oBBox.transform( _oViewCacheMatrix );
-		            culled = p_oFrustum.boxInFrustum( _oBBox );
-				}
+		        boundingSphere.transform( viewMatrix );
+		        culled = p_oFrustum.sphereInFrustum( boundingSphere );
 			}
 			// --
 			if( culled == CullingState.OUTSIDE )  container.visible = false;
@@ -200,7 +191,7 @@ package sandy.core.scenegraph
 		 */
 	    public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
-	       	const l_oMatrix:Matrix4 = _oViewCacheMatrix,
+	       	const l_oMatrix:Matrix4 = viewMatrix,
 					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
 					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,

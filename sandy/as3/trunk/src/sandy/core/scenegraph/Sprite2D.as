@@ -63,8 +63,8 @@ package sandy.core.scenegraph
 			m_oContainer = new Sprite();
 			// --
 			_v = new Vertex();
-			_oBSphere 	= new BSphere();
-	        _oBBox 		= null;
+			boundingSphere 	= new BSphere();
+	        boundingBox		= null;
 	        // --
 			_nScale = p_nScale;
 			// --
@@ -116,7 +116,7 @@ package sandy.core.scenegraph
 		 */
 		public function setBoundingSphereRadius( p_nRadius:Number ):void
 		{ 
-			_oBSphere.radius = p_nRadius; 
+			boundingSphere.radius = p_nRadius; 
 		}
 	
 		/**
@@ -165,22 +165,13 @@ package sandy.core.scenegraph
 		{
 			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
 			// --
-			if( _oViewCacheMatrix )
+			if( viewMatrix )
 			{
 				/////////////////////////
 		        //// BOUNDING SPHERE ////
 		        /////////////////////////
-		        _oBSphere.transform( _oViewCacheMatrix );
-		        culled = p_oFrustum.sphereInFrustum( _oBSphere );
-				// --
-				if( culled == Frustum.INTERSECT && _oBBox )
-				{
-		            ////////////////////////
-		            ////  BOUNDING BOX  ////
-		            ////////////////////////
-		            _oBBox.transform( _oViewCacheMatrix );
-		            culled = p_oFrustum.boxInFrustum( _oBBox );
-				}
+		        boundingSphere.transform( viewMatrix );
+		        culled = p_oFrustum.sphereInFrustum( boundingSphere );
 			}
 			// --
 			if( culled == CullingState.OUTSIDE ) 	container.visible = false;
@@ -195,9 +186,9 @@ package sandy.core.scenegraph
 		 */
 	    public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
-	    	_v.wx = _v.x * _oViewCacheMatrix.n11 + _v.y * _oViewCacheMatrix.n12 + _v.z * _oViewCacheMatrix.n13 + _oViewCacheMatrix.n14;
-			_v.wy = _v.x * _oViewCacheMatrix.n21 + _v.y * _oViewCacheMatrix.n22 + _v.z * _oViewCacheMatrix.n23 + _oViewCacheMatrix.n24;
-			_v.wz = _v.x * _oViewCacheMatrix.n31 + _v.y * _oViewCacheMatrix.n32 + _v.z * _oViewCacheMatrix.n33 + _oViewCacheMatrix.n34;
+	    	_v.wx = _v.x * viewMatrix.n11 + _v.y * viewMatrix.n12 + _v.z * viewMatrix.n13 + viewMatrix.n14;
+			_v.wy = _v.x * viewMatrix.n21 + _v.y * viewMatrix.n22 + _v.z * viewMatrix.n23 + viewMatrix.n24;
+			_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
 			m_nDepth = _v.wz;
 			m_nPerspScale = _nScale * 100/m_nDepth;
 			// --

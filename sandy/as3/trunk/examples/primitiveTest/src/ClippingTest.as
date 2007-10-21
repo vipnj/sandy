@@ -118,7 +118,7 @@ package
 			lPlane.appearance = new Appearance( new ColorMaterial() );
 			
 			cylinder.appearance = new Appearance( new BitmapMaterial( pic2.bitmapData, new MaterialAttributes( new LineAttributes() ) ) );
-			BitmapMaterial(cylinder.appearance.frontMaterial).enableAccurateClipping = true;
+			//BitmapMaterial(cylinder.appearance.frontMaterial).enableAccurateClipping = true;
 			
 			// --			
 			g.addChild( lPlane ); 
@@ -169,7 +169,7 @@ package
 			if( keyPressed[Keyboard.SPACE] )
 			{
 				var lPlane:Shape3D = world.root.getChildByName("myCylinder", true) as Shape3D;
-				BitmapMaterial(lPlane.appearance.frontMaterial).enableAccurateClipping = !BitmapMaterial(lPlane.appearance.frontMaterial).enableAccurateClipping;
+				//BitmapMaterial(lPlane.appearance.frontMaterial).enableAccurateClipping = !BitmapMaterial(lPlane.appearance.frontMaterial).enableAccurateClipping;
 			}
 			
 			if( cam.getPosition().getNorm() > innerRadius )

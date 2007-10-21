@@ -27,17 +27,22 @@ package sandy.view
 	 */	
 	public final class ViewPort
 	{
+	    		
+		/**
+		 * Flag which specifies if the viewport dimension has changed
+		 */
+		public var hasChanged:Boolean = false;
+		
 	    /**
-		* Creates a new ViewPort.
-		*
-		* @param p_nW 	The width of the rendered screen
-		* @param p_nH 	The height of the rendered screen
-		**/
+		 * Creates a new ViewPort.
+		 *
+		 * @param p_nW 	The width of the rendered screen
+		 * @param p_nH 	The height of the rendered screen
+		 **/
 		public function ViewPort ( p_nW:Number, p_nH:Number )
 		{
-			w = p_nW;
-			h = p_nH;
-			update();
+			width = p_nW;
+			height = p_nH;
 		}
 		
 		/**
@@ -45,15 +50,28 @@ package sandy.view
 		 */
 		public function update():void
 		{
-			w2 = w/2;
-			h2 = h/2;
-			ratio = w/h;
+			m_nW2 = m_nW/2;
+			m_nH2 = m_nH/2;
+			// --
+			m_nRatio = (m_nH)? m_nW / m_nH : 0;
+			// --
+			hasChanged = true;
 		}
 		
-		public var w:Number;
-		public var h:Number;
-		public var w2:Number;
-		public var h2:Number;
-		public var ratio:Number;
+		public function get width():Number { return m_nW; }
+		public function get height():Number { return m_nH; }
+		public function get width2():Number { return m_nW2; }
+		public function get height2():Number { return m_nH2; }
+		public function get ratio():Number { return m_nRatio; }
+		
+		public function set width( p_nValue:Number):void { m_nW = p_nValue; update(); }
+		public function set height( p_nValue:Number):void { m_nH = p_nValue; update(); }
+
+		
+		private var m_nW:Number = 0;
+		private var m_nW2:Number = 0;
+		private var m_nH:Number = 0;
+		private var m_nH2:Number = 0;
+		private var m_nRatio:Number = 0;
 	}
 }

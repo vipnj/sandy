@@ -17,7 +17,6 @@ limitations under the License.
 package sandy.core.scenegraph 
 {
 	import flash.display.Sprite;
-	import flash.display.StageQuality;
 	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
@@ -46,9 +45,22 @@ package sandy.core.scenegraph
 		public var nbVertices:uint = 0;
 		
 		/**
+		 * <p>Inverse of the model matrix
+		 * This is apply at the culling phasis
+		 * The matrix is inverted in comparison of the real model view matrix.<br/>
+		 * This allows replacement of the objects in the correct camera frame before projection</p>
+		 */
+		public var invModelMatrix:Matrix4 = new Matrix4();
+		
+		/**
+		 * The camera viewport
+		 */
+		public var viewport:ViewPort = new ViewPort(1,1);
+		
+		/**
 		 * The frustum of the camera.
 		 */
-		public var frustrum:Frustum;
+		public var frustrum:Frustum = new Frustum();
 
 		/**
 		 * Creates a camera for projecting visible objects in the world.
@@ -64,69 +76,18 @@ package sandy.core.scenegraph
 		public function Camera3D( p_nWidth:Number, p_nHeight:Number, p_nFov:Number = 45, p_nNear:Number = 50, p_nFar:Number = 10000 )
 		{
 			super( null );
-			_viewport = new ViewPort( p_nWidth, p_nHeight );
-			_viewport.update();
-			_perspectiveChanged = true;
-			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
-			
+			viewport.width = p_nWidth;
+			viewport.height = p_nHeight;
+			// --			
 			_nFov = p_nFov;
 			_nFar = p_nFar;
 			_nNear = p_nNear;
 			// --
-			frustrum = new Frustum();
-			// --
-			setPerspectiveProjection( _nFov, _viewport.ratio, _nNear, _nFar );
-			m_aDisplayList = new Array();
+			setPerspectiveProjection( _nFov, viewport.ratio, _nNear, _nFar );
 			// It's a non visible node
 			visible = false;
 		}
-		
-		//////////////////////
-		///// ACCESSORS //////
-		//////////////////////		
-		public function get viewport():ViewPort
-		{
-			return _viewport;
-		}
-		
-		/**
-		 * The viewport of this camera.
-		 */
-		public function set viewport( p_oVP:ViewPort ):void
-		{
-			_viewport = p_oVP;
-			_perspectiveChanged = true;
-			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
-			// TODO FIX THAT
-			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
-		}
-		
-		/**
-		 * The width of this camera's viewport.
-		 */
-		public function set viewportWidth( p_nWidth:Number ):void
-		{
-			_viewport.w = p_nWidth;
-			_viewport.update();
-			_perspectiveChanged = true;
-			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
-			// TODO FIX THAT
-			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
-		}
-		
-		/**
-		 * The height of this camera's viewport.
-		 */
-		public function set viewportHeight( p_nHeight:Number ):void
-		{
-			_viewport.h = p_nHeight;
-			_viewport.update();
-			_perspectiveChanged = true;
-			m_nOffx = _viewport.w2; m_nOffy = _viewport.h2;
-			// TODO FIX THAT
-			World3D.getInstance().container.scrollRect = new Rectangle( _viewport.w, _viewport.h );
-		}
-				
+						
 		/**
 		 * The angle of view of this camera in degrees.
 		 */
@@ -189,7 +150,7 @@ package sandy.core.scenegraph
 		    // --
 		    const l_mcContainer:Sprite = p_oScene.container;
 		    // we go high quality for drawing part
-		    //l_mcContainer.stage.quality = StageQuality.HIGH;
+		   	//l_mcContainer.stage.quality = StageQuality.HIGH;
 		    // --
 		    m_aDisplayList.sortOn( "depth", Array.NUMERIC | Array.DESCENDING );
 		    // --
@@ -213,34 +174,6 @@ package sandy.core.scenegraph
 		{
 			m_aDisplayList.push( p_oShape );
 		}
-	
-		/**
-		 * Adds an array of objects to the projection list.
-		 *
-		 * @param p_aList	The array of objects to add
-		 */
-		public function addToProjectionList( p_aList:Array ):void
-		{
-			m_oProjList = m_oProjList.concat( p_aList );
-		}
-		
-		/**
-		 * <p>Project the vertices added to the projection list during rendering time.
-		 * The vertices are projected to the screen, as a 2D position.
-		 * </p>
-		 */
-		public function project():void
-		{
-			var l_nCste:Number;
-			for each( var l_oVertex:Vertex in m_oProjList )
-			{
-				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
-				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
-				l_oVertex.sz = 1 / l_oVertex.wz;
-			}	
-			m_oProjList.splice( 0 );
-		}
 
 		/**
 		 * <p>Project the vertices list given in parameter.
@@ -257,8 +190,7 @@ package sandy.core.scenegraph
 					l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 					l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
-					l_oVertex.sz = 1 / l_oVertex.wz;
-					
+					// --
 					l_oVertex.projected = true;
 					nbVertices ++;
 				}
@@ -275,7 +207,6 @@ package sandy.core.scenegraph
 			const l_nCste:Number = 	1 / ( p_oVertex.wx * mp41 + p_oVertex.wy * mp42 + p_oVertex.wz * mp43 + mp44 );
 			p_oVertex.sx =  l_nCste * ( p_oVertex.wx * mp11 + p_oVertex.wy * mp12 + p_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
 			p_oVertex.sy = -l_nCste * ( p_oVertex.wx * mp21 + p_oVertex.wy * mp22 + p_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
-			p_oVertex.sz = 1 / p_oVertex.wz;
 		}
 		
 		/**
@@ -295,13 +226,26 @@ package sandy.core.scenegraph
 		 */
 		public override function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
+			if( viewport.hasChanged )
+			{
+				_perspectiveChanged = true;
+				// -- update the local values
+				m_nOffx = viewport.width2; 
+				m_nOffy = viewport.height2;
+				// -- Apply a scrollRect to the container at the viewport dimension
+				if( p_oScene.rectClipping ) 
+					p_oScene.container.scrollRect = new Rectangle( 0, 0, viewport.width, viewport.height );
+				// -- we warn the the modification has been taken under account
+				viewport.hasChanged = false;
+			}
+			// --
 			nbVertices = 0;
 			// --
 			if( _perspectiveChanged ) updatePerspective();
 			super.update( p_oScene, p_oModelMatrix, p_bChanged );
 			// SHOULD BE DONE IN A FASTER WAY
-			m_oModelMatrixInv.copy( _oModelCacheMatrix );
-			m_oModelMatrixInv.inverse();
+			invModelMatrix.copy( modelMatrix );
+			invModelMatrix.inverse();
 			/*new Matrix4( 	_oModelCacheMatrix.n11,
 					_oModelCacheMatrix.n21,
 					oModelCacheMatrix.n31,
@@ -314,19 +258,6 @@ package sandy.core.scenegraph
 					_oModelCacheMatrix.n23,
 					_oModelCacheMatrix.n33,
 					- _oModelCacheMatrix.n34 );*/
-		}
-				
-		/**
-		 * The model matrix of this camera.
-		 *
-		 * <p>[<b>Todo</b>: Explain this better ]</p>
-		 *
-		 * <p>The matrix is inverted in comparison of the real model view matrix.<br/>
-		 * This allows replacement of the objects in the correct camera frame before projection</p>
-		 */
-		public function get modelMatrix():Matrix4
-		{
-			return m_oModelMatrixInv;
 		}
 		
 		/**
@@ -342,7 +273,7 @@ package sandy.core.scenegraph
 		* 
 		* @return 	The projection matrix
 		*/
-		public function getProjectionMatrix():Matrix4
+		public function get projectionMatrix():Matrix4
 		{
 			return _mp;
 		}
@@ -352,7 +283,7 @@ package sandy.core.scenegraph
 		 *
 		 * @return 	The inverted projection matrix
 		 */
-		public function getProjectionMatrixInverse():Matrix4
+		public function get invProjectionMatrix():Matrix4
 		{
 			return _mpInv;
 		}
@@ -390,7 +321,8 @@ package sandy.core.scenegraph
 			mp13 = _mp.n13; mp23 = _mp.n23; mp33 = _mp.n33; mp43 = _mp.n43;
 			mp14 = _mp.n14; mp24 = _mp.n24; mp34 = _mp.n34; mp44 = _mp.n44;			
 			
-			_mpInv = Matrix4Math.getInverse( _mp );
+			_mpInv.copy( _mp );
+			_mpInv.inverse();
 			
 			changed = true;	
 		}
@@ -402,7 +334,7 @@ package sandy.core.scenegraph
 		{
 			if( _perspectiveChanged )
 			{
-				setPerspectiveProjection(_nFov, _viewport.ratio, _nNear, _nFar );
+				setPerspectiveProjection( _nFov, viewport.ratio, _nNear, _nFar );
 				_perspectiveChanged = false;
 			}
 		}
@@ -415,21 +347,17 @@ package sandy.core.scenegraph
 		//////////////////////////
 		/// PRIVATE PROPERTIES ///
 		//////////////////////////
-		
-		private var _mp : Matrix4 = new Matrix4(); // projection Matrix4
-		private var _mpInv : Matrix4; // Inverse of the projection matrix 
-		private var _mf:Matrix4; // final Matrix4 which is the result of the transformation and projection matrix's multiplication.
-	
-		private var m_oProjList:Array = new Array();
-		
-		private var _viewport:ViewPort;
-		private var m_aDisplayList:Array;
+		private var _perspectiveChanged:Boolean = true;
+		private var _mp:Matrix4 = new Matrix4(); // projection Matrix4
+		private var _mpInv:Matrix4 = new Matrix4(); // Inverse of the projection matrix 
+
+		private var m_aDisplayList:Array = new Array();
 		private var m_aDisplayedList:Array;
-		private var _perspectiveChanged:Boolean;
+		
 		private var _nFov:Number;
 		private var _nFar:Number;
 		private var _nNear:Number;
-		private var m_oModelMatrixInv:Matrix4 = new Matrix4();
+		
 		private var mp11:Number, mp21:Number,mp31:Number,mp41:Number,
 					mp12:Number,mp22:Number,mp32:Number,mp42:Number,
 					mp13:Number,mp23:Number,mp33:Number,mp43:Number,

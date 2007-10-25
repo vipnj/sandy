@@ -450,6 +450,7 @@ package sandy.core.scenegraph
 				}
 			}
 		}
+		
 		/**
 		 * Renders this node.
 		 *

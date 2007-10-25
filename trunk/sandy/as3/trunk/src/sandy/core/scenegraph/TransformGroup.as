@@ -86,7 +86,7 @@ package sandy.core.scenegraph
 			    if( l_oNode.culled != l_oCStateOut )
 			    	l_oNode.render( p_oScene, p_oCamera );
 			    // --
-			    l_oNode.changed = false; // default value is set to not changed.
+			    //l_oNode.changed = false; // default value is set to not changed - but unused property right now
 			    l_oNode.culled = l_oCStateIn; // Default value is inside.
 			}
 		}

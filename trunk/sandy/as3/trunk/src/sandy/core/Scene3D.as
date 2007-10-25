@@ -120,8 +120,6 @@ package sandy.core
 		{
 			if( root && camera && container )
 			{
-				//container.stage.frameRate *= 1.5;
-				
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_UPDATE ) );
 				root.update( this, null, false );
 				// --
@@ -130,8 +128,6 @@ package sandy.core
 				// --
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_RENDER ) );
 				root.render( this, camera );
-				
-				//container.stage.frameRate /= 1.5;
 				
 				// -- clear the polygon's container and the projection vertices list
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_RENDER_DISPLAYLIST ) );

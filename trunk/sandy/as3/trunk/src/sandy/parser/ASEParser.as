@@ -122,7 +122,7 @@ package sandy.parser
 							var v2:Number = Number(content.replace(vertexReg, "$4"));
 							var v3:Number = Number(content.replace(vertexReg, "$3"));
 
-							l_oGeometry.setVertex(id, v1*m_nScale, -v2*m_nScale, v3*m_nScale );
+							l_oGeometry.setVertex(id, v1*m_nScale, v2*m_nScale, v3*m_nScale );
 						}
 						break;
 					}
@@ -136,8 +136,8 @@ package sandy.parser
 							var faceReg:RegExp = /MESH_FACE\s*(\d+):\s*A:\s*(\d+)\s*B:\s*(\d+)\s*C:\s*(\d+)\s*AB:\s*(\d+)\s*BC:\s*(\d+)\s*CA:\s*(\d+)\s*/
 							id = uint(mfl.replace(faceReg, "$1"));
 							var p1:uint = uint(mfl.replace(faceReg, "$2"));
-							var p2:uint = uint(mfl.replace(faceReg, "$4"));
-							var p3:uint = uint(mfl.replace(faceReg, "$3"));
+							var p2:uint = uint(mfl.replace(faceReg, "$3"));
+							var p3:uint = uint(mfl.replace(faceReg, "$4"));
 
 							l_oGeometry.setFaceVertexIds(id, p1, p2, p3 );
 						}
@@ -166,8 +166,8 @@ package sandy.parser
 							faceReg = /MESH_TFACE\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/
 							id = uint(content.replace(faceReg, "$1"));
 							var f1:uint = uint(content.replace(faceReg, "$2"));
-							var f2:uint = uint(content.replace(faceReg, "$4"));
-							var f3:uint = uint(content.replace(faceReg, "$3"));
+							var f2:uint = uint(content.replace(faceReg, "$3"));
+							var f3:uint = uint(content.replace(faceReg, "$4"));
 							l_oGeometry.setFaceUVCoordsIds( id, f1, f2, f3 );
 						}
 						break;

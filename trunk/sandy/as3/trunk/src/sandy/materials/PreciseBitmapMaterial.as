@@ -28,9 +28,11 @@ package sandy.materials
 	import sandy.materials.attributes.MaterialAttributes;
 	
 	/**
+	 * <p>
 	 * Experimental port of the Away3D PreciseBitmapMaterial class.
-	 * Don't use it for any commercial purpose unless you know ecactly what you are doing.
-	 * The behaviour and name of this class may change in the future.
+	 * 
+	 * This material, even if working, is not fully stable yet. We are still trying to optimize it and may be merged in the future with the BitmapMaterial
+	 * </p>
 	 */
 	public class PreciseBitmapMaterial extends BitmapMaterial
 	{
@@ -40,8 +42,12 @@ package sandy.materials
 		public static var MAX_LEVEL:uint = 20;
 		
 		/**
-		 * precision : the lower, the more accurate it is !
-		 * threshold : the lower, the more accurate it is!
+		 * <p>Create a PreciseBitmapMaterial instance.
+		 * Mind that this material is still in development.</p>
+		 * @param bitmap The bitmapdata object to map the shape with
+		 * @param p_oAttr Material attributes object.
+		 * @param p_nPrecision : the lower, the more accurate it is !
+		 * @param p_nThreshold : the lower, the more accurate it is!
 		 */
         public function PreciseBitmapMaterial(bitmap:BitmapData, p_oAttr:MaterialAttributes=null, p_nPrecision:uint = 1, p_nThreshold:Number = 10 )
         {

@@ -61,7 +61,7 @@ package sandy.util
 		 * <p>Basically used to say if a number is zero or not.<br />
 		 * Adjust this number with regard to the precision of your application</p>
 		 */
-		public static var TOL:Number = 0.0001;	
+		public static var TOL:Number = 0.00001;	
 			
 		/**
 		 * Is the number small enough to be regarded as zero?.

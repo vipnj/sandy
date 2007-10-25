@@ -15,7 +15,7 @@
 	 * Displays the faces of a 3D shape as a Cel Shaded Material (polygon based cel shading).
 	 *
 	 * <p>Material which draws in CelShading style using a lighting map and outlines.</p>
-	 *
+	 * <p>Please note that this material does not handle the lightAttributes!</p>
 	 * @author		Collin CUSCE - Rafajafar
 	 * @version		3.0
 	 * @date 		10.08.2007
@@ -65,7 +65,7 @@
             const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
             const l_graphics:Graphics = p_mcContainer.graphics;
             var l_nCol:uint = m_nColor;
-            var c:Camera3D     = p_oScene.camera;
+            var c:Camera3D    = p_oScene.camera;
             var vn:Vector     = p_oPolygon.normal.getWorldVector(); // Normalized
             var vc:Vector     = new Vector(c.x, c.y, c.z);// this should be normalized
             VectorMath.normalize(vc);

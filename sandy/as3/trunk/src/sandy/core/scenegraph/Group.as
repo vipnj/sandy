@@ -41,7 +41,7 @@ package sandy.core.scenegraph
 		 *
 		 * @param p_sName	A string identifier for this object
 		 */
-		public function Group( p_sName:String = "" )
+		public function Group( p_sName:String )
 		{
 			super( p_sName );
 		}

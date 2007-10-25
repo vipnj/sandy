@@ -38,7 +38,7 @@ package sandy.core.scenegraph
 		 *
 		 * @param  p_sName	A string identifier for this object
 		 */
-		public function TransformGroup( p_sName:String="" )
+		public function TransformGroup( p_sName:String )
 		{
 			super( p_sName );
 		}

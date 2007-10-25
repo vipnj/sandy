@@ -47,12 +47,12 @@ package sandy.materials
 		public var matrix:Matrix = new Matrix();
 		// --
 		public var smooth:Boolean = false;
-
-	
+		
 		/**
 		 * Creates a new BitmapMaterial.
 		 * <p>Please note that we ue internally a copy of the constructor bitmapdata. Thatea mns in case you need to access this bitmapdata, you can't just use the same reference
 		 * but you shall use the BitmapMaterial#texture getter property to make it work.</p>
+		 * <p>Please note that this material does not handle the lightAttributes!</p>
 		 * @param p_oTexture 	The bitmapdata for this material
 		 * @param p_oAttr	The attributes for this material
 		 */
@@ -62,7 +62,7 @@ package sandy.materials
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
-			texture = p_oTexture;
+			texture = p_oTexture.clone();
 			// --
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
@@ -86,25 +86,6 @@ package sandy.materials
 			// --
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
-
-			// -- If there's a light, we prepare the texture
-			if( _useLight && attributes.lightAttributes )
-			{
-				var lightStrength:Number;
-				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
-				// --
-				lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
-				// --
-				var l_oRectangle:Rectangle = p_oPolygon.uvBounds;
-				var l_oTextureRectangle:Rectangle = new Rectangle(	l_oRectangle.x * m_nWidth, l_oRectangle.y * m_nHeight,
-																	l_oRectangle.width * m_nWidth, l_oRectangle.height * m_nHeight );
-				// Hack to fix a small thing with drawing lines
-				var l_oFilterOrigin:Point = new Point( l_oTextureRectangle.x, l_oTextureRectangle.y );
-				// -- l_oTextureRectangle = m_oTexture.rect;
-				l_oTextureRectangle.inflate( 1, 1 );
-				m_oCmf.matrix = __getBrightnessTransform( lightStrength );
-				m_oTexture.applyFilter( m_orgTexture, l_oTextureRectangle, l_oFilterOrigin, m_oCmf );
-			}
 			// --
 			if( polygon.isClipped )
 			{
@@ -120,7 +101,6 @@ package sandy.materials
 			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
 		}
 		
-
 		protected function _tesselatePolygon ( p_aPoints:Array, p_aUv:Array ):void
 		{
 			var l_points: Array = p_aPoints.slice();
@@ -207,8 +187,7 @@ package sandy.materials
 		public function get texture():BitmapData
 		{
 			return m_oTexture;
-		
-		}0
+		}
 		
 		/**
 		 * @private
@@ -260,6 +239,7 @@ package sandy.materials
 			if( p_oPolygon.vertices.length >= 3 )
 			{
 				var m:Matrix = null;
+				var l_oRect:Rectangle = null;
 				// --
 				if( m_nWidth > 0 && m_nHeight > 0 )
 				{		
@@ -271,32 +251,6 @@ package sandy.materials
 				}
 				// --
 				m_oPolygonMatrixMap[p_oPolygon] = m;
-			}
-		}
-		
-		private function __getBrightnessTransform( brightness:Number ):Array
-		{
-			if( attributes.lightAttributes.useBright )
-			{
-				var o:Number = (brightness * 512) - 256;
-				return new Array 
-				(
-					1	, 0.0	, 0.0	, 0.0	, o,
-					0.0	, 1		, 0.0	, 0.0	, o,
-					0.0	, 0.0	, 1		, 0.0	, o,
-					0.0	, 0.0	, 0.0	, 1.0	, 0
-				);
-			}
-			else
-			{
-				var s:Number = brightness;
-				return new Array 
-				(
-					s	, 0.0	, 0.0	, 0.0	, 0,
-					0.0	, s	, 0.0	, 0.0	, 0,
-					0.0	, 0.0	, s	, 0.0	, 0,
-					0.0	, 0.0	, 0.0	, 1.0	, 0
-				);
 			}
 		}
 		

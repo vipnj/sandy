@@ -16,7 +16,7 @@ limitations under the License.
 
 package sandy.materials 
 {
-	import sandy.core.data.Polygon;
+	import sandy.core.Scene3D;
 	
 	/**
 	 * Represents the appearance property of the visible objects.
@@ -43,7 +43,6 @@ package sandy.materials
 			m_oFrontMaterial = (p_oFront != null) 	? p_oFront :	new ColorMaterial();
 			m_oBackMaterial  = (p_oBack != null) 	? p_oBack  :	p_oFront;
 		}
-	
 		
 		/**
 		 * Get the use of vertex normal feature of the appearance

@@ -31,6 +31,7 @@ package sandy.core.data
 	import sandy.materials.Appearance;
 	import sandy.math.IntersectionMath;
 	import sandy.math.VectorMath;
+	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 
 	/**
@@ -202,10 +203,12 @@ package sandy.core.data
 		/**
 		 * Pre-compute several properties of the polygon in the same time.
 		 * List of the computed properties :
-		 *  - mean z depth : the mean z depth used for basic sorting
-		 *  - max bounds : the maximum bounds of the polygon
-		 *  - min bounds : the minimum bounds of the polygon
-		 *  - mean bounds : the mean of each components of the polygon. It is center actually.
+		 * <ul>
+		 *  <li>mean z depth : the mean z depth used for basic sorting</li>
+		 *  <li>max bounds : the maximum bounds of the polygon</li>
+		 *  <li>min bounds : the minimum bounds of the polygon</li>
+		 *  <li>mean bounds : the mean of each components of the polygon. It is center actually.</li>
+		 * </ul>
 		 */
 		public function precomputeBounds():void
 		{
@@ -282,7 +285,7 @@ package sandy.core.data
             var PScalaireNormalePlanRayon:Number = l_oNormale.dot( l_oPoint );
 
             // In case the ray is parallel to the plane
-            if( PScalaireNormalePlanRayon >= -0.0000000001 && PScalaireNormalePlanRayon <= 0.0000000001 )
+            if( PScalaireNormalePlanRayon >= -NumberUtil.TOL && PScalaireNormalePlanRayon <= NumberUtil.TOL )
                 return null;
          
             // distance from ray to plane
@@ -292,7 +295,7 @@ package sandy.core.data
             var t:Number =  - DistanceRayonPlan / PScalaireNormalePlanRayon
      
             // No collision
-            if( t < 0.0000000001 )
+            if( t < NumberUtil.TOL )
                 return null;
          
             // -- intersection point

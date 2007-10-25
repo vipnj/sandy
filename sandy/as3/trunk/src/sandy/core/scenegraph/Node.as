@@ -101,11 +101,11 @@ package sandy.core.scenegraph
 		 *
 		 * @param p_sName	A string identifier for this object.
 		 */
-		public function Node( p_sName:String = "" )
+		public function Node( p_sName:String  )
 		{
 			parent = null;
 			// --
-			if( p_sName != "" )	name = p_sName;
+			if( p_sName )	name = p_sName;
 			else name = (id).toString();
 			// --
 			changed = true;
@@ -212,7 +212,7 @@ package sandy.core.scenegraph
 
 		/**
 		 * Returns an array with all child nodes of this node.
-		 *
+		 * Note : the public children property can by used too
 		 * @return 	The array of childs nodes
 		 */
 		public function getChildList():Array

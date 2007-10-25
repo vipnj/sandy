@@ -96,8 +96,6 @@ package sandy.core.scenegraph
 		 */
 		public var enableForcedDepth:Boolean = false;
 		
-
-		
 		/**
 		 * The forced depth for this object.
 		 *
@@ -116,7 +114,7 @@ package sandy.core.scenegraph
 		 * @param p_oAppearance		The appearance of this object. If no apperance is given, the DEFAULT_APPEARANCE will be applied.
 		 * @param p_bUseSingleContainer	Whether tis object should use a single container to draw on
 		 */	
-		public function Shape3D( p_sName:String="", p_oGeometry:Geometry3D = null, p_oAppearance:Appearance = null, p_bUseSingleContainer:Boolean=true )
+		public function Shape3D( p_sName:String, p_oGeometry:Geometry3D = null, p_oAppearance:Appearance = null, p_bUseSingleContainer:Boolean=true )
 		{
 			super( p_sName );
 			// -- Add this graphical object to the World display list
@@ -244,10 +242,9 @@ package sandy.core.scenegraph
 		{
 			// IF no appearance has bene applied, no display
 			if( m_oAppearance == null ) return;
-			
-			var l_bVisible:Boolean;
-			var l_aPoints:Array = m_oGeometry.aVertex, l_oTmp:Vertex;
-	        const 	l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
+
+	        const 	l_aPoints:Array = m_oGeometry.aVertex,
+	        		l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
 					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
 					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
@@ -255,8 +252,10 @@ package sandy.core.scenegraph
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
 		
+			var l_oVertexNormal:Vertex, l_oNormal:Vertex, l_oVertex:Vertex;
+			var l_oFace:Polygon;
+			
 			// -- Now we transform the normals.
-			var l_oNormal:Vertex;
 			for each( l_oNormal in l_aNormals )
 			{
 				l_oNormal.wx  = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
@@ -268,7 +267,7 @@ package sandy.core.scenegraph
 			if( m_oAppearance.useVertexNormal )
 			{
 				// -- Now we transform the vertex normals.
-				for each( var l_oVertexNormal:Vertex in l_aVertexNormals )
+				for each( l_oVertexNormal in l_aVertexNormals )
 				{
 					l_oVertexNormal.wx = l_oVertexNormal.x * m11 + l_oVertexNormal.y * m12 + l_oVertexNormal.z * m13;
 					l_oVertexNormal.wy = l_oVertexNormal.x * m21 + l_oVertexNormal.y * m22 + l_oVertexNormal.z * m23;
@@ -277,7 +276,6 @@ package sandy.core.scenegraph
 			}
 			
 			// -- Now we can transform the objet vertices into the camera coordinates
-			var l_oVertex:Vertex;
 			for each( l_oVertex in l_aPoints )
 			{				
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
@@ -289,7 +287,6 @@ package sandy.core.scenegraph
 			m_aVisiblePoly.splice( 0 );
 			m_nDepth = 0;
 			// --
-			var l_oFace:Polygon;
 			for each( l_oFace in aPolygons )
 			{
 				l_oFace.isClipped = false;
@@ -704,11 +701,11 @@ package sandy.core.scenegraph
 		        {
 		        	var lP1:Polygon = aPolygons[i];
 		        	var lP2:Polygon = aPolygons[j];
-		        	// check if they share at least 2 vertices
+		        	// -- check if they share at least 2 vertices
 		        	var lCount:uint = 0;
 		        	for each( var l_oEdge:Edge3D in lP1.aEdges )
 		        		if( lP2.aEdges.indexOf( l_oEdge ) > -1 ) lCount++;
-		        	//
+		        	// --
 		        	if( lCount > 0 )
 		        	{
 		        		lP1.aNeighboors.push( lP2 );

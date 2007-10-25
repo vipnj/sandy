@@ -262,11 +262,11 @@ package sandy.core.data
 		public final function pow( pow:Number ):void
 		{
 			x = Math.pow( x, pow );
-	        	y = Math.pow( y, pow );
-	        	z = Math.pow( z, pow );
-	        	wx = Math.pow( wx, pow );
-	        	wy = Math.pow( wy, pow );
-	        	wz = Math.pow( wz, pow );
+        	y = Math.pow( y, pow );
+        	z = Math.pow( z, pow );
+        	wx = Math.pow( wx, pow );
+        	wy = Math.pow( wy, pow );
+        	wz = Math.pow( wz, pow );
 		}
 
 		/**
@@ -312,9 +312,8 @@ package sandy.core.data
 			// cross product vector that will be returned
 	        	// calculate the components of the cross product
 			return new Vertex( 	(y * v.z) - (z * v.y) ,
-	                            		(z * v.x) - (x * v.z) ,
-	                            		(x * v.y) - (y * v.x)
-	                            	 );
+	                            (z * v.x) - (x * v.z) ,
+	                            (x * v.y) - (y * v.x) );
 		}
 
 		/**

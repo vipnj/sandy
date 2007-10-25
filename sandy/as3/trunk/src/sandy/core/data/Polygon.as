@@ -185,23 +185,30 @@ package sandy.core.data
 			m_oEB.removeEventListener(p_sEvent, oL);
 		}
 
-		
+
 		/**
 		 * Pre-compute several properties of the polygon in the same time.
 		 * List of the computed properties :
 		 *  - visibility : if the polygon is visible
-		 *  - mean z depth : the mean z depth used for basic sorting
-		 *  - max bounds : the maximum bounds of the polygon
-		 *  - min bounds : the minimum bounds of the polygon
-		 *  - mean bounds : the mean of each components of the polygon. It is center actually.
 		 */
-		public function precompute():void
+		public function computeVisibility():void
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
 			var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
 			l_nDot *= backfaceCulling;
 			m_bVisible = ( l_nDot < 0 );
-			// --
+		}	
+			
+		/**
+		 * Pre-compute several properties of the polygon in the same time.
+		 * List of the computed properties :
+		 *  - mean z depth : the mean z depth used for basic sorting
+		 *  - max bounds : the maximum bounds of the polygon
+		 *  - min bounds : the minimum bounds of the polygon
+		 *  - mean bounds : the mean of each components of the polygon. It is center actually.
+		 */
+		public function precomputeBounds():void
+		{
 			const l_aVert:Array = vertices;
 			// --
 			meanBounds.reset();

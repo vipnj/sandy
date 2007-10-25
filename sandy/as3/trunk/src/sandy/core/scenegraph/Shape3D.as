@@ -19,6 +19,7 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.utils.getTimer;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
@@ -253,9 +254,10 @@ package sandy.core.scenegraph
 					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
 					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
 					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
-			
+		
 			// -- Now we transform the normals.
-			for each( var l_oNormal:Vertex in l_aNormals )
+			var l_oNormal:Vertex;
+			for each( l_oNormal in l_aNormals )
 			{
 				l_oNormal.wx  = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
 				l_oNormal.wy  = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
@@ -275,8 +277,9 @@ package sandy.core.scenegraph
 			}
 			
 			// -- Now we can transform the objet vertices into the camera coordinates
-			for each( var l_oVertex:Vertex in l_aPoints )
-			{					
+			var l_oVertex:Vertex;
+			for each( l_oVertex in l_aPoints )
+			{				
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
@@ -286,14 +289,16 @@ package sandy.core.scenegraph
 			m_aVisiblePoly.splice( 0 );
 			m_nDepth = 0;
 			// --
-			for each( var l_oFace:Polygon in aPolygons )
+			var l_oFace:Polygon;
+			for each( l_oFace in aPolygons )
 			{
 				l_oFace.isClipped = false;
 				// -- lauch precomputation
-				l_oFace.precompute();
+				l_oFace.computeVisibility();
 				// --
 				if ( l_oFace.visible || !m_bBackFaceCulling) 
 				{
+					l_oFace.precomputeBounds();
 					// we process the frustum clipping
 					if( m_bClipped && enableClipping )
 					{
@@ -380,7 +385,7 @@ package sandy.core.scenegraph
 		 * Performs a z-sorting and renders the objects visible polygons.
 		 *
 		 * <p>The method is called only if the object renders on a single container<br/> 
-		 * - ( useSignelContainer = true ).</p>
+		 * - ( useSingleContainer = true ).</p>
 		 *
 		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
@@ -662,7 +667,7 @@ package sandy.core.scenegraph
 		
 		private function __destroyPolygons():void
 		{
-	    		if( aPolygons != null && aPolygons.length > 0 )
+	    	if( aPolygons != null && aPolygons.length > 0 )
 			{
 				var i:int, l:int = aPolygons.length;
 				while( i<l )

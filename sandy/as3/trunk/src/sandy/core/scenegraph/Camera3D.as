@@ -246,18 +246,18 @@ package sandy.core.scenegraph
 			// SHOULD BE DONE IN A FASTER WAY
 			invModelMatrix.copy( modelMatrix );
 			invModelMatrix.inverse();
-			/*new Matrix4( 	_oModelCacheMatrix.n11,
-					_oModelCacheMatrix.n21,
-					oModelCacheMatrix.n31,
-					- _oModelCacheMatrix.n14,
-					_oModelCacheMatrix.n12,
-					_oModelCacheMatrix.n22,
-					_oModelCacheMatrix.n32,
-					- _oModelCacheMatrix.n24,
-					_oModelCacheMatrix.n13,
-					_oModelCacheMatrix.n23,
-					_oModelCacheMatrix.n33,
-					- _oModelCacheMatrix.n34 );*/
+			/*new Matrix4( 	modelMatrix.n11,
+					modelMatrix.n21,
+					modelMatrix.n31,
+					- modelMatrix.n14,
+					modelMatrix.n12,
+					modelMatrix.n22,
+					modelMatrix.n32,
+					- modelMatrix.n24,
+					modelMatrix.n13,
+					modelMatrix.n23,
+					modelMatrix.n33,
+					- modelMatrix.n34 );*/
 		}
 		
 		/**

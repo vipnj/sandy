@@ -108,7 +108,7 @@ package sandy.core
 		{ 
 			m_bRectClipped = p_bEnableClipping;
 			// -- we force the new state of the rectClipping property to be applied
-			camera.viewport.hasChanged = true;
+			if( camera ) camera.viewport.hasChanged = true;
 		}
 
 		/**

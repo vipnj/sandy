@@ -374,7 +374,7 @@ package sandy.core.scenegraph
 			var n:Number = Math.sqrt( p_nX*p_nX + p_nY*p_nY + p_nZ*p_nZ );
 			// --
 			m_tmpMt.axisRotation( p_nX/n, p_nY/n, p_nZ/n, p_nAngle );
-			//
+			// --
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
@@ -660,8 +660,8 @@ package sandy.core.scenegraph
 				m_oMatrix.n33 = _vOut.z * _oScale.z;
 				m_oMatrix.n34 = _p.z;
 
-				m_oMatrix.n41 = m_oMatrix.n42 = m_oMatrix.n43 = 0;
-				m_oMatrix.n44 = 1;
+				//m_oMatrix.n41 = m_oMatrix.n42 = m_oMatrix.n43 = 0;
+				//m_oMatrix.n44 = 1;
 			}
 		}
 

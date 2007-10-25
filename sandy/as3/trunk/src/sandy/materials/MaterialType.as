@@ -48,6 +48,7 @@ package sandy.materials
 		 */
 		public static function get WIREFRAME():MaterialType { return __wireframe; }
 		private static var __wireframe:MaterialType = new MaterialType( 2 );
+		
 		/**
 		 * Constant value representing the BitmapMaterial
 		 */
@@ -59,22 +60,23 @@ package sandy.materials
 		 */
 		public static function get MOVIE():MaterialType { return __movie; }
 		private static var __movie:MaterialType = new MaterialType( 5);
+		
 		/**
 		 * Constant value representing the VideoMaterial
 		 */
 		public static function get VIDEO():MaterialType { return __video; }
 		private static var __video:MaterialType = new MaterialType( 6);
 		
-		
 		/**
-		 * Constant value representing the WireFrameMaterial
+		 * Constant value representing the OutlineMaterial
 		 */
 		public static function get OUTLINE():MaterialType { return __outline; }
 		private static var __outline:MaterialType = new MaterialType( 7 );
+		
 		//---------//
 		//Variables//
 		//---------//
-		private var		_value:Number; //value of the type
+		private var	_value:Number; //value of the type
 		
 		//-----------//
 		//Constructor//

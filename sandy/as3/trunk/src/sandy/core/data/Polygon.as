@@ -366,8 +366,12 @@ package sandy.core.data
 			} 
 			else
 			{
+				cvertices = null;
+				caUVCoord = null;
+				// --	
 				cvertices = vertices.concat();
 				caUVCoord = aUVCoord.concat();
+				// --
 				p_oFrustum.clipFrustum( cvertices, caUVCoord );
 			}
 			return cvertices;
@@ -381,6 +385,7 @@ package sandy.core.data
 		public function clipFrontPlane( p_oFrustum:Frustum ):Array
 		{
 			isClipped = true;
+			cvertices = null;
 			cvertices = vertices.concat();
 			// If line
 			if( vertices.length < 3 ) 
@@ -389,6 +394,7 @@ package sandy.core.data
 			}
 			else
 			{
+				caUVCoord = null;
 				caUVCoord = aUVCoord.concat();
 				p_oFrustum.clipFrontPlane( cvertices, caUVCoord );
 			}

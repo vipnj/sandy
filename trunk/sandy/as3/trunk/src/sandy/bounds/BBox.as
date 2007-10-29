@@ -45,8 +45,8 @@ package sandy.bounds
 		 */
 		public var min:Vector;		
 	
-		public var m_oTMin:Vector;
-		public var m_oTMax:Vector;
+		public var tmin:Vector;
+		public var tmax:Vector;
 		
 		public var aCorners:Array;
 		public var aTCorners:Array;
@@ -93,8 +93,8 @@ package sandy.bounds
 		{
 			min		= (p_min != null) ? p_min : new Vector( -0.5,-0.5,-0.5 );
 			max		= (p_max != null) ? p_max : new Vector(  0.5, 0.5, 0.5 );
-			m_oTMin = new Vector();
-			m_oTMax = new Vector();
+			tmin = new Vector();
+			tmax = new Vector();
 			aCorners = new Array(8);
 			aTCorners = new Array(8);
 			__computeCorners(false);
@@ -137,8 +137,8 @@ package sandy.bounds
 			
 			if( p_bRecalcVertices == true )
 			{
-			    minx = m_oTMin.x;    miny = m_oTMin.y;    minz = m_oTMin.z;
-			    maxx = m_oTMax.x;    maxy = m_oTMax.y;    maxz = m_oTMax.z;
+			    minx = tmin.x;    miny = tmin.y;    minz = tmin.z;
+			    maxx = tmax.x;    maxy = tmax.y;    maxz = tmax.z;
 			}
 			else
 			{
@@ -175,19 +175,19 @@ package sandy.bounds
 		    }
 		    
 		    // --
-		    m_oTMin.x = Number.MAX_VALUE;m_oTMax.x = Number.MIN_VALUE;
-			m_oTMin.y = Number.MAX_VALUE;m_oTMax.y = Number.MIN_VALUE;
-			m_oTMin.z = Number.MAX_VALUE;m_oTMax.z = Number.MIN_VALUE;
+		    tmin.x = Number.MAX_VALUE;tmax.x = Number.MIN_VALUE;
+			tmin.y = Number.MAX_VALUE;tmax.y = Number.MIN_VALUE;
+			tmin.z = Number.MAX_VALUE;tmax.z = Number.MIN_VALUE;
 		    for each ( lVector in aTCorners )
 			{
-				if( lVector.x < m_oTMin.x )		m_oTMin.x = lVector.x;
-				else if( lVector.x > m_oTMax.x )	m_oTMax.x = lVector.x;
+				if( lVector.x < tmin.x )		tmin.x = lVector.x;
+				else if( lVector.x > tmax.x )	tmax.x = lVector.x;
 				// --
-				if( lVector.y < m_oTMin.y )		m_oTMin.y = lVector.y;
-				else if( lVector.y > m_oTMax.y )	m_oTMax.y = lVector.y;
+				if( lVector.y < tmin.y )		tmin.y = lVector.y;
+				else if( lVector.y > tmax.y )	tmax.y = lVector.y;
 				// --
-				if( lVector.z < m_oTMin.z )		m_oTMin.z = lVector.z;
-				else if( lVector.z > m_oTMax.z )	m_oTMax.z = lVector.z;
+				if( lVector.z < tmin.z )		tmin.z = lVector.z;
+				else if( lVector.z > tmax.z )	tmax.z = lVector.z;
 	    	}
 	    }
 	    
@@ -211,8 +211,8 @@ package sandy.bounds
 		    var l_oBBox:BBox = new BBox();
 		    l_oBBox.max = max.clone();
 		    l_oBBox.min = min.clone();
-		    l_oBBox.m_oTMax = m_oTMax.clone();
-		    l_oBBox.m_oTMin = m_oTMin.clone();
+		    l_oBBox.tmax = tmax.clone();
+		    l_oBBox.tmin = tmin.clone();
 		    return l_oBBox;
 		}
 		

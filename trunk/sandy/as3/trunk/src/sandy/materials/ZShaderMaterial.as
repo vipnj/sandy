@@ -24,6 +24,7 @@ package sandy.materials
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
+	import sandy.util.NumberUtil;
 
 	/**
 	 * Displays a kind of Z shading of any object that this material is applied to
@@ -66,8 +67,6 @@ package sandy.materials
 			var y1: Number = v1.sy;
 			var x2: Number = v2.sx;
 			var y2: Number = v2.sy;
-
-			var zM: Number = p_oPolygon.shape.boundingBox.min.z;
 			
 			//-- get projected normal
 			var normal: Vertex = p_oPolygon.normal;
@@ -77,11 +76,13 @@ package sandy.materials
 			var ny: Number = normal.sy;
 			
 			//-- compute gray values
-			var zR: Number = p_oPolygon.shape.boundingBox.max.z - p_oPolygon.shape.boundingBox.min.z;
+			var zM: Number = p_oPolygon.shape.boundingBox.tmin.z;
+			var zR: Number = p_oPolygon.shape.boundingBox.tmax.z - zM;
 			
 			var g0: Number = 0xff - ( v0.wz - zM ) / zR * 0xff;
 			var g1: Number = 0xff - ( v2.wz - zM ) / zR * 0xff;
-			
+			g0  = NumberUtil.constrain( g0, 0, 0xFF );
+			g1  = NumberUtil.constrain( g1, 0, 0xFF );
 			//-- compute gradient matrix
 			var dx20: Number = x2 - x0;
 			var dy20: Number = y2 - y0;
@@ -92,6 +93,7 @@ package sandy.materials
 			matrix.createGradientBox( zLen2, zLen2, Math.atan2( ny, nx ), x0 - zLen, y0 - zLen );
 	
 			//-- draw gradient
+			l_graphics.lineStyle();
 			l_graphics.beginGradientFill( "linear", [ ( g0 << 16 ) | ( g0 << 8 ) | g0, ( g1 << 16 ) | ( g1 << 8 ) | g1 ], [ 100, 100 ], [ 128, 0xff ], matrix );
 			l_graphics.moveTo( x0, y0 );
             for each (var l_oVertex:Vertex in l_points )

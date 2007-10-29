@@ -34,7 +34,8 @@ package sandy.materials
 	
 	/**
 	 * Displays a bitmap on the faces of a 3D shape.
-	 *
+	 * Note : The lightening isn't managed by this material for the moment.
+	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @author		Xavier Martin - zeflasher - transparency managment
 	 * @version		3.0
@@ -52,7 +53,7 @@ package sandy.materials
 		 * Creates a new BitmapMaterial.
 		 * <p>Please note that we ue internally a copy of the constructor bitmapdata. Thatea mns in case you need to access this bitmapdata, you can't just use the same reference
 		 * but you shall use the BitmapMaterial#texture getter property to make it work.</p>
-		 * <p>Please note that this material does not handle the lightAttributes!</p>
+		 * <p>Please note that this material does not handle the lightAttributes for the moment!</p>
 		 * @param p_oTexture 	The bitmapdata for this material
 		 * @param p_oAttr	The attributes for this material
 		 */
@@ -87,7 +88,7 @@ package sandy.materials
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
 			// --
-			if( polygon.isClipped )
+			if( polygon.isClipped ) // or l_points.length > 3 ...
 			{
 				_tesselatePolygon( l_points, l_uv );
 			}
@@ -117,9 +118,9 @@ package sandy.materials
 				_tesselatePolygon( p_aPoints, p_aUv );
 			}
 			// --
-			map = ( polygon.isClipped ) ? _createTextureMatrix( p_aUv ) : (m_oPolygonMatrixMap[polygon] as Matrix );
+			map = _createTextureMatrix( l_uv );
 	        // --
-	        drawPolygon( p_aPoints );
+	        drawPolygon( l_points );
 	 	}
 
 
@@ -145,13 +146,8 @@ package sandy.materials
 			graphics.beginBitmapFill( m_oTexture, matrix, repeat, smooth );
 			// --
 			graphics.moveTo( x0, y0 );
-			// --
-			var l_oPoint:Vertex;
-			for( var id:int = 1; id < p_aPoints.length; id +=1 )
-			{
-				l_oPoint = p_aPoints[int(id)];
-				graphics.lineTo( l_oPoint.sx, l_oPoint.sy);
-			}
+			graphics.lineTo( x1, y1 );
+			graphics.lineTo( x2, y2 );
 			// --
 			graphics.endFill();
 		}

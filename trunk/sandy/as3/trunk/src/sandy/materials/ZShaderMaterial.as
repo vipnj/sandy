@@ -35,12 +35,10 @@ package sandy.materials
 	public class ZShaderMaterial extends Material
 	{
 		public var matrix:Matrix = new Matrix();
-		public var zCoef:Number = 1;
 		// --
 		
 		public function ZShaderMaterial( p_nCoef:Number = 1 )
 		{
-			zCoef = p_nCoef;
 		}
 		
 		/**
@@ -69,7 +67,7 @@ package sandy.materials
 			var x2: Number = v2.sx;
 			var y2: Number = v2.sy;
 
-			var zM: Number = p_oPolygon.shape.boundingBox.m_oTMin.z;
+			var zM: Number = p_oPolygon.shape.boundingBox.min.z;
 			
 			//-- get projected normal
 			var normal: Vertex = p_oPolygon.normal;
@@ -79,10 +77,10 @@ package sandy.materials
 			var ny: Number = normal.sy;
 			
 			//-- compute gray values
-			var zR: Number = p_oPolygon.shape.boundingBox.m_oTMax.z - p_oPolygon.shape.boundingBox.m_oTMin.z;
+			var zR: Number = p_oPolygon.shape.boundingBox.max.z - p_oPolygon.shape.boundingBox.min.z;
 			
-			var g0: Number = 0xff - ( v0.wz - zM ) / zR * zCoef * 0xff;
-			var g1: Number = 0xff - ( v2.wz - zM ) / zR * zCoef * 0xff;
+			var g0: Number = 0xff - ( v0.wz - zM ) / zR * 0xff;
+			var g1: Number = 0xff - ( v2.wz - zM ) / zR * 0xff;
 			
 			//-- compute gradient matrix
 			var dx20: Number = x2 - x0;
@@ -95,7 +93,7 @@ package sandy.materials
 	
 			//-- draw gradient
 			l_graphics.beginGradientFill( "linear", [ ( g0 << 16 ) | ( g0 << 8 ) | g0, ( g1 << 16 ) | ( g1 << 8 ) | g1 ], [ 100, 100 ], [ 128, 0xff ], matrix );
-			l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
+			l_graphics.moveTo( x0, y0 );
             for each (var l_oVertex:Vertex in l_points )
             {
                 l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );

@@ -19,12 +19,10 @@ package sandy.materials
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
-	import sandy.core.data.Vector;
+	import sandy.core.data.Vertex;
 	import sandy.materials.attributes.MaterialAttributes;
 	
 	/**
@@ -36,39 +34,22 @@ package sandy.materials
 	 */
 	public class PreciseBitmapMaterial extends BitmapMaterial
 	{
-        public var precision:Number = 1;
-		public var threshold:Number = 10;
-		// Changing this value makes the player not crash...
-		public static var MAX_LEVEL:uint = 20;
-		
+        public var precision:Number = 1;		
+		private var m_nRecLevel:int = 0;
 		/**
 		 * <p>Create a PreciseBitmapMaterial instance.
 		 * Mind that this material is still in development.</p>
 		 * @param bitmap The bitmapdata object to map the shape with
 		 * @param p_oAttr Material attributes object.
 		 * @param p_nPrecision : the lower, the more accurate it is !
-		 * @param p_nThreshold : the lower, the more accurate it is!
 		 */
-        public function PreciseBitmapMaterial(bitmap:BitmapData, p_oAttr:MaterialAttributes=null, p_nPrecision:uint = 1, p_nThreshold:Number = 10 )
+        public function PreciseBitmapMaterial(bitmap:BitmapData, p_oAttr:MaterialAttributes=null, p_nPrecision:uint = 1 )
         {
             super(bitmap, p_oAttr);
 
             precision = p_nPrecision;
 
             precision = precision * precision * 1.4;
-            
-            threshold = p_nThreshold;
-            
-            createVertexArray();
-        }
-        
-        public function createVertexArray():void
-        {
-        	var index:Number = MAX_LEVEL;
-        	while (index--) 
-        	{
-        		svArray.push(new Vector());
-        	}
         }
           
 
@@ -90,6 +71,8 @@ package sandy.materials
 			// --
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
+        	// --
+        	m_nRecLevel = 0;
 			// --
 			_tesselatePolygon( l_points, l_uv );
 			// --
@@ -115,254 +98,121 @@ package sandy.materials
 			// --
 			map = ( polygon.isClipped ) ? _createTextureMatrix( l_uv ).clone() : (m_oPolygonMatrixMap[polygon] as Matrix ).clone();
 	        // --
-	        renderRec( l_points[0].getScreenPoint(), l_points[1].getScreenPoint(), l_points[2].getScreenPoint(), 0 );
+	        var v0:Vertex = l_points[0];
+	        var v1:Vertex = l_points[1];
+	        var v2:Vertex = l_points[2];
+	        
+	        renderRec(	map.a, map.b, map.c, map.d, map.tx, map.ty,
+						v0.sx, v0.sy, v0.wz,
+						v1.sx, v1.sy, v1.wz,
+						v2.sx, v2.sy, v2.wz);
 	        // --
 	        map = null;
 		}
              
-        internal var svArray:Array = new Array();
-		internal var faz:Number;
-        internal var fbz:Number;
-        internal var fcz:Number;
-
-        internal var mabz:Number;
-        internal var mbcz:Number;
-        internal var mcaz:Number;
-
-        internal var mabx:Number;
-        internal var maby:Number;
-        internal var mbcx:Number;
-        internal var mbcy:Number;
-        internal var mcax:Number;
-        internal var mcay:Number;
-
-        internal var dabx:Number;
-        internal var daby:Number;
-        internal var dbcx:Number;
-        internal var dbcy:Number;
-        internal var dcax:Number;
-        internal var dcay:Number;
-            
-        internal var dsab:Number;
-        internal var dsbc:Number;
-        internal var dsca:Number;
-        
-        internal var dmax:Number;
-        
-        internal var ax:Number;
-        internal var ay:Number;
-        internal var bx:Number;
-        internal var by:Number;
-        internal var cx:Number;
-        internal var cy:Number;
-		internal var az:Number;
-        internal var bz:Number;
-        internal var cz:Number;
-        
-        protected function renderRec( a:Vector, b:Vector, c:Vector, index:Number):void
+		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number, 
+            ax:Number, ay:Number, az:Number, bx:Number, by:Number, bz:Number, cx:Number, cy:Number, cz:Number):void
         {
-        	ax = a.x;
-        	ay = a.y;
-        	az = a.z;
-        	bx = b.x;
-        	by = b.y;
-        	bz = b.z;
-        	cx = c.x;
-        	cy = c.y;
-        	cz = c.z;
+			m_nRecLevel++;
+            var faz:Number = az;
+            var fbz:Number = bz;
+            var fcz:Number = cz;
+            var mabz:Number = 2 / (faz + fbz);
+            var mbcz:Number = 2 / (fbz + fcz);
+            var mcaz:Number = 2 / (fcz + faz);
+            var mabx:Number = (ax*faz + bx*fbz)*mabz;
+            var maby:Number = (ay*faz + by*fbz)*mabz;
+            var mbcx:Number = (bx*fbz + cx*fcz)*mbcz;
+            var mbcy:Number = (by*fbz + cy*fcz)*mbcz;
+            var mcax:Number = (cx*fcz + ax*faz)*mcaz;
+            var mcay:Number = (cy*fcz + ay*faz)*mcaz;
+            var dabx:Number = ax + bx - mabx;
+            var daby:Number = ay + by - maby;
+            var dbcx:Number = bx + cx - mbcx;
+            var dbcy:Number = by + cy - mbcy;
+            var dcax:Number = cx + ax - mcax;
+            var dcay:Number = cy + ay - mcay;
+            var dsab:Number = (dabx*dabx + daby*daby);
+            var dsbc:Number = (dbcx*dbcx + dbcy*dbcy);
+            var dsca:Number = (dcax*dcax + dcay*dcay);
 
-            if (index >= (MAX_LEVEL-3) || (Math.max(Math.max(ax, bx), cx) - Math.min(Math.min(ax, bx), cx) < threshold) || (Math.max(Math.max(ay, by), cy) - Math.min(Math.min(ay, by), cy) < threshold))
+            if ((m_nRecLevel > 5) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
             {
-                renderTriangle( map, ax, ay, bx, by, cx, cy );
-                return;
+                renderTriangle(ta, tb, tc, td, tx, ty, ax, ay, bx, by, cx, cy);
+				m_nRecLevel--; return;
             }
 
-            faz = az;
-            fbz = bz;
-            fcz = cz;
-
-            mabz = 2 / (faz + fbz);
-            mbcz = 2 / (fbz + fcz);
-            mcaz = 2 / (fcz + faz);
-
-            dabx = ax + bx - (mabx = (ax*faz + bx*fbz)*mabz);
-            daby = ay + by - (maby = (ay*faz + by*fbz)*mabz);
-            dbcx = bx + cx - (mbcx = (bx*fbz + cx*fcz)*mbcz);
-            dbcy = by + cy - (mbcy = (by*fbz + cy*fcz)*mbcz);
-            dcax = cx + ax - (mcax = (cx*fcz + ax*faz)*mcaz);
-            dcay = cy + ay - (mcay = (cy*fcz + ay*faz)*mcaz);
-            
-            dsab = (dabx*dabx + daby*daby);
-            dsbc = (dbcx*dbcx + dbcy*dbcy);
-            dsca = (dcax*dcax + dcay*dcay);
-
-            if ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision))
+            if ((dsab > precision) && (dsca > precision) && (dsbc > precision) )
             {
-    			renderTriangle( map, ax, ay, bx, by, cx, cy );
-                return;
-            }
-            
-			var map_a:Number = map.a;
-			var map_b:Number = map.b;
-			var map_c:Number = map.c;
-			var map_d:Number = map.d;
-			var map_tx:Number = map.tx;
-			var map_ty:Number = map.ty;
-        	
-        	var sv1:Vector;
-        	var sv2:Vector;
-        	var sv3:Vector = svArray[index++];
-        	if( sv3 )
-        	{
-	        	sv3.x = mbcx/2;
-	        	sv3.y = mbcy/2;
-	        	sv3.z = (bz+cz)/2;
-        	}
-        	else return;
-        	
-            if ((dsab > precision) && (dsca > precision) && (dsbc > precision))
-            {
-            	sv1 = svArray[index++];
-            	if( sv1 )
-            	{
-	            	sv1.x = mabx/2;
-		        	sv1.y = maby/2;
-		        	sv1.z = (az+bz)/2;
-		        	
-		        	sv2 = svArray[index++];
-		        	if( sv2 )
-		        	{
-			        	sv2.x = mcax/2;
-				        sv2.y = mcay/2;
-				        sv2.z = (cz+az)/2;
-			        	
-		            	map.a = map_a*=2;
-		            	map.b = map_b*=2;
-		            	map.c = map_c*=2;
-		            	map.d = map_d*=2;
-		            	map.tx = map_tx*=2;
-		            	map.ty = map_ty*=2;
-		                renderRec(a, sv1, sv2, index);
-			        	
-						map.a = map_a;
-		            	map.b = map_b;
-		            	map.c = map_c;
-		            	map.d = map_d;
-		            	map.tx = map_tx-1;
-		            	map.ty = map_ty;
-		                renderRec(sv1, b, sv3, index);
-			        	
-						map.a = map_a;
-		            	map.b = map_b;
-		            	map.c = map_c;
-		            	map.d = map_d;
-		            	map.tx = map_tx;
-		            	map.ty = map_ty-1;
-		                renderRec(sv2, sv3, c, index);
-			        	
-						map.a = -map_a;
-		            	map.b = -map_b;
-		            	map.c = -map_c;
-		            	map.d = -map_d;
-		            	map.tx = 1-map_tx;
-		            	map.ty = 1-map_ty;
-		                renderRec(sv3, sv2, sv1, index);
-	          		}
-            	}
-            	return;
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2,
+                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, mcax/2, mcay/2, (cz+az)/2);
+
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2-1, ty*2,
+                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
+
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2-1,
+                    mcax/2, mcay/2, (cz+az)/2, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
+
+                renderRec(-ta*2, -tb*2, -tc*2, -td*2, -tx*2+1, -ty*2+1,
+                    mbcx/2, mbcy/2, (bz+cz)/2, mcax/2, mcay/2, (cz+az)/2, mabx/2, maby/2, (az+bz)/2);
+                    
+                m_nRecLevel--; return;
             }
 
-            dmax = Math.max(dsab, Math.max(dsca, dsbc));
+            var dmax:Number = Math.max(dsab, Math.max(dsca, dsbc));
+
             if (dsab == dmax)
             {
-            	sv1 = svArray[index++];
-            	if( sv1 )
-            	{
-	            	sv1.x = mabx/2;
-		        	sv1.y = maby/2;
-		        	sv1.z = (az+bz)/2;
-		        	
-	            	map.a = map_a*=2;
-	            	map.c = map_c*=2;
-	            	map.tx = map_tx*=2;
-	                renderRec(a, sv1, c, index);
-		        	
-					map.a = map_a + map_b;
-	            	map.b = map_b;
-	            	map.c = map_c + map_d;
-	            	map.d = map_d;
-	            	map.tx = map_tx + map_ty - 1;
-	            	map.ty = map_ty;
-	                renderRec(sv1, b, c, index);
-            	}
-                return;
+                renderRec(ta*2, tb*1, tc*2, td*1, tx*2, ty*1,
+                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, cx, cy, cz);
+
+                renderRec(ta*2+tb, tb*1, 2*tc+td, td*1, tx*2+ty-1, ty*1,
+                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, cx, cy, cz);
+                    
+                m_nRecLevel--; return;
             }
 
             if (dsca == dmax)
             {
-            	sv2 = svArray[index++];
-            	if( sv2 )
-            	{
-	            	sv2.x = mcax/2;
-		        	sv2.y = mcay/2;
-		        	sv2.z = (cz+az)/2;
-	            	
-	            	map.b = map_b*=2;
-	            	map.d = map_d*=2;
-	            	map.ty = map_ty*=2;
-	                renderRec(a, b, sv2, index);
-		        	
-					map.a = map_a;
-	            	map.b = map_b + map_a;
-	            	map.c = map_c;
-	            	map.d = map_d + map_c;
-	            	map.tx = map_tx;
-	            	map.ty = map_ty + map_tx - 1;
-	                renderRec(sv2, b, c, index);
-            	}
-                return;
+                renderRec(ta*1, tb*2, tc*1, td*2, tx*1, ty*2,
+                    ax, ay, az, bx, by, bz, mcax/2, mcay/2, (cz+az)/2);
+
+                renderRec(ta*1, tb*2 + ta, tc*1, td*2 + tc, tx, ty*2+tx-1,
+                    mcax/2, mcay/2, (cz+az)/2, bx, by, bz, cx, cy, cz);
+
+                m_nRecLevel--; return;
             }
-	        	
-		    map.a = map_a - map_b;
-        	map.b = map_b*2;
-        	map.c = map_c - map_d;
-        	map.d = map_d*2;
-        	map.tx = map_tx - map_ty;
-        	map.ty = map_ty*2;
-            renderRec(a, b, sv3, index);
-	        	
-		    map.a = map_a*2;
-        	map.b = map_b - map_a;
-        	map.c = map_c*2;
-        	map.d = map_d - map_c;
-        	map.tx = map_tx*2;
-        	map.ty = map_ty - map_tx;
-        	
-            renderRec(a, sv3, c, index);
+
+            renderRec(ta-tb, tb*2, tc-td, td*2, tx-ty, ty*2,
+                ax, ay, az, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
+
+            renderRec(2*ta, tb-ta, tc*2, td-tc, 2*tx, ty-tx,
+                ax, ay, az, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
+
+			m_nRecLevel--;
         }
-        
-        protected function renderTriangle(	p_oMatrix:Matrix, v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void
+
+		protected function renderTriangle(a:Number, b:Number, c:Number, d:Number, tx:Number, ty:Number, 
+			v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void
 		{
-			const a2:Number = v1x - v0x;
-			const b2:Number = v1y - v0y;
-			const c2:Number = v2x - v0x;
-			const d2:Number = v2y - v0y;
+			var a2:Number = v1x - v0x;
+			var b2:Number = v1y - v0y;
+			var c2:Number = v2x - v0x;
+			var d2:Number = v2y - v0y;
 								   
-			matrix.a = p_oMatrix.a*a2 + p_oMatrix.b*c2;
-			matrix.b = p_oMatrix.a*b2 + p_oMatrix.b*d2;
-			matrix.c = p_oMatrix.c*a2 + p_oMatrix.d*c2;
-			matrix.d = p_oMatrix.c*b2 + p_oMatrix.d*d2;
-			matrix.tx = p_oMatrix.tx*a2 + p_oMatrix.ty*c2 + v0x;
-			matrix.ty = p_oMatrix.tx*b2 + p_oMatrix.ty*d2 + v0y;
-			
-			graphics.lineStyle( 0 );
+			matrix.a = a*a2 + b*c2;
+			matrix.b = a*b2 + b*d2;
+			matrix.c = c*a2 + d*c2;
+			matrix.d = c*b2 + d*d2;
+			matrix.tx = tx*a2 + ty*c2 + v0x;
+			matrix.ty = tx*b2 + ty*d2 + v0y;
+
+			graphics.lineStyle();
 			graphics.beginBitmapFill(m_oTexture, matrix, repeat, smooth);
 			graphics.moveTo(v0x, v0y);
 			graphics.lineTo(v1x, v1y);
 			graphics.lineTo(v2x, v2y);
 			graphics.endFill();
 		}
-		
 	}
-	
 }

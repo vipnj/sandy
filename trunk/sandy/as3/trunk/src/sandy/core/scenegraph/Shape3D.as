@@ -303,7 +303,7 @@ package sandy.core.scenegraph
 						// -- We project the vertices
 				 		if( l_oFace.cvertices.length > 0 )
 				 		{
-				 			p_oCamera.projectArray( l_oFace.vertices );  // not needed anymore except bitmapmaterial with enableAccurateClipping set to false
+				 			//p_oCamera.projectArray( l_oFace.vertices );  // not needed anymore except bitmapmaterial with enableAccurateClipping set to false
 							p_oCamera.projectArray( l_oFace.cvertices );
 				 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 				 			
@@ -341,7 +341,7 @@ package sandy.core.scenegraph
 							// -- We project the vertices
 					 		if( l_oFace.cvertices.length > 0 )
 					 		{
-					 			p_oCamera.projectArray( l_oFace.vertices ); // not needed anymore exept bitmapmaterial with enableAccurateClipping set to false
+					 			//p_oCamera.projectArray( l_oFace.vertices ); // not needed anymore exept bitmapmaterial with enableAccurateClipping set to false
 								p_oCamera.projectArray( l_oFace.cvertices );
 					 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 					 			

@@ -19,7 +19,6 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.utils.getTimer;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
@@ -242,7 +241,7 @@ package sandy.core.scenegraph
 		{
 			// IF no appearance has bene applied, no display
 			if( m_oAppearance == null ) return;
-
+			const  l_nZNear:Number = p_oCamera.near;
 	        const 	l_aPoints:Array = m_oGeometry.aVertex,
 	        		l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
@@ -303,8 +302,7 @@ package sandy.core.scenegraph
 						// -- We project the vertices
 				 		if( l_oFace.cvertices.length > 0 )
 				 		{
-				 			//p_oCamera.projectArray( l_oFace.vertices );  // not needed anymore except bitmapmaterial with enableAccurateClipping set to false
-							p_oCamera.projectArray( l_oFace.cvertices );
+				 			p_oCamera.projectArray( l_oFace.cvertices );
 				 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 				 			
 				 			// -- we manage the display list depending on the mode choosen
@@ -319,7 +317,7 @@ package sandy.core.scenegraph
 					}
 					else
 					{
-				    	if( l_oFace.minBounds.z > 0 )
+				    	if( l_oFace.minBounds.z > l_nZNear )
 						{	
 					    	if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 					    	

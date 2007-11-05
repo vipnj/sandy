@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -135,7 +135,7 @@ class sandy.core.data.BezierPath
 		}
 		else
 		{
-			trace('sandy.core.data.BezierPath ERROR: Number of points incompatible '+_nNbPoints+' '+_nNbPoints%2);
+			trace('sandy.core.data.BezierPath ERROR: An odd number of points is required. You provided ' +_nNbPoints + ', which is an even number');
 			return;
 		}
 		

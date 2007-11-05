@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -451,7 +451,7 @@ class sandy.core.transform.BasicInterpolator
 	
 	private var _paused:Boolean;
 	private var _finished:Boolean;
-	private var _blocked:Boolean;// surement � virer car risque de foutre une merde terrible dans sequence et parallel !
+	private var _blocked:Boolean;// surement à virer car risque de foutre une merde terrible dans sequence et parallel !
 	private var _modified:Boolean;
 		
 	private var _frame:Number; // current frame of the interpolation (just an index, cannot be the true one in some case)

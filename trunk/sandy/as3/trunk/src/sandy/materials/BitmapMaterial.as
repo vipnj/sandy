@@ -80,15 +80,15 @@ package sandy.materials
 		{
         	if( m_oTexture == null ) return;
         	// --
-			const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
-			const l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord : p_oPolygon.aUVCoord;
+			var l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
+			var l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord.slice() : p_oPolygon.aUVCoord.slice();
 			// --
 			if( !l_points.length ) return;
 			// --
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
 			// --
-			if( polygon.isClipped ) // or l_points.length > 3 ...
+			if( polygon.isClipped || l_points.length > 3 )
 			{
 				_tesselatePolygon( l_points, l_uv );
 			}
@@ -100,6 +100,9 @@ package sandy.materials
 			// --
 			if( attributes.lineAttributes ) attributes.lineAttributes.draw( graphics, polygon, l_points );
 			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
+			// --
+			l_points = null;
+			l_uv = null;
 		}
 		
 		protected function _tesselatePolygon ( p_aPoints:Array, p_aUv:Array ):void
@@ -121,6 +124,10 @@ package sandy.materials
 			map = _createTextureMatrix( l_uv );
 	        // --
 	        drawPolygon( l_points );
+	        // --
+	        map = null;
+	        l_points = null;
+			l_uv = null;
 	 	}
 
 

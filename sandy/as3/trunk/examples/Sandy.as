@@ -13,8 +13,8 @@ package
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE ;
 			//var demo:InteractionDemo = new InteractionDemo();
-			//var demo:PerspectiveCorrectionDemo = new PerspectiveCorrectionDemo();
-			var demo:PanoDemo = new PanoDemo();
+			var demo:PerspectiveCorrectionDemo = new PerspectiveCorrectionDemo();
+			//var demo:PanoDemo = new PanoDemo();
 			// --
 			addChild( demo );
 			demo.init();

@@ -46,8 +46,8 @@ import sandy.core.data.Matrix4;
 * @author	Martin Wood-Mitrovski
 * @author	Thomas Balitout - samothtronicien
 * @since 	1.0
-* @version	1.2.2
-* @date 	26.05.2007
+* @version	1.2.3
+* @date 	05.11.2007
 */
 class sandy.core.Object3D extends Leaf
 {
@@ -126,11 +126,15 @@ class sandy.core.Object3D extends Leaf
 	}	
 
 	public function setTransparency (a:Number):Void {
+		//trace ("Setting alpha of object to " + a);
 		setAlpha(a);
 	}
 	
 	
 	public function setAlpha (a:Number):Void {
+		if (a == undefined) {
+			a = 100; // default to 100% alpha
+		}
 		container._alpha = a;
 	}
 	
@@ -288,8 +292,9 @@ class sandy.core.Object3D extends Leaf
 	* @param	bOverWrite	Boolean, overwrite or not all specific Faces's Skin
 	* @return	Boolean True to apply the skin to the non default faces skins , false otherwise (default).
 	*/
-	public function setSkin( pS:Skin ):Boolean
+	public function setSkin( pS:Skin):Boolean
 	{
+		//trace ("Got to object3d.setSkin");
 		// Remove any old listeners. This way, we don't get notified about an old skin 
 		// loading after we already changed the skin, for example.
 		_s.removeEventListener( SkinEvent.onUpdateEVENT, this );
@@ -333,7 +338,7 @@ class sandy.core.Object3D extends Leaf
 	* Once this feature is enable this feature, the animation is more CPU intensive.
 	* The default value is false.
 	* This method set the argument value to encompass all the faces of the object.
-	* As the Polygon class has also a enableEvents( Boolean ) method, you have the possibility to enable only
+	* As the Polygon class also has an enableEvents( Boolean ) method, you have the possibility to enable only
 	* the faces that are interessting for you.
 	* @param	b Boolean true to enable event system, false otherwise
 	*/
@@ -344,6 +349,7 @@ class sandy.core.Object3D extends Leaf
 		{
 			if( !_bEv )
 			{
+				//trace ("Adding events on main object");
 				var dpress:Delegate = new Delegate(this, __sendObjectEvent);
 				dpress.setArguments( _oOnPress );
 				container.onPress = dpress.getFunction();
@@ -365,13 +371,16 @@ class sandy.core.Object3D extends Leaf
 				container.onReleaseOutside = dreleaseout.getFunction();
 			}
 		}
-		else if( !b && _bEv )
+		
+		// Disable events on the object if told to, or if the polys are responding to events
+		if( !b || _bEv )
 		{
-			container.onPress = null;
-			container.onRollOver = null;
-			container.onRollOut = null;
-			container.onRelease = null;
-			container.onReleaseOutside = null;
+			//trace ("Removing events on main object");
+			delete container.onPress;
+			delete container.onRollOver;
+			delete container.onRollOut;
+			delete container.onRelease;
+			delete container.onReleaseOutside;
 		}
 		_bEv = b;
 	}
@@ -403,7 +412,7 @@ class sandy.core.Object3D extends Leaf
 	{		
 		//trace ("Hiding Object3D " + name);
 		//setVisible(false);
-		//container._visible = false;
+		container._visible = true;
 		// Store the previous alpha
 		if (container._alpha > 0) {
 			_containerAlpha = container._alpha;
@@ -501,7 +510,6 @@ class sandy.core.Object3D extends Leaf
 		//
 		_aSorted = [];
 		
-	//_root.setFastRendering(true); - Ignore this
 		while( --l > -1 )
 		{
 			f = aFaces[l];
@@ -663,6 +671,7 @@ class sandy.core.Object3D extends Leaf
 		}
 		// --
 		_s.removeEventListener( SkinEvent.onUpdateEVENT, this );
+		removeAllListeners();
 		// --
 		//World3D.getInstance().getObjectEventManager().removeEventListeningObject( this );
 		// --
@@ -706,6 +715,8 @@ class sandy.core.Object3D extends Leaf
 			bClipped = bClipped || aF[l].clip( frustum );
 		}
 		*/
+		//trace (" ");
+		//trace ("*** Inside Object3D.clip ***");
 		var result:Boolean = false;
 		var res:Number;
 		var l:Number;
@@ -717,14 +728,14 @@ class sandy.core.Object3D extends Leaf
 			// faces at their original state.
 			if( _bPolyClipped )
 			{
+				//trace ("c"); //Clearing clipping for this object");
 			    l = aFaces.length;
 				while( --l > -1 )
 				{
-				    aFaces[int(l)].clipped  = false;
+				    aFaces[int(l)].clipped = false;
 				}
 				_bPolyClipped = false;
 			}
-				
 			delete _oBSphere;
 			_oBSphere = new BSphere( this );
 			
@@ -746,7 +757,7 @@ class sandy.core.Object3D extends Leaf
 				if( res == Frustum.OUTSIDE )
 				{
 					// It's OUTSIDE, so again, the object is clipped
-					result =  true;
+					result = true;
 				}
 				else if (res == Frustum.INTERSECT )
 				{
@@ -756,12 +767,18 @@ class sandy.core.Object3D extends Leaf
 					l = aFaces.length;
 					while( --l > -1 )
 					{
+						//if (l == 0) {
+						//	trace (" aFaces[l].clip( frustum ) is " +  aFaces[l].clip( frustum ));
+						//}
 						aClipped = aClipped.concat( aFaces[l].clip( frustum ) );
+						//trace ("aClipped is " + aClipped);
 					}
 					// We consider that the object is not clipped and needs to be drawn.
-					//_bPolyClipped = true; // FIXME - This looks wrong. Shouldn't it be set to false?
-					_bPolyClipped = false;
+					_bPolyClipped = true; // I think this is true because there is poly clipping (albeit partial object clipping)
 					result = false;  // This is the default anyway
+				//} else {
+					//trace ("None of the above clipping in object3D");
+					//result = false;
 				}// ELSE => INSIDE
 			}// ELSE => INSIDE
 		}// ELSE => INSIDE
@@ -840,6 +857,7 @@ class sandy.core.Object3D extends Leaf
 	
 	private function __sendObjectEvent( e:ObjectEvent ):Void
 	{
+		//trace ("Sending event for full object");
 		_oEB.broadcastEvent.apply( _oEB, arguments );
 	}
 
@@ -879,6 +897,7 @@ class sandy.core.Object3D extends Leaf
 			aFaces[l].updateTextureMatrix( s );
 		}
 	}
+
 	
 	/**
 	* -------------------------------------------------------
@@ -907,6 +926,6 @@ class sandy.core.Object3D extends Leaf
 	private var _oOnRollOut:ObjectEvent;
 	private var _oEB:EventBroadcaster;	
 	private var _bPolyClipped:Boolean;
-	private var _bSeparatePolys:Boolean = false; // If true, draw each poly  in separate movie clip, which allows us to track events on a poly-by-poly basis
+	private var _bSeparatePolys:Boolean = false; // If true, draw each poly in separate movie clip, which allows us to track events on a poly-by-poly basis
 	private var _containerAlpha:Number;  // previous alpha setting for restoring later
 }

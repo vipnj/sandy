@@ -20,10 +20,8 @@ package sandy.core.scenegraph
 	import flash.geom.Rectangle;
 	
 	import sandy.core.Scene3D;
-	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
-	import sandy.math.Matrix4Math;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
@@ -55,7 +53,7 @@ package sandy.core.scenegraph
 		/**
 		 * The camera viewport
 		 */
-		public var viewport:ViewPort = new ViewPort(1,1);
+		public var viewport:ViewPort = new ViewPort(640,480);
 		
 		/**
 		 * The frustum of the camera.
@@ -182,14 +180,16 @@ package sandy.core.scenegraph
 		 */
 		public function projectArray( p_oList:Array ):void
 		{
+			const l_nX:Number = viewport.offset.x + m_nOffx;
+			const l_nY:Number = viewport.offset.y + m_nOffy;
 			var l_nCste:Number;
 			for each( var l_oVertex:Vertex in p_oList )
 			{
 				if( ! l_oVertex.projected )
 				{
 					l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-					l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
-					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+					l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
+					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
 					// --
 					l_oVertex.projected = true;
 					nbVertices ++;
@@ -204,9 +204,11 @@ package sandy.core.scenegraph
 		 */
 		public function projectVertex( p_oVertex:Vertex ):void
 		{
+			const l_nX:Number = viewport.offset.x + m_nOffx;
+			const l_nY:Number = viewport.offset.y + m_nOffy;
 			const l_nCste:Number = 	1 / ( p_oVertex.wx * mp41 + p_oVertex.wy * mp42 + p_oVertex.wz * mp43 + mp44 );
-			p_oVertex.sx =  l_nCste * ( p_oVertex.wx * mp11 + p_oVertex.wy * mp12 + p_oVertex.wz * mp13 + mp14 ) * m_nOffx + m_nOffx;
-			p_oVertex.sy = -l_nCste * ( p_oVertex.wx * mp21 + p_oVertex.wy * mp22 + p_oVertex.wz * mp23 + mp24 ) * m_nOffy + m_nOffy;
+			p_oVertex.sx =  l_nCste * ( p_oVertex.wx * mp11 + p_oVertex.wy * mp12 + p_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
+			p_oVertex.sy = -l_nCste * ( p_oVertex.wx * mp21 + p_oVertex.wy * mp22 + p_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
 		}
 		
 		/**

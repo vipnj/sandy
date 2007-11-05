@@ -15,6 +15,8 @@ limitations under the License.
 */
 package sandy.view 
 {
+	import flash.geom.Point;
+	
 	/**
 	 * The view port represents the rendered screen.
 	 *
@@ -27,7 +29,13 @@ package sandy.view
 	 */	
 	public final class ViewPort
 	{
-	    		
+	    
+	    /**
+		 * Offset to change the viewport center.
+		 * For example, if you set myCamera.viewport.offset.y to 100, everything drawn at the screen will be moved 100 pixels down (due to Flash vertical axis convention).
+		 */
+		public var offset:Point = new Point();
+				
 		/**
 		 * Flag which specifies if the viewport dimension has changed
 		 */
@@ -57,6 +65,7 @@ package sandy.view
 			// --
 			hasChanged = true;
 		}
+		
 		
 		public function get width():Number { return m_nW; }
 		public function get height():Number { return m_nH; }

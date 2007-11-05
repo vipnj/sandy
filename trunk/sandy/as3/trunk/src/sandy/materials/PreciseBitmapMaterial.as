@@ -74,7 +74,21 @@ package sandy.materials
         	// --
         	m_nRecLevel = 0;
 			// --
-			_tesselatePolygon( l_points, l_uv );
+			if( polygon.isClipped || l_points.length > 3 )
+			{
+				_tesselatePolygon( l_points, l_uv );
+			}
+			else
+			{
+				map = (m_oPolygonMatrixMap[polygon] as Matrix );
+				var v0:Vertex = l_points[0];
+	        	var v1:Vertex = l_points[1];
+	        	var v2:Vertex = l_points[2];
+				renderRec(	map.a, map.b, map.c, map.d, map.tx, map.ty,
+						v0.sx, v0.sy, v0.wz,
+						v1.sx, v1.sy, v1.wz,
+						v2.sx, v2.sy, v2.wz);
+			}
 			// --
 			if( attributes.lineAttributes ) attributes.lineAttributes.draw( graphics, polygon, l_points );
 			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
@@ -99,7 +113,7 @@ package sandy.materials
 				_tesselatePolygon( p_aPoints, p_aUv );
 			}
 			// --
-			map = ( polygon.isClipped ) ? _createTextureMatrix( l_uv ).clone() : (m_oPolygonMatrixMap[polygon] as Matrix ).clone();
+			map = _createTextureMatrix( l_uv );
 	        // --
 	        var v0:Vertex = l_points[0];
 	        var v1:Vertex = l_points[1];
@@ -110,7 +124,6 @@ package sandy.materials
 						v1.sx, v1.sy, v1.wz,
 						v2.sx, v2.sy, v2.wz);
 	        // --
-	        map = null;
 	        l_points = null;
 			l_uv = null;
 		}

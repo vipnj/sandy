@@ -560,6 +560,7 @@ package sandy.core.scenegraph
 	    			{
 	    				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
 						m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+						m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction); 
 						m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
 						m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
 	    			}
@@ -578,6 +579,7 @@ package sandy.core.scenegraph
     			{
     				m_oContainer.removeEventListener(MouseEvent.CLICK, _onInteraction);
 					m_oContainer.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_DOWN, _onInteraction); 
 					m_oContainer.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
 					m_oContainer.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
     			}

@@ -105,7 +105,7 @@ package demos
 		// Create the root Group and the object tree 
 		private function createScene():Group
 		{
-			var root:Group = new Group();
+			var root:Group = new Group("root");
 			shape = new SkyBox( "pano", 300, 20, 20, false );
 			//shape.bottom.enableBackFaceCulling = false;
 			root.addChild( shape );

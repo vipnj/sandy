@@ -547,6 +547,7 @@ package sandy.core.data
 	        {
 	        	container.addEventListener(MouseEvent.CLICK, _onInteraction);
 	    		container.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+	    		container.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
 	    		container.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
 	    		container.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
 			}
@@ -554,6 +555,7 @@ package sandy.core.data
 			{
 				container.removeEventListener(MouseEvent.CLICK, _onPress);
 				container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
+				container.removeEventListener(MouseEvent.MOUSE_DOWN, _onPress);
 				container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
 				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
 	    	}

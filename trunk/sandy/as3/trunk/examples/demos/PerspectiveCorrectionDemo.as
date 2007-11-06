@@ -88,8 +88,7 @@ package demos
 			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableNearClipping = true;
 			var lPic:Bitmap = new Texture2();
-			var l_oMaterial:PreciseBitmapMaterial = new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5, 5);
-			l_oMaterial.enableAccurateClipping = true;
+			var l_oMaterial:PreciseBitmapMaterial = new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5);
 			m_oPlane.appearance = new Appearance( l_oMaterial );
 
 			// --

@@ -197,7 +197,7 @@ package sandy.primitive
 					//l_geometry.createFace( p0, p1, p2, p3 );
 					//l_geometry.addUVCoords( uv0, uv1, uv2 );
 					l_geometry.setFaceVertexIds( l_geometry.getNextFaceID(), p0, p1, p2, p3 );
-					l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv0, uv1, uv2 );
+					l_geometry.setFaceUVCoordsIds( l_geometry.getNextFaceUVCoordID(), uv0, uv1, uv2, uv3 );
 				}
 			}
 			else

@@ -18,7 +18,7 @@ package sandy.materials
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -76,19 +76,18 @@ package sandy.materials
 			var l_nCol:uint = m_nColor;
 			if( _useLight && attributes.lightAttributes )
 			{
-				var lightStrength:Number;
-				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
-
+				//var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
+				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();//getWorldVector();
+				p_oPolygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
+				
+				var lightStrength:Number = NumberUtil.constrain( p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient, 0, 1 );
+				
 				if( attributes.lightAttributes.useBright )
 				{
-					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
-					// --
 					l_nCol = ColorUtil.calculateLitColour(l_nCol, lightStrength);
 				}
 				else
 				{
-					lightStrength = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
-					// --
 					var r:Number = ( l_nCol >> 16 )	& 0xFF;
 					var g:Number = ( l_nCol >> 8 )	& 0xFF;
 					var b:Number = ( l_nCol ) 	 	& 0xFF;

@@ -10,7 +10,7 @@ package demos
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.materials.Appearance;
-	import sandy.materials.PreciseBitmapMaterial;
+	import sandy.materials.BitmapMaterial;
 	import sandy.materials.attributes.LineAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.primitive.Plane3D;
@@ -88,7 +88,7 @@ package demos
 			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableNearClipping = true;
 			var lPic:Bitmap = new Texture2();
-			var l_oMaterial:PreciseBitmapMaterial = new PreciseBitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5);
+			var l_oMaterial:BitmapMaterial = new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5);
 			m_oPlane.appearance = new Appearance( l_oMaterial );
 
 			// --

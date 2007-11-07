@@ -77,7 +77,7 @@ package demos
 			// --
 			for ( var i:int = 0; i < 6; i++)
 			{
-				queue.add( planeNames[i], new URLRequest("../assets/golden/"+planeNames[i]+".jpg") );
+				queue.add( planeNames[i], new URLRequest("assets/golden/"+planeNames[i]+".jpg") );
 			}
 			// --
 			queue.addEventListener(SandyEvent.QUEUE_COMPLETE, loadComplete );
@@ -106,7 +106,7 @@ package demos
 		private function createScene():Group
 		{
 			var root:Group = new Group("root");
-			shape = new SkyBox( "pano", 300, 20, 20, false );
+			shape = new SkyBox( "pano", 300, 10, 10, false );
 			//shape.bottom.enableBackFaceCulling = false;
 			root.addChild( shape );
 			return root;

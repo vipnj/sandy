@@ -49,15 +49,19 @@ package sandy.materials
 		// --
 		public var smooth:Boolean = false;
 		
+		public var precision:uint = 0;
+		
+		private var m_nRecLevel:int = 0;
+		
 		/**
 		 * Creates a new BitmapMaterial.
 		 * <p>Please note that we ue internally a copy of the constructor bitmapdata. Thatea mns in case you need to access this bitmapdata, you can't just use the same reference
 		 * but you shall use the BitmapMaterial#texture getter property to make it work.</p>
-		 * <p>Please note that this material does not handle the lightAttributes for the moment!</p>
 		 * @param p_oTexture 	The bitmapdata for this material
 		 * @param p_oAttr	The attributes for this material
+		 * @param p_nPrecision The precision of this material. Using a precision with 0 makes the material behave as before. Then 1 as precision is very high and requires a lot of computation but proceed a the best perpective mapping correction. Bigger values are less CPU intensive but also less accurate. Usually a value of 5 is enough.
 		 */
-		public function BitmapMaterial( p_oTexture:BitmapData = null, p_oAttr:MaterialAttributes = null )
+		public function BitmapMaterial( p_oTexture:BitmapData = null, p_oAttr:MaterialAttributes = null, p_nPrecision:uint = 0 )
 		{
 			super(p_oAttr);
 			// --
@@ -67,6 +71,7 @@ package sandy.materials
 			// --
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
+			precision = p_nPrecision;
 		}
 		
 		/**
@@ -88,6 +93,8 @@ package sandy.materials
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
 			// --
+			m_nRecLevel = 0;
+			// --
 			if( polygon.isClipped || l_points.length > 3 )
 			{
 				_tesselatePolygon( l_points, l_uv );
@@ -95,11 +102,39 @@ package sandy.materials
 			else
 			{
 				map = (m_oPolygonMatrixMap[polygon] as Matrix );
-				drawPolygon( l_points );
+				var v0:Vertex = l_points[0];
+	        	var v1:Vertex = l_points[1];
+	        	var v2:Vertex = l_points[2];
+				if( precision == 0 )
+		        {
+		        	renderTriangle(map.a, map.b, map.c, map.d, map.tx, map.ty, v0.sx, v0.sy, v1.sx, v1.sy, v2.sx, v2.sy );
+		        }
+		        else
+		        {
+			        renderRec(	map.a, map.b, map.c, map.d, map.tx, map.ty,
+								v0.sx, v0.sy, v0.wz,
+								v1.sx, v1.sy, v1.wz,
+								v2.sx, v2.sy, v2.wz);
+		        }
 			}
 			// --
 			if( attributes.lineAttributes ) attributes.lineAttributes.draw( graphics, polygon, l_points );
 			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
+			if( _useLight && attributes.lightAttributes )
+			{
+				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();//getWorldVector();
+				polygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
+				// TODO implement bright management
+				var lightStrength:Number = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;				
+				// --
+				graphics.beginFill( 0, 1-lightStrength );
+				graphics.moveTo( l_points[0].sx, l_points[0].sy );
+				for each( var l_oVertex:Vertex in l_points )
+				{
+					graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
+				}
+				graphics.endFill();
+			}
 			// --
 			l_points = null;
 			l_uv = null;
@@ -123,41 +158,128 @@ package sandy.materials
 			// --
 			map = _createTextureMatrix( l_uv );
 	        // --
-	        drawPolygon( l_points );
+	        var v0:Vertex = l_points[0];
+	        var v1:Vertex = l_points[1];
+	        var v2:Vertex = l_points[2];
+	        
+	        if( precision == 0 )
+	        {
+	        	renderTriangle(map.a, map.b, map.c, map.d, map.tx, map.ty, v0.sx, v0.sy, v1.sx, v1.sy, v2.sx, v2.sy );
+	        }
+	        else
+	        {
+		        renderRec(	map.a, map.b, map.c, map.d, map.tx, map.ty,
+							v0.sx, v0.sy, v0.wz,
+							v1.sx, v1.sy, v1.wz,
+							v2.sx, v2.sy, v2.wz);
+	        }
 	        // --
-	        map = null;
 	        l_points = null;
 			l_uv = null;
 	 	}
 
+		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number, 
+            ax:Number, ay:Number, az:Number, bx:Number, by:Number, bz:Number, cx:Number, cy:Number, cz:Number):void
+        {
+			m_nRecLevel++;
+            var mabz:Number = 2 / (az + bz);
+            var mbcz:Number = 2 / (bz + cz);
+            var mcaz:Number = 2 / (cz + az);
+            var mabx:Number = (ax*az + bx*bz)*mabz;
+            var maby:Number = (ay*az + by*bz)*mabz;
+            var mbcx:Number = (bx*bz + cx*cz)*mbcz;
+            var mbcy:Number = (by*bz + cy*cz)*mbcz;
+            var mcax:Number = (cx*cz + ax*az)*mcaz;
+            var mcay:Number = (cy*cz + ay*az)*mcaz;
+            var dabx:Number = ax + bx - mabx;
+            var daby:Number = ay + by - maby;
+            var dbcx:Number = bx + cx - mbcx;
+            var dbcy:Number = by + cy - mbcy;
+            var dcax:Number = cx + ax - mcax;
+            var dcay:Number = cy + ay - mcay;
+            var dsab:Number = (dabx*dabx + daby*daby);
+            var dsbc:Number = (dbcx*dbcx + dbcy*dbcy);
+            var dsca:Number = (dcax*dcax + dcay*dcay);
 
-        protected function drawPolygon( p_aPoints:Array ):void
+            if ((m_nRecLevel > 5) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
+            {
+                renderTriangle(ta, tb, tc, td, tx, ty, ax, ay, bx, by, cx, cy);
+				m_nRecLevel--; return;
+            }
+
+            if ((dsab > precision) && (dsca > precision) && (dsbc > precision) )
+            {
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2,
+                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, mcax/2, mcay/2, (cz+az)/2);
+
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2-1, ty*2,
+                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
+
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2-1,
+                    mcax/2, mcay/2, (cz+az)/2, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
+
+                renderRec(-ta*2, -tb*2, -tc*2, -td*2, -tx*2+1, -ty*2+1,
+                    mbcx/2, mbcy/2, (bz+cz)/2, mcax/2, mcay/2, (cz+az)/2, mabx/2, maby/2, (az+bz)/2);
+                    
+                m_nRecLevel--; return;
+            }
+
+            var dmax:Number = Math.max(dsab, Math.max(dsca, dsbc));
+
+            if (dsab == dmax)
+            {
+                renderRec(ta*2, tb*1, tc*2, td*1, tx*2, ty*1,
+                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, cx, cy, cz);
+
+                renderRec(ta*2+tb, tb*1, 2*tc+td, td*1, tx*2+ty-1, ty*1,
+                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, cx, cy, cz);
+                    
+                m_nRecLevel--; return;
+            }
+
+            if (dsca == dmax)
+            {
+                renderRec(ta*1, tb*2, tc*1, td*2, tx*1, ty*2,
+                    ax, ay, az, bx, by, bz, mcax/2, mcay/2, (cz+az)/2);
+
+                renderRec(ta*1, tb*2 + ta, tc*1, td*2 + tc, tx, ty*2+tx-1,
+                    mcax/2, mcay/2, (cz+az)/2, bx, by, bz, cx, cy, cz);
+
+                m_nRecLevel--; return;
+            }
+
+            renderRec(ta-tb, tb*2, tc-td, td*2, tx-ty, ty*2,
+                ax, ay, az, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
+
+            renderRec(2*ta, tb-ta, tc*2, td-tc, 2*tx, ty-tx,
+                ax, ay, az, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
+
+			m_nRecLevel--;
+        }
+
+		protected function renderTriangle(a:Number, b:Number, c:Number, d:Number, tx:Number, ty:Number, 
+			v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void
 		{
-			const x0:Number = p_aPoints[0].sx, y0:Number = p_aPoints[0].sy;
-			const x1:Number = p_aPoints[1].sx, y1:Number = p_aPoints[1].sy;
-			const x2:Number = p_aPoints[2].sx, y2:Number = p_aPoints[2].sy;
-			//--
-			const a2:Number = x1 - x0;
-			const b2:Number = y1 - y0;
-			const c2:Number = x2 - x0;
-			const d2:Number = y2 - y0;
-			// --					   
-			matrix.a = map.a*a2 + map.b*c2;
-			matrix.b = map.a*b2 + map.b*d2;
-			matrix.c = map.c*a2 + map.d*c2;
-			matrix.d = map.c*b2 + map.d*d2;
-			matrix.tx = map.tx*a2 + map.ty*c2 + x0;
-			matrix.ty = map.tx*b2 + map.ty*d2 + y0;
-			// --
+			var a2:Number = v1x - v0x;
+			var b2:Number = v1y - v0y;
+			var c2:Number = v2x - v0x;
+			var d2:Number = v2y - v0y;
+								   
+			matrix.a = a*a2 + b*c2;
+			matrix.b = a*b2 + b*d2;
+			matrix.c = c*a2 + d*c2;
+			matrix.d = c*b2 + d*d2;
+			matrix.tx = tx*a2 + ty*c2 + v0x;
+			matrix.ty = tx*b2 + ty*d2 + v0y;
+
 			graphics.lineStyle();
-			graphics.beginBitmapFill( m_oTexture, matrix, repeat, smooth );
-			// --
-			graphics.moveTo( x0, y0 );
-			graphics.lineTo( x1, y1 );
-			graphics.lineTo( x2, y2 );
-			// --
+			graphics.beginBitmapFill(m_oTexture, matrix, repeat, smooth);
+			graphics.moveTo(v0x, v0y);
+			graphics.lineTo(v1x, v1y);
+			graphics.lineTo(v2x, v2y);
 			graphics.endFill();
 		}
+		
 
 		protected function _createTextureMatrix( p_aUv:Array ):Matrix
 		{

@@ -32,20 +32,17 @@ package sandy.view
 		 * INTERSECT means that the object intersects one or more planes of the frustum, 
 		 * and should be partly rendered.
 		 */
-		public static function get INTERSECT():CullingState { return _INTERSECT_ ; };
-		private static var _INTERSECT_:CullingState = new CullingState("intersect");
+		public static const INTERSECT:CullingState = new CullingState("intersect");
 		
 		/**
 		 * INSIDE means that the object is completely inside the frustum, and should be rendered.
 		 */
-		public static function get INSIDE():CullingState { return _INSIDE_ ; };
-		private static var _INSIDE_:CullingState = new CullingState("inside");
+		public static const INSIDE:CullingState = new CullingState("inside");
 		
 		/**
 		 * OUTSIDE means that the object is completely outside the frustum, and should not be rendered..
 		 */
-		public static function get OUTSIDE():CullingState { return _OUTSIDE_ ; };
-		private static var _OUTSIDE_:CullingState = new CullingState("outside");
+		public static const OUTSIDE:CullingState = new CullingState("outside");
 		
 		public function toString():String
 		{

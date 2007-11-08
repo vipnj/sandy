@@ -30,7 +30,7 @@ package sandy.util
 			var r:Number = ( col >> 16 )& 0xFF;
 			var g:Number = ( col >> 8 ) & 0xFF;
 			var b:Number = ( col ) 		& 0xFF;
-			
+
 			// divide by 256
 			r *= 0.00390625;
 			g *= 0.00390625;
@@ -73,17 +73,23 @@ package sandy.util
 					{
 						if (r == max) 
 						{
-							if (b == min) n = 0; else n = 5;
+							if (b == min) n = 0; 
+							else n = 5;
+							
 							break;
 						}
 							
 						if (g == max) 
 						{
-							if (b == min) n = 1; else n = 2;
+							if (b == min) n = 1; 
+							else n = 2;
+							
 							break;
 						}
 							
-						if (r == min) n = 3; else n = 4;
+						if (r == min) n = 3; 
+						else n = 4;
+						
 						break;
 					}
 					
@@ -100,7 +106,7 @@ package sandy.util
 					h = 60 * (n + F);
 				}
 			}
-			
+
 			if (lightStrength < 0.5) 
 			{
 				delta = s * lightStrength;
@@ -110,9 +116,10 @@ package sandy.util
 				delta = s * (1 - lightStrength);
 			}
 			
+
 			min = lightStrength - delta;
 			max = lightStrength + delta;
-			
+
 			n = Math.floor(h / 60);
 			F = (h - n*60) * delta / 30;
 			n %= 6;
@@ -129,8 +136,10 @@ package sandy.util
 				case 4: r = mu;  g= min; b= max; break;
 				case 5: r = max; g= min; b= md; break;
 			}
-							
+				
 			return ((r * 256) << 16 | (g * 256) << 8 |  (b * 256));
 		}
+	
 	}
+	
 }

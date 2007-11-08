@@ -127,7 +127,11 @@ package sandy.materials
 				// TODO implement bright management
 				var lightStrength:Number = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;				
 				// --
-				graphics.beginFill( 0, 1-lightStrength );
+				if( attributes.lightAttributes.useBright) 
+					graphics.beginFill( (lightStrength < 0.5) ? 0 : 0xFFFFFF, (lightStrength < 0.5) ? (1-2 * lightStrength) : (2 * lightStrength - 1) );
+				else 
+					graphics.beginFill( 0, 1-lightStrength );
+				// --
 				graphics.moveTo( l_points[0].sx, l_points[0].sy );
 				for each( var l_oVertex:Vertex in l_points )
 				{

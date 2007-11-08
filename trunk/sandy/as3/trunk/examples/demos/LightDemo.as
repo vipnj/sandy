@@ -63,7 +63,7 @@ package demos
   
   		private function _createMaterialAttributes():MaterialAttributes
   		{
-  			return new MaterialAttributes( new LightAttributes( true, 0) );
+  			return new MaterialAttributes( new LightAttributes( true, 0.2) );
   		}
   		
 	  	private function _createAppearance():Appearance
@@ -78,7 +78,7 @@ package demos
 	  	{
 	  		var l_oParser:IParser = Parser.create( "assets/Rhino.ASE", null, 0.03 );
 	  		l_oParser.standardAppearance = _createAppearance();
-	  		l_oParser.addEventListener( ParserEvent.onInitEVENT, _createScene3D );
+	  		l_oParser.addEventListener( ParserEvent.INIT, _createScene3D );
 	  		l_oParser.parse();
 	  	}
 	  	
@@ -86,9 +86,9 @@ package demos
 		{
 			m_oScene.root = p_oEvt.group;
 			
-			var l_oSphere:Sphere = new Sphere("mySphere", 100 );
+			var l_oSphere:Sphere = new Sphere("mySphere", 30 );
 			l_oSphere.x = 200;
-			var l_oSphereMaterial:ColorMaterial = new ColorMaterial( 0xCCCC, 1, _createMaterialAttributes() );
+			var l_oSphereMaterial:ColorMaterial = new ColorMaterial( 0xFF0000, 1, _createMaterialAttributes() );
 			l_oSphereMaterial.lightingEnable = true;
 			l_oSphere.appearance = new Appearance( l_oSphereMaterial  );
 			m_oScene.root.addChild( l_oSphere );

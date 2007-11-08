@@ -42,7 +42,7 @@ package sandy.parser
 	 */
 	public class AParser extends EventDispatcher implements IParser
 	{
-		protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.onProgressEVENT );
+		protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.PROGRESS );
 		protected const m_oLoader:URLLoader = new URLLoader();
 		protected var m_oGroup:Group;
 		protected var m_oFile:Object;
@@ -96,7 +96,7 @@ package sandy.parser
 		*/
 		private function _io_error( e:IOErrorEvent ):void
 		{
-			dispatchEvent( new ParserEvent( ParserEvent.onFailEVENT ) );
+			dispatchEvent( new ParserEvent( ParserEvent.FAIL ) );
 		}
 
 		/**

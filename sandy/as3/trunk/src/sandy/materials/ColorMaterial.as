@@ -76,11 +76,10 @@ package sandy.materials
 			var l_nCol:uint = m_nColor;
 			if( _useLight && attributes.lightAttributes )
 			{
-				//var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
-				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();//getWorldVector();
+				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();
 				p_oPolygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
-				
-				var lightStrength:Number = NumberUtil.constrain( p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient, 0, 1 );
+				// SEEMS TO BE A PROBLEM HERE WITH SOME COLORS AND BRIGHT
+				var lightStrength:Number = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
 				
 				if( attributes.lightAttributes.useBright )
 				{

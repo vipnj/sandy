@@ -73,7 +73,7 @@ package sandy.parser
 		{
 			super.parseData( e );
 			// --
-			var lines:Array = unescapeMultiByte( String( m_oFile ) ).split( '\r\n' );
+			var lines:Array = unescapeMultiByte( String( m_oFile ) ).split( '\n' );
 			var lineLength:uint = lines.length;
 			var id:uint;
 			// -- local vars
@@ -178,7 +178,7 @@ package sandy.parser
 			l_oShape = new Shape3D( null, l_oGeometry, m_oStandardAppearance );
 			m_oGroup.addChild( l_oShape );
 			// -- Parsing is finished
-			var l_eOnInit:ParserEvent = new ParserEvent( ParserEvent.onInitEVENT );
+			var l_eOnInit:ParserEvent = new ParserEvent( ParserEvent.INIT );
 			l_eOnInit.group = m_oGroup;
 			dispatchEvent( l_eOnInit );
 		}

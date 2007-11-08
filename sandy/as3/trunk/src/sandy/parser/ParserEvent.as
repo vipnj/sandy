@@ -33,19 +33,19 @@ package sandy.parser
 		/**
 	     * The load has failed
 	     */
-	    static public const onFailEVENT:String = 'onFailEVENT';
+	    static public const FAIL:String = 'onFailEVENT';
 	    /**
 	     * The OBject3D object is initialized
 	     */
-	    static public const onInitEVENT:String = 'onInitEVENT';
+	    static public const INIT:String = 'onInitEVENT';
 	    /**
 	     * The load has started
 	     */
-	    static public const onLoadEVENT:String = 'onLoadEVENT';
+	    static public const LOAD:String = 'onLoadEVENT';
 		/**
 		 *  The load is in progress
 		 */
-		public static const onProgressEVENT:String = 'onProgressEVENT';
+		public static const PROGRESS:String = 'onProgressEVENT';
 		
 		public var percent:Number;
 		public var group:Group;

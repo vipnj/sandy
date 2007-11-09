@@ -4,6 +4,7 @@ package demos
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
@@ -34,11 +35,12 @@ package demos
 		public function init():void
 		{
 			var lCamera:Camera3D = new Camera3D( 640, 480 );
+			lCamera.viewport.offset = new Point( 0, 150 );
 			m_oScene = World3D.getInstance();
 			m_oScene.container = this;
 			m_oScene.camera = lCamera ;
 			lCamera.z = -400;
-			lCamera.y = 90;
+			lCamera.y = 100;
 			lCamera.lookAt( 0, 0, 0 );
 			m_oScene.root = _createScene3D();
 			m_oScene.root.addChild( lCamera );
@@ -85,10 +87,10 @@ package demos
 		{
 			var lG:Group = new Group("rootGroup");
 
-			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
+			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.QUAD );
 			m_oPlane.enableNearClipping = true;
 			var lPic:Bitmap = new Texture2();
-			var l_oMaterial:BitmapMaterial = new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 5);
+			var l_oMaterial:BitmapMaterial = new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 2);
 			m_oPlane.appearance = new Appearance( l_oMaterial );
 
 			// --

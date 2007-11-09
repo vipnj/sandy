@@ -21,6 +21,7 @@ package sandy.core.data
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.scenegraph.Geometry3D;
@@ -49,6 +50,7 @@ package sandy.core.data
 	// STATICS_______________________________________________________
 		private static var _ID_:uint = 0;
 
+		public static var POLYGON_MAP:Dictionary = new Dictionary(true);
 	// ______
 	// PUBLIC________________________________________________________
 		/**
@@ -152,6 +154,8 @@ package sandy.core.data
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID, p_nEdgesID );
 			m_oContainer = new Sprite();
+			// --
+			POLYGON_MAP[id] = this;
 		}
 
 		/**
@@ -282,17 +286,17 @@ package sandy.core.data
             var l_nPlaneConst:Number = VectorMath.dot( (vertices[0] as Vertex).getVector(), l_oNormale );
          
             // Calcul le produit scalaire Normale du plan avec le vecteur directeur du rayon
-            var PScalaireNormalePlanRayon:Number = l_oNormale.dot( l_oPoint );
+            var l_nDotNormalePlanRayon:Number = l_oNormale.dot( l_oPoint );
 
             // In case the ray is parallel to the plane
-            if( PScalaireNormalePlanRayon >= -NumberUtil.TOL && PScalaireNormalePlanRayon <= NumberUtil.TOL )
+            if( l_nDotNormalePlanRayon >= -NumberUtil.TOL && l_nDotNormalePlanRayon <= NumberUtil.TOL )
                 return null;
          
             // distance from ray to plane
-            var DistanceRayonPlan:Number = (l_oOrigineRayon.dot( l_oNormale ))/(l_oNormale.getNorm());         
+            var l_nDistRayonPlan:Number = (l_oOrigineRayon.dot( l_oNormale ))/(l_oNormale.getNorm());         
      
             // lpane distance
-            var t:Number =  - DistanceRayonPlan / PScalaireNormalePlanRayon
+            var t:Number =  - l_nDistRayonPlan / l_nDotNormalePlanRayon
      
             // No collision
             if( t < NumberUtil.TOL )
@@ -546,18 +550,31 @@ package sandy.core.data
 	        if( b && !mouseEvents )
 	        {
 	        	container.addEventListener(MouseEvent.CLICK, _onInteraction);
-	    		container.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
+	    		container.addEventListener(MouseEvent.MOUSE_UP, _onInteraction);
 	    		container.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
 	    		container.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
 	    		container.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+	    		
+				container.addEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+				container.addEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+				container.addEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+				container.addEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+				container.addEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
+    
 			}
 			else if( !b && mouseEvents )
 			{
-				container.removeEventListener(MouseEvent.CLICK, _onPress);
-				container.removeEventListener(MouseEvent.MOUSE_UP, _onPress);
-				container.removeEventListener(MouseEvent.MOUSE_DOWN, _onPress);
-				container.removeEventListener(MouseEvent.ROLL_OVER, _onRollOver);
-				container.removeEventListener(MouseEvent.ROLL_OUT, _onRollOut);
+				container.removeEventListener(MouseEvent.CLICK, _onInteraction);
+				container.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+				container.removeEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+				container.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+				container.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+				
+				container.removeEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+				container.removeEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+				container.removeEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+				container.removeEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+				container.removeEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
 	    	}
 	    	mouseEvents = b;
 		}
@@ -632,26 +649,6 @@ package sandy.core.data
 			vertices = null;
 		}
 
-		/*
-		 ***********************
-		 * EVENTS
-		 ***********************
-		*/
-
-		private function _onPress(e:MouseEvent):void
-		{
-			//dispatchEvent(e);
-		}
-
-		private function _onRollOver(e:MouseEvent):void
-		{
-			//dispatchEvent(e);
-		}
-
-		private function _onRollOut(e:MouseEvent):void
-		{
-			//dispatchEvent(e);
-		}
 
 	// _______
 	// PRIVATE_______________________________________________________

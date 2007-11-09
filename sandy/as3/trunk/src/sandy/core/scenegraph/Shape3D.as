@@ -113,7 +113,7 @@ package sandy.core.scenegraph
 		 * @param p_oAppearance		The appearance of this object. If no apperance is given, the DEFAULT_APPEARANCE will be applied.
 		 * @param p_bUseSingleContainer	Whether tis object should use a single container to draw on
 		 */	
-		public function Shape3D( p_sName:String, p_oGeometry:Geometry3D = null, p_oAppearance:Appearance = null, p_bUseSingleContainer:Boolean=true )
+		public function Shape3D( p_sName:String = "", p_oGeometry:Geometry3D = null, p_oAppearance:Appearance = null, p_bUseSingleContainer:Boolean=true )
 		{
 			super( p_sName );
 			// -- Add this graphical object to the World display list
@@ -559,10 +559,16 @@ package sandy.core.scenegraph
 	    			else
 	    			{
 	    				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
-						m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
-						m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction); 
-						m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
-						m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+			    		m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+			    		m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+			    		m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+			    		m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+			    		
+						m_oContainer.addEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+						m_oContainer.addEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+						m_oContainer.addEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+						m_oContainer.addEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+						m_oContainer.addEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
 	    			}
 				}
 			}
@@ -578,10 +584,16 @@ package sandy.core.scenegraph
     			else
     			{
     				m_oContainer.removeEventListener(MouseEvent.CLICK, _onInteraction);
-					m_oContainer.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction); //MIGRATION GUIDE: onRelease & onReleaseOutside
-					m_oContainer.removeEventListener(MouseEvent.MOUSE_DOWN, _onInteraction); 
-					m_oContainer.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);	
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);
 					m_oContainer.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+					
+					m_oContainer.removeEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+					m_oContainer.removeEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
     			}
 			}
 			m_bEv = b;

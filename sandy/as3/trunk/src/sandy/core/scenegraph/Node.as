@@ -101,7 +101,7 @@ package sandy.core.scenegraph
 		 *
 		 * @param p_sName	A string identifier for this object.
 		 */
-		public function Node( p_sName:String  )
+		public function Node( p_sName:String = "" )
 		{
 			parent = null;
 			// --

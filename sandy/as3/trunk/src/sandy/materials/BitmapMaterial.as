@@ -101,7 +101,7 @@ package sandy.materials
 			}
 			else
 			{
-				map = (m_oPolygonMatrixMap[polygon] as Matrix );
+				map = (m_oPolygonMatrixMap[polygon.id] as Matrix );
 				var v0:Vertex = l_points[0];
 	        	var v1:Vertex = l_points[1];
 	        	var v2:Vertex = l_points[2];
@@ -323,6 +323,10 @@ package sandy.materials
 		 */
 		public function set texture( p_oTexture:BitmapData ):void
 		{
+			var l_bReWrap:Boolean = false;
+			if( m_nHeight != p_oTexture.height) l_bReWrap = true;
+			else if( m_nWidth != p_oTexture.width) l_bReWrap = true;
+			// --
 			m_oTexture = p_oTexture;
 			m_nHeight = m_oTexture.height;
 			m_nWidth = m_oTexture.width;
@@ -331,10 +335,13 @@ package sandy.materials
 			m_oTexture.lock(); // not sure it is faster but it should....
 			m_orgTexture = p_oTexture.clone();
 			// -- We reinitialize the precomputed matrix
-			for( var l_sID:String in m_oPolygonMatrixMap )
+			if( l_bReWrap )
 			{
-				var l_oPoly:Polygon = m_oPolygonMatrixMap[ l_sID ] as Polygon;
-				init( l_oPoly );
+				for( var l_sID:String in m_oPolygonMatrixMap )
+				{
+					var l_oPoly:Polygon = Polygon.POLYGON_MAP[ l_sID ];
+					init( l_oPoly );
+				}
 			}
 		}
 	
@@ -379,7 +386,7 @@ package sandy.materials
 					}
 				}
 				// --
-				m_oPolygonMatrixMap[p_oPolygon] = m;
+				m_oPolygonMatrixMap[p_oPolygon.id] = m;
 			}
 		}
 		

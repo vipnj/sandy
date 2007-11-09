@@ -57,7 +57,7 @@ package sandy.core.scenegraph
 		 *			Default value is 1.0 which means unchanged. 
 		 * 			A value of 2.0 will make the object will double the size
 		 */	
-		public function Sprite2D( p_sName:String, p_oContent:DisplayObject, p_nScale:Number=1) 
+		public function Sprite2D( p_sName:String = "", p_oContent:DisplayObject = null, p_nScale:Number=1) 
 		{
 			super(p_sName);
 			m_oContainer = new Sprite();
@@ -68,7 +68,7 @@ package sandy.core.scenegraph
 	        // --
 			_nScale = p_nScale;
 			// --
-			content = p_oContent;
+			if( p_oContent ) content = p_oContent;
 			
 			setBoundingSphereRadius( 30 );
 		}

@@ -60,7 +60,7 @@ package sandy.core.scenegraph
 		 *
 		 * @param p_nOffset 	A number between [0-360] to give a frame offset into the clip.
 		 */
-		public function Sprite3D( p_sName:String, p_oContent:MovieClip, p_nScale:Number=1, p_nOffset:Number=0 )
+		public function Sprite3D( p_sName:String = "", p_oContent:MovieClip = null, p_nScale:Number=1, p_nOffset:Number=0 )
 		{
 			super(p_sName);
 			m_oContainer = new Sprite();
@@ -71,7 +71,7 @@ package sandy.core.scenegraph
 	        // --
 			_nScale = p_nScale;
 			// --
-			content = p_oContent;
+			if( p_oContent )content = p_oContent;
 			// --
 			_dir = new Vertex( 0, 0, -1 );
 			_vView = new Vector( 0, 0, 1 );

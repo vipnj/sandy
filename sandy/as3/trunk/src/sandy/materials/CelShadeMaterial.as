@@ -36,7 +36,7 @@
 		 * @param p_nOutlineAlpha	The alpha of the outline - Default 1, value range ( 0 - 1 )
 		 * @param p_nOutlineColor	The color map of the fills. Must be an array of 11 values. Fractional numbers from (0 - 2) work best. - Default null
 		 */
-		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:umber = 1, p_aColorMap:Array = null )
+		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:Number = 1, p_aColorMap:Array = null )
 		{
 			super(p_nOutlineThickness, p_nOutlineColor, p_nOutlineAlpha, p_oAttr);
 			// --

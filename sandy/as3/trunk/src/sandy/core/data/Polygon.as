@@ -49,7 +49,13 @@ package sandy.core.data
 	// _______
 	// STATICS_______________________________________________________
 		private static var _ID_:uint = 0;
-
+		
+		/**
+		 * This property lists all the polygons.
+		 * This is an helping property since it allows to retrieve a polygon instance from its unique ID.
+		 * Polygon objects have an unique ID with myPolygon.id.
+		 * Using : Polygon.POLYGON_MAP[myPolygon.id] returns myPolygon (for sure this example has no interesst except showing the use of the property.
+		 */
 		public static var POLYGON_MAP:Dictionary = new Dictionary(true);
 	// ______
 	// PUBLIC________________________________________________________
@@ -61,6 +67,7 @@ package sandy.core.data
 
 		/**
 		 * [READ-ONLY] property.
+		 * Link to the Shape3D instance this polygon is related too.
 		 */
 		public var shape:Shape3D;
 		
@@ -72,14 +79,17 @@ package sandy.core.data
 		
 		/**
 		 * [READ-ONLY] property.
+		 * Specify if the polygon has been clipped
 		 */
 		public var isClipped:Boolean = false;
 		/**
 		 * [READ-ONLY] property.
+		 * Array of clipped vertices. Check isClipped property first to see if this array shall be containing the useful data or not.
 		 */
 		public var cvertices:Array;
 		/**
 		 * [READ-ONLY] property.
+		 * Array of original vertices.
 		 */
 		public var vertices:Array;
 		/**
@@ -124,14 +134,17 @@ package sandy.core.data
 		
 		/**
 		 * [READ-ONLY] property.
+		 * Min values of this polygon
 		 */
 		public var minBounds:Vector = new Vector();
 		/**
 		 * [READ-ONLY] property.
+		 * Max values of this polygon
 		 */
 		public var maxBounds:Vector = new Vector();
 		/**
 		 * [READ-ONLY] property.
+		 * Mean values of this polygon
 		 */
 		public var meanBounds:Vector = new Vector();
 

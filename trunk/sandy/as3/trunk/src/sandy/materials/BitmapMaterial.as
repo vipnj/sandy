@@ -33,8 +33,7 @@ package sandy.materials
 	import sandy.util.NumberUtil;
 	
 	/**
-	 * Displays a bitmap on the faces of a 3D shape.
-	 * Note : The lightening isn't managed by this material for the moment.
+	 * Displays a bitmap on the faces of a 3D shape..
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @author		Xavier Martin - zeflasher - transparency managment
@@ -43,15 +42,22 @@ package sandy.materials
 	 */
 	public class BitmapMaterial extends Material
 	{
-		public static const ORIGIN:Point = new Point();	
 		
-		public var matrix:Matrix = new Matrix();
-		// --
+		/**
+		 * This property enable smooth bitmap rendering when set to true.
+		 * The default value is set to false to have the best performance first.
+		 * Enable this property have a performance impact, use it warefully
+		 */
 		public var smooth:Boolean = false;
 		
+		/**
+		 * Precision of the bitmap mapping.
+		 * This material uses an affine linear mapping. It results in a lack of accuracy at rendering time when the surface to draw is too big.
+		 * An usual solution is to augment the number of polygon, but the performance cost can be quite big.
+		 * An other solution is to change this property value. The lower to more accurate the perspective correction is.
+		 * To disable the perspective correction, set this property to zero, which is also the default value
+		 */
 		public var precision:uint = 0;
-		
-		private var m_nRecLevel:int = 0;
 		
 		/**
 		 * Creates a new BitmapMaterial.
@@ -386,8 +392,10 @@ package sandy.materials
 		private var m_nInvHeight:Number;
 		private var m_nInvWidth:Number;
 		
+		private var m_nRecLevel:int = 0;
 		protected var m_oPolygonMatrixMap:Dictionary;
 		private var m_oPoint:Point = new Point();
 		private var m_oCmf:ColorMatrixFilter;
+		protected var matrix:Matrix = new Matrix();
 	}
 }

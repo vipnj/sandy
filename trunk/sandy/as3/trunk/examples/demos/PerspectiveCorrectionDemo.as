@@ -87,10 +87,10 @@ package demos
 		{
 			var lG:Group = new Group("rootGroup");
 
-			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.QUAD );
+			m_oPlane = new Plane3D("myPlane", 300, 300, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableNearClipping = true;
 			var lPic:Bitmap = new Texture2();
-			var l_oMaterial:BitmapMaterial = new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes() ), 2);
+			var l_oMaterial:BitmapMaterial = new BitmapMaterial( lPic.bitmapData, new MaterialAttributes( new LineAttributes(3, 0xFF) ), 2);
 			m_oPlane.appearance = new Appearance( l_oMaterial );
 
 			// --

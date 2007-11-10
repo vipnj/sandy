@@ -118,27 +118,7 @@ package sandy.materials
 		        }
 			}
 			// --
-			if( attributes.lineAttributes ) attributes.lineAttributes.draw( graphics, polygon, l_points );
-			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( graphics, polygon, l_points );
-			if( _useLight && attributes.lightAttributes )
-			{
-				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();//getWorldVector();
-				polygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
-				// TODO implement bright management
-				var lightStrength:Number = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;				
-				// --
-				if( attributes.lightAttributes.useBright) 
-					graphics.beginFill( (lightStrength < 0.5) ? 0 : 0xFFFFFF, (lightStrength < 0.5) ? (1-2 * lightStrength) : (2 * lightStrength - 1) );
-				else 
-					graphics.beginFill( 0, 1-lightStrength );
-				// --
-				graphics.moveTo( l_points[0].sx, l_points[0].sy );
-				for each( var l_oVertex:Vertex in l_points )
-				{
-					graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-				}
-				graphics.endFill();
-			}
+			if( attributes )  attributes.draw( graphics, polygon, this, p_oScene ) ;
 			// --
 			l_points = null;
 			l_uv = null;

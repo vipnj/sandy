@@ -80,7 +80,7 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, 0xFF0000 );
+			m_oTexture.fillRect( m_oTexture.rect, 0xFF000000 );
 			// --
 			m_oTexture.draw( m_oMovie );
 		}

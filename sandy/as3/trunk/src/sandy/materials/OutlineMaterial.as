@@ -41,7 +41,6 @@ package sandy.materials
 		 * @param p_nThickness	The thickness of the lines - Default 1
 		 * @param p_nColor 	The color of the lines - Default 0
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
-		 * @param p_oLineAttr The line attributes object
 		 */
 		public function OutlineMaterial( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes = null )
 		{
@@ -49,7 +48,7 @@ package sandy.materials
 			// --
 			m_nType = MaterialType.OUTLINE;
 			// --
-			attributes.outlineAttributes = new OutlineAttributes( p_nThickness, p_nColor, p_nAlpha );
+			attributes.attributes.push( new OutlineAttributes( p_nThickness, p_nColor, p_nAlpha ) );
 		}
 
 		/**
@@ -61,8 +60,7 @@ package sandy.materials
 		 */		
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			attributes.outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
-			if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
+			attributes.draw( p_mcContainer.graphics, p_oPolygon, this, p_oScene );
 		}
 
 	}

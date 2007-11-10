@@ -18,8 +18,10 @@ package sandy.materials.attributes
 {
 	import flash.display.Graphics;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
+	import sandy.materials.Material;
 	
 	/**
 	 * Holds all line attribute data for a material.
@@ -108,15 +110,23 @@ package sandy.materials.attributes
 			modified = true;
 		}
 		
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_aPoints:Array ):void
+		/**
+		 * Draw the edges of the polygon into the graphics object.
+		 *  
+		 * @param p_oGraphics the Graphics object to draw attributes into
+		 * @param p_oPolygon the polygon which is going o be drawn
+		 * @param p_oMaterial the refering material
+		 * @param p_oScene the scene
+		 */
+		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
-			const l_points:Array = p_aPoints;
+			var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;
 			var l_oVertex:Vertex;
 			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
 			// --
-			p_oGraphics.moveTo( l_points[0].sx, l_points[0].sy );
-			var lId:int = l_points.length;
-			while( l_oVertex = l_points[ --lId ] )
+			p_oGraphics.moveTo( l_aPoints[0].sx, l_aPoints[0].sy );
+			var lId:int = l_aPoints.length;
+			while( l_oVertex = l_aPoints[ --lId ] )
 				p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
 		}
 	}

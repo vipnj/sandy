@@ -17,22 +17,29 @@ limitations under the License.
 
 package sandy.materials.attributes
 {
+	import flash.display.Graphics;
+	
+	import sandy.core.Scene3D;
+	import sandy.core.data.Polygon;
+	import sandy.materials.Material;
+	
 	public class MaterialAttributes
 	{
-		public var lineAttributes:LineAttributes = null;
-		
-		public var outlineAttributes:OutlineAttributes = null;
-		
-		public var lightAttributes:LightAttributes = null;
+		public var attributes:Array = new Array();
 		
 		public function MaterialAttributes( ...args )
 		{
-			for each( var l_oAtt:IAttributes in args )
+			for( var i:int = 0; i < args.length; i++ )
 			{
-				if( l_oAtt is LineAttributes ) lineAttributes = l_oAtt as LineAttributes;
-				else if( l_oAtt is OutlineAttributes ) outlineAttributes = l_oAtt as OutlineAttributes;
-				else if( l_oAtt is LightAttributes ) lightAttributes = l_oAtt as LightAttributes;
+				if( args[i] is IAttributes )
+					attributes.push( args[i] );
 			}
+		}
+		
+		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			for each( var l_oAttr:IAttributes in attributes )
+				l_oAttr.draw( p_oGraphics, p_oPolygon, p_oMaterial, p_oScene );
 		}
 	}
 }

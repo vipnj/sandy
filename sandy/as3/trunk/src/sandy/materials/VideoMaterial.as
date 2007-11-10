@@ -54,7 +54,7 @@ package sandy.materials
 		 */
 		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, 0xFF0000 ), p_oAttr );
+			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, 0xFF000000 ), p_oAttr );
 			m_oVideo = p_oVideo;
 			m_nType = MaterialType.VIDEO;
 			// --
@@ -80,7 +80,7 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, 0xFF0000 );
+			m_oTexture.fillRect( m_oTexture.rect, 0xFF000000 );
 			// --
 			m_oTexture.draw( m_oVideo, null, null, null, null, true );
 		}

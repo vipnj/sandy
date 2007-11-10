@@ -45,6 +45,13 @@ package sandy.materials
 		public var useVertexNormal:Boolean = false;
 		
 		/**
+		 * Specify is the material can receive light and apply the lightAttributes if specified.
+		 * Can be useful to disable very rapidly the light when unused.
+		 * Default value : false
+		 */
+		public var lightingEnable:Boolean = false;
+		
+		/**
 		 * Creates a matrial.
 		 *
 		 * <p>This constructor is never called directly - but by sub class constructors</p>
@@ -96,20 +103,6 @@ package sandy.materials
 		public function get type():MaterialType
 		{ 
 			return m_nType; 
-		}
-		
-		/**
-		 * Is the light enabled for this material?.
-		 *		
-		 * <p>true if this material uses light, false otherwise.</p>
-		 */
-		public function set lightingEnable ( p_bBool:Boolean ):void
-		{
-			if( _useLight != p_bBool )
-			{
-				_useLight = p_bBool;
-				m_bModified = true;
-			}		
 		}
 		
 		/**

@@ -26,17 +26,17 @@
 		private var m_nAlpha:Number;
 		private var lightingMap:Array;
 		/**
-		 * Creates a new CelShadeMaterial.
-		 *
+		 * CelShadeMaterial is still an experimental material. You should not use it unless you perfectly know what you are doing.
+		 * This material may change in the future version of the library.
+		 * <strong> CelShadeMaterial does not supper MaterialAttributes! </strong>
 		 * @param p_nColor	The color of the fills - Default 0
 		 * @param p_nAlpha 	The alpha of the fills - Default 1, value range ( 0 - 1 )
 		 * @param p_nOutlineThickness	The thickness of the outline - Default 1
 		 * @param p_nOutlineColor	The color of the outline - Default 0
 		 * @param p_nOutlineAlpha	The alpha of the outline - Default 1, value range ( 0 - 1 )
 		 * @param p_nOutlineColor	The color map of the fills. Must be an array of 11 values. Fractional numbers from (0 - 2) work best. - Default null
-		 * @param p_oAttr	The attributes for this material
 		 */
-		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:umber = 1, p_aColorMap:Array = null, p_oAttr:MaterialAttributes = null )
+		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:umber = 1, p_aColorMap:Array = null )
 		{
 			super(p_nOutlineThickness, p_nOutlineColor, p_nOutlineAlpha, p_oAttr);
 			// --
@@ -62,7 +62,7 @@
 		 */
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
         {
-           const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
+            const l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
             const l_graphics:Graphics = p_mcContainer.graphics;
             var l_nCol:uint = m_nColor;
             var c:Camera3D     = p_oScene.camera;
@@ -80,12 +80,6 @@
             b = b * lightingMap[Math.round(dot * 10)];
             l_nCol =  r << 16 | g << 8 |  b;
 
-			if (attributes)
-			{
-				if( attributes.outlineAttributes) attributes.outlineAttributes.draw( l_graphics, p_oPolygon, p_oPolygon.vertices );
-				if( attributes.lineAttributes ) attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, p_oPolygon.vertices );
-			}
-
            	l_graphics.lineStyle(0,0,0);
             l_graphics.beginFill( l_nCol, m_nAlpha );
             l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
@@ -94,7 +88,6 @@
                 l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
             }
             l_graphics.endFill();
-
         }
 
 

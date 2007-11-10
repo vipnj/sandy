@@ -19,14 +19,21 @@ package sandy.materials.attributes
 {
 	import flash.display.Graphics;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.materials.Material;
 	
 	/**
 	 * Interface for all the elements that represent a material attribute property.
-	 * This interface is more for a typing purpose (kind of typedef).
+	 * This interface is really important to make the attributes thing really flexible and make users extends it.
+	 * 
+	 * @param p_oGraphics the Graphics object to draw attributes into
+	 * @param p_oPolygon the polygon which is going o be drawn
+	 * @param p_oMaterial the refering material
+	 * @param p_oScene the scene
 	 */
 	public interface IAttributes
 	{
-		function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_aPoints:Array ):void;		
+		function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void;		
 	}
 }

@@ -28,9 +28,6 @@ package demos
 			super();
 		}
 		
-		private var m_nTotal:int = 0;
-		private var m_nIteration:int = 0;
-		
 		private var world:World3D = World3D.getInstance();
 		private var shape:SkyBox;
 		private var planeNames:Array;
@@ -106,8 +103,7 @@ package demos
 		private function createScene():Group
 		{
 			var root:Group = new Group("root");
-			shape = new SkyBox( "pano", 300, 10, 10, false );
-			//shape.bottom.enableBackFaceCulling = false;
+			shape = new SkyBox( "pano", 300, 9, 9, false );
 			root.addChild( shape );
 			return root;
 		}
@@ -120,17 +116,8 @@ package demos
 				camera.rotateY -= 5*(( this.mouseX - (stage.stageWidth/2)  ) / stage.stageWidth);
 				camera.tilt = NumberUtil.constrain( camera.tilt + 5*(( this.mouseY - (stage.stageHeight/2) )/stage.stageHeight), -89, 89 );
 
-				if( m_nIteration == 1000 )
-				{
-					trace( (m_nTotal / 1000)+" ms de rendu moyen");
-				}
-				else
-				{
-					m_nIteration ++;
-					var t:int = getTimer();
-					world.render();
-					m_nTotal += ( getTimer() - t );
-				}
+				world.render();
+
 			}
 		}
 	}

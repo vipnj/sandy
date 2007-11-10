@@ -72,42 +72,16 @@ package sandy.materials
 			var l_oVertex:Vertex;
 			var lId:int = l_points.length;
 			var l_graphics:Graphics = p_mcContainer.graphics;
-
-			var l_nCol:uint = m_nColor;
-			if( _useLight && attributes.lightAttributes )
-			{
-				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();
-				p_oPolygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
-				// SEEMS TO BE A PROBLEM HERE WITH SOME COLORS AND BRIGHT
-				var lightStrength:Number = p_oScene.light.calculate( l_oNormal ) + attributes.lightAttributes.ambient;
-				
-				if( attributes.lightAttributes.useBright )
-				{
-					l_nCol = ColorUtil.calculateLitColour(l_nCol, lightStrength);
-				}
-				else
-				{
-					var r:Number = ( l_nCol >> 16 )	& 0xFF;
-					var g:Number = ( l_nCol >> 8 )	& 0xFF;
-					var b:Number = ( l_nCol ) 	 	& 0xFF;
-					// --
-					r = NumberUtil.constrain( r*lightStrength, 0, 255 );
-					g = NumberUtil.constrain( g*lightStrength, 0, 255 );
-					b = NumberUtil.constrain( b*lightStrength, 0, 255 );
-					// --
-					l_nCol = r << 16 | g << 8 |  b;
-				}
-			}
 			// --
 			l_graphics.lineStyle();
-			l_graphics.beginFill( l_nCol, m_nAlpha );
+			l_graphics.beginFill( m_nColor, m_nAlpha );
 			l_graphics.moveTo( l_points[0].sx, l_points[0].sy );
 			while( l_oVertex = l_points[ --lId ] )
 				l_graphics.lineTo( l_oVertex.sx, l_oVertex.sy );
 			l_graphics.endFill();
 			// --
-			if( attributes.lineAttributes ) attributes.lineAttributes.draw( l_graphics, p_oPolygon, l_points );
-			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( l_graphics, p_oPolygon, l_points );
+			if( attributes )  attributes.draw( l_graphics, p_oPolygon, this, p_oScene ) ;
+
 		}
 
 		/**

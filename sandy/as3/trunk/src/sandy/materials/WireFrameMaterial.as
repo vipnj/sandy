@@ -48,7 +48,7 @@ package sandy.materials
 			// --
 			m_nType = MaterialType.WIREFRAME;
 			// --
-			attributes.lineAttributes = new LineAttributes( p_nThickness, p_nColor,p_nAlpha ) ;
+			attributes.attributes.push( new LineAttributes( p_nThickness, p_nColor,p_nAlpha ) ) ;
 
 		}
 
@@ -61,8 +61,7 @@ package sandy.materials
 		 */		
 		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
 		{
-			attributes.lineAttributes.draw( p_mcContainer.graphics, p_oPolygon, (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices );
-			if( attributes.outlineAttributes ) attributes.outlineAttributes.draw( p_mcContainer.graphics, p_oPolygon, (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices );
+			attributes.draw( p_mcContainer.graphics, p_oPolygon, this, p_oScene );
 		}
 
 	}

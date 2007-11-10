@@ -18,9 +18,10 @@ package sandy.materials.attributes
 {
 	import flash.display.Graphics;
 	
+	import sandy.core.Scene3D;
 	import sandy.core.data.Edge3D;
 	import sandy.core.data.Polygon;
-	import sandy.materials.attributes.IAttributes;
+	import sandy.materials.Material;
 	
 	/**
 	 * Holds all outline attributes data for a material.
@@ -108,8 +109,16 @@ package sandy.materials.attributes
 			m_nThickness = p_nValue; 
 			modified = true;
 		}
-		
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_aPoints:Array ):void
+	
+		/**
+		 * Draw the outline edges of the polygon into the graphics object.
+		 *  
+		 * @param p_oGraphics the Graphics object to draw attributes into
+		 * @param p_oPolygon the polygon which is going o be drawn
+		 * @param p_oMaterial the refering material
+		 * @param p_oScene the scene
+		 */
+		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
 			var l_oEdge:Edge3D;
 			var l_oPolygon:Polygon;

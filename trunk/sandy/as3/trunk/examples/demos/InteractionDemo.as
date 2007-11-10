@@ -122,9 +122,7 @@ package demos
 			m_oPlane.useSingleContainer = false;
 			m_oPlane.enableEvents = true;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onClick );
-			m_oPlane.enableForcedDepth = true;
-			m_oPlane.forcedDepth = 999999999999;
-			
+
 			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineAttributes() );
 			m_oPlane.appearance = new Appearance( new BitmapMaterial( texture, l_oAttr ) );
 			m_oPlane.enableNearClipping = true;

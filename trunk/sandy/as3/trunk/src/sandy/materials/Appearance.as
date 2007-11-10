@@ -41,7 +41,7 @@ package sandy.materials
 		public function Appearance( p_oFront:Material=null, p_oBack:Material=null )
 		{
 			m_oFrontMaterial = (p_oFront != null) 	? p_oFront :	new ColorMaterial();
-			m_oBackMaterial  = (p_oBack != null) 	? p_oBack  :	p_oFront;
+			m_oBackMaterial  = (p_oBack != null) 	? p_oBack  :	m_oFrontMaterial;
 		}
 		
 		/**

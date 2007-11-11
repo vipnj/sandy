@@ -44,7 +44,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <p></p>
   Displays the faces of a 3D shape as a Cel Shaded Material (polygon based cel shading).
     <p>Material which draws in CelShading style using a lighting map and outlines.</p>
-    <p></p>
+  <p>Please note that this material does not handle the lightAttributes!</p>
+  <p></p>
 <br>
 <hr>
 </div>
@@ -89,8 +90,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lightingEnable">lightingEnable</a> : Boolean<div class="summaryTableDescription">
-   Is the light enabled for this material?.</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lightingEnable">lightingEnable</a> : Boolean = false<div class="summaryTableDescription">
+   Specify is the material can receive light and apply the lightAttributes if specified.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -165,9 +166,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#CelShadeMaterial()">CelShadeMaterial</a>(p_nColor:uint = 0, p_nAlpha:uint = 100, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:uint = 100, p_aColorMap:Array = null, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</div>
+<a class="signatureLink" href="#CelShadeMaterial()">CelShadeMaterial</a>(p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:Number = 1, p_aColorMap:Array = null)</div>
 <div class="summaryTableDescription">
-   Creates a new CelShadeMaterial.</div>
+   CelShadeMaterial is still an experimental material.</div>
 </td><td class="summaryTableOwnerCol">CelShadeMaterial</td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -232,9 +233,11 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function CelShadeMaterial(p_nColor:uint = 0, p_nAlpha:uint = 100, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:uint = 100, p_aColorMap:Array = null, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</code><p>
-   Creates a new CelShadeMaterial.
-      </p><span class="label">Parameters</span>
+<code>public function CelShadeMaterial(p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:Number = 1, p_aColorMap:Array = null)</code><p>
+   CelShadeMaterial is still an experimental material. You should not use it unless you perfectly know what you are doing.
+   This material may change in the future version of the library.
+   <strong> CelShadeMaterial does not supper MaterialAttributes! </strong>
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nColor</span>:uint</code> (default = <code>0</code>)<code></code> &mdash; The color of the fills - Default 0
@@ -244,7 +247,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nAlpha</span>:uint</code> (default = <code>100</code>)<code></code> &mdash;  The alpha of the fills - Default 100, value range ( 0 - 100 )
+<td width="20px"></td><td><code><span class="label">p_nAlpha</span>:Number</code> (default = <code>1</code>)<code></code> &mdash;  The alpha of the fills - Default 1, value range ( 0 - 1 )
    </td>
 </tr>
 <tr>
@@ -265,7 +268,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nOutlineAlpha</span>:uint</code> (default = <code>100</code>)<code></code> &mdash; The alpha of the outline - Default 100, value range ( 0 - 100 )
+<td width="20px"></td><td><code><span class="label">p_nOutlineAlpha</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; The alpha of the outline - Default 1, value range ( 0 - 1 )
    </td>
 </tr>
 <tr>
@@ -273,13 +276,6 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_aColorMap</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; The color map of the fills. Must be an array of 11 values. Fractional numbers from (0 - 2) work best. - Default null
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">p_oAttr</span>:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a></code> (default = <code>null</code>)<code></code> &mdash; The attributes for this material
    </td>
 </tr>
 </table>

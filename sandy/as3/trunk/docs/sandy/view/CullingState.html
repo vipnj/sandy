@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="CullingState,sandy.view.CullingState,INTERSECT,INSIDE,OUTSIDE,toString" name="keywords">
+<meta content="CullingState,sandy.view.CullingState,INSIDE,INTERSECT,OUTSIDE,toString" name="keywords">
 <title>sandy.view.CullingState</title>
 </head>
 <body>
@@ -19,7 +19,7 @@
 <td align="left" class="titleTableTitle">Sandy 3.0 RC1</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?sandy/view/CullingState.html&amp;sandy/view/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;CullingState</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;CullingState</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
 </tr>
 <tr class="titleTableRow3">
 <td colspan="2">&nbsp;</td>
@@ -27,7 +27,7 @@
 </table>
 <script type="text/javascript" language="javascript">
 <!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class CullingState"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class CullingState"); titleBar_setSubNav(true,false,false,false,false,false,true,false,false,false,false,false,false,false);}
 --></script>
 <div class="MainContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable">
@@ -45,34 +45,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
     <p></p>
 <br>
 <hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INSIDE">INSIDE</a> : <a href="../view/CullingState.html">CullingState</a>
-<div class="summaryTableDescription">[static][read-only]
-   INSIDE means that the object is completely inside the frustum, and should be rendered.</div>
-</td><td class="summaryTableOwnerCol">CullingState</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INTERSECT">INTERSECT</a> : <a href="../view/CullingState.html">CullingState</a>
-<div class="summaryTableDescription">[static][read-only]
-   INTERSECT means that the object intersects one or more planes of the frustum, 
-   and should be partly rendered.</div>
-</td><td class="summaryTableOwnerCol">CullingState</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#OUTSIDE">OUTSIDE</a> : <a href="../view/CullingState.html">CullingState</a>
-<div class="summaryTableDescription">[static][read-only]
-   OUTSIDE means that the object is completely outside the frustum, and should not be rendered..</div>
-</td><td class="summaryTableOwnerCol">CullingState</td>
-</tr>
-</table>
 </div>
 <a name="methodSummary"></a>
 <div class="summarySection">
@@ -98,56 +70,39 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 </div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INSIDE">INSIDE</a> : <a href="../view/CullingState.html">CullingState</a>
+<div class="summaryTableDescription">[static]
+   INSIDE means that the object is completely inside the frustum, and should be rendered.</div>
+</td><td class="summaryTableOwnerCol">CullingState</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INTERSECT">INTERSECT</a> : <a href="../view/CullingState.html">CullingState</a>
+<div class="summaryTableDescription">[static]
+   INTERSECT means that the object intersects one or more planes of the frustum, 
+   and should be partly rendered.</div>
+</td><td class="summaryTableOwnerCol">CullingState</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#OUTSIDE">OUTSIDE</a> : <a href="../view/CullingState.html">CullingState</a>
+<div class="summaryTableDescription">[static]
+   OUTSIDE means that the object is completely outside the frustum, and should not be rendered..</div>
+</td><td class="summaryTableOwnerCol">CullingState</td>
+</tr>
+</table>
+</div>
 <script type="text/javascript" language="javascript">
 <!--
 showHideInherited();
 --></script>
 <div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="INSIDE"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">INSIDE</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>INSIDE:<a href="../view/CullingState.html">CullingState</a></code>&nbsp;&nbsp;[read-only]<p>
-   INSIDE means that the object is completely inside the frustum, and should be rendered.
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get INSIDE():<a href="../view/CullingState.html">CullingState</a></code>
-<br>
-</div>
-<a name="INTERSECT"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">INTERSECT</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>INTERSECT:<a href="../view/CullingState.html">CullingState</a></code>&nbsp;&nbsp;[read-only]<p>
-   INTERSECT means that the object intersects one or more planes of the frustum, 
-   and should be partly rendered.
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get INTERSECT():<a href="../view/CullingState.html">CullingState</a></code>
-<br>
-</div>
-<a name="OUTSIDE"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">OUTSIDE</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>OUTSIDE:<a href="../view/CullingState.html">CullingState</a></code>&nbsp;&nbsp;[read-only]<p>
-   OUTSIDE means that the object is completely outside the frustum, and should not be rendered..
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get OUTSIDE():<a href="../view/CullingState.html">CullingState</a></code>
-<br>
-</div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="CullingState()"></a>
@@ -184,6 +139,39 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="INSIDE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">INSIDE</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const INSIDE:<a href="../view/CullingState.html">CullingState</a></code><p>
+   INSIDE means that the object is completely inside the frustum, and should be rendered.
+   </p></div>
+<a name="INTERSECT"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">INTERSECT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const INTERSECT:<a href="../view/CullingState.html">CullingState</a></code><p>
+   INTERSECT means that the object intersects one or more planes of the frustum, 
+   and should be partly rendered.
+   </p></div>
+<a name="OUTSIDE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">OUTSIDE</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const OUTSIDE:<a href="../view/CullingState.html">CullingState</a></code><p>
+   OUTSIDE means that the object is completely outside the frustum, and should not be rendered..
+   </p></div>
 <br>
 <br>
 <hr>

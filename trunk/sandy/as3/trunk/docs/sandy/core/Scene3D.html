@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="Scene3D,sandy.core.Scene3D,camera,root,container,light,render,dispose" name="keywords">
+<meta content="Scene3D,sandy.core.Scene3D,camera,container,root,light,rectClipping,dispose,render" name="keywords">
 <title>sandy.core.Scene3D</title>
 </head>
 <body>
@@ -92,6 +92,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Scene3D</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#rectClipping">rectClipping</a> : Boolean<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Scene3D</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#root">root</a> : <a href="scenegraph/Group.html">Group</a>
 <div class="summaryTableDescription">
    The root of the scene graph for this scene.</div>
@@ -109,7 +113,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#Scene3D()">Scene3D</a>(p_sName:String, p_oContainer:Sprite, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a>, p_oRootNode:<a href="scenegraph/Group.html">Group</a>)</div>
+<a class="signatureLink" href="#Scene3D()">Scene3D</a>(p_sName:String, p_oContainer:Sprite, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a> = null, p_oRootNode:<a href="scenegraph/Group.html">Group</a> = null)</div>
 <div class="summaryTableDescription">
    Creates a new Scene.</div>
 </td><td class="summaryTableOwnerCol">Scene3D</td>
@@ -181,6 +185,20 @@ showHideInherited();
 <a href="light/Light3D.html" target="">sandy.core.light.Light3D</a>
 </div>
 </div>
+<a name="rectClipping"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">rectClipping</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>rectClipping:Boolean</code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get rectClipping():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set rectClipping(value:Boolean):void</code>
+<br>
+</div>
 <a name="root"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -200,7 +218,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function Scene3D(p_sName:String, p_oContainer:Sprite, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a>, p_oRootNode:<a href="scenegraph/Group.html">Group</a>)</code><p>
+<code>public function Scene3D(p_sName:String, p_oContainer:Sprite, p_oCamera:<a href="scenegraph/Camera3D.html">Camera3D</a> = null, p_oRootNode:<a href="scenegraph/Group.html">Group</a> = null)</code><p>
    Creates a new Scene.
       </p><p>Each scene has its own container where its 2D representation will be drawn.<br />
    The scene is automatically registered with the SceneLocator.</p>
@@ -222,14 +240,14 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oCamera</span>:<a href="scenegraph/Camera3D.html">Camera3D</a></code> &mdash; The single camera for this scene
+<td width="20px"></td><td><code><span class="label">p_oCamera</span>:<a href="scenegraph/Camera3D.html">Camera3D</a></code> (default = <code>null</code>)<code></code> &mdash; The single camera for this scene
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oRootNode</span>:<a href="scenegraph/Group.html">Group</a></code> &mdash; The root group of the object tree for this scene
+<td width="20px"></td><td><code><span class="label">p_oRootNode</span>:<a href="scenegraph/Group.html">Group</a></code> (default = <code>null</code>)<code></code> &mdash; The root group of the object tree for this scene
    </td>
 </tr>
 </table>

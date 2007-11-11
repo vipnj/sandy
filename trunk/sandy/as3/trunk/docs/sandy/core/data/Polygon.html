@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Polygon,sandy.core.data.Polygon,id,owner,isClipped,cvertices,vertices,vertexNormals,normal,aUVCoord,aEdges,caUVCoord,uvBounds,backfaceCulling,aNeighboors,minBounds,maxBounds,meanBounds,m_oContainer,m_oVisibilityRef,m_oEB,broadcaster,visible,container,depth,appearance,addEventListener,removeEventListener,precompute,clip,clipFrontPlane,getZAverage,getZMinimum,clear,display,toString,enableEvents,_onInteraction,createNormal,swapCulling,destroy" name="keywords">
+<meta content="Polygon,sandy.core.data.Polygon,POLYGON_MAP,aEdges,aNeighboors,aUVCoord,backfaceCulling,caUVCoord,cvertices,id,isClipped,m_oContainer,m_oEB,m_oVisibilityRef,maxBounds,meanBounds,minBounds,normal,scene,shape,uvBounds,vertexNormals,vertices,broadcaster,container,visible,appearance,depth,_onInteraction,addEventListener,clear,clip,clipFrontPlane,computeVisibility,createNormal,destroy,display,enableEvents,get3DFrom2D,getUVFrom2D,precomputeBounds,removeEventListener,swapCulling,toString" name="keywords">
 <title>sandy.core.data.Polygon</title>
 </head>
 <body>
@@ -137,7 +137,18 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#owner">owner</a> : <a href="../scenegraph/Shape3D.html">Shape3D</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#POLYGON_MAP">POLYGON_MAP</a> : Dictionary<div class="summaryTableDescription">[static]
+   This property lists all the polygons.</div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#scene">scene</a> : <a href="../../core/Scene3D.html">Scene3D</a>
+<div class="summaryTableDescription">
+   [READ-ONLY] property.</div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#shape">shape</a> : <a href="../scenegraph/Shape3D.html">Shape3D</a>
 <div class="summaryTableDescription">
    [READ-ONLY] property.</div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
@@ -237,6 +248,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#computeVisibility()">computeVisibility</a>():void</div>
+<div class="summaryTableDescription">
+   Pre-compute several properties of the polygon in the same time.</div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#createNormal()">createNormal</a>():<a href="../data/Vector.html">Vector</a>
 </div>
 <div class="summaryTableDescription">
@@ -270,23 +289,32 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#getZAverage()">getZAverage</a>():Number</div>
+<a class="signatureLink" href="#get3DFrom2D()">get3DFrom2D</a>(p_oScreenPoint:Point):<a href="../data/Vector.html">Vector</a>
+</div>
 <div class="summaryTableDescription">
-   Returns the depth average of this face.</div>
+   Returns the real 3D position of the 2D screen position.</div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#getZMinimum()">getZMinimum</a>():Number</div>
+<a class="signatureLink" href="#getUVFrom2D()">getUVFrom2D</a>(p_oScreenPoint:Point):<a href="../data/UVCoord.html">UVCoord</a>
+</div>
 <div class="summaryTableDescription">
-   Returns the minimum depth of this face.</div>
+   Get the UVCoord under the 2D screen position after a mouse click or something
+   The 2D position is usually coming from :
+   <div class='listing'><pre>
+   var l_nClicX:Number = m_oScene.container.mouseX;
+         var l_nClicY:Number = m_oScene.container.mouseY;
+         </pre></div>
+         
+         </div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#precompute()">precompute</a>():void</div>
+<a class="signatureLink" href="#precomputeBounds()">precomputeBounds</a>():void</div>
 <div class="summaryTableDescription">
    Pre-compute several properties of the polygon in the same time.</div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
@@ -460,6 +488,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public var cvertices:Array</code><p>
    [READ-ONLY] property.
+   Array of clipped vertices. Check isClipped property first to see if this array shall be containing the useful data or not.
    </p></div>
 <a name="depth"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -486,6 +515,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public var isClipped:Boolean = false</code><p>
    [READ-ONLY] property.
+   Specify if the polygon has been clipped
    </p></div>
 <a name="maxBounds"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -496,6 +526,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public var maxBounds:<a href="../data/Vector.html">Vector</a></code><p>
    [READ-ONLY] property.
+   Max values of this polygon
    </p></div>
 <a name="meanBounds"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -506,6 +537,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public var meanBounds:<a href="../data/Vector.html">Vector</a></code><p>
    [READ-ONLY] property.
+   Mean values of this polygon
    </p></div>
 <a name="minBounds"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -516,6 +548,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public var minBounds:<a href="../data/Vector.html">Vector</a></code><p>
    [READ-ONLY] property.
+   Min values of this polygon
    </p></div>
 <a name="m_oContainer"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -554,15 +587,40 @@ showHideInherited();
 <code>public var normal:<a href="../data/Vertex.html">Vertex</a></code><p>
    [READ-ONLY] property.
    </p></div>
-<a name="owner"></a>
+<a name="POLYGON_MAP"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">owner</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">POLYGON_MAP</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public var owner:<a href="../scenegraph/Shape3D.html">Shape3D</a></code><p>
+<code>public static var POLYGON_MAP:Dictionary</code><p>
+   This property lists all the polygons.
+   This is an helping property since it allows to retrieve a polygon instance from its unique ID.
+   Polygon objects have an unique ID with myPolygon.id.
+   Using : Polygon.POLYGON_MAP[myPolygon.id] returns myPolygon (for sure this example has no interesst except showing the use of the property.
+   </p></div>
+<a name="scene"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">scene</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var scene:<a href="../../core/Scene3D.html">Scene3D</a></code><p>
    [READ-ONLY] property.
+   Refers to the Scene3D the shape is linked to.
+   </p></div>
+<a name="shape"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">shape</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var shape:<a href="../scenegraph/Shape3D.html">Shape3D</a></code><p>
+   [READ-ONLY] property.
+   Link to the Shape3D instance this polygon is related too.
    </p></div>
 <a name="uvBounds"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -594,6 +652,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public var vertices:Array</code><p>
    [READ-ONLY] property.
+   Array of original vertices.
    </p></div>
 <a name="visible"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -624,7 +683,7 @@ showHideInherited();
       </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oOwner</span>:<a href="../scenegraph/Shape3D.html">Shape3D</a></code> &mdash;  The shape this polygon belongs to
+<td width="20px"></td><td><code><span class="label">p_oOwner</span>:<a href="../scenegraph/Shape3D.html">Shape3D</a></code> &mdash;      The shape this polygon belongs to
    </td>
 </tr>
 <tr>
@@ -762,6 +821,18 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="computeVisibility()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">computeVisibility</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function computeVisibility():void</code><p>
+   Pre-compute several properties of the polygon in the same time.
+   List of the computed properties :
+    - visibility : if the polygon is visible
+   </p></div>
 <a name="createNormal()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -836,59 +907,88 @@ showHideInherited();
 </tr>
 </table>
 </div>
-<a name="getZAverage()"></a>
+<a name="get3DFrom2D()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">getZAverage</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">get3DFrom2D</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function getZAverage():Number</code><p>
-   Returns the depth average of this face.
-      </p><p>Useful for z-sorting.</p>
-      <p></p>
+<code>public function get3DFrom2D(p_oScreenPoint:Point):<a href="../data/Vector.html">Vector</a></code><p>
+   Returns the real 3D position of the 2D screen position.
+   The 2D position is usually coming from :
+   <div class='listing'><pre>
+   var l_nClicX:Number = m_oScene.container.mouseX;
+         var l_nClicY:Number = m_oScene.container.mouseY;
+         </pre></div>
+         
+         </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oScreenPoint</span>:Point</code></td>
+</tr>
+</table>
+<p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Number</code> &mdash; A number representing the depth average.
-   </td>
+<td width="20"></td><td><code><a href="../data/Vector.html">Vector</a></code> &mdash; 
+                        the real 3D position which correspond to the intersection onto that polygone
+         
+                        
+                     </td>
 </tr>
 </table>
 </div>
-<a name="getZMinimum()"></a>
+<a name="getUVFrom2D()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">getZMinimum</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">getUVFrom2D</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function getZMinimum():Number</code><p>
-   Returns the minimum depth of this face.
-      </p><p>Useful for z-sorting.</p>
-      <p></p>
+<code>public function getUVFrom2D(p_oScreenPoint:Point):<a href="../data/UVCoord.html">UVCoord</a></code><p>
+   Get the UVCoord under the 2D screen position after a mouse click or something
+   The 2D position is usually coming from :
+   <div class='listing'><pre>
+   var l_nClicX:Number = m_oScene.container.mouseX;
+         var l_nClicY:Number = m_oScene.container.mouseY;
+         </pre></div>
+         
+         </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oScreenPoint</span>:Point</code></td>
+</tr>
+</table>
+<p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Number</code> &mdash; A number representing the depth minimum.
-   </td>
+<td width="20"></td><td><code><a href="../data/UVCoord.html">UVCoord</a></code> &mdash; 
+                        the UVCoord under the 2D screen point
+         
+                        
+                     </td>
 </tr>
 </table>
 </div>
-<a name="precompute()"></a>
+<a name="precomputeBounds()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">precompute</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">precomputeBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function precompute():void</code><p>
+<code>public function precomputeBounds():void</code><p>
    Pre-compute several properties of the polygon in the same time.
    List of the computed properties :
-    - visibility : if the polygon is visible
-    - mean z depth : the mean z depth used for basic sorting
-    - max bounds : the maximum bounds of the polygon
-    - min bounds : the minimum bounds of the polygon
-    - mean bounds : the mean of each components of the polygon. It is center actually.
+   <ul>
+    <li>mean z depth : the mean z depth used for basic sorting</li>
+    <li>max bounds : the maximum bounds of the polygon</li>
+    <li>min bounds : the minimum bounds of the polygon</li>
+    <li>mean bounds : the mean of each components of the polygon. It is center actually.</li>
+   </ul>
    </p></div>
 <a name="removeEventListener()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">

@@ -38,21 +38,20 @@
 		 */
 		public function CelShadeMaterial( p_nColor:uint = 0, p_nAlpha:Number = 1, p_nOutlineThickness:uint = 1, p_nOutlineColor:uint = 0, p_nOutlineAlpha:Number = 1, p_aColorMap:Array = null )
 		{
-			super(p_nOutlineThickness, p_nOutlineColor, p_nOutlineAlpha, p_oAttr);
+			super(p_nOutlineThickness, p_nOutlineColor, p_nOutlineAlpha);
 			// --
 			m_nType = MaterialType.COLOR;
 			// --
 			m_nColor = p_nColor;
 			m_nAlpha = p_nAlpha;
 			// --
-			attributes = p_oAttr;
-
 			if(p_aColorMap)
 				lightingMap = p_aColorMap;
 			else
-				 lightingMap = [0.1, 0.1, 0.3, 0.3, 0.3, 0.6, 0.6, 0.6, 1, 1, 1.3];
+				lightingMap = [0.1, 0.1, 0.3, 0.3, 0.3, 0.6, 0.6, 0.6, 1, 1, 1.3];
+
 		}
-		
+
 		/**
 		 * Renders this material on the face it dresses.
 		 *

@@ -190,7 +190,7 @@ package sandy.parser
 				} else if( p_oNode.rotate.length() == 3 ) {
 					for( var j:int=0; j < 3; j++ )
 					{
-						var l_oRot : Array = stringToArray( p_oNode.rotate[i] );
+						var l_oRot : Array = stringToArray( p_oNode.rotate[j] );
 
 						switch( p_oNode.rotate[j].@sid.toLowerCase() )
 						{
@@ -198,10 +198,10 @@ package sandy.parser
 								l_oShape.rotateX = Number( l_oRot[ 3 ] );
 								break;
 							case "rotatey":
-								l_oShape.rotateY = Number( l_oRot[ 3 ] );
+								l_oShape.rotateZ = Number( l_oRot[ 3 ] );
 								break;
 							case "rotatez":
-								l_oShape.rotateZ = Number( l_oRot[ 3 ] );
+								l_oShape.rotateY = Number( l_oRot[ 3 ] );
 								break;
 						}
 					}

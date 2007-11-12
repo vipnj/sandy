@@ -1,4 +1,6 @@
-﻿package sandy.materials
+﻿
+
+package sandy.materials
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;

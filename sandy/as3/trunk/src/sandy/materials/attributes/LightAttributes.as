@@ -25,7 +25,7 @@ package sandy.materials.attributes
 	import sandy.materials.Material;
 	
 	/**
-	 * Holds all light attribute data for a material.
+	 * Realize a flat shading effect when associated to a material.
 	 *
 	 * <p>To make this material attribute use by the Material object, the material must have :myMAterial.lighteningEnable = true.<br />
 	 * This attributes contains some parameters</p>

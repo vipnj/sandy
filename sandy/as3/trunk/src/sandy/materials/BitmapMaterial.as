@@ -37,6 +37,7 @@ package sandy.materials
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @author		Xavier Martin - zeflasher - transparency managment
+	 * @author 		Away.com engine, for the perspectice corrected mapping
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */

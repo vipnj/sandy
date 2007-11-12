@@ -13,22 +13,21 @@ package demos
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.ColorMaterial;
-	import sandy.materials.attributes.GouraudAttributes;
+	import sandy.materials.attributes.LightAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.parser.IParser;
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
 	import sandy.primitive.Sphere;
 	
-	public final class LightDemo extends Sprite
-	{
-		[Embed(source="assets/texrin2.jpg")]
-		private var Texture:Class;
-		
-		public function LightDemo()
+	public final class MaxDemo extends Sprite
+	{		
+		public function MaxDemo()
 		{
 			super();
 		}
+		[Embed(source="assets/textures/textureKitty.jpg")]
+		private var Texture:Class;
 		
 		private var m_oScene:Scene3D;
 		private var keyPressed:Array = new Array();
@@ -63,7 +62,7 @@ package demos
   
   		private function _createMaterialAttributes():MaterialAttributes
   		{
-  			return new MaterialAttributes( new GouraudAttributes(0.1) );
+  			return new MaterialAttributes( new LightAttributes( true, 0.2) );
   		}
   		
 	  	private function _createAppearance():Appearance
@@ -76,7 +75,8 @@ package demos
 	  	
 	  	private function load():void
 	  	{
-	  		var l_oParser:IParser = Parser.create( "assets/Rhino.ASE", null, 0.03 );
+	  		//var l_oParser:IParser = Parser.create( "assets/models/SpaceFighter02.3ds", Parser.MAX_3DS );`
+	  		var l_oParser:IParser = Parser.create( "assets/models/kitty.ase", Parser.ASE, 0.1 );
 	  		l_oParser.standardAppearance = _createAppearance();
 	  		l_oParser.addEventListener( ParserEvent.INIT, _createScene3D );
 	  		l_oParser.parse();
@@ -85,16 +85,7 @@ package demos
   		private function _createScene3D( p_oEvt:ParserEvent ):void
 		{
 			m_oScene.root = p_oEvt.group;
-			
-			var l_oSphere:Sphere = new Sphere("mySphere", 30 );
-			l_oSphere.x = 200;
-			var l_oSphereMaterial:ColorMaterial = new ColorMaterial( 0xFF0000, 1, _createMaterialAttributes() );
-			l_oSphereMaterial.lightingEnable = true;
-			l_oSphere.appearance = new Appearance( l_oSphereMaterial  );
-			m_oScene.root.addChild( l_oSphere );
-			
 			m_oScene.root.addChild( m_oScene.camera );
-			
 			_enableEvents();
 		}	
 		
@@ -118,12 +109,6 @@ package demos
 			{ 
 			    cam.moveHorizontally( -10 );
 			}
-			// --
-			for each( var l_oObject:ATransformable in m_oScene.root.children )
-			{
-				if( l_oObject is Shape3D ) l_oObject.rotateY ++;
-			}
-			// --
 			m_oScene.render();
 		}
 		

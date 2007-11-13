@@ -19,7 +19,7 @@ package sandy.materials
 	import flash.display.*;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
@@ -37,6 +37,12 @@ package sandy.materials
 	 */
 	public class MovieMaterial extends BitmapMaterial
 	{
+		/**
+		 * Default color used to draw the bitmapdata content with.
+		 * In case you need a specific color, change  this value at your application initialization
+		 */
+		public static var DEFAULT_FILL_COLOR:uint = 0;
+		
 		private var m_oTimer :Timer;
 		private var m_oMovie : MovieClip;
 
@@ -53,7 +59,7 @@ package sandy.materials
 		 */
 		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oMovie.width, p_oMovie.height, true, 0xFF000000 ), p_oAttr );
+			super( new BitmapData( p_oMovie.width, p_oMovie.height, true, DEFAULT_FILL_COLOR ), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
 			// --
@@ -80,7 +86,7 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, 0xFF000000 );
+			m_oTexture.fillRect( m_oTexture.rect, DEFAULT_FILL_COLOR );
 			// --
 			m_oTexture.draw( m_oMovie );
 		}

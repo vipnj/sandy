@@ -39,15 +39,25 @@ package sandy.materials.attributes
 	 */
 	public final class GouraudAttributes implements IAttributes
 	{
-		private const ratios:Array = [ 0x00, 0xFF ];
-		public var ambient:Number = 0.0;
+		/**
+		 * Flag for lightening mode.
+		 * <p>If true, the lit objects use full light range from black to white.<b />
+		 * If false (the default) they just range from black to their normal appearance.</p>
+		 */
+		public var useBright:Boolean = false;
+				
+		/**
+		 * Level of ambient light, added to the scene if lighting is enabled.
+		 */
+		public var ambient:Number = 0.3;
 		
 		/**
 		 * Create the GouraudAttribute object.
 		 * @param p_nAmbient The ambient light value. A value between O and 1 is expected.
 		 */
-		public function GouraudAttributes( p_nAmbient:Number = 0.0 )
+		public function GouraudAttributes( p_bBright:Boolean = false, p_nAmbient:Number = 0.0 )
 		{
+			useBright = p_bBright;
 			ambient = NumberUtil.constrain( p_nAmbient, 0, 1 );
 		}
 		
@@ -55,15 +65,18 @@ package sandy.materials.attributes
 		internal var id0:int, id1:int, id2:int;
 		internal var v0N:Vector, v1N:Vector, v2N:Vector;
 		internal var v0L:Number, v1L:Number, v2L:Number;
-		internal var aL:Array;
+		internal var aL:Array = new Array(3);
 		internal var aLId:Array;
-		internal var colours:Array;
-		internal var alpha:Array
-		internal var coef:Number
+		
+		internal var alpha:Array = new Array(2);
+		internal var coef:Number;
 		internal var p3x:Number, p3y:Number, p4x:Number, p4y:Number, d:Number, p4len:Number;
 		internal var matrix:Matrix = new Matrix();
 		internal var l_oVertex:Vertex;
 		 
+		internal const colours:Array = new Array(0,0); 
+		internal const ratios:Array = [ 0x00, 0xFF ];
+		
 		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
 			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
@@ -85,7 +98,7 @@ package sandy.materials.attributes
 			v1L = NumberUtil.constrain( v1L, 0, 1 );
 			v2L = NumberUtil.constrain( v2L, 0, 1 );	
 			// --
-			aL = [v0L, v1L, v2L];
+			aL[0] = v0L; aL[1] =  v1L; aL[2] = v2L;
 			aLId = aL.sort( Array.NUMERIC | Array.RETURNINDEXEDARRAY );
 			// --
 			id0 = int(aLId[0]);
@@ -96,9 +109,11 @@ package sandy.materials.attributes
 			v1 = l_aPoints[int(id1)];
 			v2 = l_aPoints[int(id2)];
 			// --
-			colours = [ grayscale(aL[int(id0)]), grayscale(aL[int(id2)]) ];
-			alpha = [ 1-aL[int(id0)], 1-aL[int(id2)] ];
-			coef = ( aL[int(id1)] - aL[int(id0)]) / (aL[int(id2)] - aL[int(id0)] );
+			
+			alpha[0] = ( !useBright )? 1-aL[int(id0)] : NumberUtil.constrain( (aL[int(id0)] < 0.5) ? (1-2 * aL[int(id0)]) : (2 * aL[int(id0)] - 1), 0, 1 );
+			alpha[1] = ( !useBright )? 1-aL[int(id2)] : NumberUtil.constrain( (aL[int(id2)] < 0.5) ? (1-2 * aL[int(id2)]) : (2 * aL[int(id2)] - 1), 0, 1 );
+			
+			coef = ( aL[int(id1)] - aL[int(id0)] ) / ( aL[int(id2)] - aL[int(id0)] );
 			// --
 			p3x = v0.sx + coef * (v2.sx - v0.sx);
 			p3y = v0.sy + coef * (v2.sy - v0.sy);
@@ -121,12 +136,5 @@ package sandy.materials.attributes
 			}
 			p_oGraphics.endFill();
 		}
-		
-		private function grayscale(k:Number):Number
-		{
-			k = (k<<8) & 0xFF;
-			return k << 16 | k << 8 | k;
-		}
-		
 	}
 }

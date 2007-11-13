@@ -39,6 +39,12 @@ package sandy.materials
 	 */
 	public class VideoMaterial extends BitmapMaterial
 	{
+		/**
+		 * Default color used to draw the bitmapdata content with.
+		 * In case you need a specific color, change  this value at your application initialization
+		 */
+		public static var DEFAULT_FILL_COLOR:uint = 0;
+		
 		private var m_oTimer:Timer;
 		private var m_oVideo : Video;
 		
@@ -54,7 +60,7 @@ package sandy.materials
 		 */
 		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, 0xFF000000 ), p_oAttr );
+			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, DEFAULT_FILL_COLOR ), p_oAttr );
 			m_oVideo = p_oVideo;
 			m_nType = MaterialType.VIDEO;
 			// --
@@ -80,7 +86,7 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, 0xFF000000 );
+			m_oTexture.fillRect( m_oTexture.rect, DEFAULT_FILL_COLOR );
 			// --
 			m_oTexture.draw( m_oVideo, null, null, null, null, true );
 		}

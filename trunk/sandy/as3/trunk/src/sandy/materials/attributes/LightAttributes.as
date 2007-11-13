@@ -23,6 +23,7 @@ package sandy.materials.attributes
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.materials.Material;
+	import sandy.util.NumberUtil;
 	
 	/**
 	 * Realize a flat shading effect when associated to a material.
@@ -54,12 +55,12 @@ package sandy.materials.attributes
 		 * Creates a new LineAttributes object.
 		 *
 		 * @param p_bBright	- default false - The brightness
-		 * @param p_nAmbient - default 0 - The ambiant light value
+		 * @param p_nAmbient - default 0 - The ambiant light value. Value must be between 0 and 1
 		 */
 		public function LightAttributes( p_bBright:Boolean = false, p_nAmbient:Number = 0.3 )
 		{
 			useBright = p_bBright;
-			ambient = p_nAmbient;
+			ambient = NumberUtil.constrain( p_nAmbient, 0, 1 );
 			// --
 			modified = true;
 		}

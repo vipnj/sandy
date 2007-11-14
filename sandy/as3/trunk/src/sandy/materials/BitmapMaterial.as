@@ -37,6 +37,7 @@ package sandy.materials
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @author		Xavier Martin - zeflasher - transparency managment
+	 * @author		James Dahl - Tip for tesselation optimization
 	 * @author 		Away.com engine, for the perspectice corrected mapping
 	 * @version		3.0
 	 * @date 		26.07.2007
@@ -59,6 +60,12 @@ package sandy.materials
 		 * To disable the perspective correction, set this property to zero, which is also the default value
 		 */
 		public var precision:uint = 0;
+		
+		/**
+		 * Maximum level of resurssion allowed when using perpective correction (precision > 0)
+		 * This property modification can have a very important CPU impact, so be careful if you consider to change it.
+		 */
+		public var recurssion:uint = 5;
 		
 		/**
 		 * Creates a new BitmapMaterial.
@@ -169,49 +176,68 @@ package sandy.materials
 			l_uv = null;
 	 	}
 
-		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number, 
+		internal var mabz:Number;
+        internal var mbcz:Number;
+        internal var mcaz:Number;
+        internal var mabx:Number;
+        internal var maby:Number;
+        internal var mbcx:Number;
+        internal var mbcy:Number;
+        internal var mcax:Number;
+		internal var mcay:Number;
+		internal var dabx:Number;
+		internal var daby:Number;
+		internal var dbcx:Number;
+		internal var dbcy:Number;
+		internal var dcax:Number;
+		internal var dcay:Number;
+		internal var dsab:Number;
+		internal var dsbc:Number;
+		internal var dsca:Number;
+		
+		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number,
             ax:Number, ay:Number, az:Number, bx:Number, by:Number, bz:Number, cx:Number, cy:Number, cz:Number):void
         {
-			m_nRecLevel++;
-            var mabz:Number = 2 / (az + bz);
-            var mbcz:Number = 2 / (bz + cz);
-            var mcaz:Number = 2 / (cz + az);
-            var mabx:Number = (ax*az + bx*bz)*mabz;
-            var maby:Number = (ay*az + by*bz)*mabz;
-            var mbcx:Number = (bx*bz + cx*cz)*mbcz;
-            var mbcy:Number = (by*bz + cy*cz)*mbcz;
-            var mcax:Number = (cx*cz + ax*az)*mcaz;
-            var mcay:Number = (cy*cz + ay*az)*mcaz;
-            var dabx:Number = ax + bx - mabx;
-            var daby:Number = ay + by - maby;
-            var dbcx:Number = bx + cx - mbcx;
-            var dbcy:Number = by + cy - mbcy;
-            var dcax:Number = cx + ax - mcax;
-            var dcay:Number = cy + ay - mcay;
-            var dsab:Number = (dabx*dabx + daby*daby);
-            var dsbc:Number = (dbcx*dbcx + dbcy*dbcy);
-            var dsca:Number = (dcax*dcax + dcay*dcay);
+        	m_nRecLevel++;
+            mabz = 2 / (az + bz);
+            mbcz = 2 / (bz + cz);
+            mcaz = 2 / (cz + az);
+            mabx = (ax*az + bx*bz)*mabz;
+            maby = (ay*az + by*bz)*mabz;
+            mbcx = (bx*bz + cx*cz)*mbcz;
+            mbcy = (by*bz + cy*cz)*mbcz;
+            mcax = (cx*cz + ax*az)*mcaz;
+            mcay = (cy*cz + ay*az)*mcaz;
+            dabx = ax + bx - mabx;
+            daby = ay + by - maby;
+            dbcx = bx + cx - mbcx;
+            dbcy = by + cy - mbcy;
+            dcax = cx + ax - mcax;
+            dcay = cy + ay - mcay;
+            dsab = (dabx*dabx + daby*daby);
+            dsbc = (dbcx*dbcx + dbcy*dbcy);
+            dsca = (dcax*dcax + dcay*dcay);
 
-            if ((m_nRecLevel > 5) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
+            if ((m_nRecLevel > recurssion) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
             {
                 renderTriangle(ta, tb, tc, td, tx, ty, ax, ay, bx, by, cx, cy);
-				m_nRecLevel--; return;
+            	m_nRecLevel--; return;
             }
 
             if ((dsab > precision) && (dsca > precision) && (dsbc > precision) )
             {
-                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2,
-                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, mcax/2, mcay/2, (cz+az)/2);
+                renderRec(ta<<1, tb<<1, tc<<1, td<<1, tx<<1, ty<<1,
+                    ax, ay, az, mabx>>1, maby>>1, (az+bz)>>1, mcax>>1, mcay>>1, (cz+az)>>1);
 
-                renderRec(ta*2, tb*2, tc*2, td*2, tx*2-1, ty*2,
-                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
+                renderRec(ta<<1, tb<<1, tc<<1, td<<1, tx<<1-1, ty<<1,
+                    mabx>>1, maby>>1, (az+bz)>>1, bx, by, bz, mbcx>>1, mbcy>>1, (bz+cz)>>1);
 
-                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2-1,
-                    mcax/2, mcay/2, (cz+az)/2, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
+                renderRec(ta<<1, tb<<1, tc<<1, td<<1, tx<<1, ty<<1-1,
+                    mcax>>1, mcay>>1, (cz+az)>>1, mbcx>>1, mbcy>>1, (bz+cz)>>1, cx, cy, cz);
 
-                renderRec(-ta*2, -tb*2, -tc*2, -td*2, -tx*2+1, -ty*2+1,
-                    mbcx/2, mbcy/2, (bz+cz)/2, mcax/2, mcay/2, (cz+az)/2, mabx/2, maby/2, (az+bz)/2);
-                    
+                renderRec(-ta<<1, -tb<<1, -tc<<1, -td<<1, -tx<<1+1, -ty<<1+1,
+                    mbcx>>1, mbcy>>1, (bz+cz)>>1, mcax>>1, mcay>>1, (cz+az)>>1, mabx>>1, maby>>1, (az+bz)>>1);
+                   
                 m_nRecLevel--; return;
             }
 
@@ -219,33 +245,33 @@ package sandy.materials
 
             if (dsab == dmax)
             {
-                renderRec(ta*2, tb*1, tc*2, td*1, tx*2, ty*1,
-                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, cx, cy, cz);
+                renderRec(ta<<1, tb<<1, tc<<1, td<<1, tx<<1, ty<<1,
+                    ax, ay, az, mabx>>1, maby>>1, (az+bz)/2, cx, cy, cz);
 
-                renderRec(ta*2+tb, tb*1, 2*tc+td, td*1, tx*2+ty-1, ty*1,
-                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, cx, cy, cz);
-                    
+                renderRec(ta<<1+tb, tb, tc<<1+td, td, tx<<1+ty-1, ty,
+                    mabx>>1, maby>>1, (az+bz)>>1, bx, by, bz, cx, cy, cz);
+                   
                 m_nRecLevel--; return;
             }
 
             if (dsca == dmax)
             {
-                renderRec(ta*1, tb*2, tc*1, td*2, tx*1, ty*2,
-                    ax, ay, az, bx, by, bz, mcax/2, mcay/2, (cz+az)/2);
+                renderRec(ta, tb<<1, tc, td<<1, tx, ty<<1,
+                    ax, ay, az, bx, by, bz, mcax>>1, mcay>>1, (cz+az)>>1);
 
-                renderRec(ta*1, tb*2 + ta, tc*1, td*2 + tc, tx, ty*2+tx-1,
-                    mcax/2, mcay/2, (cz+az)/2, bx, by, bz, cx, cy, cz);
+                renderRec(ta, tb<<1 + ta, tc, td<<1 + tc, tx, ty<<1+tx-1,
+                    mcax>>1, mcay>>1, (cz+az)>>1, bx, by, bz, cx, cy, cz);
 
                 m_nRecLevel--; return;
             }
 
-            renderRec(ta-tb, tb*2, tc-td, td*2, tx-ty, ty*2,
-                ax, ay, az, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
+            renderRec(ta-tb, tb<<1, tc-td, td<<1, tx-ty, ty<<1,
+                ax, ay, az, bx, by, bz, mbcx>>1, mbcy>>1, (bz+cz)>>1);
 
-            renderRec(2*ta, tb-ta, tc*2, td-tc, 2*tx, ty-tx,
-                ax, ay, az, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
+            renderRec(ta<<1, tb-ta, tc<<1, td-tc, tx<<1, ty-tx,
+                ax, ay, az, mbcx>>1, mbcy>>1, (bz+cz)>>1, cx, cy, cz);
 
-			m_nRecLevel--;
+         	m_nRecLevel--;
         }
 
 		protected function renderTriangle(a:Number, b:Number, c:Number, d:Number, tx:Number, ty:Number, 
@@ -299,6 +325,7 @@ package sandy.materials
 				
 		/**
 		 * The texture ( bitmap ) of this material
+		 * @return the Bitmapdata used to map polygons
 		 */
 		public function get texture():BitmapData
 		{

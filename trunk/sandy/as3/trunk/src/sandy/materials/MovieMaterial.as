@@ -17,9 +17,11 @@ limitations under the License.
 package sandy.materials
 {
 	import flash.display.*;
+	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.geom.Rectangle;
 	import flash.utils.Timer;
-	
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
@@ -32,19 +34,15 @@ package sandy.materials
 	 * @author		Xavier Martin - zeflasher
 	 * @author		Thomas PFEIFFER - kiroukou
 	 * @since		1.0
-	 * @version		3.0
-	 * @date 		26.06.2007
+	 * @version		3.1 - Add tranparent border, width and height params in the constructor. Help cropping the image. To improve ( add x / y location, or even maybe a shape... )
+	 * 				this should be add directly in the bitmap material I reckon
+	 * @date 		11.11.2007
 	 */
 	public class MovieMaterial extends BitmapMaterial
 	{
-		/**
-		 * Default color used to draw the bitmapdata content with.
-		 * In case you need a specific color, change  this value at your application initialization
-		 */
-		public static var DEFAULT_FILL_COLOR:uint = 0;
-		
 		private var m_oTimer :Timer;
 		private var m_oMovie : MovieClip;
+		private var m_bUpdate : Boolean;
 
 		/**
 		 * Creates a new MovieMaterial.
@@ -56,18 +54,43 @@ package sandy.materials
 		 * @param p_oMovie 	The Movieclip to be shown by this material
 		 * @param p_nUpdateMS	The update interval
 		 * @param p_oAttr	The material attributes
+		 * @param p_bRemoveTransparentBorder	Remove the transparent border
+		 * @param p_nWidth	desired width ( chunk the movieclip )
+		 * @param p_nHeight	desired height ( chunk the movieclip )
 		 */
-		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
+		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null, p_bRemoveTransparentBorder:Boolean = false, p_nHeight:Number=0, p_nWidth:Number=0 )
 		{
-			super( new BitmapData( p_oMovie.width, p_oMovie.height, true, DEFAULT_FILL_COLOR ), p_oAttr );
+			var w : Number;
+			var h : Number;
+			
+			if ( p_bRemoveTransparentBorder )
+			{
+				var tmpBmp : BitmapData = new BitmapData(  p_oMovie.width, p_oMovie.height, true, 0x00FF0000 );
+				tmpBmp.draw( p_oMovie );
+				var rect : Rectangle = tmpBmp.getColorBoundsRect( 0xFF000000, 0x00000000, false );
+				w = rect.width;
+				h = rect.height;
+			}
+			else 
+			{
+				w = p_nWidth ? p_nWidth :  p_oMovie.width;
+				h = p_nHeight ? p_nHeight : p_oMovie.height;				
+			}
+
+			super( new BitmapData( w, h ), p_oAttr );	
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
 			// --
+			m_bUpdate = true;
 			m_oTimer = new Timer( p_nUpdateMS );
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
 			m_oTimer.start();
+			
+			tmpBmp = null;
+			rect = null;
+			w = undefined;
+			h = undefined;
 		}
-
 
 		/**
 		 * Renders this material on the face it dresses.
@@ -78,17 +101,22 @@ package sandy.materials
 		 */
 		public override function renderPolygon ( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ) : void
 		{
+			m_bUpdate = true;
 			super.renderPolygon( p_oScene, p_oPolygon, p_mcContainer );
 		}
 
 		/**
 		 * Updates this material each internal timer cycle.
 		 */
-		private function _update( p_eEvent:TimerEvent ):void
+		private function _update( p_eEvent:Event ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, DEFAULT_FILL_COLOR );
-			// --
-			m_oTexture.draw( m_oMovie );
+			if ( m_bUpdate )
+			{
+				m_oTexture.fillRect( m_oTexture.rect, 0x00FFFFFF );
+				// --
+				m_oTexture.draw( m_oMovie );
+			}
+			m_bUpdate = false;
 		}
 		
 		/**
@@ -106,6 +134,14 @@ package sandy.materials
 		public function stop():void
 		{
 			m_oTimer.stop();
+		}
+		
+		/**
+		 * Get the movieclip used for the material
+		 */
+		public function get movie() : MovieClip
+		{
+			return m_oMovie;
 		}
 		
 	}

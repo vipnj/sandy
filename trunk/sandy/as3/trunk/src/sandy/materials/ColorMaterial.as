@@ -24,7 +24,6 @@ package sandy.materials
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.materials.attributes.MaterialAttributes;
-	import sandy.util.ColorUtil;
 	import sandy.util.NumberUtil;
 
 	/**

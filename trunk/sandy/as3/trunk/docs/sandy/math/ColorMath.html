@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="ColorMath,sandy.math.ColorMath,getInstance,hex2rgb,hex2rgbn,rgb2hex" name="keywords">
+<meta content="ColorMath,sandy.math.ColorMath,calculateLitColour,hex2rgb,hex2rgbn,rgb2hex" name="keywords">
 <title>sandy.math.ColorMath</title>
 </head>
 <body>
@@ -55,18 +55,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#ColorMath()">ColorMath</a>()</div>
-<div class="summaryTableDescription">
-   Creates a ColorMath object.</div>
-</td><td class="summaryTableOwnerCol">ColorMath</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#getInstance()">getInstance</a>():<a href="../math/ColorMath.html">ColorMath</a>
-</div>
+<a class="signatureLink" href="#calculateLitColour()">calculateLitColour</a>(col:Number, lightStrength:Number):Number</div>
 <div class="summaryTableDescription">[static]
-   Returns an instance of this class.</div>
+   Calculate the colour for a particular lighting strength.</div>
 </td><td class="summaryTableOwnerCol">ColorMath</td>
 </tr>
 <tr class="">
@@ -102,39 +93,37 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 showHideInherited();
 --></script>
 <div class="MainContent">
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="ColorMath()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">ColorMath</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function ColorMath()</code><p>
-   Creates a ColorMath object.
-   
-   </p><p>This is a singleton constructor, and should not be called directly.<br />
-   If called from outside the ColorMath class, it throws a SingletonError.</p>
-   [<strong>ToDo</strong>: Why instantiate this at all? - all methods are class methods! ]
-   </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
-<a name="getInstance()"></a>
+<a name="calculateLitColour()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">getInstance</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">calculateLitColour</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function getInstance():<a href="../math/ColorMath.html">ColorMath</a></code><p>
-   Returns an instance of this class.
-      </p><p>Call this method to get an instance of ColorMath</p>
-   <p></p>
+<code>public static function calculateLitColour(col:Number, lightStrength:Number):Number</code><p>
+   Calculate the colour for a particular lighting strength.
+   This converts the supplied pre-multiplied RGB colour into HSL
+   then modifies the L according to the light strength. 
+   The result is then mapped back into the RGB space.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">col</span>:Number</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">lightStrength</span>:Number</code></td>
+</tr>
+</table>
+<p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code><a href="../math/ColorMath.html">ColorMath</a></code></td>
+<td width="20"></td><td><code>Number</code></td>
 </tr>
 </table>
 </div>

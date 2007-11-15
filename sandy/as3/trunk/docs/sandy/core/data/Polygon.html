@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Polygon,sandy.core.data.Polygon,POLYGON_MAP,aEdges,aNeighboors,aUVCoord,backfaceCulling,caUVCoord,cvertices,id,isClipped,m_oContainer,m_oEB,m_oVisibilityRef,maxBounds,meanBounds,minBounds,normal,scene,shape,uvBounds,vertexNormals,vertices,broadcaster,container,visible,appearance,depth,_onInteraction,addEventListener,clear,clip,clipFrontPlane,computeVisibility,createNormal,destroy,display,enableEvents,get3DFrom2D,getUVFrom2D,precomputeBounds,removeEventListener,swapCulling,toString" name="keywords">
+<meta content="Polygon,sandy.core.data.Polygon,POLYGON_MAP,aEdges,aNeighboors,aUVCoord,backfaceCulling,caUVCoord,cvertices,id,isClipped,m_oContainer,m_oEB,m_oVisibilityRef,maxBounds,meanBounds,minBounds,normal,scene,shape,uvBounds,vertexNormals,vertices,broadcaster,container,enableEvents,enableInteractivity,visible,appearance,depth,_onInteraction,_onTextureInteraction,_startMouseInteraction,_stopMouseInteraction,addEventListener,clear,clip,clipFrontPlane,computeVisibility,createNormal,destroy,display,get3DFrom2D,getUVFrom2D,precomputeBounds,removeEventListener,swapCulling,toString" name="keywords">
 <title>sandy.core.data.Polygon</title>
 </head>
 <body>
@@ -105,6 +105,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#depth">depth</a> : Number<div class="summaryTableDescription">
    The z depth of this polygon.</div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableEvents">enableEvents</a> : Boolean<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableInteractivity">enableInteractivity</a> : Boolean<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
@@ -281,14 +289,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#enableEvents()">enableEvents</a>(b:Boolean):void</div>
-<div class="summaryTableDescription">
-   Enables or disables object events for this polygon.</div>
-</td><td class="summaryTableOwnerCol">Polygon</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
 <a class="signatureLink" href="#get3DFrom2D()">get3DFrom2D</a>(p_oScreenPoint:Point):<a href="../data/Vector.html">Vector</a>
 </div>
 <div class="summaryTableDescription">
@@ -356,6 +356,27 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#_onInteraction()">_onInteraction</a>(p_oEvt:Event):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#_onTextureInteraction()">_onTextureInteraction</a>(p_oEvt:Event = null):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#_startMouseInteraction()">_startMouseInteraction</a>(e:MouseEvent = null):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#_stopMouseInteraction()">_stopMouseInteraction</a>(e:MouseEvent = null):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
@@ -504,6 +525,34 @@ showHideInherited();
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get depth():Number</code>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function set depth(value:Number):void</code>
+<br>
+</div>
+<a name="enableEvents"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableEvents</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>enableEvents:Boolean</code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get enableEvents():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set enableEvents(value:Boolean):void</code>
+<br>
+</div>
+<a name="enableInteractivity"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableInteractivity</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>enableInteractivity:Boolean</code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get enableInteractivity():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set enableInteractivity(value:Boolean):void</code>
 <br>
 </div>
 <a name="isClipped"></a>
@@ -739,6 +788,48 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="_onTextureInteraction()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">_onTextureInteraction</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function _onTextureInteraction(p_oEvt:Event = null):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oEvt</span>:Event</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+</div>
+<a name="_startMouseInteraction()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">_startMouseInteraction</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function _startMouseInteraction(e:MouseEvent = null):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">e</span>:MouseEvent</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+</div>
+<a name="_stopMouseInteraction()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">_stopMouseInteraction</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function _stopMouseInteraction(e:MouseEvent = null):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">e</span>:MouseEvent</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+</div>
 <a name="addEventListener()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -884,25 +975,6 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_oContainer</span>:Sprite</code> (default = <code>null</code>)<code></code> &mdash; The container to draw on
-   </td>
-</tr>
-</table>
-</div>
-<a name="enableEvents()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">enableEvents</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function enableEvents(b:Boolean):void</code><p>
-   Enables or disables object events for this polygon.
-      </p><p>If a value of true is passed, the object events onPress, onRollOver and onRollOut are enabled.<br />.
-   To use them, you have to add listeners for the events.</p>
-      <span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">b</span>:Boolean</code> &mdash;  Pass true to enable the events, false to disable.
    </td>
 </tr>
 </table>

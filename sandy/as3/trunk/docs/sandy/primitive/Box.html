@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="Box,sandy.primitive.Box,generate,toString" name="keywords">
+<meta content="Box,sandy.primitive.Box,FACE_BACK,FACE_BOTTOM,FACE_FRONT,FACE_LEFT,FACE_RIGHT,FACE_TOP,generate,getFace,toString" name="keywords">
 <title>sandy.primitive.Box</title>
 </head>
 <body>
@@ -173,6 +173,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Shape3D.html#enableForcedDepth">enableForcedDepth</a> : Boolean = false<div class="summaryTableDescription">
    Should forced depth be enable for this object?.</div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Shape3D.html">Shape3D</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Shape3D.html#enableInteractivity">enableInteractivity</a> : Boolean<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Shape3D.html">Shape3D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -522,6 +526,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Returns an array with all child nodes of this node.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getFace()">getFace</a>(p_nFace:uint):<a href="../core/data/PrimitiveFace.html">PrimitiveFace</a>
+</div>
+<div class="summaryTableDescription">
+  Returns a PrimitiveFace object ( an array of polygons ) defining the specified face
+    </div>
+</td><td class="summaryTableOwnerCol">Box</td>
+</tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -759,9 +773,33 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a onclick="javascript:setInheritedVisible(true,'Constant');" href="#constantSummary" class="showHideLink"><img src="../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Constants</a>
 </div>
 </div>
-<table id="summaryTableConstant" class="summaryTable hideInheritedConstant" cellpadding="3" cellspacing="0">
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FACE_BACK">FACE_BACK</a> : uint = 0<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Box</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FACE_BOTTOM">FACE_BOTTOM</a> : uint = 2<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Box</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FACE_FRONT">FACE_FRONT</a> : uint = 1<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Box</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FACE_LEFT">FACE_LEFT</a> : uint = 4<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Box</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FACE_RIGHT">FACE_RIGHT</a> : uint = 5<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Box</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FACE_TOP">FACE_TOP</a> : uint = 3<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Box</td>
 </tr>
 <tr class="hideInheritedConstant">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/Node.html#id">id</a> : uint<div class="summaryTableDescription">
@@ -867,6 +905,34 @@ showHideInherited();
 <a href="../core/data/Polygon.html" target="">sandy.core.data.Polygon</a>
 </div>
 </div>
+<a name="getFace()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getFace</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getFace(p_nFace:uint):<a href="../core/data/PrimitiveFace.html">PrimitiveFace</a></code><p>
+  Returns a PrimitiveFace object ( an array of polygons ) defining the specified face
+    </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nFace</span>:uint</code> &mdash; The requested face
+  </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../core/data/PrimitiveFace.html">PrimitiveFace</a></code> &mdash; 
+                        The PrimitiveFace object
+  
+                        
+                     </td>
+</tr>
+</table>
+</div>
 <a name="toString()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -882,6 +948,62 @@ showHideInherited();
 <td width="20"></td><td><code>String</code></td>
 </tr>
 </table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="FACE_BACK"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FACE_BACK</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FACE_BACK:uint = 0</code>
+</div>
+<a name="FACE_BOTTOM"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FACE_BOTTOM</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FACE_BOTTOM:uint = 2</code>
+</div>
+<a name="FACE_FRONT"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FACE_FRONT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FACE_FRONT:uint = 1</code>
+</div>
+<a name="FACE_LEFT"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FACE_LEFT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FACE_LEFT:uint = 4</code>
+</div>
+<a name="FACE_RIGHT"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FACE_RIGHT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FACE_RIGHT:uint = 5</code>
+</div>
+<a name="FACE_TOP"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FACE_TOP</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FACE_TOP:uint = 3</code>
 </div>
 <br>
 <br>

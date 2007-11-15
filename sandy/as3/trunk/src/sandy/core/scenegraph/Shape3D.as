@@ -530,7 +530,48 @@ package sandy.core.scenegraph
 		{
 			return m_bBackFaceCulling;
 		}
-				
+			
+		
+		/**
+		 * Enable the interactivity on this shape and its polygon.
+		 * Be careful, this mode have some requirements :
+		 *   - to have useSingleContainer set to false. It is done automatically if enabled
+		 * 
+		 * The original settings are back to their  original state when the mode is disabled
+		 */
+		public function set enableInteractivity( p_bState:Boolean ):void
+		{
+			if( p_bState != m_bMouseInteractivity )
+			{
+				if( p_bState )
+				{
+					if( m_bUseSingleContainer == true )
+					{
+						m_bUseSingleContainer = false;
+						m_bForcedSingleContainer = true;
+					}
+				}
+				else
+				{
+					if( m_bForcedSingleContainer == true )
+					{
+						useSingleContainer = true;
+						m_bForcedSingleContainer = false;
+					}
+				}
+				// --
+				for each( var l_oPolygon:Polygon in aPolygons )
+				{
+		    		l_oPolygon.enableInteractivity = p_bState;
+		    	}
+		    			
+				m_bMouseInteractivity = p_bState;
+			}
+		}	
+		
+		public function get enableInteractivity():Boolean
+		{ return m_bMouseInteractivity; }
+		
 		/**
 		 * Enables the event system for mouse events.
 		 *
@@ -553,7 +594,7 @@ package sandy.core.scenegraph
 	    			{
 		    			for each( v in aPolygons )
 						{
-		    			    v.enableEvents( true );
+		    			    v.enableEvents = true;
 		    			}
 	    			}
 	    			else
@@ -578,7 +619,7 @@ package sandy.core.scenegraph
     			{
 	    			for each( v in aPolygons )
 					{
-	    			    v.enableEvents( false );
+	    			    v.enableEvents = false;
 	    			}
     			}
     			else
@@ -744,5 +785,8 @@ package sandy.core.scenegraph
 
 		private var m_aToProject:Array = new Array();
 		private var m_aVisiblePoly:Array = new Array();		
+		
+		private var m_bMouseInteractivity:Boolean = false;
+		private var m_bForcedSingleContainer:Boolean = false;
 	}
 }

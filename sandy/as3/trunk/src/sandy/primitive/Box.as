@@ -16,6 +16,7 @@ limitations under the License.
 package sandy.primitive 
 {
 	import sandy.core.data.Polygon;
+	import sandy.core.data.PrimitiveFace;
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Geometry3D;
@@ -37,6 +38,15 @@ package sandy.primitive
 	 */
 	public class Box extends Shape3D implements Primitive3D
 	{
+		
+	//	TODO 
+		public static const FACE_TOP	: uint	= 3;
+		public static const FACE_BOTTOM	: uint	= 2;
+		public static const FACE_BACK	: uint	= 0; //ok
+		public static const FACE_FRONT	: uint	= 1; //ok
+		public static const FACE_RIGHT	: uint	= 5; //ok
+		public static const FACE_LEFT	: uint	= 4; //ok
+		
 		/**
 		 * height of the Box
 		 */ 
@@ -57,6 +67,10 @@ package sandy.primitive
 		 * creation mode - number of vertices per face
 		 */
 		private var _mode : String;
+		/**
+		 * faces of the cube
+		 */
+		private var m_aFaces : Array;
 	
 		
 		/**
@@ -83,6 +97,7 @@ package sandy.primitive
 			_q = (p_nQuality <= 0 || p_nQuality > 10) ?  1 : p_nQuality ;
 			_mode = ( p_sMode != 'tri' && p_sMode != 'quad' ) ? 'tri' : p_sMode;
 			geometry = generate();
+			_generateFaces();
 		}
 		
 		/**
@@ -266,6 +281,31 @@ package sandy.primitive
 							level - 1 );
 				
 			}
+		}
+		
+		private function _generateFaces() : void
+		{
+			m_aFaces = new Array( 6 );
+			var m : uint = _mode == PrimitiveMode.TRI ? 2 : 1;
+			var multi : uint = m * Math.pow( 4, _q-1 );
+			for ( var i : Number = 0; i < 6; i++ )
+			{
+				m_aFaces[ i ] = new PrimitiveFace( this );
+				var l : Number = ( i+1 ) * multi;
+				for ( var j : Number = i * multi; j < l; j++ )	
+					( m_aFaces[ i ] as PrimitiveFace ).addPolygon( j );
+			}
+		}
+		
+		/**
+		* Returns a PrimitiveFace object ( an array of polygons ) defining the specified face
+		*
+		* @param	p_nFace The requested face
+		* @return	The PrimitiveFace object
+		*/
+		public function getFace( p_nFace : uint ) : PrimitiveFace
+		{
+			return m_aFaces[ p_nFace ];
 		}
 		
 		public override function toString():String

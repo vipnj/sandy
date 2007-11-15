@@ -34,6 +34,7 @@ package sandy.core.data
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
+	import sandy.core.interaction.VirtualMouse;
 
 	/**
 	 * Polygon's are the building blocks of visible 3D shapes.
@@ -558,7 +559,7 @@ package sandy.core.data
 		 *
 		 * @param b 	Pass true to enable the events, false to disable.
 		 */
-		public function enableEvents( b:Boolean ):void
+		public function set enableEvents( b:Boolean ):void
 		{
 	        if( b && !mouseEvents )
 	        {
@@ -591,12 +592,77 @@ package sandy.core.data
 	    	}
 	    	mouseEvents = b;
 		}
+		
+		public function get enableEvents():Boolean
+		{ return mouseEvents; }
 
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
 			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
 		}
-
+		
+		protected function _startMouseInteraction( e : MouseEvent = null ) : void
+		{
+			container.addEventListener(MouseEvent.CLICK, _onTextureInteraction);
+			container.addEventListener(MouseEvent.MOUSE_UP, _onTextureInteraction);
+			container.addEventListener(MouseEvent.MOUSE_DOWN, _onTextureInteraction);
+			
+			container.addEventListener(MouseEvent.DOUBLE_CLICK, _onTextureInteraction);
+			container.addEventListener(MouseEvent.MOUSE_MOVE, _onTextureInteraction);
+			container.addEventListener(MouseEvent.MOUSE_OVER, _onTextureInteraction);
+			container.addEventListener(MouseEvent.MOUSE_OUT, _onTextureInteraction);
+			container.addEventListener(MouseEvent.MOUSE_WHEEL, _onTextureInteraction);
+			m_oContainer.addEventListener( Event.ENTER_FRAME, _onTextureInteraction );
+		}
+		
+		protected function _stopMouseInteraction( e : MouseEvent = null ) : void
+		{
+			container.removeEventListener(MouseEvent.CLICK, _onTextureInteraction);
+			container.removeEventListener(MouseEvent.MOUSE_UP, _onTextureInteraction);
+			container.removeEventListener(MouseEvent.MOUSE_DOWN, _onTextureInteraction);
+			
+			container.removeEventListener(MouseEvent.DOUBLE_CLICK, _onTextureInteraction);
+			container.removeEventListener(MouseEvent.MOUSE_MOVE, _onTextureInteraction);
+			container.removeEventListener(MouseEvent.MOUSE_OVER, _onTextureInteraction);
+			container.removeEventListener(MouseEvent.MOUSE_OUT, _onTextureInteraction);
+			container.removeEventListener(MouseEvent.MOUSE_WHEEL, _onTextureInteraction);
+			m_oContainer.removeEventListener( Event.ENTER_FRAME, _onTextureInteraction );
+		}
+		
+		public function set enableInteractivity( p_bState:Boolean ):void
+		{
+			if( p_bState != mouseInteractivity )
+			{
+				if( p_bState )
+				{
+					container.addEventListener( MouseEvent.ROLL_OVER, _startMouseInteraction, false );
+					container.addEventListener( MouseEvent.ROLL_OUT, _stopMouseInteraction, false );
+				}
+				else
+				{
+					_stopMouseInteraction();
+				}
+				// --
+				mouseInteractivity = p_bState;
+			}
+		}
+		
+		public function get enableInteractivity():Boolean
+		{ return mouseInteractivity; }
+		
+		
+		protected function _onTextureInteraction( p_oEvt:Event = null ) : void
+		{
+			if ( p_oEvt == null || !(p_oEvt is MouseEvent) ) p_oEvt = new MouseEvent( MouseEvent.MOUSE_MOVE, true, false, 0, 0, null, false, false, false, false, 0);
+			
+		    //	get the position of the mouse on the poly
+			var pt2D : Point = new Point( scene.container.mouseX, scene.container.mouseY );
+			var uv : UVCoord = getUVFrom2D( pt2D );
+			
+			VirtualMouse.getInstance().interactWithTexture( this, uv, p_oEvt as MouseEvent );
+			_onInteraction( p_oEvt );
+		}
+				
 		/**
 		 * Calculates and returns the normal vector of the polygon.
 		 *
@@ -680,5 +746,6 @@ package sandy.core.data
 
 		/** Boolean representing the state of the event activation */
 		private var mouseEvents:Boolean = false;
+		private var mouseInteractivity:Boolean = false;
 	}
 }

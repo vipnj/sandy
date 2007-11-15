@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	applicationComplete="createSandyScene()"
+	width="640"
+	height="500"
+	layout="vertical"
+	paddingTop="0"
+	paddingRight="0"
+	paddingBottom="0"
+	paddingLeft="0" >
+	
+	<mx:Script>
+		<![CDATA[
+		
+			private function createSandyScene():void 
+			{
+				var demo:InteractionTest = new InteractionTest( this );
+				// --
+				spriteContainer.addChild( demo );
+			}
+					
+		]]>
+	</mx:Script>
+ 
+ 	<mx:TextArea id="textArea" borderStyle="none" width="200" height="100"  y="120" verticalScrollPolicy="on" horizontalScrollPolicy="on" visible="true">
+ 	</mx:TextArea>
+  
+	<mx:UIComponent id="spriteContainer" width="640" height="480" />
+	
+</mx:Application>

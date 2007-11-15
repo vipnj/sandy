@@ -5,24 +5,18 @@ package sandy.core.interaction
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
-	import flash.display.MovieClip;
 	import flash.display.SimpleButton;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
-	import sandy.core.data.Matrix4;
+	
 	import sandy.core.data.Polygon;
 	import sandy.core.data.UVCoord;
-	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
-	import sandy.core.Scene3D;
-	import sandy.events.BubbleEvent;
-	import sandy.materials.BitmapMaterial;
 	import sandy.materials.MovieMaterial;
-	import sandy.math.VectorMath;
 	
 	
 	/**
@@ -40,9 +34,9 @@ package sandy.core.interaction
 		private static var _oI		: VirtualMouse;
 		
 	//	target
-		private var m_ioTarget		: InteractiveObject;
+		private var m_ioTarget		: Sprite;
 	//	old target
-		private var m_ioOldTarget	: InteractiveObject;
+		private var m_ioOldTarget	: Sprite;
 		private var location		: Point;
 		private var lastLocation	: Point;
 		private var lastWithinStage	: Boolean = true;
@@ -70,7 +64,7 @@ package sandy.core.interaction
 	**************************************************************************** */	
 		public function interactWithTexture(  p_oPoly : Polygon, p_uvTexture : UVCoord, p_event : MouseEvent ) : void
 		{
-		// -- recuperation du material appliqu� sur le polygone
+			// -- recuperation du material appliqu� sur le polygone
 			var l_oMaterial:MovieMaterial = (p_oPoly.visible ? p_oPoly.appearance.frontMaterial : p_oPoly.appearance.backMaterial) as MovieMaterial;
 			if( l_oMaterial == null ) return;
 
@@ -81,8 +75,8 @@ package sandy.core.interaction
 			//		1) is not ignored
 			//		2) is InteractiveObject
 			//		3) mouseEnabled
-			var objectsUnderPoint:Array = l_oMaterial.movie.getObjectsUnderPoint(location);
-			var currentTarget:InteractiveObject;
+			var objectsUnderPoint:Array = m_ioTarget.getObjectsUnderPoint(location);
+			var currentTarget:Sprite;
 			var currentParent:DisplayObject;
 			
 			var i:int = objectsUnderPoint.length;
@@ -110,7 +104,7 @@ package sandy.core.interaction
 					// and mouseEnabled is true
 					if (!currentTarget && currentParent is DisplayObjectContainer && DisplayObjectContainer(currentParent).mouseEnabled) 
 					{
-						currentTarget = ( currentParent as InteractiveObject );
+						currentTarget = ( currentParent as Sprite );
 					}
 					
 					// next parent in hierarchy

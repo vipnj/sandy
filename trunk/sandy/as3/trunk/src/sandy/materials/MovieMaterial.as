@@ -21,7 +21,7 @@ package sandy.materials
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
@@ -41,7 +41,7 @@ package sandy.materials
 	public class MovieMaterial extends BitmapMaterial
 	{
 		private var m_oTimer :Timer;
-		private var m_oMovie : MovieClip;
+		private var m_oMovie : Sprite;
 		private var m_bUpdate : Boolean;
 
 		/**
@@ -58,7 +58,7 @@ package sandy.materials
 		 * @param p_nWidth	desired width ( chunk the movieclip )
 		 * @param p_nHeight	desired height ( chunk the movieclip )
 		 */
-		public function MovieMaterial( p_oMovie:MovieClip, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null, p_bRemoveTransparentBorder:Boolean = false, p_nHeight:Number=0, p_nWidth:Number=0 )
+		public function MovieMaterial( p_oMovie:Sprite, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null, p_bRemoveTransparentBorder:Boolean = false, p_nHeight:Number=0, p_nWidth:Number=0 )
 		{
 			var w : Number;
 			var h : Number;
@@ -139,7 +139,7 @@ package sandy.materials
 		/**
 		 * Get the movieclip used for the material
 		 */
-		public function get movie() : MovieClip
+		public function get movie() : Sprite
 		{
 			return m_oMovie;
 		}

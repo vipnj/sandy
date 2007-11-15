@@ -68,6 +68,7 @@ package demos
 			// --
 			m_oPlane = new Plane3D("myPlane", 200, 200, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableBackFaceCulling = false;
+			//m_oPlane.swapCulling();
 			m_oPlane.appearance = createAppearance();
 			// --
 			lG.addChild( m_oPlane );
@@ -77,8 +78,8 @@ package demos
 		
 		private function enterFrameHandler( event : Event ) : void
 		{
-			m_oPlane.rotateX = (stage.width/2 - mouseX)*0.25;
-			m_oPlane.rotateY = (stage.height/2 - mouseY)*0.25;
+			m_oPlane.rotateX += (stage.width/2 - mouseX)*0.0055;
+			m_oPlane.rotateY += (stage.height/2 - mouseY)*0.0055;
 			m_oScene.render();
 		}
 		

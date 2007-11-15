@@ -33,7 +33,7 @@ package sandy.core.data
 		/**
 		 * Should we use fast math.
 		 */
-		public static var USE_FAST_MATH:Boolean = true;
+		public static var USE_FAST_MATH:Boolean = false;
 		
 		// we force initialization of the fast math table
 		private const _fastMathInitialized:Boolean = FastMath.initialized;

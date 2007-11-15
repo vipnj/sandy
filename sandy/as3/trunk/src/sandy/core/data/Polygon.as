@@ -24,6 +24,7 @@ package sandy.core.data
 	import flash.utils.Dictionary;
 	
 	import sandy.core.Scene3D;
+	import sandy.core.interaction.VirtualMouse;
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.IDisplayable;
 	import sandy.core.scenegraph.Shape3D;
@@ -31,10 +32,10 @@ package sandy.core.data
 	import sandy.events.BubbleEventBroadcaster;
 	import sandy.materials.Appearance;
 	import sandy.math.IntersectionMath;
+	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
-	import sandy.core.interaction.VirtualMouse;
 
 	/**
 	 * Polygon's are the building blocks of visible 3D shapes.
@@ -123,11 +124,6 @@ package sandy.core.data
 		public var uvBounds:Rectangle;
 		
 		/**
-		 *  Normal backface culling side is 1. -1 means that the opposite side is culled.
-		 */
-		public var backfaceCulling:Number;
-
-		/**
 		 * [READ-ONLY] property
 		 * Array of polygons that share an edge with the current polygon.
 		 */
@@ -163,8 +159,6 @@ package sandy.core.data
 		{
 			shape = p_oOwner;
 			m_oGeometry = p_geometry;
-			// --
-			backfaceCulling = 1;
 			// --
 			__update( p_aVertexID, p_aUVCoordsID, p_nFaceNormalID, p_nEdgesID );
 			m_oContainer = new Sprite();
@@ -214,7 +208,6 @@ package sandy.core.data
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
 			var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
-			l_nDot *= backfaceCulling;
 			m_bVisible = ( l_nDot < 0 );
 		}	
 			
@@ -715,8 +708,17 @@ package sandy.core.data
 		 */
 		public function swapCulling():void
 		{
-			// -- swap backface culling
-			backfaceCulling *= -1;
+			//TODO Check the acuracy of this method
+			// reverse the normal
+			var v:Vector = normal.getVector();
+			var m:Matrix4 = Matrix4Math.axisRotation( vertices[0].x - vertices[1].x, vertices[0].y - vertices[1].y, vertices[0].z - vertices[1].z, 180 );
+			m.vectorMult3x3( v );
+			v.normalize();
+			normal.x = v.x;
+			normal.y = v.y;
+			normal.z = v.z;
+			v = null;
+			m = null;
 		}
 
 		/**

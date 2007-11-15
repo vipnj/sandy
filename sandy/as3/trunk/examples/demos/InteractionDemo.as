@@ -11,11 +11,9 @@ package demos
 	import flash.ui.Keyboard;
 	
 	import sandy.core.World3D;
-	import sandy.core.data.Matrix4;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
-	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.core.scenegraph.Shape3D;
@@ -23,12 +21,12 @@ package demos
 	import sandy.events.BubbleEvent;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
+	import sandy.materials.Material;
+	import sandy.materials.attributes.GouraudAttributes;
 	import sandy.materials.attributes.LineAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
-	import sandy.math.VectorMath;
 	import sandy.primitive.Line3D;
 	import sandy.primitive.Sphere;
-	import sandy.util.NumberUtil;
 
 
 	public class InteractionDemo extends Sprite
@@ -121,10 +119,14 @@ package demos
 			m_oPlane = new Sphere("sphere");//new Plane3D("myPlane", 300, 300, 2, 2, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.useSingleContainer = false;
 			m_oPlane.enableEvents = true;
+			m_oPlane.enableForcedDepth = true;
+			m_oPlane.forcedDepth = 99999999;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onClick );
 
-			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineAttributes() );
-			m_oPlane.appearance = new Appearance( new BitmapMaterial( texture, l_oAttr ) );
+			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineAttributes(), new GouraudAttributes() );
+			var l_oMat:Material = new BitmapMaterial( texture, l_oAttr );
+			l_oMat.lightingEnable = true;
+			m_oPlane.appearance = new Appearance( l_oMat );
 			m_oPlane.enableNearClipping = true;
 			
 			lTg.addChild( m_oPlane );

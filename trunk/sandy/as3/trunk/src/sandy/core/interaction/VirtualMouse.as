@@ -75,7 +75,7 @@ package sandy.core.interaction
 			//		1) is not ignored
 			//		2) is InteractiveObject
 			//		3) mouseEnabled
-			var objectsUnderPoint:Array = m_ioTarget.getObjectsUnderPoint(location);
+			var objectsUnderPoint:Array = m_ioTarget.getObjectsUnderPoint( m_ioTarget.localToGlobal( location ) );
 			var currentTarget:Sprite;
 			var currentParent:DisplayObject;
 			

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -14,7 +14,7 @@ limitations under the License.
 # ***** END LICENSE BLOCK *****
 */
 
-package sandy.materials 
+package sandy.materials
 {
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
@@ -24,33 +24,32 @@ package sandy.materials
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.util.NumberUtil;
-	
+
 	/**
 	 * Displays a bitmap on the faces of a 3D shape..
-	 * 
+	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @author		Xavier Martin - zeflasher - transparency managment
-	 * @author		James Dahl - Tip for tesselation optimization
-	 * @author 		Away.com engine, for the perspectice corrected mapping
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
 	public class BitmapMaterial extends Material
 	{
-		
+
 		/**
 		 * This property enable smooth bitmap rendering when set to true.
 		 * The default value is set to false to have the best performance first.
 		 * Enable this property have a performance impact, use it warefully
 		 */
 		public var smooth:Boolean = false;
-		
+
 		/**
 		 * Precision of the bitmap mapping.
 		 * This material uses an affine linear mapping. It results in a lack of accuracy at rendering time when the surface to draw is too big.
@@ -59,13 +58,7 @@ package sandy.materials
 		 * To disable the perspective correction, set this property to zero, which is also the default value
 		 */
 		public var precision:uint = 0;
-		
-		/**
-		 * Maximum level of resurssion allowed when using perpective correction (precision > 0)
-		 * This property modification can have a very important CPU impact, so be careful if you consider to change it.
-		 */
-		public var recurssion:uint = 5;
-		
+
 		/**
 		 * Creates a new BitmapMaterial.
 		 * <p>Please note that we ue internally a copy of the constructor bitmapdata. Thatea mns in case you need to access this bitmapdata, you can't just use the same reference
@@ -80,13 +73,15 @@ package sandy.materials
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
-			texture = p_oTexture.clone();
+			var temp = new BitmapData( p_oTexture.width, p_oTexture.height );
+			temp.draw( p_oTexture );
+			texture = temp;
 			// --
 			m_oCmf = new ColorMatrixFilter();
 			m_oPolygonMatrixMap = new Dictionary();
 			precision = p_nPrecision;
 		}
-		
+
 		/**
 		 * Renders this material on the face it dresses
 		 *
@@ -94,7 +89,7 @@ package sandy.materials
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
 		 */
-		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
+		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
 		{
         	if( m_oTexture == null ) return;
         	// --
@@ -136,7 +131,7 @@ package sandy.materials
 			l_points = null;
 			l_uv = null;
 		}
-		
+
 		protected function _tesselatePolygon ( p_aPoints:Array, p_aUv:Array ):void
 		{
 			var l_points: Array = p_aPoints.slice();
@@ -158,7 +153,7 @@ package sandy.materials
 	        var v0:Vertex = l_points[0];
 	        var v1:Vertex = l_points[1];
 	        var v2:Vertex = l_points[2];
-	        
+
 	        if( precision == 0 )
 	        {
 	        	renderTriangle(map.a, map.b, map.c, map.d, map.tx, map.ty, v0.sx, v0.sy, v1.sx, v1.sy, v2.sx, v2.sy );
@@ -178,7 +173,7 @@ package sandy.materials
 		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number,
             ax:Number, ay:Number, az:Number, bx:Number, by:Number, bz:Number, cx:Number, cy:Number, cz:Number):void
         {
-        	m_nRecLevel++;
+			m_nRecLevel++;
             var mabz:Number = 2 / (az + bz);
             var mbcz:Number = 2 / (bz + cz);
             var mcaz:Number = 2 / (cz + az);
@@ -198,30 +193,26 @@ package sandy.materials
             var dsbc:Number = (dbcx*dbcx + dbcy*dbcy);
             var dsca:Number = (dcax*dcax + dcay*dcay);
 
- 
-            if ((m_nRecLevel > recurssion) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
+            if ((m_nRecLevel > 5) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
             {
                 renderTriangle(ta, tb, tc, td, tx, ty, ax, ay, bx, by, cx, cy);
 				m_nRecLevel--; return;
             }
-			
-			var ta2:Number = ta + ta,tb2:Number = tb+tb,tc2:Number = tc+tc,td2:Number = td+td,tx2:Number = tx+tx,ty2:Number = ty+ty;
-            var mbcx2:Number = mbcx * 0.5, mbcy2:Number = mbcy * 0.5, mabx2:Number = mabx*0.5, maby2:Number = maby * 0.5;
-            
+
             if ((dsab > precision) && (dsca > precision) && (dsbc > precision) )
-            {         
-                renderRec(ta2, tb2, tc2, td2, tx2, ty2,
-                    ax, ay, az, mabx2, maby2, (az+bz)*0.5, mcax*0.5, mcay*0.5, (cz+az)*0.5);
+            {
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2,
+                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, mcax/2, mcay/2, (cz+az)/2);
 
-                renderRec(ta2, tb2, tc2, td2, tx2-1, ty2,
-                    mabx2, maby2, (az+bz)*0.5, bx, by, bz, mbcx2, mbcy2, (bz+cz)*0.5);
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2-1, ty*2,
+                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
 
-                renderRec(ta2, tb2, tc2, td2, tx2, ty2-1,
-                    mcax*0.5, mcay*0.5, (cz+az)*0.5, mbcx2, mbcy2, (bz+cz)*0.5, cx, cy, cz);
+                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2-1,
+                    mcax/2, mcay/2, (cz+az)/2, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
 
-                renderRec(-(ta2), -(tb2), -(tc2), -(td2), -(tx2)+1, -(ty2)+1,
-                    mbcx2, mbcy2, (bz+cz)*0.5, mcax*0.5, mcay*0.5, (cz+az)*0.5, mabx2, maby2, (az+bz)*0.5);
-                    
+                renderRec(-ta*2, -tb*2, -tc*2, -td*2, -tx*2+1, -ty*2+1,
+                    mbcx/2, mbcy/2, (bz+cz)/2, mcax/2, mcay/2, (cz+az)/2, mabx/2, maby/2, (az+bz)/2);
+
                 m_nRecLevel--; return;
             }
 
@@ -229,43 +220,43 @@ package sandy.materials
 
             if (dsab == dmax)
             {
-                renderRec(ta2, tb, tc2, td, tx2, ty,
-                    ax, ay, az, mabx2, maby2, (az+bz)*0.5, cx, cy, cz);
+                renderRec(ta*2, tb*1, tc*2, td*1, tx*2, ty*1,
+                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, cx, cy, cz);
 
-                renderRec(ta2+tb, tb, tc2+td, td, tx2+ty-1, ty,
-                    mabx2, maby2, (az+bz)*0.5, bx, by, bz, cx, cy, cz);
-                    
+                renderRec(ta*2+tb, tb*1, 2*tc+td, td*1, tx*2+ty-1, ty*1,
+                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, cx, cy, cz);
+
                 m_nRecLevel--; return;
             }
 
             if (dsca == dmax)
             {
-                renderRec(ta, tb2, tc, td2, tx, ty2,
-                    ax, ay, az, bx, by, bz, mcax*0.5, mcay*0.5, (cz+az)*0.5);
+                renderRec(ta*1, tb*2, tc*1, td*2, tx*1, ty*2,
+                    ax, ay, az, bx, by, bz, mcax/2, mcay/2, (cz+az)/2);
 
-                renderRec(ta, tb2 + ta, tc, td2 + tc, tx, ty2+tx-1,
-                    mcax*0.5, mcay*0.5, (cz+az)*0.5, bx, by, bz, cx, cy, cz);
+                renderRec(ta*1, tb*2 + ta, tc*1, td*2 + tc, tx, ty*2+tx-1,
+                    mcax/2, mcay/2, (cz+az)/2, bx, by, bz, cx, cy, cz);
 
                 m_nRecLevel--; return;
             }
 
-            renderRec(ta-tb, tb2, tc-td, td2, tx-ty, ty2,
-                ax, ay, az, bx, by, bz, mbcx2, mbcy2, (bz+cz)*0.5);
+            renderRec(ta-tb, tb*2, tc-td, td*2, tx-ty, ty*2,
+                ax, ay, az, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
 
-            renderRec(ta2, tb-ta, tc2, td-tc, tx2, ty-tx,
-                ax, ay, az, mbcx2, mbcy2, (bz+cz)*0.5, cx, cy, cz);
+            renderRec(2*ta, tb-ta, tc*2, td-tc, 2*tx, ty-tx,
+                ax, ay, az, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
 
 			m_nRecLevel--;
         }
 
-		protected function renderTriangle(a:Number, b:Number, c:Number, d:Number, tx:Number, ty:Number, 
+		protected function renderTriangle(a:Number, b:Number, c:Number, d:Number, tx:Number, ty:Number,
 			v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void
 		{
 			var a2:Number = v1x - v0x;
 			var b2:Number = v1y - v0y;
 			var c2:Number = v2x - v0x;
 			var d2:Number = v2y - v0y;
-								   
+
 			matrix.a = a*a2 + b*c2;
 			matrix.b = a*b2 + b*d2;
 			matrix.c = c*a2 + d*c2;
@@ -280,7 +271,7 @@ package sandy.materials
 			graphics.lineTo(v2x, v2y);
 			graphics.endFill();
 		}
-		
+
 
 		protected function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
@@ -295,7 +286,7 @@ package sandy.materials
 			{
 				u0 -= (u0 > 0.05)? 0.05 : -0.05;
 				v0 -= (v0 > 0.07)? 0.07 : -0.07;
-			}	
+			}
 			if( u2 == u1 && v2 == v1 )
 			{
 				u2 -= (u2 > 0.05)? 0.04 : -0.04;
@@ -306,16 +297,15 @@ package sandy.materials
 			m.invert();
 			return m;
 		}
-				
+
 		/**
 		 * The texture ( bitmap ) of this material
-		 * @return the Bitmapdata used to map polygons
 		 */
 		public function get texture():BitmapData
 		{
 			return m_oTexture;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -342,7 +332,7 @@ package sandy.materials
 				}
 			}
 		}
-	
+
 		/**
 		 * Changes the transparency of the texture.
 		 *
@@ -354,15 +344,15 @@ package sandy.materials
 		{
 			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
 			if( m_oCmf ) m_oCmf = null;
-			var matrix:Array = [1, 0, 0, 0, 0,
-							 	0, 1, 0, 0, 0, 
-							 	0, 0, 1, 0, 0, 
-							 	0, 0, 0, p_nValue, 0];
-	 
+			var matrix:Array = [	1, 0, 0, 0, 0,
+					    	0, 1, 0, 0, 0,
+					    	0, 0, 1, 0, 0,
+					    	0, 0, 0, p_nValue, 0];
+
 			m_oCmf = new ColorMatrixFilter( matrix );
 			texture.applyFilter( m_orgTexture, texture.rect, m_oPoint, m_oCmf );
 		}
-	
+
 		/**
 		 * Initiates this material.
 		 *
@@ -376,7 +366,7 @@ package sandy.materials
 				var l_oRect:Rectangle = null;
 				// --
 				if( m_nWidth > 0 && m_nHeight > 0 )
-				{		
+				{
 					var l_aUV:Array = p_oPolygon.aUVCoord;
 					if( l_aUV )
 					{
@@ -387,23 +377,23 @@ package sandy.materials
 				m_oPolygonMatrixMap[p_oPolygon.id] = m;
 			}
 		}
-		
+
 		public function toString():String
 		{
 			return 'sandy.materials.BitmapMaterial' ;
 		}
-		
+
 		internal var polygon:Polygon;
         internal var graphics:Graphics;
         internal var map:Matrix = new Matrix();
-        
+
 		protected var m_oTexture:BitmapData;
 		protected var m_orgTexture:BitmapData;
 		private var m_nHeight:Number;
 		private var m_nWidth:Number;
 		private var m_nInvHeight:Number;
 		private var m_nInvWidth:Number;
-		
+
 		private var m_nRecLevel:int = 0;
 		protected var m_oPolygonMatrixMap:Dictionary;
 		private var m_oPoint:Point = new Point();

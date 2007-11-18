@@ -64,7 +64,7 @@ package sandy.core.interaction
 	**************************************************************************** */	
 		public function interactWithTexture(  p_oPoly : Polygon, p_uvTexture : UVCoord, p_event : MouseEvent ) : void
 		{
-			// -- recuperation du material appliqu� sur le polygone
+			// -- recuperation du material applique sur le polygone
 			var l_oMaterial:MovieMaterial = (p_oPoly.visible ? p_oPoly.appearance.frontMaterial : p_oPoly.appearance.backMaterial) as MovieMaterial;
 			if( l_oMaterial == null ) return;
 
@@ -80,7 +80,7 @@ package sandy.core.interaction
 			var currentParent:DisplayObject;
 			
 			var i:int = objectsUnderPoint.length;
-			while (i--) 
+			while ( --i > -1 ) 
 			{
 				currentParent = objectsUnderPoint[i];
 				
@@ -114,19 +114,16 @@ package sandy.core.interaction
 
 			// if a currentTarget was not found
 			// the currentTarget is the texture
-			if (!currentTarget){
+			if (!currentTarget)
+			{
 				currentTarget = m_ioTarget;
 			}
 			
 			if ( !m_ioOldTarget ) currentTarget.stage;
-				
-//trace( "old target: " + m_ioOldTarget )
-//trace( "current target: " + currentTarget )
-//trace( "mouse event: " + p_event )
-//trace( "--------------------------------------" )
-			
-		//	if the target is a textfield
-		/*	if ( currentTarget is TextField ) {
+						
+			//	if the target is a textfield
+			/*	if ( currentTarget is TextField ) 
+			{
 				_checkLinks( currentTarget as TextField );
 				return;
 			}*/
@@ -136,20 +133,19 @@ package sandy.core.interaction
 			var currentTargetLocal:Point = currentTarget.globalToLocal(location);
 			
 			// move event
-			if (lastLocation.x != location.x || lastLocation.y != location.y) {
-				
+			if (lastLocation.x != location.x || lastLocation.y != location.y) 
+			{	
 				var withinStage:Boolean = Boolean(location.x >= 0 && location.y >= 0 && location.x <= p_oPoly.container.stage.stageWidth && location.y <= p_oPoly.container.stage.stageHeight);
-				
 				// mouse leave if left stage
-				if ( !withinStage && lastWithinStage ){
+				if ( !withinStage && lastWithinStage )
+				{
 					_lastEvent = new MouseEvent(Event.MOUSE_LEAVE, false, false);
 					p_oPoly.container.stage.dispatchEvent(_lastEvent);
 					dispatchEvent(_lastEvent);
 				}
-				
 				// only mouse move if within stage
-				if ( withinStage ){
-					
+				if ( withinStage )
+				{	
 					//_lastEvent = new MouseEvent( MouseEvent.MOUSE_MOVE, true, false, currentTargetLocal.x, currentTargetLocal.y, currentTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta );
 					_lastEvent = new MouseEvent(Event.MOUSE_LEAVE, false, false);
 					currentTarget.dispatchEvent(_lastEvent);
@@ -161,23 +157,20 @@ package sandy.core.interaction
 			}
 			
 			// roll/mouse (out and over) events 
-			if ( currentTarget != m_ioOldTarget ) {
-				
+			if ( currentTarget != m_ioOldTarget ) 
+			{	
 				// off of last target
 				_lastEvent = new MouseEvent(MouseEvent.MOUSE_OUT, true, false, targetLocal.x, targetLocal.y, currentTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta);
 				m_ioTarget.dispatchEvent(_lastEvent);
-				dispatchEvent(_lastEvent);
-				
+				dispatchEvent(_lastEvent);	
 				// rolls do not propagate
 				_lastEvent = new MouseEvent(MouseEvent.ROLL_OUT, false, false, targetLocal.x, targetLocal.y, currentTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta);
 				m_ioTarget.dispatchEvent(_lastEvent);
 				dispatchEvent(_lastEvent);
-				
 				// on to current target
 				_lastEvent = new MouseEvent(MouseEvent.MOUSE_OVER, true, false, currentTargetLocal.x, currentTargetLocal.y, m_ioOldTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta);
 				currentTarget.dispatchEvent(_lastEvent);
 				dispatchEvent(_lastEvent);
-
 				// rolls do not propagate
 				_lastEvent = new MouseEvent( MouseEvent.ROLL_OVER, false, false, currentTargetLocal.x, currentTargetLocal.y, m_ioOldTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta);
 				currentTarget.dispatchEvent(_lastEvent);
@@ -190,11 +183,9 @@ package sandy.core.interaction
 				_lastEvent = new MouseEvent(MouseEvent.MOUSE_DOWN, true, false, currentTargetLocal.x, currentTargetLocal.y, currentTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta);
 				currentTarget.dispatchEvent(_lastEvent);
 				dispatchEvent(_lastEvent);
-				
 				// remember last down
 				lastDownTarget = currentTarget;
-				
-			// mouse is up
+				// mouse is up
 			} 
 			else if ( p_event.type == MouseEvent.MOUSE_UP )
 			{
@@ -202,7 +193,8 @@ package sandy.core.interaction
 				currentTarget.dispatchEvent(_lastEvent);
 				dispatchEvent(_lastEvent);
 			}
-			else if ( p_event.type == MouseEvent.CLICK ) {
+			else if ( p_event.type == MouseEvent.CLICK ) 
+			{
 				_lastEvent = new MouseEvent(MouseEvent.CLICK, true, false, currentTargetLocal.x, currentTargetLocal.y, currentTarget, p_event.ctrlKey, p_event.altKey, p_event.shiftKey, p_event.buttonDown, p_event.delta);
 				currentTarget.dispatchEvent(_lastEvent);
 				dispatchEvent(_lastEvent);

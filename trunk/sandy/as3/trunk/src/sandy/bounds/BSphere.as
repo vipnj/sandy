@@ -123,70 +123,37 @@ package sandy.bounds
 		 */		
 		public function compute( p_aVertices:Array ):void
 		{
-			var x:Number, y:Number, z:Number, d:Number;
 			if(p_aVertices.length == 0) return;
-			
-			var p:Array = new Array();
-			var i:int, j:int, l:int = 0;
-			
-			for each( var v:Vertex in p_aVertices )
-			{
-				p.push( v.getVector() );
-				l++;
-			}
-	
-			var p1:Vector = p[0];
-			var p2:Vector = p[0];
+			var x:Number, y:Number, z:Number, d:Number, i:int = 0, j:int = 0, l:int = p_aVertices.length;
+			var p1:Vertex = p_aVertices[0].clone();
+			var p2:Vertex = p_aVertices[0].clone();
 			// find the farthest couple of points
-			var dmax:Number = 0;
-			i=0;
-			
-			while( i < l ) 
+			var dmax:Number = 0;			
+			var pA:Vertex, pB:Vertex;
+			while( i < l )
 			{
 				j = i + 1;
-				while( j < l ) 
+				while( j < l )
 				{
-					x = p[int(j)].x - p[int(i)].x;
-					y = p[int(j)].y - p[int(i)].y;
-					z = p[int(j)].z - p[int(i)].z;
+					pA = p_aVertices[int(i)];
+					pB = p_aVertices[int(j)];
+					x = pB.x - pA.x;
+					y = pB.y - pA.y;
+					z = pB.z - pA.z;
 					d = x * x + y * y + z * z;
-					if(d > dmax) 
+					if(d > dmax)
 					{
 						dmax = d;
-						p1 = p[int(i)];
-						p2 = p[int(j)];
+						p1.copy( pA );
+						p2.copy( pB );
 					}
-					
-					j++;
+					j += 1;
 				}
-				i++;
+				i += 1;
 			}
-	
+			// --
 			center = new Vector((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2);
 			radius = Math.sqrt(dmax) / 2;
-	        /*
-			var r:Array = pointsOutofSphere(p);
-			if(r.length == 0) 
-			{
-				return;
-			}
-	
-			var q:Vector = VectorMath.clone(center );
-			for( i = 0; i < r.length; i++) 
-			{
-				x = r[int(i)].x - center.x;
-				y = r[int(i)].y - center.y;
-				z = r[int(i)].z - center.z;
-				d = Math.sqrt(x * x + y * y + z * z);
-				d = 0.5 - radius / d / 2;
-				q.x = (q.x + x * d);
-				q.y = (q.y + y * d);
-				q.z = (q.z + z * d);
-			}
-			center = q;
-	
-			radius = computeRadius(p);
-			*/
 		}
 	  
 	  

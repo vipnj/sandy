@@ -254,9 +254,7 @@ package sandy.core.data
 		 * @return 	true if this face is visible, false otherwise.
 		 */
 		public function get visible(): Boolean
-		{
-			return m_bVisible;
-		}
+		{return m_bVisible;}
 
 		/**
 		 * Returns the real 3D position of the 2D screen position.
@@ -590,9 +588,7 @@ package sandy.core.data
 		{ return mouseEvents; }
 
 		protected function _onInteraction( p_oEvt:Event ):void
-		{
-			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
-		}
+		{m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );}
 		
 		protected function _startMouseInteraction( e : MouseEvent = null ) : void
 		{

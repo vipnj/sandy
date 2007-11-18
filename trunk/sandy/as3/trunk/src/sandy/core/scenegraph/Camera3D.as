@@ -22,6 +22,7 @@ package sandy.core.scenegraph
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
+	import sandy.math.Matrix4Math;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
@@ -192,7 +193,7 @@ package sandy.core.scenegraph
 					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
 					// --
 					l_oVertex.projected = true;
-					nbVertices ++;
+					nbVertices += 1;
 				}
 			}
 		}
@@ -245,21 +246,19 @@ package sandy.core.scenegraph
 			// --
 			if( _perspectiveChanged ) updatePerspective();
 			super.update( p_oScene, p_oModelMatrix, p_bChanged );
-			// SHOULD BE DONE IN A FASTER WAY
-			invModelMatrix.copy( modelMatrix );
-			invModelMatrix.inverse();
-			/*new Matrix4( 	modelMatrix.n11,
-					modelMatrix.n21,
-					modelMatrix.n31,
-					- modelMatrix.n14,
-					modelMatrix.n12,
-					modelMatrix.n22,
-					modelMatrix.n32,
-					- modelMatrix.n24,
-					modelMatrix.n13,
-					modelMatrix.n23,
-					modelMatrix.n33,
-					- modelMatrix.n34 );*/
+			// -- fast camera model matrix inverssion
+			invModelMatrix.n11 = modelMatrix.n11;
+			invModelMatrix.n12 = modelMatrix.n21;
+			invModelMatrix.n13 = modelMatrix.n31;
+			invModelMatrix.n21 = modelMatrix.n12;
+			invModelMatrix.n22 = modelMatrix.n22;
+			invModelMatrix.n23 = modelMatrix.n32;
+			invModelMatrix.n31 = modelMatrix.n13;
+			invModelMatrix.n32 = modelMatrix.n23;
+			invModelMatrix.n33 = modelMatrix.n33;
+			invModelMatrix.n14 = -(modelMatrix.n11 * modelMatrix.n14 + modelMatrix.n21 * modelMatrix.n24 + modelMatrix.n31 * modelMatrix.n34);
+			invModelMatrix.n24 = -(modelMatrix.n12 * modelMatrix.n14 + modelMatrix.n22 * modelMatrix.n24 + modelMatrix.n32 * modelMatrix.n34);
+			invModelMatrix.n34 = -(modelMatrix.n13 * modelMatrix.n14 + modelMatrix.n23 * modelMatrix.n24 + modelMatrix.n33 * modelMatrix.n34);
 		}
 		
 		/**

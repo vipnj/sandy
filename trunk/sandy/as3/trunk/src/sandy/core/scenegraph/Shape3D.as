@@ -241,8 +241,8 @@ package sandy.core.scenegraph
 		{
 			// IF no appearance has bene applied, no display
 			if( m_oAppearance == null ) return;
-			const  l_nZNear:Number = p_oCamera.near;
-	        const 	l_aPoints:Array = m_oGeometry.aVertex,
+			var  l_nZNear:Number = p_oCamera.near;
+	        var 	l_aPoints:Array = m_oGeometry.aVertex,
 	        		l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aNormals:Array = m_oGeometry.aFacesNormals,
 					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
@@ -260,18 +260,6 @@ package sandy.core.scenegraph
 				l_oNormal.wx  = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
 				l_oNormal.wy  = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
 				l_oNormal.wz  = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
-			}
-			
-			// -- Only is required by the apperance, we are going to transform the vertex normals
-			if( m_oAppearance.useVertexNormal )
-			{
-				// -- Now we transform the vertex normals.
-				for each( l_oVertexNormal in l_aVertexNormals )
-				{
-					l_oVertexNormal.wx = l_oVertexNormal.x * m11 + l_oVertexNormal.y * m12 + l_oVertexNormal.z * m13;
-					l_oVertexNormal.wy = l_oVertexNormal.x * m21 + l_oVertexNormal.y * m22 + l_oVertexNormal.z * m23;
-					l_oVertexNormal.wz = l_oVertexNormal.x * m31 + l_oVertexNormal.y * m32 + l_oVertexNormal.z * m33;
-				}
 			}
 			
 			// -- Now we can transform the objet vertices into the camera coordinates
@@ -733,33 +721,30 @@ package sandy.core.scenegraph
 		
 		private function __generatePolygons( p_oGeometry:Geometry3D ):void
 		{
-			var i:uint = 0;
+			var i:int = 0, j:int = 0, l:int = p_oGeometry.aFacesVertexID.length;
 			// --
-			for each ( var o:* in p_oGeometry.aFacesVertexID )
+			for( i=0; i < l; i += 1 )
 			{
 				aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i, i );
-				if( m_oAppearance ) aPolygons[i].appearance = m_oAppearance;
-				this.broadcaster.addChild( aPolygons[i].broadcaster );
-				// If the polygon shall render with its container, we add it, otherwise we register the shape container as container of the polygon
-				i++;
+				if( m_oAppearance ) aPolygons[int(i)].appearance = m_oAppearance;
+				this.broadcaster.addChild( aPolygons[int(i)].broadcaster );
 			}
 			// -- attempt to create the neighboors relation between polygons
-	        
-	        var j: uint;
-	        var a: uint = aPolygons.length;
-	        //for( j = a - 1, i = 0 ; i < a ; j = i, i++ )
-	        for( i = 0; i < a-1; i++ )
+	        var a:int = aPolygons.length, lCount:int = 0;
+	        var lP1:Polygon, lP2:Polygon;
+	        var l_aEdges:Array;
+	        for( i = 0; i < a-1; i+=1 )
 	        {
-	        	for( j=i+1; j < a; j++ )
+	        	for( j=i+1; j < a; j+=1 )
 		        {
-		        	var lP1:Polygon = aPolygons[i];
-		        	var lP2:Polygon = aPolygons[j];
+		        	lP1 = aPolygons[int(i)];
+		        	lP2 = aPolygons[int(j)];
+		        	l_aEdges = lP2.aEdges;
 		        	// -- check if they share at least 2 vertices
-		        	var lCount:uint = 0;
 		        	for each( var l_oEdge:Edge3D in lP1.aEdges )
-		        		if( lP2.aEdges.indexOf( l_oEdge ) > -1 ) lCount++;
+		        		if( l_aEdges.indexOf( l_oEdge ) > -1 ) lCount++;
 		        	// --
-		        	if( lCount > 0 )
+		        	if( lCount > 1 )
 		        	{
 		        		lP1.aNeighboors.push( lP2 );
 		        		lP2.aNeighboors.push( lP1 );

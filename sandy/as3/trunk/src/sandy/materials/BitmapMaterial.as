@@ -73,7 +73,7 @@ package sandy.materials
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
-			var temp = new BitmapData( p_oTexture.width, p_oTexture.height );
+			var temp = new BitmapData( p_oTexture.width, p_oTexture.height, true, 0x00FFFFFF );
 			temp.draw( p_oTexture );
 			texture = temp;
 			// --

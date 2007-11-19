@@ -101,7 +101,7 @@ package sandy.core
 		{return m_bRectClipped;}
 		
 		/**
-		 * Enable this property (default value is false) to perfectly clip your 3D scene to the viewport dimension.
+		 * Enable this property (default value is true!) to perfectly clip your 3D scene to the viewport dimension.
 		 * Once enabled, even if you don't have enableClipping set to true for each of your objects, nothing will be drawn outside
 		 */
 		public function set rectClipping( p_bEnableClipping:Boolean ):void
@@ -167,7 +167,7 @@ package sandy.core
 			return true;
 		}
 		
-		private var m_bRectClipped:Boolean = false;
+		private var m_bRectClipped:Boolean = true;
 		private var _light:Light3D; 	//the unique light instance of the world
 	}
 }

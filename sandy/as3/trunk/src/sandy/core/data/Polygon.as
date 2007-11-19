@@ -36,6 +36,7 @@ package sandy.core.data
 	import sandy.math.VectorMath;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
+	import flash.events.KeyboardEvent;
 
 	/**
 	 * Polygon's are the building blocks of visible 3D shapes.
@@ -601,6 +602,10 @@ package sandy.core.data
 			container.addEventListener(MouseEvent.MOUSE_OVER, _onTextureInteraction);
 			container.addEventListener(MouseEvent.MOUSE_OUT, _onTextureInteraction);
 			container.addEventListener(MouseEvent.MOUSE_WHEEL, _onTextureInteraction);
+			
+			container.addEventListener(KeyboardEvent.KEY_DOWN, _onTextureInteraction);
+			container.addEventListener(KeyboardEvent.KEY_UP, _onTextureInteraction);
+			
 			m_oContainer.addEventListener( Event.ENTER_FRAME, _onTextureInteraction );
 		}
 		
@@ -616,6 +621,10 @@ package sandy.core.data
 			container.removeEventListener(MouseEvent.MOUSE_OUT, _onTextureInteraction);
 			container.removeEventListener(MouseEvent.MOUSE_WHEEL, _onTextureInteraction);
 			m_oContainer.removeEventListener( Event.ENTER_FRAME, _onTextureInteraction );
+			
+			container.removeEventListener(KeyboardEvent.KEY_DOWN, _onTextureInteraction);
+			container.removeEventListener(KeyboardEvent.KEY_UP, _onTextureInteraction);
+			
 		}
 		
 		public function set enableInteractivity( p_bState:Boolean ):void

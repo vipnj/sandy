@@ -21,10 +21,12 @@ package sandy.materials
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
-	
+	import flash.filters.ColorMatrixFilter;
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.util.NumberUtil;
 
 	/**
 	 * Displays a MovieClip on the faces of a 3D shape.
@@ -62,7 +64,7 @@ package sandy.materials
 		{
 			var w : Number;
 			var h : Number;
-			
+
 			if ( p_bRemoveTransparentBorder )
 			{
 				var tmpBmp : BitmapData = new BitmapData(  p_oMovie.width, p_oMovie.height, true, 0x00FF0000 );
@@ -71,13 +73,13 @@ package sandy.materials
 				w = rect.width;
 				h = rect.height;
 			}
-			else 
+			else
 			{
 				w = p_nWidth ? p_nWidth :  p_oMovie.width;
-				h = p_nHeight ? p_nHeight : p_oMovie.height;				
+				h = p_nHeight ? p_nHeight : p_oMovie.height;
 			}
 
-			super( new BitmapData( w, h ), p_oAttr );	
+			super( new BitmapData( w, h ), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
 			// --
@@ -85,7 +87,7 @@ package sandy.materials
 			m_oTimer = new Timer( p_nUpdateMS );
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
 			m_oTimer.start();
-			
+
 			tmpBmp = null;
 			rect = null;
 			w = undefined;
@@ -106,19 +108,41 @@ package sandy.materials
 		}
 
 		/**
+		 * Changes the transparency of the texture.
+		 *
+		 * <p>The passed value is the percentage of opacity.</p>
+		 *
+		 * @param p_nValue 	A value between 0 and 1. (automatically constrained)
+		 */
+		public override function setTransparency( p_nValue:Number ):void
+		{ // Overridden to make transparency setting work
+			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
+			if( m_oCmf ) m_oCmf = null;
+			var matrix:Array = [	1, 0, 0, 0, 0,
+					    	0, 1, 0, 0, 0,
+					    	0, 0, 1, 0, 0,
+					    	0, 0, 0, p_nValue, 0];
+
+			m_oCmf = new ColorMatrixFilter( matrix );
+		}
+
+
+		/**
 		 * Updates this material each internal timer cycle.
 		 */
 		private function _update( p_eEvent:Event ):void
 		{
 			if ( m_bUpdate )
 			{
-				m_oTexture.fillRect( m_oTexture.rect, 0x00FFFFFF );
+				//m_oTexture.fillRect( m_oTexture.rect, 0x00FFFFFF );
 				// --
-				m_oTexture.draw( m_oMovie );
+				m_oTexture.draw( m_oMovie );//
+				// The filter must be applied after update
+				texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
 			}
 			m_bUpdate = false;
 		}
-		
+
 		/**
 		 * Call this method when you want to start the material update.
 		 * This is automatically called at the material creation so basically it is used only when the MovieMaterial::stop() method has been called
@@ -127,7 +151,7 @@ package sandy.materials
 		{
 			m_oTimer.start();
 		}
-		
+
 		/**
 		 * Call this method is case you would like to stop the automatic MovieMaterial texture update.
 		 */
@@ -135,7 +159,7 @@ package sandy.materials
 		{
 			m_oTimer.stop();
 		}
-		
+
 		/**
 		 * Get the movieclip used for the material
 		 */
@@ -143,6 +167,6 @@ package sandy.materials
 		{
 			return m_oMovie;
 		}
-		
+
 	}
 }

@@ -21,10 +21,12 @@ package sandy.materials
 	import flash.events.TimerEvent;
 	import flash.media.Video;
 	import flash.utils.Timer;
-	
+	import flash.filters.ColorMatrixFilter;
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.util.NumberUtil;
 
 	/**
 	 * Displays a Flash video ( FLV ) on the faces of a 3D shape.
@@ -44,10 +46,10 @@ package sandy.materials
 		 * In case you need a specific color, change  this value at your application initialization
 		 */
 		public static var DEFAULT_FILL_COLOR:uint = 0;
-		
+
 		private var m_oTimer:Timer;
 		private var m_oVideo : Video;
-		
+
 		/**
 		 * Creates a new VideoMaterial.
 		 *
@@ -82,15 +84,37 @@ package sandy.materials
 		}
 
 		/**
+		 * Changes the transparency of the texture.
+		 *
+		 * <p>The passed value is the percentage of opacity.</p>
+		 *
+		 * @param p_nValue 	A value between 0 and 1. (automatically constrained)
+		 */
+		public override function setTransparency( p_nValue:Number ):void
+		{ // Overridden to make transparency setting work
+			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
+			if( m_oCmf ) m_oCmf = null;
+			var matrix:Array = [	1, 0, 0, 0, 0,
+					    	0, 1, 0, 0, 0,
+					    	0, 0, 1, 0, 0,
+					    	0, 0, 0, p_nValue, 0];
+
+			m_oCmf = new ColorMatrixFilter( matrix );
+		}
+
+
+		/**
 		 * Updates this material each internal timer cycle.
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			m_oTexture.fillRect( m_oTexture.rect, DEFAULT_FILL_COLOR );
+			//m_oTexture.fillRect( m_oTexture.rect, DEFAULT_FILL_COLOR );
 			// --
 			m_oTexture.draw( m_oVideo, null, null, null, null, true );
+			// The filter must be applied after update
+			texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
 		}
-		
+
 		/**
 		 * Call this method when you want to start the material update.
 		 * This is automatically called at the material creation so basically it is used only when the VideoMaterial::stop() method has been called
@@ -99,7 +123,7 @@ package sandy.materials
 		{
 			m_oTimer.start();
 		}
-		
+
 		/**
 		 * Call this method is case you would like to stop the automatic video material graphics update.
 		 */

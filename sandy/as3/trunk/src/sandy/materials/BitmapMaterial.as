@@ -396,8 +396,8 @@ package sandy.materials
 
 		private var m_nRecLevel:int = 0;
 		protected var m_oPolygonMatrixMap:Dictionary;
-		private var m_oPoint:Point = new Point();
-		private var m_oCmf:ColorMatrixFilter;
+		protected var m_oPoint:Point = new Point();
+		protected var m_oCmf:ColorMatrixFilter;
 		protected var matrix:Matrix = new Matrix();
 	}
 }

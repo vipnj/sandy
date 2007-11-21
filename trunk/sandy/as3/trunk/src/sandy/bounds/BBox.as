@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -181,13 +181,13 @@ package sandy.bounds
 		    for each ( lVector in aTCorners )
 			{
 				if( lVector.x < tmin.x )		tmin.x = lVector.x;
-				else if( lVector.x > tmax.x )	tmax.x = lVector.x;
+				if( lVector.x > tmax.x )		tmax.x = lVector.x;
 				// --
 				if( lVector.y < tmin.y )		tmin.y = lVector.y;
-				else if( lVector.y > tmax.y )	tmax.y = lVector.y;
+				if( lVector.y > tmax.y )		tmax.y = lVector.y;
 				// --
 				if( lVector.z < tmin.z )		tmin.z = lVector.z;
-				else if( lVector.z > tmax.z )	tmax.z = lVector.z;
+				if( lVector.z > tmax.z )		tmax.z = lVector.z;
 	    	}
 	    }
 	    

@@ -175,9 +175,9 @@ package sandy.bounds
 		    }
 		    
 		    // --
-		    tmin.x = Number.MAX_VALUE;tmax.x = Number.MIN_VALUE;
-			tmin.y = Number.MAX_VALUE;tmax.y = Number.MIN_VALUE;
-			tmin.z = Number.MAX_VALUE;tmax.z = Number.MIN_VALUE;
+		    tmin.x = Number.MAX_VALUE; tmax.x = Number.MIN_VALUE;
+			tmin.y = Number.MAX_VALUE; tmax.y = Number.MIN_VALUE;
+			tmin.z = Number.MAX_VALUE; tmax.z = Number.MIN_VALUE;
 		    for each ( lVector in aTCorners )
 			{
 				if( lVector.x < tmin.x )		tmin.x = lVector.x;

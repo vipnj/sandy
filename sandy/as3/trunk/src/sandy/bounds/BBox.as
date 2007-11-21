@@ -171,29 +171,27 @@ package sandy.bounds
 	     */		
 	    public function transform( p_oMatrix:Matrix4 ):void
 	    {
+		    aTCorners[0].copy( aCorners[0] );
+		    p_oMatrix.vectorMult( aTCorners[0] );
+			tmin.copy( aTCorners[0] ); tmax.copy( tmin );
+
 		    var lVector:Vector;
 		    // --
-		    
-		    for( var lId:uint = 0; lId < 8; lId ++ )
+		    for( var lId:uint = 1; lId < 8; lId ++ )
 		    {
 		        aTCorners[lId].copy( aCorners[lId] )
 		        p_oMatrix.vectorMult( aTCorners[lId] );
-		    }
 		    
-		    // --
-		    tmin.x = Number.MAX_VALUE; tmax.x = Number.MIN_VALUE;
-			tmin.y = Number.MAX_VALUE; tmax.y = Number.MIN_VALUE;
-			tmin.z = Number.MAX_VALUE; tmax.z = Number.MIN_VALUE;
-		    for each ( lVector in aTCorners )
-			{
+				lVector = aTCorners[lId];
+
 				if( lVector.x < tmin.x )		tmin.x = lVector.x;
-				if( lVector.x > tmax.x )		tmax.x = lVector.x;
+				else if( lVector.x > tmax.x )	tmax.x = lVector.x;
 				// --
 				if( lVector.y < tmin.y )		tmin.y = lVector.y;
-				if( lVector.y > tmax.y )		tmax.y = lVector.y;
+				else if( lVector.y > tmax.y )	tmax.y = lVector.y;
 				// --
 				if( lVector.z < tmin.z )		tmin.z = lVector.z;
-				if( lVector.z > tmax.z )		tmax.z = lVector.z;
+				else if( lVector.z > tmax.z )	tmax.z = lVector.z;
 	    	}
 	    	
 	    	// --

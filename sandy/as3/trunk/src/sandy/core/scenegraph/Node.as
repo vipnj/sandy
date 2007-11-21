@@ -415,7 +415,7 @@ package sandy.core.scenegraph
 			if( boundingBox )
 				boundingBox.uptodate = false;
 			if( boundingSphere ) 
-				boundingSphere.uptodate = true;
+				boundingSphere.uptodate = false;
 			
 			/* Shall be overriden */
 			changed = changed || p_bChanged;

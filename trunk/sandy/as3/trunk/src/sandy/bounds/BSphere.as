@@ -36,12 +36,17 @@ package sandy.bounds
 	 */
 	public final class BSphere
 	{
+		/**
+		 * Specify if this object is up to date or not.
+		 * If false, you need to call its transform method to get its correct bounds in the desired frame.
+		 */
+		public var uptodate:Boolean = false;
+		
 		public var center:Vector = new Vector();
 		public var radius:Number = 1;
 		// -----------------------------
 		//    [TRANSFORMED]  -----------
 		public var position:Vector = new Vector();
-		//public var tRadius:Number = 1;
 		
 		/**
 		 * Creates a bounding sphere that encloses a 3D object. This object's vertices are passed
@@ -104,6 +109,7 @@ package sandy.bounds
 	        p_oMatrix.vectorMult( position );
 	        //var l_ncale:Number = Math.sqrt( p_oMatrix.n11 * p_oMatrix.n11 + p_oMatrix.n22 * p_oMatrix.n22 + p_oMatrix.n33 * p_oMatrix.n33 );
 	        //tRadius = radius;// * l_ncale;
+	        uptodate = true;
 	    }
 	    
 		/**

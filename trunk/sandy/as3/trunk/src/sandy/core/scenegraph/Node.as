@@ -228,7 +228,7 @@ package sandy.core.scenegraph
 		 *
 		 * @return 		The requested node or null if no child with this is was found
 		 */
-		public function getChildFromId( p_nId:Number, p_bRecurs:Boolean=false ):Node
+		public function getChildFromId( p_nId:uint, p_bRecurs:Boolean=false ):Node
 		{
 			var l_oNode:Node, l_oNode2:Node;
 			for each( l_oNode in children )
@@ -411,11 +411,18 @@ package sandy.core.scenegraph
 		public function update( p_oScene:Scene3D, p_oModelMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			scene = p_oScene;
+			// --
+			if( boundingBox )
+				boundingBox.uptodate = false;
+			if( boundingSphere ) 
+				boundingSphere.uptodate = true;
+			
 			/* Shall be overriden */
 			changed = changed || p_bChanged;
 			var l_oNode:Node;
 			for each( l_oNode in children )
 				l_oNode.update( p_oScene, p_oModelMatrix, changed );
+		
 		}
 
 

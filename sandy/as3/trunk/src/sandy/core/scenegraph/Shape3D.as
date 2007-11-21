@@ -203,7 +203,8 @@ package sandy.core.scenegraph
 		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
-
+			if( culled == Frustum.OUTSIDE ) return;
+			
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
 	        /////////////////////////

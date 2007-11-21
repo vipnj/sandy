@@ -66,7 +66,9 @@ package sandy.materials
 			var v2: Vertex = l_points[zIndices[2]];
 
 			//-- compute gray values
-			p_oPolygon.shape.boundingBox.transform (p_oPolygon.shape.viewMatrix);
+			if (!p_oPolygon.shape.boundingBox.uptodate)
+				p_oPolygon.shape.boundingBox.transform (p_oPolygon.shape.viewMatrix);
+
 			var zM: Number = p_oPolygon.shape.boundingBox.tmin.z;
 			var zR: Number = p_oPolygon.shape.boundingBox.tmax.z - zM;
 			

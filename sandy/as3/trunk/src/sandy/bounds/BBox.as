@@ -36,6 +36,12 @@ package sandy.bounds
 	public class BBox
 	{
 		/**
+		 * Specify if this object is up to date or not.
+		 * If false, you need to call its transform method to get its correct bounds in the desired frame.
+		 */
+		public var uptodate:Boolean = false;
+		
+		/**
 		 * Max vector, representing the upper point of the cube volume
 		 */
 		public var max:Vector;		
@@ -189,6 +195,9 @@ package sandy.bounds
 				if( lVector.z < tmin.z )		tmin.z = lVector.z;
 				if( lVector.z > tmax.z )		tmax.z = lVector.z;
 	    	}
+	    	
+	    	// --
+	    	uptodate = true;
 	    }
 	    
 		/**

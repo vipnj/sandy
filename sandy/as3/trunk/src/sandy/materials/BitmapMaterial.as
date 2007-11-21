@@ -73,7 +73,7 @@ package sandy.materials
 			// --
 			m_nType = MaterialType.BITMAP;
 			// --
-			var temp = new BitmapData( p_oTexture.width, p_oTexture.height, true, 0x00FFFFFF );
+			var temp:BitmapData = new BitmapData( p_oTexture.width, p_oTexture.height, true, 0 );
 			temp.draw( p_oTexture );
 			texture = temp;
 			// --
@@ -315,13 +315,16 @@ package sandy.materials
 			if( m_nHeight != p_oTexture.height) l_bReWrap = true;
 			else if( m_nWidth != p_oTexture.width) l_bReWrap = true;
 			// --
+			if( m_oTexture ) m_oTexture.dispose();
+			if( m_orgTexture ) m_orgTexture.dispose();
+			// --
 			m_oTexture = p_oTexture;
+			m_orgTexture = p_oTexture.clone();
+			
 			m_nHeight = m_oTexture.height;
 			m_nWidth = m_oTexture.width;
 			m_nInvHeight = 1/m_nHeight;
 			m_nInvWidth = 1/m_nWidth;
-			m_oTexture.lock(); // not sure it is faster but it should....
-			m_orgTexture = p_oTexture.clone();
 			// -- We reinitialize the precomputed matrix
 			if( l_bReWrap )
 			{
@@ -345,9 +348,9 @@ package sandy.materials
 			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
 			if( m_oCmf ) m_oCmf = null;
 			var matrix:Array = [	1, 0, 0, 0, 0,
-					    	0, 1, 0, 0, 0,
-					    	0, 0, 1, 0, 0,
-					    	0, 0, 0, p_nValue, 0];
+							    	0, 1, 0, 0, 0,
+							    	0, 0, 1, 0, 0,
+							    	0, 0, 0, p_nValue, 0];
 
 			m_oCmf = new ColorMatrixFilter( matrix );
 			texture.applyFilter( m_orgTexture, texture.rect, m_oPoint, m_oCmf );

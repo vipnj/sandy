@@ -208,7 +208,7 @@ package sandy.core.scenegraph
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
 	        /////////////////////////
-        	boundingSphere.transform( viewMatrix );
+        	if( !boundingSphere.uptodate ) boundingSphere.transform( viewMatrix );
         	culled = p_oFrustum.sphereInFrustum( boundingSphere );
 			// --
 			if( culled == Frustum.INTERSECT && boundingBox )
@@ -216,7 +216,7 @@ package sandy.core.scenegraph
 				////////////////////////
 				////  BOUNDING BOX  ////
 				////////////////////////
-				boundingBox.transform( viewMatrix );
+				if( !boundingBox.uptodate ) boundingBox.transform( viewMatrix );
 				culled = p_oFrustum.boxInFrustum( boundingBox );
 			}
 			

@@ -19,10 +19,10 @@ package sandy.materials
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
-	import flash.filters.ColorMatrixFilter;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
@@ -67,7 +67,7 @@ package sandy.materials
 
 			if ( p_bRemoveTransparentBorder )
 			{
-				var tmpBmp : BitmapData = new BitmapData(  p_oMovie.width, p_oMovie.height, true, 0x00FF0000 );
+				var tmpBmp : BitmapData = new BitmapData(  p_oMovie.width, p_oMovie.height, true, 0 );
 				tmpBmp.draw( p_oMovie );
 				var rect : Rectangle = tmpBmp.getColorBoundsRect( 0xFF000000, 0x00000000, false );
 				w = rect.width;
@@ -88,7 +88,10 @@ package sandy.materials
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );
 			m_oTimer.start();
 
-			tmpBmp = null;
+			if( tmpBmp ) 
+			{
+				tmpBmp.dispose();tmpBmp = null;
+			}
 			rect = null;
 			w = undefined;
 			h = undefined;
@@ -134,9 +137,9 @@ package sandy.materials
 		{
 			if ( m_bUpdate )
 			{
-				//m_oTexture.fillRect( m_oTexture.rect, 0x00FFFFFF );
+				//m_oTexture.fillRect( m_oTexture.rect, 0 );
 				// --
-				m_oTexture.draw( m_oMovie );//
+				m_oTexture.draw( m_oMovie );//, null, null, BlendMode.ALPHA );
 				// The filter must be applied after update
 				texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
 			}

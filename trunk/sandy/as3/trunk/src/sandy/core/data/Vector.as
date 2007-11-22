@@ -252,16 +252,26 @@ package sandy.core.data
 		 */
 		public final function getAngle ( w:Vector ):Number
 		{
-			var ncos:Number = dot( w ) / ( getNorm() * w.getNorm() );
-			var sin2:Number = 1 - ncos * ncos;
-			if (sin2<0)
+			var n1:Number = getNorm();
+			var n2:Number =  w.getNorm();
+			var denom:Number = n1 * n2;
+			if( denom  == 0 ) 
 			{
-				trace(" wrong "+ncos);
-				sin2 = 0;
+				return 0;
 			}
-			//I took long time to find this bug. Who can guess that (1-cos*cos) is negative ?!
-			//sqrt returns a NaN for a negative value !
-			return  Math.atan2( Math.sqrt(sin2), ncos );
+			else
+			{
+				var ncos:Number = dot( w ) / ( denom );
+				var sin2:Number = 1 - (ncos * ncos);
+				if ( sin2 < 0 )
+				{
+					trace(" wrong "+ncos);
+					sin2 = 0;
+				}
+				//I took long time to find this bug. Who can guess that (1-cos*cos) is negative ?!
+				//sqrt returns a NaN for a negative value !
+				return  Math.atan2( Math.sqrt(sin2), ncos );
+			}
 		}
 
 

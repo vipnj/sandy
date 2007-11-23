@@ -731,8 +731,14 @@ package sandy.core.data
 		 */
 		public function destroy():void
 		{
+			clear();
+			// --
+			if( m_oContainer.parent ) m_oContainer.parent.removeChild( m_oContainer );
+			if( m_oContainer ) m_oContainer = null;
+			// --
 			cvertices = null;
 			vertices = null;
+			m_oEB = null;
 		}
 
 

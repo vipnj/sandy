@@ -340,6 +340,32 @@ package sandy.core.scenegraph
 			}
 		}
 
+
+		/**
+		 * Delete the camera node and clear its displaylist.
+		 *  
+		 */
+		public override function destroy():void
+		{
+			var l_oShape:IDisplayable;
+			// --
+			for each( l_oShape in m_aDisplayedList )
+			{
+				if( l_oShape ) l_oShape.clear();
+			}
+			
+			for each( l_oShape in m_aDisplayList )
+			{
+				if( l_oShape ) l_oShape.clear();
+			}
+			// --
+			m_aDisplayedList = null;
+			m_aDisplayList = null;
+			viewport = null;
+			// --
+			super.destroy();
+		}
+		
 		public override function toString():String
 		{
 			return "sandy.core.scenegraph.Camera3D";

@@ -35,13 +35,13 @@ package sandy.events
 		
 		/**
 		 * Stops receiving bubble events from passed-in child.
-		 * 
+		 * FIXME : This method has  very bad implementation and disabled for the moment 
 		 * @param child a {@link BubbleEventBroadcaster} instance that will stop
 		 * to send bubble events.
 		 */
 		public function removeChild( child : BubbleEventBroadcaster ) : void
 		{
-			child.parent = null;
+			//child.parent = null;
 		}
         
 		public override function broadcastEvent( e : Event ) : void

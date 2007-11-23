@@ -500,6 +500,52 @@ package sandy.core.scenegraph
 			return l_result;
 		}
 		
+		
+		/**
+		 * Dispose all the geometry ressources.
+		 * Arrays data is removed, arrays are set to null value to make garbage collection possible
+		 */
+		public function dispose():void
+		{
+			var a:Array, l_oVertex:Vertex;
+			// Points
+			for each( l_oVertex in aVertex )
+			{
+				l_oVertex = null;
+			}
+			aVertex = null;
+			// Faces
+			for each( a in aFacesVertexID )
+			{
+				a = null;
+			}
+			aFacesVertexID = null;
+			// Normals
+			for each( l_oVertex in aFacesNormals )
+			{
+				l_oVertex = null;
+			}
+			aFacesNormals = null;
+			// Normals
+			for each( l_oVertex in aVertexNormals )
+			{
+				l_oVertex = null;
+			}
+			aVertexNormals = null;
+			// UVs face
+			for each( var b:Array in aFacesUVCoordsID )
+			{
+				b = null;
+			}
+			aFacesUVCoordsID = null;
+			// UVs coords
+			for each( var u:UVCoord in aUVCoords )
+			{
+				u = null;
+			}	
+			aUVCoords = null;		
+		}
+		
 		/**
 		 * Returns a string representation of this geometry.
 		 *

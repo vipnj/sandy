@@ -91,6 +91,7 @@ package sandy.core
 					root = p_oRootNode;
 					if ( root != null && camera != null ) root.addChild( camera );
 				}
+				m_sName = p_sName;
 			}
 			// --
 			_light = new Light3D( new Vector( 0, 0, 1 ), 100 );
@@ -111,6 +112,16 @@ package sandy.core
 			if( camera ) camera.viewport.hasChanged = true;
 		}
 
+
+		/**
+		 * Returns the scene's name as a string value.
+		 * This value can't be changed.
+		 */
+		public function get name():String
+		{
+			return m_sName;
+		}
+		
 		/**
 		 * Renders this scene into its display object container.
 		 *
@@ -159,14 +170,21 @@ package sandy.core
 		/**
 		 * Dispose all the resources of this given scene.
 		 *
-		 * <p>[<strong>ToDo</strong>: Test it ]</p>
+		 * <p>Ressources will be free, and scene unregistered from SceneLocator</p>
 		 */
 		public function dispose():Boolean
 		{
+			SceneLocator.getInstance().unregisterScene( m_sName );
 			root.destroy();
+			// --
+			if(root) root = null;
+			if(camera) camera = null;
+			if(_light) _light = null;
+			
 			return true;
 		}
 		
+		protected var m_sName:String;
 		private var m_bRectClipped:Boolean = true;
 		private var _light:Light3D; 	//the unique light instance of the world
 	}

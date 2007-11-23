@@ -34,6 +34,7 @@ package sandy.materials.attributes
 	 * This attributes contains some parameters</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
+	 * @author		Makc for effect improvment 
 	 * @version		3.0
 	 * @date 		13.11.2007
 	 */
@@ -74,11 +75,12 @@ package sandy.materials.attributes
 		internal var matrix:Matrix = new Matrix();
 		internal var l_oVertex:Vertex;
 		 
-		internal const colours:Array = new Array(0,0); 
-		internal const ratios:Array = [ 0x00, 0xFF ];
+		internal var colours:Array = new Array(0,0); 
+		internal var ratios:Array = [ 0x00, 0xFF ];
 		
 		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
+			var m:Number;
 			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
 			v0 = l_aPoints[0];
 	        v1 = l_aPoints[1];
@@ -109,11 +111,47 @@ package sandy.materials.attributes
 			v1 = l_aPoints[int(id1)];
 			v2 = l_aPoints[int(id2)];
 			// --
-			
-			alpha[0] = ( !useBright )? 1-aL[int(id0)] : NumberUtil.constrain( (aL[int(id0)] < 0.5) ? (1-2 * aL[int(id0)]) : (2 * aL[int(id0)] - 1), 0, 1 );
-			alpha[1] = ( !useBright )? 1-aL[int(id2)] : NumberUtil.constrain( (aL[int(id2)] < 0.5) ? (1-2 * aL[int(id2)]) : (2 * aL[int(id2)] - 1), 0, 1 );
-			
 			coef = ( aL[int(id1)] - aL[int(id0)] ) / ( aL[int(id2)] - aL[int(id0)] );
+			
+			//"b" is short for blackness; this is 1 when black, and down to 0
+			// we want 0 to be mapped to transparent normally, and to white if useBright is set
+			var b0:Number = aL[int(id0)] * (useBright ? 2 : 1);
+			var b1:Number = aL[int(id2)] * (useBright ? 2 : 1);
+			// now we have 4 situations to deal with
+			if ((b0<=1)&&(b1<=1))
+			{
+			   // add black color (basically your 1st code)
+			   colours = [ 0, 0 ];
+			   alpha = [ 1-b0, 1-b1 ];
+			   ratios = [ 0x00, 0xFF ];
+			}
+			else if ((b0>1)&&(b1>1))
+			{
+			   // add white color
+			   colours = [ 0xFFFFFF, 0xFFFFFF ];
+			   alpha = [ b0-1, b1-1 ];
+			   ratios = [ 0x00, 0xFF ];
+			}
+			else if ((b0<1)&&(b1>1))
+			{
+			   // add black and white
+			   colours = [ 0, 0, 0xFFFFFF, 0xFFFFFF ];
+			   alpha = [ 1-b0, 0, 0, b1-1 ];
+			   // find the midpoint
+			   m = 0xFF * (1-b0)/(b1-b0);
+			   ratios = [ 0x00, m, m, 0xFF ];
+			}
+			else
+			/* if ((b0>1)&&(b1<1)) -- no need to check this, but keep in mind what this branch is for */
+			{
+			   // add white and black
+			   colours = [ 0xFFFFFF, 0xFFFFFF, 0, 0 ];
+			   alpha = [ b0-1, 0, 0, 1-b1 ];
+			   // find the midpoint
+			   m = 0xFF * (b0-1)/(b0-b1);
+			   ratios = [ 0x00, m, m, 0xFF ];
+			}
+
 			// --
 			p3x = v0.sx + coef * (v2.sx - v0.sx);
 			p3y = v0.sy + coef * (v2.sy - v0.sy);
@@ -135,6 +173,12 @@ package sandy.materials.attributes
 				p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
 			}
 			p_oGraphics.endFill();
+			
+			// --
+			l_aPoints = null;
+			v0N = null;
+			v1N = null;
+			v2N = null;
 		}
 	}
 }

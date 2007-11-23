@@ -134,8 +134,7 @@ package sandy.materials
 			{
 				m_oTexture.fillRect( m_oTexture.rect, 0 );
 				// --
-				m_oAlphaFix.alphaMultiplier = 0;
-				m_oAlphaFix.alphaOffset = 255 * m_oMovie.alpha;
+				m_oAlphaFix.alphaMultiplier = m_oMovie.alpha;
 				m_oTexture.draw( m_oMovie, null, m_oAlphaFix );
 			}
 			m_bUpdate = false;

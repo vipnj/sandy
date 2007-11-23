@@ -362,7 +362,7 @@ package sandy.core.scenegraph
 		*/
 		public function clear():void
 		{
-			m_oContainer.graphics.clear();
+			if( m_oContainer ) m_oContainer.graphics.clear();
 		}
 		
 		/**
@@ -660,12 +660,16 @@ package sandy.core.scenegraph
 		
 		/**
 		 * Destroy this object and all its faces
-		 * [<b>ToDo</b>: the method has a FIXME label and may not work as expected]
+		 * container object is removed, and graphics cleared.  All polygons have their
 		 */
 		public override function destroy():void
 		{
 			// 	FIXME Fix it - it should be more like 
-			//	geometry.destroy();
+			m_oGeometry.dispose();
+			// --
+			clear();
+			if( m_oContainer.parent ) m_oContainer.parent.removeChild( m_oContainer );
+			if( m_oContainer ) m_oContainer = null;
 			// --
 			__destroyPolygons();
 			// --
@@ -711,18 +715,22 @@ package sandy.core.scenegraph
 				var i:int, l:int = aPolygons.length;
 				while( i<l )
 				{
-					this.broadcaster.removeChild( aPolygons[i].broadcaster );
-					Polygon( aPolygons[int(i)] ).destroy();
-					if( m_bUseSingleContainer == false ) World3D.getInstance().container.removeChild( aPolygons[i].container );
-						i++;
+					if( broadcaster != null ) broadcaster.removeChild( aPolygons[i].broadcaster );
+					if( aPolygons[i] ) Polygon( aPolygons[int(i)] ).destroy();
+					// --
+					aPolygons[int(i)] = null;
+					// --
+					i ++;
 				}
 			}
 			aPolygons.splice(0);
+			aPolygons = null;
 		}
 		
 		private function __generatePolygons( p_oGeometry:Geometry3D ):void
 		{
 			var i:int = 0, j:int = 0, l:int = p_oGeometry.aFacesVertexID.length;
+			aPolygons = new Array( l );
 			// --
 			for( i=0; i < l; i += 1 )
 			{

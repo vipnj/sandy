@@ -19,10 +19,11 @@ package demos
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
 	import sandy.primitive.Sphere;
+	import sandy.core.data.Vector;
 	
 	public final class LightDemo extends Sprite
 	{
-		[Embed(source="assets/texrin2.jpg")]
+		[Embed(source="../assets/texrin2.jpg")]
 		private var Texture:Class;
 		
 		public function LightDemo()
@@ -30,6 +31,7 @@ package demos
 			super();
 		}
 		
+		private var m_oSphere:Sphere;
 		private var m_oScene:Scene3D;
 		private var keyPressed:Array = new Array();
 		
@@ -63,7 +65,7 @@ package demos
   
   		private function _createMaterialAttributes():MaterialAttributes
   		{
-  			return new MaterialAttributes( new GouraudAttributes(0.1) );
+  			return new MaterialAttributes( new GouraudAttributes(true, 0.3) );
   		}
   		
 	  	private function _createAppearance():Appearance
@@ -76,7 +78,7 @@ package demos
 	  	
 	  	private function load():void
 	  	{
-	  		var l_oParser:IParser = Parser.create( "assets/Rhino.ASE", null, 0.03 );
+	  		var l_oParser:IParser = Parser.create( "../assets/Rhino.ASE", null, 0.03 );
 	  		l_oParser.standardAppearance = _createAppearance();
 	  		l_oParser.addEventListener( ParserEvent.INIT, _createScene3D );
 	  		l_oParser.parse();
@@ -86,12 +88,13 @@ package demos
 		{
 			m_oScene.root = p_oEvt.group;
 			
-			var l_oSphere:Sphere = new Sphere("mySphere", 30 );
-			l_oSphere.x = 200;
+			m_oSphere = new Sphere("mySphere", 30 );
+			m_oSphere.x = 200;
+			m_oSphere.geometryCenter = new Vector( 50, 0, 0 );
 			var l_oSphereMaterial:ColorMaterial = new ColorMaterial( 0xFF0000, 1, _createMaterialAttributes() );
 			l_oSphereMaterial.lightingEnable = true;
-			l_oSphere.appearance = new Appearance( l_oSphereMaterial  );
-			m_oScene.root.addChild( l_oSphere );
+			m_oSphere.appearance = new Appearance( l_oSphereMaterial  );
+			m_oScene.root.addChild( m_oSphere );
 			
 			m_oScene.root.addChild( m_oScene.camera );
 			
@@ -121,7 +124,10 @@ package demos
 			// --
 			for each( var l_oObject:ATransformable in m_oScene.root.children )
 			{
-				if( l_oObject is Shape3D ) l_oObject.rotateY ++;
+				if( l_oObject is Shape3D )
+				{
+					l_oObject.rotateY ++;
+				}
 			}
 			// --
 			m_oScene.render();

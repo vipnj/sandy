@@ -26,6 +26,7 @@ package sandy.materials
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.math.ColorMath;
 	import sandy.util.NumberUtil;
 
 	/**
@@ -42,9 +43,16 @@ package sandy.materials
 	 */
 	public class MovieMaterial extends BitmapMaterial
 	{
-		private var m_oTimer :Timer;
-		private var m_oMovie : Sprite;
-		private var m_bUpdate : Boolean;
+		/**
+		 * Default color used to draw the bitmapdata content with.
+		 * In case you need a specific color, change  this value at your application initialization
+		 */
+		public static var DEFAULT_FILL_COLOR:uint = 0;
+
+		private var m_oTimer:Timer;
+		private var m_oMovie:Sprite;
+		private var m_bUpdate:Boolean;
+		private var m_oAlpha:ColorTransform;
 
 		/**
 		 * Creates a new MovieMaterial.
@@ -65,7 +73,7 @@ package sandy.materials
 			var w : Number;
 			var h : Number;
 
-			m_oAlphaFix = new ColorTransform ();
+			m_oAlpha = new ColorTransform ();
 
 			if ( p_bRemoveTransparentBorder )
 			{
@@ -81,7 +89,7 @@ package sandy.materials
 				h = p_nHeight ? p_nHeight : p_oMovie.height;
 			}
 
-			super( new BitmapData( w, h, true, 0), p_oAttr );
+			super( new BitmapData( w, h, true, MovieMaterial.DEFAULT_FILL_COLOR), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
 			// --
@@ -121,7 +129,7 @@ package sandy.materials
 		 */
 		public override function setTransparency( p_nValue:Number ):void
 		{
-			m_oMovie.alpha = NumberUtil.constrain( p_nValue, 0, 1 );
+			m_oAlpha.alphaMultiplier = NumberUtil.constrain( p_nValue, 0, 1 );
 		}
 
 
@@ -132,10 +140,10 @@ package sandy.materials
 		{
 			if ( m_bUpdate )
 			{
-				m_oTexture.fillRect( m_oTexture.rect, 0 );
+				m_oTexture.fillRect( m_oTexture.rect,
+					ColorMath.changeAlpha( MovieMaterial.DEFAULT_FILL_COLOR, m_oAlpha.alphaMultiplier) );
 				// --
-				m_oAlphaFix.alphaMultiplier = m_oMovie.alpha;
-				m_oTexture.draw( m_oMovie, null, m_oAlphaFix );
+				m_oTexture.draw( m_oMovie, null, m_oAlpha, null, null, smooth );
 			}
 			m_bUpdate = false;
 		}
@@ -164,7 +172,5 @@ package sandy.materials
 		{
 			return m_oMovie;
 		}
-		
-		private var m_oAlphaFix:ColorTransform;
 	}
 }

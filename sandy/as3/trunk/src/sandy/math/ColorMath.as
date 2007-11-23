@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -28,6 +28,18 @@ package sandy.math
 	 */
 	public class ColorMath
 	{
+		
+		/**
+		 * Returns the color with altered alpha value.
+		 * 
+		 * @param c	32-bit color.
+		 * @param a	New alpha. 	( 0 - 1 )
+		 * @return	The hexadecimal value
+		 */
+		public static function changeAlpha (c:uint, a:Number):uint
+		{
+			return (c & 0xFFFFFF) + Math.floor(a * 0xFF) * 0x1000000;
+		}
 		
 		/**
 		 * Converts color component values ( rgb ) to one hexadecimal value.

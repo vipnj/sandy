@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -113,8 +113,8 @@ package sandy.materials.attributes
 			// --
 			coef = ( aL[int(id1)] - aL[int(id0)] ) / ( aL[int(id2)] - aL[int(id0)] );
 			
-			//"b" is short for blackness; this is 1 when black, and down to 0
-			// we want 0 to be mapped to transparent normally, and to white if useBright is set
+			// "b" is short for brightness; this is 0 when black, and up to 1
+			// we want 1 to be mapped to transparent normally, and to white if useBright is set
 			var b0:Number = aL[int(id0)] * (useBright ? 2 : 1);
 			var b1:Number = aL[int(id2)] * (useBright ? 2 : 1);
 			// now we have 4 situations to deal with

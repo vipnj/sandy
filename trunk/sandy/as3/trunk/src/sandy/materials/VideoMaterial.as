@@ -21,11 +21,12 @@ package sandy.materials
 	import flash.events.TimerEvent;
 	import flash.media.Video;
 	import flash.utils.Timer;
-	import flash.filters.ColorMatrixFilter;
+	import flash.geom.ColorTransform;
 
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.math.ColorMath;
 	import sandy.util.NumberUtil;
 
 	/**
@@ -48,7 +49,9 @@ package sandy.materials
 		public static var DEFAULT_FILL_COLOR:uint = 0;
 
 		private var m_oTimer:Timer;
-		private var m_oVideo : Video;
+		private var m_oVideo:Video;
+		private var m_bUpdate:Boolean;
+		private var m_oAlpha:ColorTransform;
 
 		/**
 		 * Creates a new VideoMaterial.
@@ -62,7 +65,8 @@ package sandy.materials
 		 */
 		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, DEFAULT_FILL_COLOR ), p_oAttr );
+			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, VideoMaterial.DEFAULT_FILL_COLOR ), p_oAttr );
+			m_oAlpha = new ColorTransform ();
 			m_oVideo = p_oVideo;
 			m_nType = MaterialType.VIDEO;
 			// --
@@ -80,6 +84,7 @@ package sandy.materials
 		 */
 		public override function renderPolygon ( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ) : void
 		{
+			m_bUpdate = true;
 			super.renderPolygon( p_oScene, p_oPolygon, p_mcContainer );
 		}
 
@@ -91,15 +96,8 @@ package sandy.materials
 		 * @param p_nValue 	A value between 0 and 1. (automatically constrained)
 		 */
 		public override function setTransparency( p_nValue:Number ):void
-		{ // Overridden to make transparency setting work
-			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
-			if( m_oCmf ) m_oCmf = null;
-			var matrix:Array = [	1, 0, 0, 0, 0,
-					    	0, 1, 0, 0, 0,
-					    	0, 0, 1, 0, 0,
-					    	0, 0, 0, p_nValue, 0];
-
-			m_oCmf = new ColorMatrixFilter( matrix );
+		{
+			m_oAlpha.alphaMultiplier = NumberUtil.constrain( p_nValue, 0, 1 );
 		}
 
 
@@ -108,11 +106,14 @@ package sandy.materials
 		 */
 		private function _update( p_eEvent:TimerEvent ):void
 		{
-			//m_oTexture.fillRect( m_oTexture.rect, DEFAULT_FILL_COLOR );
-			// --
-			m_oTexture.draw( m_oVideo, null, null, null, null, true );
-			// The filter must be applied after update
-			texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
+			if ( m_bUpdate )
+			{
+				m_oTexture.fillRect( m_oTexture.rect,
+					ColorMath.changeAlpha( VideoMaterial.DEFAULT_FILL_COLOR, m_oAlpha.alphaMultiplier) );
+				// --
+				m_oTexture.draw( m_oVideo, null, m_oAlpha, null, null, smooth );
+			}
+			m_bUpdate = false;
 		}
 
 		/**
@@ -131,6 +132,5 @@ package sandy.materials
 		{
 			m_oTimer.stop();
 		}
-
 	}
 }

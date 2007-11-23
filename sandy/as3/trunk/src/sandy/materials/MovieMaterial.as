@@ -19,7 +19,7 @@ package sandy.materials
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
-	import flash.filters.ColorMatrixFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
 	
@@ -65,6 +65,8 @@ package sandy.materials
 			var w : Number;
 			var h : Number;
 
+			m_oAlphaFix = new ColorTransform ();
+
 			if ( p_bRemoveTransparentBorder )
 			{
 				var tmpBmp : BitmapData = new BitmapData(  p_oMovie.width, p_oMovie.height, true, 0 );
@@ -79,7 +81,7 @@ package sandy.materials
 				h = p_nHeight ? p_nHeight : p_oMovie.height;
 			}
 
-			super( new BitmapData( w, h ), p_oAttr );
+			super( new BitmapData( w, h, true, 0), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_nType = MaterialType.MOVIE;
 			// --
@@ -118,15 +120,8 @@ package sandy.materials
 		 * @param p_nValue 	A value between 0 and 1. (automatically constrained)
 		 */
 		public override function setTransparency( p_nValue:Number ):void
-		{ // Overridden to make transparency setting work
-			p_nValue = NumberUtil.constrain( p_nValue, 0, 1 );
-			if( m_oCmf ) m_oCmf = null;
-			var matrix:Array = [	1, 0, 0, 0, 0,
-					    	0, 1, 0, 0, 0,
-					    	0, 0, 1, 0, 0,
-					    	0, 0, 0, p_nValue, 0];
-
-			m_oCmf = new ColorMatrixFilter( matrix );
+		{
+			m_oMovie.alpha = NumberUtil.constrain( p_nValue, 0, 1 );
 		}
 
 
@@ -137,11 +132,11 @@ package sandy.materials
 		{
 			if ( m_bUpdate )
 			{
-				//m_oTexture.fillRect( m_oTexture.rect, 0 );
+				m_oTexture.fillRect( m_oTexture.rect, 0 );
 				// --
-				m_oTexture.draw( m_oMovie );//, null, null, BlendMode.ALPHA );
-				// The filter must be applied after update
-				texture.applyFilter( texture, texture.rect, m_oPoint, m_oCmf );
+				m_oAlphaFix.alphaMultiplier = 0;
+				m_oAlphaFix.alphaOffset = 255 * m_oMovie.alpha;
+				m_oTexture.draw( m_oMovie, null, m_oAlphaFix );
 			}
 			m_bUpdate = false;
 		}
@@ -170,6 +165,7 @@ package sandy.materials
 		{
 			return m_oMovie;
 		}
-
+		
+		private var m_oAlphaFix:ColorTransform;
 	}
 }

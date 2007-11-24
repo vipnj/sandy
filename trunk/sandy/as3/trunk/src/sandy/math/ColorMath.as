@@ -38,7 +38,7 @@ package sandy.math
 		 */
 		public static function changeAlpha (c:uint, a:Number):uint
 		{
-			return (c & 0xFFFFFF) + Math.floor(a * 0xFF) * 0x1000000;
+			var a0:uint = c / 0x1000000; return (c & 0xFFFFFF) + Math.floor(a * a0) * 0x1000000;
 		}
 		
 		/**

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -17,12 +17,12 @@ limitations under the License.
 package sandy.materials
 {
 	import flash.display.Sprite;
-	
+
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.materials.attributes.OutlineAttributes;
-	
+
 	/**
 	 * Displays the outline of a 3D shape in wireframe.
 	 *
@@ -34,7 +34,7 @@ package sandy.materials
 	 */
 	public class OutlineMaterial extends Material
 	{
-		
+
 		/**
 		 * Creates a new OutlineMaterial.
 		 *
@@ -42,7 +42,7 @@ package sandy.materials
 		 * @param p_nColor 	The color of the lines - Default 0
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
 		 */
-		public function OutlineMaterial( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:MaterialAttributes = null )
+		public function OutlineMaterial( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1, p_oAttr:MaterialAttributes = null )
 		{
 			super( p_oAttr );
 			// --
@@ -53,12 +53,12 @@ package sandy.materials
 
 		/**
 		 * Renders this material on the face it dresses.
-		 * 
+		 *
 		 * @param p_oScene		The current scene
 		 * @param p_oPolygon	The face to be rendered
 		 * @param p_mcContainer	The container to draw on
-		 */		
-		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void 
+		 */
+		public override function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
 		{
 			attributes.draw( p_mcContainer.graphics, p_oPolygon, this, p_oScene );
 		}

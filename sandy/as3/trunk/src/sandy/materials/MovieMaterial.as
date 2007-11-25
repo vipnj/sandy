@@ -91,7 +91,7 @@ package sandy.materials
 
 			super( new BitmapData( w, h, true, MovieMaterial.DEFAULT_FILL_COLOR), p_oAttr );
 			m_oMovie = p_oMovie;
-			m_nType = MaterialType.MOVIE;
+			m_oType = MaterialType.MOVIE;
 			// --
 			m_bUpdate = true;
 			m_oTimer = new Timer( p_nUpdateMS );

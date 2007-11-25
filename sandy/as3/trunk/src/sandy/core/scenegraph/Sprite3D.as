@@ -47,6 +47,12 @@ package sandy.core.scenegraph
 		// and offer a method to attach a visual content as a child of the sprite
 		public var offset:uint = 0;
 		
+		/**
+		 * When enabled, the sprite will be displayed at its graphical center.
+		 * Otherwise its top left corner will be set at the computed screen position
+		 */
+		public var autoCenter:Boolean = true;
+		
 		 /**
 	 	 * Creates a Sprite3D
 		 *
@@ -144,7 +150,6 @@ package sandy.core.scenegraph
 
 		/**
 		 * The depth to draw this sprite at.
-		 * <p>[<b>ToDo</b>: Explain ]</p>
 		 */
 		public function get depth():Number
 		{
@@ -239,20 +244,21 @@ package sandy.core.scenegraph
 			super.remove();
 		}
 		
-
 		/**
-		 * Displays this sprite xxx.
+		 * Displays this sprite.
 		 *
-		 * <p>[<b>ToDo</b>: We have a FIXME label here, so it may not work as expected ]</p>
+		 * <p>display the object onto the scene.
+		 * If the object has autocenter enabled, sprite center is set at screen position.
+		 * Otherwise the sprite top left corner will be at that position.</p>
 		 *
 		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
 		 */
-		public function display( p_oScene:Scene3D , p_oContainer:Sprite = null ):void
+		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null  ):void
 		{
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-			m_oContainer.x = _v.sx - m_oContainer.width/2;// - m_nW2;
-			m_oContainer.y = _v.sy - m_oContainer.height/2;// - m_nH2;
+			m_oContainer.x = _v.sx - (autoCenter ? m_oContainer.width/2 : 0);
+			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
 		}
 
 		// Returns the frame to show at the current camera angle
@@ -261,7 +267,7 @@ package sandy.core.scenegraph
 			a = NumberUtil.toDegree( a );
 			a = (( a + offset )+360) % 360;
 			// -- we have a frame for a 360 content, let's make it fit the current one
-			a = uint( a * m_nAutoOffset );
+			a = ( a * m_nAutoOffset ) << 0;
 			return uint(a);
 		}
 

@@ -51,7 +51,7 @@ package sandy.materials
 		{
 			super(p_oAttr);
 			// --
-			m_nType = MaterialType.COLOR;
+			m_oType = MaterialType.COLOR;
 			// --
 			m_nColor = p_nColor;
 			m_nAlpha = p_nAlpha;

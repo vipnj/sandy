@@ -34,85 +34,43 @@ package sandy.materials
 		/**
 		 * Constant value representing the default material
 		 */
-		public static function get NONE():MaterialType { return __none; }
-		private static var __none:MaterialType = new MaterialType( -1 );
-		
+		public static const NONE:MaterialType = new MaterialType("default");
+
 		/**
 		 * Constant value representing the ColorMaterial
 		 */
-		public static function get COLOR():MaterialType { return __simple_color; }
-		private static var __simple_color:MaterialType = new MaterialType( 0 );
-	
+		public static const COLOR:MaterialType = new MaterialType("color");
+
 		/**
 		 * Constant value representing the WireFrameMaterial
 		 */
-		public static function get WIREFRAME():MaterialType { return __wireframe; }
-		private static var __wireframe:MaterialType = new MaterialType( 2 );
-		
+		public static const WIREFRAME:MaterialType = new MaterialType("wireframe");
+
 		/**
 		 * Constant value representing the BitmapMaterial
 		 */
-		public static function get BITMAP():MaterialType { return __bitmap; }
-		private static var __bitmap:MaterialType = new MaterialType( 3 );
-	
+		public static const BITMAP:MaterialType = new MaterialType("bitmap");
+
 		/**
 		 * Constant value representing the MovieMaterial
 		 */
-		public static function get MOVIE():MaterialType { return __movie; }
-		private static var __movie:MaterialType = new MaterialType( 5);
-		
+		public static const MOVIE:MaterialType = new MaterialType("movie");
+
 		/**
 		 * Constant value representing the VideoMaterial
 		 */
-		public static function get VIDEO():MaterialType { return __video; }
-		private static var __video:MaterialType = new MaterialType( 6);
-		
+		public static const VIDEO:MaterialType = new MaterialType("video");
+
 		/**
 		 * Constant value representing the OutlineMaterial
 		 */
-		public static function get OUTLINE():MaterialType { return __outline; }
-		private static var __outline:MaterialType = new MaterialType( 7 );
+		public static const OUTLINE:MaterialType = new MaterialType("outline");
 		
-		//---------//
-		//Variables//
-		//---------//
-		private var	_value:Number; //value of the type
 		
-		//-----------//
-		//Constructor//
-		//-----------//
-		
-		/**
-		 * Creates a TransformType with the associated value.
-		 * 
-		 * @param p_nValue	The type constant value
-		 */
-		public function MaterialType(p_nValue:Number)
+		public function MaterialType( p_sType:String )
 		{
-			_value = p_nValue;
+			m_sType = p_sType;
 		}
-		
-		//--------------//
-		//Public methods//
-		//--------------//
-		/**
-		 * Returns a string representation of this object.
-		 *
-		 * @return	The fully qualified name of this object + its numeric value
-		 */
-		public function toString():String
-		{
-			return "sandy.materials.MaterialType:"+_value;
-		}
-		
-		/**
-		 * Returns the numeric value of this TransformType.
-		 * 
-		 * @return	The numeric value
-		 */
-		public function getValue():Number
-		{
-			return _value;
-		}
+		private var m_sType:String;
 	}
 }

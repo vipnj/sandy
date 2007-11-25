@@ -64,7 +64,7 @@ package sandy.materials
 			_id = _ID_++;
 			attributes = (p_oAttr == null) ? new MaterialAttributes() : p_oAttr;
 			m_bModified = true;
-			m_nType = MaterialType.NONE;
+			m_oType = MaterialType.NONE;
 		}
 		
 		/**
@@ -102,7 +102,7 @@ package sandy.materials
 		 */
 		public function get type():MaterialType
 		{ 
-			return m_nType; 
+			return m_oType; 
 		}
 		
 		/**
@@ -154,7 +154,7 @@ package sandy.materials
 		private var _filters:Array;
 		protected var _useLight : Boolean = false;
 		private var _id:Number;
-		protected var m_nType:MaterialType;
+		protected var m_oType:MaterialType;
 		private static var _ID_:Number = 0;
 		private static var create:Boolean;
 	}

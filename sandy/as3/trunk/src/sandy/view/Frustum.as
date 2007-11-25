@@ -61,7 +61,7 @@ package sandy.view
 		public static const FAR:uint 	= 1;
 		public static const RIGHT:uint 	= 2;
 		public static const LEFT:uint	= 3;
-	    	public static const TOP:uint 	= 4;
+	    public static const TOP:uint 	= 4;
 		public static const BOTTOM:uint = 5; 
 		
 		public static const INSIDE:CullingState = CullingState.INSIDE;
@@ -121,8 +121,10 @@ package sandy.view
 			aPlanes[NEAR] 	= PlaneMath.computePlaneFromPoints( p[0], p[2], p[1] ); // Near
 			aPlanes[FAR] 	= PlaneMath.computePlaneFromPoints( p[4], p[5], p[6] ); // Far
 			
-			for( var i:Number = 0; i < 6; i++ )
-				PlaneMath.normalizePlane( aPlanes[i] );	
+			for( var i:int = 0; i < 6; i++ )
+			{
+				PlaneMath.normalizePlane( aPlanes[int(i)] );
+			}
 		}
 		
 		/**
@@ -190,7 +192,9 @@ package sandy.view
 	        for each( var plane:Plane in aPlanes ) 
 			{
 				if ( PlaneMath.classifyPoint( plane, p_oPoint) == PlaneMath.NEGATIVE )
+				{
 					return Frustum.OUTSIDE;
+				}
 			}
 			return Frustum.INSIDE ;
 		}
@@ -211,10 +215,14 @@ package sandy.view
 	        for each( var plane:Plane in aPlanes ) 
 	        { 
 	            d = plane.a * x + plane.b * y + plane.c * z + plane.d; 
-	            if( d <= -radius ) 
-	                return Frustum.OUTSIDE; 
-	            if( d > radius ) 
+	            if( d <= -radius )
+	            {
+	                return Frustum.OUTSIDE;
+	            }
+	            if( d > radius )
+	            { 
 	                c++;
+	            }
 	        } 
 	        // --
 	        return (c == 6) ? Frustum.INSIDE : Frustum.INTERSECT;
@@ -245,11 +253,18 @@ package sandy.view
 					lDist = plane.a * v.x + plane.b * v.y + plane.c * v.z + plane.d;
 					// is the corner outside or inside
 					if ( lDist < 0 )
+					{
 						out++;
+					}
 					else
+					{
 						iin++;
+					}
 					// -- 
-					if( iin > 0 && out > 0 ) break;
+					if( iin > 0 && out > 0 )
+					{
+						break;
+					}
 				}
 				// if all corners are out
 				if ( iin == 0 )
@@ -339,7 +354,6 @@ package sandy.view
 			}
 			else if( l_nDist1 > 0 && l_nDist0 > 0 ) // ALL IN
 			{
-				
 				p_aCvert.push( v0 );
 				p_aCvert.push( v1 );
 			}
@@ -370,7 +384,9 @@ package sandy.view
 			}
 			
 			if (allin)
+			{
 				return;
+			}
 			else if (allout)
 			{
 				// we return an empty array
@@ -441,6 +457,7 @@ package sandy.view
 				{
 					clipped = true;		// Both out
 				}
+				
 				v1 = v2;
 				dist1 = dist2;
 				l_oUV1 = l_oUV2;

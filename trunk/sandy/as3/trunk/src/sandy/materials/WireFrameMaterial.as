@@ -46,7 +46,7 @@ package sandy.materials
 		{
 			super( p_oAttr );
 			// --
-			m_nType = MaterialType.WIREFRAME;
+			m_oType = MaterialType.WIREFRAME;
 			// --
 			attributes.attributes.push( new LineAttributes( p_nThickness, p_nColor,p_nAlpha ) ) ;
 

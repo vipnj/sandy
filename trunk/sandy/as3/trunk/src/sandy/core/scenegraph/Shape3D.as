@@ -739,7 +739,7 @@ package sandy.core.scenegraph
 				this.broadcaster.addChild( aPolygons[int(i)].broadcaster );
 			}
 			// -- attempt to create the neighboors relation between polygons
-	        var a:int = aPolygons.length, lCount:int = 0;
+	        var a:int = aPolygons.length, lCount:uint = 0;
 	        var lP1:Polygon, lP2:Polygon;
 	        var l_aEdges:Array;
 	        for( i = 0; i < a-1; i+=1 )
@@ -749,11 +749,13 @@ package sandy.core.scenegraph
 		        	lP1 = aPolygons[int(i)];
 		        	lP2 = aPolygons[int(j)];
 		        	l_aEdges = lP2.aEdges;
+		        	// --
+		        	lCount = 0;
 		        	// -- check if they share at least 2 vertices
 		        	for each( var l_oEdge:Edge3D in lP1.aEdges )
-		        		if( l_aEdges.indexOf( l_oEdge ) > -1 ) lCount++;
+		        		if( l_aEdges.indexOf( l_oEdge ) > -1 ) lCount += 1;
 		        	// --
-		        	if( lCount > 1 )
+		        	if( lCount > 0 )
 		        	{
 		        		lP1.aNeighboors.push( lP2 );
 		        		lP2.aNeighboors.push( lP1 );

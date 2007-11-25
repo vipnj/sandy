@@ -80,15 +80,13 @@ package sandy.core.scenegraph
 		 */
 		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
-			const l_oCStateOut:CullingState = CullingState.OUTSIDE, l_oCStateIn:CullingState = CullingState.INSIDE;
-			// --
 			for each( var l_oNode:Node in children )
 			{
-			    if( l_oNode.culled != l_oCStateOut )
+			    if( l_oNode.culled != CullingState.OUTSIDE )
 			    	l_oNode.render( p_oScene, p_oCamera );
 			    // --
 			    l_oNode.changed = false; // default value is set to not changed.
-			    l_oNode.culled = l_oCStateIn; // Default value is inside.
+			    l_oNode.culled = CullingState.INSIDE; // Default value is inside.
 			}
 		}
 	}

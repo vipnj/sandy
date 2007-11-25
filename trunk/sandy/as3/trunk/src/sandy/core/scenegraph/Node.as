@@ -202,7 +202,10 @@ package sandy.core.scenegraph
 		 */
 		public function addChild( p_oChild:Node ):void
 		{
-			if( p_oChild.parent ) p_oChild.parent.removeChildById( p_oChild.id );
+			if( p_oChild.parent )
+			{
+				p_oChild.parent.removeChildById( p_oChild.id );	
+			}
 			// --
 			p_oChild.parent = this;
 			changed =  true ;
@@ -243,7 +246,10 @@ package sandy.core.scenegraph
 				for each( l_oNode in children )
 				{
 					l_oNode2 = l_oNode.getChildFromId( p_nId, p_bRecurs );
-					if( l_oNode2 != null ) return l_oNode2;
+					if( l_oNode2 != null )
+					{
+						return l_oNode2;
+					}
 				}
 			}
 			return null;
@@ -273,7 +279,10 @@ package sandy.core.scenegraph
 				for each( l_oNode in children )
 				{
 					node = l_oNode.getChildByName( p_sName, p_bRecurs );
-					if( node != null ) return node;
+					if( node != null )
+					{
+						 return node;
+					}
 				}
 			}
 			return null;
@@ -421,7 +430,9 @@ package sandy.core.scenegraph
 			changed = changed || p_bChanged;
 			var l_oNode:Node;
 			for each( l_oNode in children )
+			{
 				l_oNode.update( p_oScene, p_oModelMatrix, changed );
+			}
 		
 		}
 

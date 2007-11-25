@@ -17,12 +17,10 @@ limitations under the License.
 package sandy.core.scenegraph 
 {	
 	import flash.display.DisplayObject;
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
-	import sandy.core.World3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
 	import sandy.view.CullingState;
@@ -45,6 +43,12 @@ package sandy.core.scenegraph
 	{	
 		// FIXME Create a Sprite as the spriteD container, 
 		//and offer a method to attach a visual content as a child of the sprite
+		
+		/**
+		 * When enabled, the sprite will be displayed at its graphical center.
+		 * Otherwise its top left corner will be set at the computed screen position
+		 */
+		public var autoCenter:Boolean = true;
 		
 		/**
 		 * Creates a Sprite2D.
@@ -219,9 +223,11 @@ package sandy.core.scenegraph
 		}
 		
 		/**
-		 * Displays this sprite xxx.
+		 * Displays this sprite.
 		 *
-		 * <p>[<b>ToDo</b>: We have a FIXME label here, so it may not work as expected ]</p>
+		 * <p>display the object onto the scene.
+		 * If the object has autocenter enabled, sprite center is set at screen position.
+		 * Otherwise the sprite top left corner will be at that position.</p>
 		 *
 		 * @param p_oScene The current scene
 		 * @param p_oContainer	The container to draw on
@@ -229,8 +235,8 @@ package sandy.core.scenegraph
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null  ):void
 		{
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
-			m_oContainer.x = _v.sx - m_oContainer.width/2;// - m_nW2;
-			m_oContainer.y = _v.sy - m_oContainer.height/2;// - m_nH2;
+			m_oContainer.x = _v.sx - (autoCenter ? m_oContainer.width/2 : 0);
+			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
 		}
 		
 		private var m_nPerspScale:Number=0;

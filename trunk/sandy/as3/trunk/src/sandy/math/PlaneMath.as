@@ -30,54 +30,20 @@ package sandy.math
 	 */
 	public class PlaneMath
 	{
-		private static var instance:PlaneMath;
-		private static var create:Boolean;
-		
-		/**
-		 * Creates a PlaneMath object.
-		 * 
-		 * <p>This is a singleton constructor, and should not be called directly.<br />
-		 * If called from outside the PlaneMath class, it throws a SingletonError.</p>
-		 * [<strong>ToDo</strong>: Why instantiate this at all? - all methods are class methods! ]
-		 */ 
-		public function PlaneMath()
-		{
-			if ( !create )
-			{
-				throw new SingletonError();
-			}
-		}
-		
-		/**
-		 * Returns an instance of this class.
-		 *
-		 * <p>Call this method to get an instance of ColorMath</p>
-		 */
-		public static function getInstance():PlaneMath
-		{
-			if (instance == null)
-			{
-				create = true;
-				instance = new PlaneMath();
-				create = false;
-			}
-			
-			return instance;
-		}
-		
 		/**
 		 * Defines the numeric value -1
 		 */
-		public static function get NEGATIVE():Number { return -1; }
+		public static const NEGATIVE:int = -1;
 		
 		/**
 		 * Defines the numeric value 0
 		 */
-		public static function get ON_PLANE():Number { return  0; }
+		public static const ON_PLANE:int = 0;
 		
 		/**
-		 * Defines the numeric value 1		 */
-		public static function get POSITIVE():Number { return  1; }
+		 * Defines the numeric value 1
+		 */
+		public static const POSITIVE:int = 1;
 		
 		/**
 		 * Normalizes the plane. 

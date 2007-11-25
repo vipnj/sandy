@@ -216,12 +216,14 @@ package sandy.core.scenegraph
 			p_oCamera.projectVertex( _v );
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
-	        var vNormale:Vector = new Vector( _v.wx - _dir.wx, _v.wy - _dir.wy, _v.wz - _dir.wz );
-			var angle:Number = VectorMath.getAngle( _vView, vNormale );
-			if( vNormale.x == 0 ) angle = Math.PI;
-			else if( vNormale.x < 0 ) angle = 2*Math.PI - angle;
+	        m_oNormale.x = _v.wx - _dir.wx;
+	        m_oNormale.y = _v.wy - _dir.wy;
+	        m_oNormale.z = _v.wz - _dir.wz;
+			m_nAngle = VectorMath.getAngle( _vView, vNormale );
+			if( vNormale.x < 0 ) m_nAngle = 2*Math.PI - m_nAngle;
+
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
-			m_oContent.gotoAndStop( __frameFromAngle( angle ) );
+			m_oContent.gotoAndStop( __frameFromAngle( m_nAngle ) );
 		}
 
 		/**
@@ -274,9 +276,10 @@ package sandy.core.scenegraph
 		// -- frames offset
 		private var _vView:Vector;
 		private var _dir:Vertex;
-
+		private var m_oNormale:Vector;
 		private var m_nAutoOffset:Number;
 		private var m_nPerspScale:Number=0;
+		private var m_nAngle:Number;
 		private var m_nW2:Number=0;
 		private var m_nH2:Number=0;
 		protected var _v:Vertex;

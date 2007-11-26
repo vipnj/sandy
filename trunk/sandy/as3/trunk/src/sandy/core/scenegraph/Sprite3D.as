@@ -219,8 +219,8 @@ package sandy.core.scenegraph
 	        m_oNormale.x = _v.wx - _dir.wx;
 	        m_oNormale.y = _v.wy - _dir.wy;
 	        m_oNormale.z = _v.wz - _dir.wz;
-			m_nAngle = VectorMath.getAngle( _vView, vNormale );
-			if( vNormale.x < 0 ) m_nAngle = 2*Math.PI - m_nAngle;
+			m_nAngle = VectorMath.getAngle( _vView, m_oNormale );
+			if( m_oNormale.x < 0 ) m_nAngle = 2*Math.PI - m_nAngle;
 
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
 			m_oContent.gotoAndStop( __frameFromAngle( m_nAngle ) );

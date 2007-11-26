@@ -276,7 +276,7 @@ package sandy.core.scenegraph
 		// -- frames offset
 		private var _vView:Vector;
 		private var _dir:Vertex;
-		private var m_oNormale:Vector;
+		private var m_oNormale:Vector = new Vector();
 		private var m_nAutoOffset:Number;
 		private var m_nPerspScale:Number=0;
 		private var m_nAngle:Number;

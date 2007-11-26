@@ -68,7 +68,7 @@ package sandy.materials
 			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, VideoMaterial.DEFAULT_FILL_COLOR ), p_oAttr );
 			m_oAlpha = new ColorTransform ();
 			m_oVideo = p_oVideo;
-			m_nType = MaterialType.VIDEO;
+			m_oType = MaterialType.VIDEO;
 			// --
 			m_oTimer = new Timer( p_nUpdateMS );
 			m_oTimer.addEventListener(TimerEvent.TIMER, _update );

@@ -46,7 +46,7 @@ package sandy.materials
 		{
 			super( p_oAttr );
 			// --
-			m_nType = MaterialType.OUTLINE;
+			m_oType = MaterialType.OUTLINE;
 			// --
 			attributes.attributes.push( new OutlineAttributes( p_nThickness, p_nColor, p_nAlpha ) );
 		}

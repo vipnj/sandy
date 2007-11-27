@@ -18,7 +18,7 @@ package sandy.core.scenegraph
 {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	
+
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
@@ -46,13 +46,13 @@ package sandy.core.scenegraph
 		// FIXME Create a Sprite as the spriteD container,
 		// and offer a method to attach a visual content as a child of the sprite
 		public var offset:uint = 0;
-		
+
 		/**
 		 * When enabled, the sprite will be displayed at its graphical center.
 		 * Otherwise its top left corner will be set at the computed screen position
 		 */
 		public var autoCenter:Boolean = true;
-		
+
 		 /**
 	 	 * Creates a Sprite3D
 		 *
@@ -83,15 +83,15 @@ package sandy.core.scenegraph
 			_vView = new Vector( 0, 0, 1 );
 			// -- set the offset
 			offset = p_nOffset;
-			
+
 			setBoundingSphereRadius( 30 );
 		}
 
 		/**
-		 * The MovieClip that will used as content of this Sprite2D. 
+		 * The MovieClip that will used as content of this Sprite2D.
 		 * If this MovieClip has already a scree position, it will be reseted to 0,0.
-		 * 
-		 * @param p_container The MovieClip to attach to the Sprite3D#container. 
+		 *
+		 * @param p_container The MovieClip to attach to the Sprite3D#container.
 		 */
 		public function set content( p_container:MovieClip ):void
 		{
@@ -219,8 +219,8 @@ package sandy.core.scenegraph
 	        m_oNormale.x = _v.wx - _dir.wx;
 	        m_oNormale.y = _v.wy - _dir.wy;
 	        m_oNormale.z = _v.wz - _dir.wz;
-			m_nAngle = VectorMath.getAngle( _vView, vNormale );
-			if( vNormale.x < 0 ) m_nAngle = 2*Math.PI - m_nAngle;
+			m_nAngle = VectorMath.getAngle( _vView, m_oNormale );
+			if( m_oNormale.x < 0 ) m_nAngle = 2*Math.PI - m_nAngle;
 
 			// FIXME problem around 180 frame. A big jump occurs. Problem of precision ?
 			m_oContent.gotoAndStop( __frameFromAngle( m_nAngle ) );
@@ -236,7 +236,7 @@ package sandy.core.scenegraph
 		{
 			;//m_oContainer.graphics.clear();
 		}
-		
+
 		/**
 		 * Provide the classical remove behaviour, plus remove the container to the display list.
 		 */
@@ -245,7 +245,7 @@ package sandy.core.scenegraph
 			if( m_oContainer.parent ) m_oContainer.parent.removeChild( m_oContainer );
 			super.remove();
 		}
-		
+
 		/**
 		 * Displays this sprite.
 		 *

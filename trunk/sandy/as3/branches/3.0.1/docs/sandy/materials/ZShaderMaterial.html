@@ -4,13 +4,13 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="ZShaderMaterial,sandy.materials.ZShaderMaterial,matrix,renderPolygon" name="keywords">
+<meta content="ZShaderMaterial,sandy.materials.ZShaderMaterial,coef,matrix,p3x,renderPolygon" name="keywords">
 <title>sandy.materials.ZShaderMaterial</title>
 </head>
 <body>
 <script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
 <!--
-				asdocTitle = 'ZShaderMaterial - Sandy 3.0 API Documentation';
+				asdocTitle = 'ZShaderMaterial - Sandy 3.0.1 API Documentation';
 				var baseRef = '../../';
 				window.onload = configPage;
 			--></script>
@@ -68,6 +68,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    The attributes of this material.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#coef">coef</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">ZShaderMaterial</td>
+</tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#filters">filters</a> : Array<div class="summaryTableDescription">
    The array of filters for this material.</div>
@@ -92,6 +96,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#modified">modified</a> : Boolean<div class="summaryTableDescription">
    The modified state of this material.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#p3x">p3x</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">ZShaderMaterial</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#repeat">repeat</a> : Boolean<div class="summaryTableDescription">
@@ -132,7 +140,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_nType">m_nType</a> : <a href="../materials/MaterialType.html">MaterialType</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_oType">m_oType</a> : <a href="../materials/MaterialType.html">MaterialType</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
@@ -160,7 +168,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#ZShaderMaterial()">ZShaderMaterial</a>(p_nCoef:Number = 1)</div>
+<a class="signatureLink" href="#ZShaderMaterial()">ZShaderMaterial</a>(p_nCoef:Number = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">ZShaderMaterial</td>
 </tr>
@@ -190,14 +198,32 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
+<a name="coef"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">coef</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var coef:Number</code>
+</div>
 <a name="matrix"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">matrix</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">matrix</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
 <code>public var matrix:Matrix</code>
+</div>
+<a name="p3x"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">p3x</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var p3x:Number</code>
 </div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
@@ -208,10 +234,16 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function ZShaderMaterial(p_nCoef:Number = 1)</code><span class="label">Parameters</span>
+<code>public function ZShaderMaterial(p_nCoef:Number = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nCoef</span>:Number</code> (default = <code>1</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oAttr</span>:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a></code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 </div>
@@ -252,8 +284,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0</center>
+<center class="copyright">ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0.1</center>
 </div>
 </body>
 </html>
-<!--ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0-->
+<!--ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0.1-->

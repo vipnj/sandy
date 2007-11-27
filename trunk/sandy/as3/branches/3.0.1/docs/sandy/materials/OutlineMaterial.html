@@ -10,7 +10,7 @@
 <body>
 <script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
 <!--
-				asdocTitle = 'OutlineMaterial - Sandy 3.0 API Documentation';
+				asdocTitle = 'OutlineMaterial - Sandy 3.0.1 API Documentation';
 				var baseRef = '../../';
 				window.onload = configPage;
 			--></script>
@@ -132,7 +132,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_nType">m_nType</a> : <a href="../materials/MaterialType.html">MaterialType</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_oType">m_oType</a> : <a href="../materials/MaterialType.html">MaterialType</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
@@ -160,7 +160,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#OutlineMaterial()">OutlineMaterial</a>(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</div>
+<a class="signatureLink" href="#OutlineMaterial()">OutlineMaterial</a>(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</div>
 <div class="summaryTableDescription">
    Creates a new OutlineMaterial.</div>
 </td><td class="summaryTableOwnerCol">OutlineMaterial</td>
@@ -197,7 +197,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function OutlineMaterial(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:uint = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</code><p>
+<code>public function OutlineMaterial(p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1, p_oAttr:<a href="attributes/MaterialAttributes.html">MaterialAttributes</a> = null)</code><p>
    Creates a new OutlineMaterial.
       </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -216,7 +216,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nAlpha</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; The alpha value in percent of full opacity ( 0 - 1 )
+<td width="20px"></td><td><code><span class="label">p_nAlpha</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; The alpha value in percent of full opacity ( 0 - 1 )
    </td>
 </tr>
 <tr>
@@ -238,8 +238,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public override function renderPolygon(p_oScene:<a href="../core/Scene3D.html">Scene3D</a>, p_oPolygon:<a href="../core/data/Polygon.html">Polygon</a>, p_mcContainer:Sprite):void</code><p>
    Renders this material on the face it dresses.
-   
-   </p><span class="label">Parameters</span>
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../core/Scene3D.html">Scene3D</a></code> &mdash;  The current scene
@@ -266,8 +265,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0</center>
+<center class="copyright">ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0.1</center>
 </div>
 </body>
 </html>
-<!--ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0-->
+<!--ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0.1-->

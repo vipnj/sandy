@@ -20,6 +20,7 @@ package demos
 	import sandy.primitive.SkyBox;
 	import sandy.util.LoaderQueue;
 	import sandy.util.NumberUtil;
+	import sandy.materials.Material;
 
 	public final class PanoDemo extends Sprite
 	{
@@ -80,15 +81,41 @@ package demos
 			queue.addEventListener(SandyEvent.QUEUE_COMPLETE, loadComplete );
 			queue.start();
 		}
-
-		private function loadComplete( event:QueueEvent ):void 
+		
+		private function getMaterial( p_nId:uint ):Material
 		{
-			shape.front.appearance = new Appearance( new BitmapMaterial( (queue.data[planeNames[1]] as Bitmap).bitmapData ) );
-			shape.back.appearance = new Appearance( new BitmapMaterial( queue.data[planeNames[0]].bitmapData ) );
-			shape.left.appearance = new Appearance( new BitmapMaterial( queue.data[planeNames[4]].bitmapData ) );
-			shape.right.appearance = new Appearance( new BitmapMaterial( queue.data[planeNames[5]].bitmapData ) );
-			shape.top.appearance = new Appearance( new BitmapMaterial( queue.data[planeNames[3]].bitmapData ) );
-			shape.bottom.appearance = new Appearance( new BitmapMaterial( queue.data[planeNames[2]].bitmapData ) );				
+			var l_nPrecision:uint = 10;
+			var l_oMat:BitmapMaterial = new BitmapMaterial( queue.data[planeNames[p_nId]].bitmapData, null, l_nPrecision );
+			l_oMat.repeat = true;
+			l_oMat.maxRecurssionDepth = 6;
+			return l_oMat;
+		}
+		
+		private function loadComplete( event:QueueEvent ):void 
+		{			
+			shape.front.appearance = new Appearance( getMaterial(1) );
+			shape.back.appearance = new Appearance( getMaterial(0) );
+			shape.left.appearance = new Appearance( getMaterial(4) );
+			shape.right.appearance = new Appearance( getMaterial(5) );
+			shape.top.appearance = new Appearance( getMaterial(3) );
+			shape.bottom.appearance = new Appearance(  getMaterial(2) );				
+			// --
+			
+			shape.front.enableClipping = true;
+			shape.back.enableClipping = true;
+			shape.left.enableClipping = true;
+			shape.right.enableClipping = true;
+			shape.top.enableClipping = true;
+			shape.bottom.enableClipping = true;
+			
+			/*
+			shape.front.enableNearClipping = true;
+			shape.back.enableNearClipping = true;
+			shape.left.enableNearClipping = true;
+			shape.right.enableNearClipping = true;
+			shape.top.enableNearClipping = true;
+			shape.bottom.enableNearClipping = true;
+			*/
 			// --
 			stage.addEventListener(MouseEvent.CLICK, clickHandler);
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
@@ -103,7 +130,7 @@ package demos
 		private function createScene():Group
 		{
 			var root:Group = new Group("root");
-			shape = new SkyBox( "pano", 300, 9, 9, false );
+			shape = new SkyBox( "pano", 300, 1, 1, false );
 			root.addChild( shape );
 			return root;
 		}

@@ -59,6 +59,8 @@ package sandy.materials
 		 */
 		public var precision:uint = 0;
 
+		public var maxRecurssionDepth:uint = 5;
+		
 		/**
 		 * Creates a new BitmapMaterial.
 		 * <p>Please note that we ue internally a copy of the constructor bitmapdata. Thatea mns in case you need to access this bitmapdata, you can't just use the same reference
@@ -193,7 +195,7 @@ package sandy.materials
             var dsbc:Number = (dbcx*dbcx + dbcy*dbcy);
             var dsca:Number = (dcax*dcax + dcay*dcay);
 
-            if ((m_nRecLevel > 5) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
+            if ((m_nRecLevel > maxRecurssionDepth) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
             {
                 renderTriangle(ta, tb, tc, td, tx, ty, ax, ay, bx, by, cx, cy);
 				m_nRecLevel--; return;

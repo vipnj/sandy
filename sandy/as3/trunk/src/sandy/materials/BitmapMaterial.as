@@ -313,6 +313,9 @@ package sandy.materials
 		 */
 		public function set texture( p_oTexture:BitmapData ):void
 		{
+			if (p_oTexture == m_oTexture)
+				return;
+
 			var l_bReWrap:Boolean = false;
 			if( m_nHeight != p_oTexture.height) l_bReWrap = true;
 			else if( m_nWidth != p_oTexture.width) l_bReWrap = true;

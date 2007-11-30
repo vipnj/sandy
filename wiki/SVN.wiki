@@ -1,1 +1,1 @@
-In near future we will add tutorial about using SVN
+In near future we will add tutorial about using SVN. For the moment, you could take a look at [http://youtube.com/watch?v=vPz4VwIlrQg this video tutorial] that briefly covers getting last version using [http://tortoisesvn.tigris.org/ Tortoise SVN client].

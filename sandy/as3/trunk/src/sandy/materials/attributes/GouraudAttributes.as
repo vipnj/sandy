@@ -25,6 +25,7 @@ package sandy.materials.attributes
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.materials.Material;
+	import sandy.math.VertexMath;
 	import sandy.util.NumberUtil;
 
 	/**
@@ -70,8 +71,6 @@ package sandy.materials.attributes
 		internal var aLId:Array;
 		
 		internal var alpha:Array = new Array(2);
-		internal var coef:Number;
-		internal var p3x:Number, p3y:Number, p4x:Number, p4y:Number, d:Number, p4len:Number;
 		internal var matrix:Matrix = new Matrix();
 		internal var l_oVertex:Vertex;
 		 
@@ -110,9 +109,7 @@ package sandy.materials.attributes
 			v0 = l_aPoints[int(id0)];
 			v1 = l_aPoints[int(id1)];
 			v2 = l_aPoints[int(id2)];
-			// --
-			coef = ( aL[int(id1)] - aL[int(id0)] ) / ( aL[int(id2)] - aL[int(id0)] );
-			
+
 			// "b" is short for brightness; this is 0 when black, and up to 1
 			// we want 1 to be mapped to transparent normally, and to white if useBright is set
 			var b0:Number = aL[int(id0)] * (useBright ? 2 : 1);
@@ -152,19 +149,8 @@ package sandy.materials.attributes
 			   ratios = [ 0x00, m, m, 0xFF ];
 			}
 
-			// --
-			p3x = v0.sx + coef * (v2.sx - v0.sx);
-			p3y = v0.sy + coef * (v2.sy - v0.sy);
-			p4x = v2.sx - v0.sx;
-			p4y = v2.sy - v0.sy;
-			p4len = Math.sqrt(p4x*p4x + p4y*p4y);
-			d = Math.atan2(p3x - v1.sx, -(p3y - v1.sy));
-
 			// matrix
-			matrix.identity();
-			matrix.a = Math.cos(Math.atan2(p4y, p4x) - d) * p4len / 1600;
-			matrix.rotate(d);
-			matrix.translate( (v2.sx + v0.sx) / 2, (v2.sy + v0.sy) / 2);			
+			VertexMath.linearGradientMatrix (v0, v1, v2, aL[int(id0)], aL[int(id1)], aL[int(id2)], matrix);
 
 			p_oGraphics.beginGradientFill( "linear",colours, alpha, ratios, matrix );
 			p_oGraphics.moveTo( l_aPoints[0].sx, l_aPoints[0].sy );

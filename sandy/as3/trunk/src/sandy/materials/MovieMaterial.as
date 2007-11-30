@@ -89,7 +89,7 @@ package sandy.materials
 				h = p_nHeight ? p_nHeight : p_oMovie.height;
 			}
 
-			super( new BitmapData( w, h, true, MovieMaterial.DEFAULT_FILL_COLOR), p_oAttr );
+			super( new BitmapData( w, h, true, DEFAULT_FILL_COLOR), p_oAttr );
 			m_oMovie = p_oMovie;
 			m_oType = MaterialType.MOVIE;
 			// --
@@ -141,7 +141,7 @@ package sandy.materials
 			if ( m_bUpdate )
 			{
 				m_oTexture.fillRect( m_oTexture.rect,
-					ColorMath.changeAlpha( MovieMaterial.DEFAULT_FILL_COLOR, m_oAlpha.alphaMultiplier) );
+					ColorMath.applyAlpha( DEFAULT_FILL_COLOR, m_oAlpha.alphaMultiplier) );
 				// --
 				m_oTexture.draw( m_oMovie, null, m_oAlpha, null, null, smooth );
 			}

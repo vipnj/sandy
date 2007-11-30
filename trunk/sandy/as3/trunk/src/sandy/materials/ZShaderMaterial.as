@@ -25,6 +25,7 @@ package sandy.materials
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vertex;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.math.VertexMath;
 	import sandy.util.NumberUtil;
 
 	/**
@@ -36,8 +37,6 @@ package sandy.materials
 	 */	
 	public class ZShaderMaterial extends Material
 	{
-		internal var coef:Number
-		internal var p3x:Number, p3y:Number, p4x:Number, p4y:Number, d:Number, p4len:Number;
 		internal var matrix:Matrix = new Matrix();
 		// --
 		
@@ -81,19 +80,7 @@ package sandy.materials
 			g2  = NumberUtil.constrain( g2, 0, 0xFF );
 
 			//-- compute gradient matrix
-			coef = (g1 - g0) / (g2 - g0);
-
-			p3x = v0.sx + coef * (v2.sx - v0.sx);
-			p3y = v0.sy + coef * (v2.sy - v0.sy);
-			p4x = v2.sx - v0.sx;
-			p4y = v2.sy - v0.sy;
-			p4len = Math.sqrt(p4x*p4x + p4y*p4y);
-			d = Math.atan2(p3x - v1.sx, -(p3y - v1.sy));
-
-			matrix.identity();
-			matrix.a = Math.cos(Math.atan2(p4y, p4x) - d) * p4len / (32768 * 0.05);
-			matrix.rotate(d);
-			matrix.translate( (v2.sx + v0.sx) / 2, (v2.sy + v0.sy) / 2);	
+			VertexMath.linearGradientMatrix (v0, v1, v2, g0, g1, g2, matrix);
 	
 			//-- draw gradient
 			l_graphics.lineStyle();

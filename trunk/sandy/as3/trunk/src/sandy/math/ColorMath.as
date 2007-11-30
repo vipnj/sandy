@@ -36,7 +36,7 @@ package sandy.math
 		 * @param a	New alpha. 	( 0 - 1 )
 		 * @return	The hexadecimal value
 		 */
-		public static function changeAlpha (c:uint, a:Number):uint
+		public static function applyAlpha (c:uint, a:Number):uint
 		{
 			var a0:uint = c / 0x1000000; return (c & 0xFFFFFF) + Math.floor(a * a0) * 0x1000000;
 		}

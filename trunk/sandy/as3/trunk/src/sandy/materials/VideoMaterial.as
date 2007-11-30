@@ -65,7 +65,7 @@ package sandy.materials
 		 */
 		public function VideoMaterial( p_oVideo:Video, p_nUpdateMS:uint = 40, p_oAttr:MaterialAttributes = null )
 		{
-			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, VideoMaterial.DEFAULT_FILL_COLOR ), p_oAttr );
+			super( new BitmapData( p_oVideo.width, p_oVideo.height, true, DEFAULT_FILL_COLOR ), p_oAttr );
 			m_oAlpha = new ColorTransform ();
 			m_oVideo = p_oVideo;
 			m_oType = MaterialType.VIDEO;
@@ -109,7 +109,7 @@ package sandy.materials
 			if ( m_bUpdate )
 			{
 				m_oTexture.fillRect( m_oTexture.rect,
-					ColorMath.changeAlpha( VideoMaterial.DEFAULT_FILL_COLOR, m_oAlpha.alphaMultiplier) );
+					ColorMath.applyAlpha( DEFAULT_FILL_COLOR, m_oAlpha.alphaMultiplier) );
 				// --
 				m_oTexture.draw( m_oVideo, null, m_oAlpha, null, null, smooth );
 			}

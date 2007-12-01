@@ -42,24 +42,44 @@ package sandy.materials.attributes
 		 * Medium color (32-bit value).
 		 */
 		public var color:uint;
+
+		/**
+		 * Attenuation vector. This is the vector from transparent point to opaque point.
+		 */
+		public function set fadeTo (p_oW:Vector):void
+		{
+			_fadeTo = p_oW;
+			_fadeToN2 = p_oW.getNorm (); _fadeToN2 *= _fadeToN2;
+		}
 		
 		/**
-		 * Attenuation vector.
+		 * @private
 		 */
-		public var fadeTo:Vector;
+		public function get fadeTo ():Vector
+		{
+			return _fadeTo;
+		}
+
+		/**
+		 * Transparent point in wx, wy and wz coordinates .
+		 */
+		public var fadeFrom:Vector;
 
 		/**
 		 * Creates a new MediumAttributes object.
 		 *
 		 * @param p_nColor - Medium color (opaque white by default).
-		 * @param p_oFadeTo - Attenuation vector (500 pixels behind the screen by default).
+		 * @param p_oFadeTo - Attenuation vector (500 pixels beyond the screen by default).
+		 * @param p_oFadeFrom - Transparent point (at the screen by default).
 		 */
-		public function MediumAttributes (p_nColor:uint = 0xFFFFFFFF, p_oFadeTo:Vector = null)
+		public function MediumAttributes (p_nColor:uint = 0xFFFFFFFF, p_oFadeFrom:Vector = null, p_oFadeTo:Vector = null)
 		{
+			if (p_oFadeFrom == null)
+				p_oFadeFrom = new Vector (0, 0, 0);
 			if (p_oFadeTo == null)
 				p_oFadeTo = new Vector (0, 0, 500);
 			// --
-			color = p_nColor; fadeTo = p_oFadeTo;
+			color = p_nColor; fadeTo = p_oFadeTo; fadeFrom = p_oFadeFrom;
 		}
 		
 		/**
@@ -73,44 +93,58 @@ package sandy.materials.attributes
 		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
 			const l_points:Array = ((p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices);
-			if( !l_points.length ) return;
+			var i:int, n:int = l_points.length; if (n < 3) return;
 
-			var zIndices: Array = l_points.sortOn( "wz", Array.NUMERIC | Array.RETURNINDEXEDARRAY );
+			var l_ratios:Array = new Array (n);
+			for (i = 0; i < n; i++) l_ratios[i] = ratioFromWorldVector (l_points[i].getWorldVector ());
+
+			var zIndices:Array = l_ratios.sort (Array.NUMERIC | Array.RETURNINDEXEDARRAY);
 
 			var v0: Vertex = l_points[zIndices[0]];
 			var v1: Vertex = l_points[zIndices[1]];
 			var v2: Vertex = l_points[zIndices[2]];
 
-			var vc: Vertex = new Vertex (0, 0, 0,
-				0, 0, // <- should we account for excentric viewport here?
-				-p_oScene.camera.near); // <- should a distance to camera be used instead?
+			var r0: Number = NumberUtil.constrain (l_ratios[zIndices[0]], 0, 1);
+			var r1: Number = NumberUtil.constrain (l_ratios[zIndices[1]], 0, 1);
+			var r2: Number = NumberUtil.constrain (l_ratios[zIndices[2]], 0, 1);
 
-			// relate vertices to screen
-			var v0c: Vector = VertexMath.sub (v0, vc).getWorldVector ();
-			var v1c: Vector = VertexMath.sub (v1, vc).getWorldVector ();
-			var v2c: Vector = VertexMath.sub (v2, vc).getWorldVector ();
+			if (!NumberUtil.isZero (r2))
+			{
+				var c:uint = color & 0xFFFFFF;
+				var a:Number = (color - c) / 0x1000000 / 255.0;
 
-			// ratios
-			var ft: Number = fadeTo.getNorm (); ft *= ft;
-			var r0: Number = NumberUtil.constrain (fadeTo.dot (v0c) / ft, 0, 1);
-			var r1: Number = NumberUtil.constrain (fadeTo.dot (v1c) / ft, 0, 1);
-			var r2: Number = NumberUtil.constrain (fadeTo.dot (v2c) / ft, 0, 1);
+				if (NumberUtil.isZero (1 - r0))
+				{
+					p_oGraphics.beginFill (c, a);
+				}
 
-			// gradient matrix
-			VertexMath.linearGradientMatrix (v0, v1, v2, r0, r1, r2, matrix);
+				else
+				{
+					// gradient matrix
+					VertexMath.linearGradientMatrix (v0, v1, v2, r0, r1, r2, matrix);
 
-			// draw it
-			p_oGraphics.lineStyle();
-			p_oGraphics.beginGradientFill ("linear", [color, color], [r0, r2], [0, 0xFF], matrix);
-			p_oGraphics.moveTo (l_points[0].sx, l_points[0].sy);
-            for each (var l_oVertex:Vertex in l_points)
-            {
-                p_oGraphics.lineTo (l_oVertex.sx, l_oVertex.sy);
-            }
-			p_oGraphics.endFill();
+					p_oGraphics.beginGradientFill ("linear", [c, c], [a * r0, a * r2], [0, 0xFF], matrix);
+				}
+
+				// --
+				p_oGraphics.moveTo (l_points[0].sx, l_points[0].sy);
+				for each (var l_oVertex:Vertex in l_points)
+				{
+					p_oGraphics.lineTo (l_oVertex.sx, l_oVertex.sy);
+				}
+				p_oGraphics.endFill();
+			}
+		}
+
+		// --
+		private function ratioFromWorldVector (p_oW:Vector):Number
+		{
+			p_oW.sub (fadeFrom); return p_oW.dot (_fadeTo) / _fadeToN2;
 		}
 
 		// --
 		internal var matrix:Matrix = new Matrix();
+		internal var _fadeTo:Vector;
+		internal var _fadeToN2:Number;
 	}
 }

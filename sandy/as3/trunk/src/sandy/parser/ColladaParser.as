@@ -19,7 +19,7 @@ package sandy.parser
 	import flash.display.Bitmap;
 	import flash.events.Event;
 	import flash.net.URLRequest;
-
+	
 	import sandy.core.data.*;
 	import sandy.core.scenegraph.*;
 	import sandy.events.QueueEvent;
@@ -135,20 +135,20 @@ package sandy.parser
 		private function parseNode( p_oNode : XML ) : Node
 		{
 			// -- local variables
-			var l_oGeometry : Geometry3D;
-
+			var l_oNode:ATransformable;
+			//var l_oMatrix : Matrix4 = new Matrix4();
+			var l_sGeometryID : String;
+			var l_oNodes : XMLList;
+			var l_nNodeLen : int;
+			var l_oVector : Vector;
+			//var l_oPivot:Vector = new Vector();
+			var l_oGeometry : Geometry3D = null;
+			//var l_oScale : Transform3D;
+			
 			if( p_oNode.child( "instance_geometry" ).length() != 0 )
 			{
-				var l_oMatrix : Matrix4 = new Matrix4();
 				var l_aGeomArray:Array;
-				var l_sGeometryID : String;
-				var l_oShape:Shape3D;
-				var l_oNodes : XMLList;
-				var l_nNodeLen : int;
 				var l_oAppearance : Appearance = m_oStandardAppearance;
-				var l_oVector : Vector;
-				//var l_oScale : Transform3D;
-
 				l_oGeometry = new Geometry3D();
 				l_oAppearance = getAppearance( p_oNode );
 
@@ -158,87 +158,95 @@ package sandy.parser
 				l_oGeometry = getGeometry( l_sGeometryID, m_oMaterials );
 
 				// -- create the new shape
-				l_oShape = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
-
-				// -- scale
-				if( p_oNode.scale.length() > 0 ) {
-					l_oVector = stringToVector( p_oNode.scale );
-					l_oShape.scaleX = l_oVector.x;
-					l_oShape.scaleY = l_oVector.z;
-					l_oShape.scaleZ = l_oVector.y;
-				}
-				// -- translation
-				if( p_oNode.translate.length() > 0 ) {
-					l_oVector = stringToVector( p_oNode.translate );
-					l_oMatrix.multiply(
-						Matrix4Math.translation(
-							l_oVector.x,
-							l_oVector.z,
-							l_oVector.y )
-					);
-				}
-				// -- rotate
- 				if( p_oNode.rotate.length() == 1 ) {
-					var l_oRotations : Array = stringToArray( p_oNode.rotate );
-					l_oMatrix.multiply(
-						Matrix4Math.axisRotation(
-							l_oRotations[ 0 ],
-							l_oRotations[ 2 ],
-							l_oRotations[ 1 ],
-							l_oRotations[ 3 ] )
-					);
-				} else if( p_oNode.rotate.length() == 3 ) {
-					for( var j:int=0; j < 3; j++ )
-					{
-						var l_oRot : Array = stringToArray( p_oNode.rotate[j] );
-
-						switch( p_oNode.rotate[j].@sid.toLowerCase() )
-						{
-							case "rotatex":
-								l_oShape.rotateX = Number( l_oRot[ 3 ] );
-								break;
-							case "rotatey":
-								l_oShape.rotateZ = Number( l_oRot[ 3 ] );
-								break;
-							case "rotatez":
-								l_oShape.rotateY = Number( l_oRot[ 3 ] );
-								break;
-						}
-					}
-				}
-
-				// -- baked matrix
-				if( p_oNode.matrix.length() > 0 ) 
-				{
-					l_oMatrix.multiply(
-						stringToMatrix( p_oNode.matrix )
-					);
-					//l_oShape.setPosition( l_oMatrix.n14, l_oMatrix.n34, l_oMatrix.n24 );
-					l_oShape.scaleX = l_oMatrix.n11;
-					l_oShape.scaleY = l_oMatrix.n33;
-					l_oShape.scaleZ = l_oMatrix.n22;
-				}
-
-				// -- loop through subnodes
-				l_oNodes = p_oNode.node;
-				l_nNodeLen = l_oNodes.length();
-
-				for( var i:int = 0; i < l_nNodeLen; i++ )
-				{
-					var l_oNode : Node = parseNode( l_oNodes[i] );
-				// -- add the shape to the group node
-					if( l_oNode != null )
-						l_oShape.addChild( l_oNode );
-				}
-
-				l_oShape.matrix = l_oMatrix;
-
-				return l_oShape;
+				l_oNode = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
 			}
 			else
 			{
-				return null;
+				l_oNode = new TransformGroup( p_oNode.@name );
 			}
+			
+			// -- scale
+			if( p_oNode.scale.length() > 0 ) 
+			{
+				;
+			}
+			// -- translation
+			if( p_oNode.translate.length() >= 1 ) 
+			{
+				var l_sTranslationValue:String = "";
+				
+				l_sTranslationValue = p_oNode.translate.(@sid.toLowerCase() == "translation");
+				if( l_sTranslationValue == "" )
+					l_sTranslationValue = p_oNode.translate.(@sid.toLowerCase() == "translate");
+					
+				l_oVector = stringToVector( l_sTranslationValue );
+				l_oVector.scale(m_nScale);
+				l_oNode.x = l_oVector.x;
+				l_oNode.y = l_oVector.y;
+				l_oNode.z = l_oVector.z;
+			}
+			// -- rotate
+ 			if( p_oNode.rotate.length() == 1 ) 
+ 			{
+				var l_oRotations : Array = stringToArray( p_oNode.rotate );
+				l_oNode.rotateAxis(	l_oRotations[ 0 ],
+									l_oRotations[ 1 ],
+									l_oRotations[ 2 ],
+									l_oRotations[ 3 ] );
+			} 
+			else if( p_oNode.rotate.length() == 3 ) 
+			{
+				for( var j:int=0; j < 3; j++ )
+				{
+					var l_oRot : Array = stringToArray( p_oNode.rotate[j] );
+
+					switch( p_oNode.rotate[j].@sid.toLowerCase() )
+					{
+						case "rotatex":
+						{
+							if( l_oRot[ 3 ] != 0 ) l_oNode.rotateX = Number( l_oRot[ 3 ] );
+							break;
+						}
+						case "rotatey":
+						{
+							if( l_oRot[ 3 ] != 0 ) l_oNode.rotateY = Number( l_oRot[ 3 ] );
+							break;
+						}
+						case "rotatez":
+						{
+							if( l_oRot[ 3 ] != 0 ) l_oNode.rotateZ = Number( l_oRot[ 3 ] );
+							break;
+						}
+					}
+				}
+			}
+
+			// -- baked matrix
+			if( p_oNode.matrix.length() > 0 ) 
+			{
+				stringToMatrix( p_oNode.matrix );
+				//l_oShape.setPosition( l_oMatrix.n14, l_oMatrix.n34, l_oMatrix.n24 );
+				//l_oNode.scaleX = l_oMatrix.n11;
+				//l_oNode.scaleY = l_oMatrix.n33;
+				//l_oNode.scaleZ = l_oMatrix.n22;
+			}
+
+
+			// -- loop through subnodes
+			l_oNodes = p_oNode.node;
+			l_nNodeLen = l_oNodes.length();
+
+			for( var i:int = 0; i < l_nNodeLen; i++ )
+			{
+				var l_oChildNode : Node = parseNode( l_oNodes[i] );
+				// -- add the shape to the group node
+				if( l_oChildNode != null )
+					l_oNode.addChild( l_oChildNode );
+			}
+
+			//l_oShape.matrix = l_oMatrix;
+
+			return l_oNode;
 		}
 
 		/**
@@ -273,12 +281,10 @@ package sandy.parser
 			{
 				var l_oVertex:Object = l_aVertexFloats[ i ];
 
-				l_oOutpGeom.setVertex(
-					i,
-					l_oVertex.x * m_nScale,
-					l_oVertex.z * m_nScale,
-					l_oVertex.y * m_nScale
-				);
+				l_oOutpGeom.setVertex(	i,
+										l_oVertex.x * m_nScale,
+										l_oVertex.y * m_nScale,
+										l_oVertex.z * m_nScale );
 			}
 
 			if( l_oTriangles.input.( @semantic == "TEXCOORD" ).length() > 0 )
@@ -293,15 +299,12 @@ package sandy.parser
 				{
 					var l_oUVCoord:Object = l_aUVCoordsFloats[ i ];
 
-					l_oOutpGeom.setUVCoords(
-						i,
-						l_oUVCoord.x,
-						1 - l_oUVCoord.y
-					);
+					l_oOutpGeom.setUVCoords( i,l_oUVCoord.x, 1 - l_oUVCoord.y );
 				}
 			}
 
 			// -- get normals float array
+			// THOMAS TODO: Why using VertexNormal?  It is face normal !
 			if(  l_oTriangles.input.( @semantic == "NORMAL" ).length() > 0 )
 			{
 				var l_sNormalsID : String = l_oTriangles.input.( @semantic == "NORMAL" ).@source.split("#")[1];
@@ -312,12 +315,12 @@ package sandy.parser
 				for( i = 0; i < l_nNormalFloats; i++ )
 				{
 					var l_oNormal:Object = l_aNormalFloats[ i ];
-
+					//l_oOutpGeom.setFaceNormal( i, l_oNormal.x, l_oNormal.y, l_oNormal.z	);
+					/*
 					l_oOutpGeom.aVertexNormals[ i ] = new Vertex(
 						l_oNormal.x,
-						l_oNormal.z,
-						l_oNormal.y
-					);
+						l_oNormal.y,
+						l_oNormal.z	);*/
 				}
 			}
 
@@ -330,8 +333,8 @@ package sandy.parser
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
 				var l_aUVs : Array = l_aTriangles[ i ].TEXCOORD;
 
-				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
-				if( l_aUVs != null ) l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 1 ], l_aUVs[ 2 ] );
+				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
+				if( l_aUVs != null ) l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 2 ], l_aUVs[ 1 ] );
 
 			}
 
@@ -457,10 +460,10 @@ package sandy.parser
 		{
 			var l_aValues : Array = p_sValues.split(" ");
 			var l_nValues : int = l_aValues.length;
-
+			// --
 			if( l_nValues != 3 )
 				throw new Error( "ColladaParser.stringToVector(): A vector must have 3 values" );
-
+			// --
 			return new Vector( l_aValues[ 0 ], l_aValues[ 1 ], l_aValues[ 2 ] );
 		}
 
@@ -597,7 +600,7 @@ package sandy.parser
 			for each( var l_oLoader : Object in l_oLoaders )
 			{
 				if( l_oLoader.loader.content )
-					m_oMaterials[ l_oLoader.ID ].bitmapData = Bitmap( l_oLoader.loader.content ).bitmapData;
+					m_oMaterials[ l_oLoader.name ].bitmapData = Bitmap( l_oLoader.loader.content ).bitmapData;
 			}
 
 			parseScene( m_oCollada.library_visual_scenes.visual_scene[0] );

@@ -58,29 +58,29 @@ package sandy.view
 		 */
 		public function update():void
 		{
-			m_nW2 = m_nW/2;
-			m_nH2 = m_nH/2;
-			// --
-			m_nRatio = (m_nH)? m_nW / m_nH : 0;
-			// --
-			hasChanged = true;
+			m_nW2 = m_nW >> 1;
+            m_nH2 = m_nH >> 1;
+            // --
+            m_nRatio = (m_nH)? m_nW / m_nH : 0;
+            // --
+            hasChanged = true;
 		}
 		
 		
-		public function get width():Number { return m_nW; }
-		public function get height():Number { return m_nH; }
-		public function get width2():Number { return m_nW2; }
-		public function get height2():Number { return m_nH2; }
+		public function get width():int { return m_nW; }
+		public function get height():int { return m_nH; }
+		public function get width2():int { return m_nW2; }
+		public function get height2():int { return m_nH2; }
 		public function get ratio():Number { return m_nRatio; }
 		
-		public function set width( p_nValue:Number):void { m_nW = p_nValue; update(); }
-		public function set height( p_nValue:Number):void { m_nH = p_nValue; update(); }
+		public function set width( p_nValue:int ):void { m_nW = p_nValue; update(); }
+		public function set height( p_nValue:int ):void { m_nH = p_nValue; update(); }
 
 		
-		private var m_nW:Number = 0;
-		private var m_nW2:Number = 0;
-		private var m_nH:Number = 0;
-		private var m_nH2:Number = 0;
+		private var m_nW:int = 0;
+		private var m_nW2:int = 0;
+		private var m_nH:int = 0;
+		private var m_nH2:int = 0;
 		private var m_nRatio:Number = 0;
 	}
 }

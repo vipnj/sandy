@@ -24,7 +24,6 @@ package sandy.parser
 	import sandy.core.scenegraph.*;
 	import sandy.events.QueueEvent;
 	import sandy.materials.*;
-	import sandy.math.Matrix4Math;
 	import sandy.util.LoaderQueue;
 	import sandy.util.NumberUtil;
 
@@ -95,7 +94,10 @@ package sandy.parser
 			m_oCollada = XML( m_oFile );
 
 			default xml namespace = m_oCollada.namespace();
-
+			
+			m_bYUp = (m_oCollada.asset.up_axis == "Y_UP");
+			//m_bYUp = !m_bYUp;
+			
 			if( m_oCollada.library_images.length() > 0 )
 				m_oMaterials = loadImages( m_oCollada.library_images.image );
 			else
@@ -144,6 +146,7 @@ package sandy.parser
 			//var l_oPivot:Vector = new Vector();
 			var l_oGeometry : Geometry3D = null;
 			//var l_oScale : Transform3D;
+			var i:int;
 			
 			if( p_oNode.child( "instance_geometry" ).length() != 0 )
 			{
@@ -168,31 +171,58 @@ package sandy.parser
 			// -- scale
 			if( p_oNode.scale.length() > 0 ) 
 			{
-				;
+				l_oVector = stringToVector( p_oNode.scale );
+				// --
+				formatVector( l_oVector );
+				// --
+				l_oNode.scaleX = l_oVector.x;
+				l_oNode.scaleY = l_oVector.y;
+				l_oNode.scaleZ = l_oVector.z;
+
 			}
 			// -- translation
 			if( p_oNode.translate.length() >= 1 ) 
 			{
-				var l_sTranslationValue:String = "";
-				
-				l_sTranslationValue = p_oNode.translate.(@sid.toLowerCase() == "translation");
-				if( l_sTranslationValue == "" )
-					l_sTranslationValue = p_oNode.translate.(@sid.toLowerCase() == "translate");
+				var l_nTransAtt:int = p_oNode.translate.length();
+				for( i = 0; i < l_nTransAtt; i++ )
+				{
+					var l_sTranslationValue:String = "";
+					// --
+					var l_sAttTranslateValue:String = p_oNode.translate[i].@sid;
+					if( l_sAttTranslateValue ) l_sAttTranslateValue = l_sAttTranslateValue.toLowerCase();
 					
-				l_oVector = stringToVector( l_sTranslationValue );
-				l_oVector.scale(m_nScale);
-				l_oNode.x = l_oVector.x;
-				l_oNode.y = l_oVector.y;
-				l_oNode.z = l_oVector.z;
+					if( l_sAttTranslateValue == "translation" || l_sAttTranslateValue ==  "translate" )
+							l_sTranslationValue = p_oNode.translate[i];
+					else if( !l_sAttTranslateValue.length ) 
+							l_sTranslationValue = p_oNode.translate[i];
+	
+					if( l_sTranslationValue.length )
+					{
+						// --
+						l_oVector = stringToVector( l_sTranslationValue );
+						l_oVector.scale(m_nScale);
+						// --
+						formatVector( l_oVector );
+						// --
+						l_oNode.x = l_oVector.x;
+						l_oNode.y = l_oVector.y;
+						l_oNode.z = l_oVector.z;
+					}
+				}
 			}
 			// -- rotate
  			if( p_oNode.rotate.length() == 1 ) 
  			{
 				var l_oRotations : Array = stringToArray( p_oNode.rotate );
-				l_oNode.rotateAxis(	l_oRotations[ 0 ],
-									l_oRotations[ 1 ],
-									l_oRotations[ 2 ],
-									l_oRotations[ 3 ] );
+				
+				if( m_bYUp )
+				{
+					l_oNode.rotateAxis(	l_oRotations[ 0 ], l_oRotations[ 1 ], l_oRotations[ 2 ], l_oRotations[ 3 ] );
+				}
+				else
+				{
+					l_oNode.rotateAxis(	l_oRotations[ 0 ], l_oRotations[ 2 ], l_oRotations[ 1 ], l_oRotations[ 3 ] );
+				}	
 			} 
 			else if( p_oNode.rotate.length() == 3 ) 
 			{
@@ -204,17 +234,29 @@ package sandy.parser
 					{
 						case "rotatex":
 						{
-							if( l_oRot[ 3 ] != 0 ) l_oNode.rotateX = Number( l_oRot[ 3 ] );
+							if( l_oRot[ 3 ] != 0 )
+							{
+								if( m_bYUp ) 	l_oNode.rotateX = Number( l_oRot[ 3 ] );
+								else 			l_oNode.rotateX = Number( l_oRot[ 3 ] );
+							}
 							break;
 						}
 						case "rotatey":
 						{
-							if( l_oRot[ 3 ] != 0 ) l_oNode.rotateY = Number( l_oRot[ 3 ] );
+							if( l_oRot[ 3 ] != 0 )
+							{
+								if( m_bYUp ) 	l_oNode.rotateY = Number( l_oRot[ 3 ] );
+								else 			l_oNode.rotateZ = Number( l_oRot[ 3 ] );
+							} 
 							break;
 						}
 						case "rotatez":
 						{
-							if( l_oRot[ 3 ] != 0 ) l_oNode.rotateZ = Number( l_oRot[ 3 ] );
+							if( l_oRot[ 3 ] != 0 ) 
+							{
+								if( m_bYUp ) 	l_oNode.rotateZ = Number( l_oRot[ 3 ] );
+								else			l_oNode.rotateY = Number( l_oRot[ 3 ] );
+							}
 							break;
 						}
 					}
@@ -231,21 +273,18 @@ package sandy.parser
 				//l_oNode.scaleZ = l_oMatrix.n22;
 			}
 
-
 			// -- loop through subnodes
 			l_oNodes = p_oNode.node;
 			l_nNodeLen = l_oNodes.length();
 
-			for( var i:int = 0; i < l_nNodeLen; i++ )
+			for( i = 0; i < l_nNodeLen; i++ )
 			{
 				var l_oChildNode : Node = parseNode( l_oNodes[i] );
 				// -- add the shape to the group node
 				if( l_oChildNode != null )
 					l_oNode.addChild( l_oChildNode );
 			}
-
 			//l_oShape.matrix = l_oMatrix;
-
 			return l_oNode;
 		}
 
@@ -279,12 +318,15 @@ package sandy.parser
 			// -- set vertices
 			for( i = 0; i < l_nVertexFloat; i++ )
 			{
-				var l_oVertex:Object = l_aVertexFloats[ i ];
-
+				var l_oVertex:Vector = l_aVertexFloats[ i ];
+				l_oVertex.scale( m_nScale );
+				// --
+				formatVector( l_oVertex );
+				// --
 				l_oOutpGeom.setVertex(	i,
-										l_oVertex.x * m_nScale,
-										l_oVertex.y * m_nScale,
-										l_oVertex.z * m_nScale );
+										l_oVertex.x,
+										l_oVertex.y,
+										l_oVertex.z );
 			}
 
 			if( l_oTriangles.input.( @semantic == "TEXCOORD" ).length() > 0 )
@@ -314,8 +356,13 @@ package sandy.parser
 				// -- set normals
 				for( i = 0; i < l_nNormalFloats; i++ )
 				{
-					var l_oNormal:Object = l_aNormalFloats[ i ];
-					//l_oOutpGeom.setFaceNormal( i, l_oNormal.x, l_oNormal.y, l_oNormal.z	);
+					var l_oNormal:Vector = l_aNormalFloats[ i ];
+					// STRANGE, AREN'T NORMAL VECTORS NORMALIZED?
+					l_oNormal.normalize();
+					// --
+					formatVector(l_oNormal);
+					// --
+					if( !m_bYUp ) l_oOutpGeom.setFaceNormal( i, l_oNormal.x, l_oNormal.y, l_oNormal.z	);
 					/*
 					l_oOutpGeom.aVertexNormals[ i ] = new Vertex(
 						l_oNormal.x,
@@ -333,9 +380,16 @@ package sandy.parser
 				var l_aNormals : Array = l_aTriangles[ i ].NORMAL;
 				var l_aUVs : Array = l_aTriangles[ i ].TEXCOORD;
 
-				l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 2 ], l_aVertex[ 1 ] );
-				if( l_aUVs != null ) l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 2 ], l_aUVs[ 1 ] );
-
+				if( m_bYUp )
+				{
+					l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
+					if( l_aUVs != null ) l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 1 ], l_aUVs[ 2 ] );
+				}
+				else
+				{
+					l_oOutpGeom.setFaceVertexIds( i, l_aVertex[ 0 ], l_aVertex[ 1 ], l_aVertex[ 2 ] );
+					if( l_aUVs != null ) l_oOutpGeom.setFaceUVCoordsIds( i, l_aUVs[ 0 ], l_aUVs[ 1 ], l_aUVs[ 2 ] );
+				}
 			}
 
 			return l_oOutpGeom;
@@ -358,20 +412,18 @@ package sandy.parser
 
 			for( var i:int = 0; i < l_nFloatArray; i += l_nOffset )
 			{
-				var l_oCoords : Object;
+				var l_oCoords : Vector;
 				// FIX FROM THOMAS to solve the case there's only UV coords exported instead of UVW. To clean
 				if( l_nOffset == 3 )
 				{
-					l_oCoords = {	x : Number( l_aFloatArray[ i ] ),
-									y : Number( l_aFloatArray[ i + 1 ] ),
-									z : Number( l_aFloatArray[ i + 2 ] )
-								};
+					l_oCoords = new Vector( Number( l_aFloatArray[ i ] ),
+											Number( l_aFloatArray[ i + 1 ] ),
+											Number( l_aFloatArray[ i + 2 ] ) );
 				}
 				else if( l_nOffset == 2 )
 				{
-					l_oCoords =	{	x : Number( l_aFloatArray[ i ] ),
-									y : Number( l_aFloatArray[ i + 1 ] )
-								};
+					l_oCoords =	new Vector( Number( l_aFloatArray[ i ] ),
+											Number( l_aFloatArray[ i + 1 ]) , 0 );
 				}
 				l_aOutput.push( l_oCoords );
 			}
@@ -489,6 +541,24 @@ package sandy.parser
 			);
 
 			return l_oMatrix4;
+		}
+		
+		
+		private function formatVector( p_oVect:Vector ):void
+		{
+			var tmp:Number;
+			if( m_bYUp )
+			{
+				p_oVect.x = -p_oVect.x;
+			}
+			else
+			{
+				/*
+				tmp = p_oVect.y;
+				p_oVect.y = p_oVect.z;
+				p_oVect.z = tmp;
+				*/
+			}
 		}
 
 		/**

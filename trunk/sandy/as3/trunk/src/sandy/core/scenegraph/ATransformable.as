@@ -679,8 +679,8 @@ package sandy.core.scenegraph
 			switch( p_sMode )
 			{
 				case "local" 	: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
-				case "camera" : l_oPos = new Vector( viewMatrix.n14, viewMatrix.n24, viewMatrix.n34 ); break;
-				case "absolute" 	: l_oPos = new Vector( modelMatrix.n14, modelMatrix.n24, modelMatrix.n34 ); break;
+				case "camera" 	: l_oPos = new Vector( viewMatrix.n14, viewMatrix.n24, viewMatrix.n34 ); break;
+				case "absolute" : l_oPos = new Vector( modelMatrix.n14, modelMatrix.n24, modelMatrix.n34 ); break;
 				default 		: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
 			}
 			return l_oPos;

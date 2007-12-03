@@ -205,8 +205,8 @@ package sandy.core.scenegraph
 		 */
 		public function projectVertex( p_oVertex:Vertex ):void
 		{
-			const l_nX:Number = viewport.offset.x + m_nOffx;
-			const l_nY:Number = viewport.offset.y + m_nOffy;
+			const l_nX:Number = (viewport.offset.x + m_nOffx);
+			const l_nY:Number = (viewport.offset.y + m_nOffy);
 			const l_nCste:Number = 	1 / ( p_oVertex.wx * mp41 + p_oVertex.wy * mp42 + p_oVertex.wz * mp43 + mp44 );
 			p_oVertex.sx =  l_nCste * ( p_oVertex.wx * mp11 + p_oVertex.wy * mp12 + p_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
 			p_oVertex.sy = -l_nCste * ( p_oVertex.wx * mp21 + p_oVertex.wy * mp22 + p_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
@@ -389,6 +389,6 @@ package sandy.core.scenegraph
 					mp12:Number,mp22:Number,mp32:Number,mp42:Number,
 					mp13:Number,mp23:Number,mp33:Number,mp43:Number,
 					mp14:Number,mp24:Number,mp34:Number,mp44:Number,				
-					m_nOffx:Number, m_nOffy:Number;
+					m_nOffx:int, m_nOffy:int;
 	}
 }

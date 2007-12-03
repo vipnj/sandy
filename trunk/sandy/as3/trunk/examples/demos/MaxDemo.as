@@ -72,10 +72,10 @@ package demos
   			switch( p_sType )
   			{
   				case GOURAUD:
-  					l_oAttr = new GouraudAttributes( true, 0.0 );
+  					l_oAttr = new GouraudAttributes( true, 0.2 );
   					break;
   				case FLAT:
-  					l_oAttr = new LightAttributes( true, 0.2 );
+  					l_oAttr = new LightAttributes( false, 0.2 );
   					break;
   				case NONE:
   				default :

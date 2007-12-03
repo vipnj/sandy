@@ -98,7 +98,7 @@ package sandy.core.scenegraph
 		 */
 		public function set matrix( p_oMatrix:Matrix4 ):void
 		{
-			m_oMatrix = p_oMatrix;
+			m_oMatrix.copy( p_oMatrix );
 		    // --
 		    m_oMatrix.vectorMult3x3(_vSide);
 		    m_oMatrix.vectorMult3x3(_vUp);
@@ -375,7 +375,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
 		}
-
+		
 		/**
 		 * The position in the parent frame this object should "look at".
 		 *

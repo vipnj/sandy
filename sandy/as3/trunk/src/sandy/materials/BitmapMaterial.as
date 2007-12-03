@@ -37,6 +37,8 @@ package sandy.materials
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @author		Xavier Martin - zeflasher - transparency managment
+	 * @author		Makc for first renderRect implementation
+	 * @author		James Dahl - optimization in renderRec method
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
@@ -56,9 +58,15 @@ package sandy.materials
 		 * An usual solution is to augment the number of polygon, but the performance cost can be quite big.
 		 * An other solution is to change this property value. The lower to more accurate the perspective correction is.
 		 * To disable the perspective correction, set this property to zero, which is also the default value
+		 * If you use the precision to solve the distortion issue, you can reduce the primitives quality (execpt if you are experimenting some sorting issues)
 		 */
 		public var precision:uint = 0;
 
+		/**
+		 * Maximum  recurssion depth when using precision > 1 (which enables the perspective correction).
+		 * The bigger the number is, the more accurate the result will be.
+		 * Try to change this value to fits your needs to obtain the best performance.
+		 */
 		public var maxRecurssionDepth:uint = 5;
 		
 		/**
@@ -172,10 +180,16 @@ package sandy.materials
 			l_uv = null;
 	 	}
 
-		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number,
+  		protected function renderRec( ta:Number, tb:Number, tc:Number, td:Number, tx:Number, ty:Number,
             ax:Number, ay:Number, az:Number, bx:Number, by:Number, bz:Number, cx:Number, cy:Number, cz:Number):void
         {
-			m_nRecLevel++;
+            m_nRecLevel++;
+            var ta2:Number = ta+ta;
+            var tb2:Number = tb+tb;
+            var tc2:Number = tc+tc;
+            var td2:Number = td+td;
+            var tx2:Number = tx+tx;
+            var ty2:Number = ty+ty;
             var mabz:Number = 2 / (az + bz);
             var mbcz:Number = 2 / (bz + cz);
             var mcaz:Number = 2 / (cz + az);
@@ -194,62 +208,72 @@ package sandy.materials
             var dsab:Number = (dabx*dabx + daby*daby);
             var dsbc:Number = (dbcx*dbcx + dbcy*dbcy);
             var dsca:Number = (dcax*dcax + dcay*dcay);
-
-            if ((m_nRecLevel > maxRecurssionDepth) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
+            var mabxHalf:Number = mabx*0.5;
+            var mabyHalf:Number = maby*0.5;
+            var azbzHalf:Number = (az+bz)*0.5;
+            var mcaxHalf:Number = mcax*0.5;
+            var mcayHalf:Number = mcay*0.5;
+            var czazHalf:Number = (cz+az)*0.5;
+            var mbcxHalf:Number = mbcx*0.5;
+            var mbcyHalf:Number = mbcy*0.5;
+            var bzczHalf:Number = (bz+cz)*0.5;
+ 
+            if (( m_nRecLevel > maxRecurssionDepth ) || ((dsab <= precision) && (dsca <= precision) && (dsbc <= precision)))
             {
                 renderTriangle(ta, tb, tc, td, tx, ty, ax, ay, bx, by, cx, cy);
-				m_nRecLevel--; return;
+                m_nRecLevel--; return;
             }
-
+ 
             if ((dsab > precision) && (dsca > precision) && (dsbc > precision) )
             {
-                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2,
-                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, mcax/2, mcay/2, (cz+az)/2);
-
-                renderRec(ta*2, tb*2, tc*2, td*2, tx*2-1, ty*2,
-                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
-
-                renderRec(ta*2, tb*2, tc*2, td*2, tx*2, ty*2-1,
-                    mcax/2, mcay/2, (cz+az)/2, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
-
-                renderRec(-ta*2, -tb*2, -tc*2, -td*2, -tx*2+1, -ty*2+1,
-                    mbcx/2, mbcy/2, (bz+cz)/2, mcax/2, mcay/2, (cz+az)/2, mabx/2, maby/2, (az+bz)/2);
-
+                renderRec(ta2, tb2, tc2, td2, tx2, ty2,
+                    ax, ay, az, mabxHalf, mabyHalf, azbzHalf, mcaxHalf, mcayHalf, czazHalf);
+ 
+                renderRec(ta2, tb2, tc2, td2, tx2-1, ty2,
+                    mabxHalf, mabyHalf, azbzHalf, bx, by, bz, mbcxHalf, mbcyHalf, bzczHalf);
+ 
+                renderRec(ta2, tb2, tc2, td2, tx2, ty2-1,
+                    mcaxHalf, mcayHalf, czazHalf, mbcxHalf, mbcyHalf, bzczHalf, cx, cy, cz);
+ 
+                renderRec(-ta2, -tb2, -tc2, -td2, -tx2+1, -ty2+1,
+                    mbcxHalf, mbcyHalf, bzczHalf, mcaxHalf, mcayHalf, czazHalf, mabxHalf, mabyHalf, azbzHalf);
+ 
                 m_nRecLevel--; return;
             }
-
+ 
             var dmax:Number = Math.max(dsab, Math.max(dsca, dsbc));
-
+ 
             if (dsab == dmax)
             {
-                renderRec(ta*2, tb*1, tc*2, td*1, tx*2, ty*1,
-                    ax, ay, az, mabx/2, maby/2, (az+bz)/2, cx, cy, cz);
-
-                renderRec(ta*2+tb, tb*1, 2*tc+td, td*1, tx*2+ty-1, ty*1,
-                    mabx/2, maby/2, (az+bz)/2, bx, by, bz, cx, cy, cz);
-
+                renderRec(ta2, tb, tc2, td, tx2, ty,
+                    ax, ay, az, mabxHalf, mabyHalf, azbzHalf, cx, cy, cz);
+ 
+                renderRec(ta2+tb, tb, tc2+td, td, tx2+ty-1, ty,
+                    mabxHalf, mabyHalf, azbzHalf, bx, by, bz, cx, cy, cz);
+ 
                 m_nRecLevel--; return;
             }
-
+ 
             if (dsca == dmax)
             {
-                renderRec(ta*1, tb*2, tc*1, td*2, tx*1, ty*2,
-                    ax, ay, az, bx, by, bz, mcax/2, mcay/2, (cz+az)/2);
-
-                renderRec(ta*1, tb*2 + ta, tc*1, td*2 + tc, tx, ty*2+tx-1,
-                    mcax/2, mcay/2, (cz+az)/2, bx, by, bz, cx, cy, cz);
-
+                renderRec(ta, tb2, tc, td2, tx, ty2,
+                    ax, ay, az, bx, by, bz, mcaxHalf, mcayHalf, czazHalf);
+ 
+                renderRec(ta, tb2 + ta, tc, td2 + tc, tx, ty2+tx-1,
+                    mcaxHalf, mcayHalf, czazHalf, bx, by, bz, cx, cy, cz);
+ 
                 m_nRecLevel--; return;
             }
-
-            renderRec(ta-tb, tb*2, tc-td, td*2, tx-ty, ty*2,
-                ax, ay, az, bx, by, bz, mbcx/2, mbcy/2, (bz+cz)/2);
-
-            renderRec(2*ta, tb-ta, tc*2, td-tc, 2*tx, ty-tx,
-                ax, ay, az, mbcx/2, mbcy/2, (bz+cz)/2, cx, cy, cz);
-
-			m_nRecLevel--;
+ 
+            renderRec(ta-tb, tb2, tc-td, td2, tx-ty, ty2,
+                ax, ay, az, bx, by, bz, mbcxHalf, mbcyHalf, bzczHalf);
+ 
+            renderRec(ta2, tb-ta, tc2, td-tc, tx2, ty-tx,
+                ax, ay, az, mbcxHalf, mbcyHalf, bzczHalf, cx, cy, cz);
+ 
+            m_nRecLevel--;
         }
+        
 
 		protected function renderTriangle(a:Number, b:Number, c:Number, d:Number, tx:Number, ty:Number,
 			v0x:Number, v0y:Number, v1x:Number, v1y:Number, v2x:Number, v2y:Number):void

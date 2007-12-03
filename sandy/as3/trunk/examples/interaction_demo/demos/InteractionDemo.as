@@ -96,14 +96,15 @@ package demos
  
 		private function createTexture():void
 		{
-			texture = new Texture();
+			//texture = new Texture();
 			textureScroll = new TexturePanel();
-			
+			textureScroll.x = 1000;
+			addChild( textureScroll );
 			/*
 			btn_test  = texture.getChildByName('btn_test') as MovieClip;
 			btn_test.addEventListener( MouseEvent.MOUSE_OVER, _interaction );
-			btn_test.addEventListener( MouseEvent.CLICK, _interaction );
-			*/
+			btn_test.addEventListener( MouseEvent.CLICK, _interaction );*/
+			
 		}
 		
 		private function _interaction( e : MouseEvent ): void

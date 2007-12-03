@@ -24,6 +24,7 @@ package sandy.view
 	 * It may be the whole or only a part of the stage</p>
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
+	 * @author		James Dahl - optimization with bitwise and int type.
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */	

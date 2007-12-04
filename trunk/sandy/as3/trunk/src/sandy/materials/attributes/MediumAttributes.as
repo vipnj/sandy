@@ -81,7 +81,7 @@ package sandy.materials.attributes
 		public var fadeFrom:Vector;
 
 		/**
-		 * Maximum amount of blur to add.
+		 * Maximum amount of blur to add. <b>Warning:</b> this feature is very expensive when shape useSingleContainer is false.
 		 */
 		public var blurAmount:Number;
 
@@ -186,18 +186,21 @@ package sandy.materials.attributes
 		{
 			if (p_nBlurAmount == 0) return;
 
-			var fs:Array = [], changed:Boolean = false, s:Sprite = p_oPolygon.container;
+			var fs:Array = [], changed:Boolean = false;
+			var s:Sprite = (p_oPolygon.shape.useSingleContainer) ? p_oPolygon.shape.container : p_oPolygon.container;
+
 			for (var i:int = s.filters.length -1; i > -1; i--)
 			{
 				if (!changed && (s.filters[i] is BlurFilter) && (s.filters[i].quality == 1))
 				{
-					// hopefully, this check will save some cpu
-					if ((s.filters[i].blurX == p_nBlurAmount) &&
-					    (s.filters[i].blurY == p_nBlurAmount)) return;
+					var bf:BlurFilter = s.filters[i];
 
-					// assume this is our filter and replace it
-					fs.push (new BlurFilter (p_nBlurAmount, p_nBlurAmount, 1));
-					changed = true;
+					// hopefully, this check will save some cpu
+					if ((bf.blurX == p_nBlurAmount) &&
+					    (bf.blurY == p_nBlurAmount)) return;
+
+					// assume this is our filter and change it
+					bf.blurX = bf.blurY = p_nBlurAmount; fs[i] = bf; changed = true;
 				}
 				else
 				{

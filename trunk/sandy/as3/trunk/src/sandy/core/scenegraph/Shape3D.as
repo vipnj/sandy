@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -172,7 +172,13 @@ package sandy.core.scenegraph
     		}
     		m_bUseSingleContainer = p_bUseSingleContainer;
     	}
-    	
+
+		/**
+		 * @private
+		 */
+		public function get useSingleContainer ():Boolean
+		{return m_bUseSingleContainer;}
+
 		/**
 		 * Updates the bounding volumes of this object.
 		 */

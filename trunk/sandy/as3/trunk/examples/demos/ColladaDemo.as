@@ -57,7 +57,8 @@ package demos
 	  	{
 	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/box.DAE", Parser.COLLADA, 1 ) as ColladaParser;
 	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/tank3.DAE", Parser.COLLADA, 1 ) as ColladaParser;
-	  		var l_oParser:ColladaParser = Parser.create( "assets/models/Focus.DAE", Parser.COLLADA, 10 ) as ColladaParser;
+	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/Focus.DAE", Parser.COLLADA, 10 ) as ColladaParser;
+	  		var l_oParser:ColladaParser = Parser.create( "assets/models/Cube.DAE", Parser.COLLADA, 10 ) as ColladaParser;
 
 			// Important to make Sandy load the textures from DAE file directly
 	  		l_oParser.RELATIVE_TEXTURE_PATH = "assets/textures/";

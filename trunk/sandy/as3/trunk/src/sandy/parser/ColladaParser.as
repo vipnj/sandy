@@ -160,6 +160,7 @@ package sandy.parser
 				// -- get the vertices
 				l_oGeometry = getGeometry( l_sGeometryID, m_oMaterials );
 
+				if( l_oGeometry == null ) return null;
 				// -- create the new shape
 				l_oNode = new Shape3D( p_oNode.@name, l_oGeometry, l_oAppearance );
 			}
@@ -303,6 +304,7 @@ package sandy.parser
 
 			// -- triangles
 			var l_oTriangles : XML = l_oGeometry.mesh.triangles[0];
+			if( l_oTriangles == null ) return null;
 			var l_aTriangles : Array = stringToArray( l_oTriangles.p );
 			var l_sMaterial : String = l_oTriangles.@material;
 			var l_nCount : Number = Number( l_oTriangles.@count );

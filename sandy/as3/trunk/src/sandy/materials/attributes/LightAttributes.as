@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -28,7 +28,7 @@ package sandy.materials.attributes
 	/**
 	 * Realize a flat shading effect when associated to a material.
 	 *
-	 * <p>To make this material attribute use by the Material object, the material must have :myMAterial.lighteningEnable = true.<br />
+	 * <p>To make this material attribute use by the Material object, the material must have :myMAterial.lightingEnable = true.<br />
 	 * This attributes contains some parameters</p>
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou

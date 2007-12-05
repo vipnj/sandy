@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="VertexMath,sandy.math.VertexMath,addVertex,clone,cross,dot,getInstance,negate,sub" name="keywords">
+<meta content="VertexMath,sandy.math.VertexMath,addVertex,clone,cross,dot,getInstance,linearGradientMatrix,negate,sub" name="keywords">
 <title>sandy.math.VertexMath</title>
 </head>
 <body>
@@ -139,6 +139,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">[static]
    Computes the norm of a 3D vector.</div>
 </td><td class="summaryTableOwnerCol"><a href="VectorMath.html">VectorMath</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#linearGradientMatrix()">linearGradientMatrix</a>(p_oV0:<a href="../core/data/Vertex.html">Vertex</a>, p_oV1:<a href="../core/data/Vertex.html">Vertex</a>, p_oV2:<a href="../core/data/Vertex.html">Vertex</a>, p_nR0:Number, p_nR1:Number, p_nR2:Number, p_oMatrix:Matrix = null):Matrix</div>
+<div class="summaryTableDescription">[static]
+   Calculates linear gradient matrix from three vertices and ratios
+      <p>This function expects vertices to be ordered in such a way that p_nR0 &lt; p_nR1 &lt; p_n2.</div>
+</td><td class="summaryTableOwnerCol">VertexMath</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
@@ -356,6 +365,76 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20"></td><td><code><a href="../math/VertexMath.html">VertexMath</a></code></td>
+</tr>
+</table>
+</div>
+<a name="linearGradientMatrix()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">linearGradientMatrix</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function linearGradientMatrix(p_oV0:<a href="../core/data/Vertex.html">Vertex</a>, p_oV1:<a href="../core/data/Vertex.html">Vertex</a>, p_oV2:<a href="../core/data/Vertex.html">Vertex</a>, p_nR0:Number, p_nR1:Number, p_nR2:Number, p_oMatrix:Matrix = null):Matrix</code><p>
+   Calculates linear gradient matrix from three vertices and ratios
+      </p><p>This function expects vertices to be ordered in such a way that p_nR0 &lt; p_nR1 &lt; p_n2.
+   Ratios can be scaled by any positive factor;
+   see beginGradientFill documentation for ratios meaning.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oV0</span>:<a href="../core/data/Vertex.html">Vertex</a></code> &mdash; Left-most vertex in a gradient.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oV1</span>:<a href="../core/data/Vertex.html">Vertex</a></code> &mdash; Inner vertex in a gradient.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oV2</span>:<a href="../core/data/Vertex.html">Vertex</a></code> &mdash; Right-most vertex in a gradient.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nR0</span>:Number</code> &mdash; Ratio for p_oV0.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nR1</span>:Number</code> &mdash; Ratio for p_oV1.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nR2</span>:Number</code> &mdash; Ratio for p_oV2.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oMatrix</span>:Matrix</code> (default = <code>null</code>)<code></code> &mdash; (Optional) matrix object to use.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Matrix</code> &mdash;  The matrix to use with beginGradientFill, GradientType.LINEAR.
+   </td>
 </tr>
 </table>
 </div>

@@ -1,6 +1,5 @@
 package demos
 {
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -8,14 +7,13 @@ package demos
 	
 	import sandy.core.Scene3D;
 	import sandy.core.scenegraph.Camera3D;
-	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
-	import sandy.materials.BitmapMaterial;
+	import sandy.materials.ColorMaterial;
+	import sandy.materials.attributes.GouraudAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
-	import sandy.parser.ColladaParser;
 	import sandy.parser.Parser;
+	import sandy.parser.Parser3DS;
 	import sandy.parser.ParserEvent;
-	import sandy.primitive.Sphere;
 	
 	public final class ColladaDemo extends Sprite
 	{
@@ -53,15 +51,23 @@ package demos
            keyPressed[e.keyCode]=false;
         }
   
+  		private function get appearance():Appearance
+  		{
+  			var l_oMaterial:ColorMaterial = new ColorMaterial( 0xFF, 1, new MaterialAttributes( new GouraudAttributes( true, 0.1 ) ) );
+  			l_oMaterial.lightingEnable = true;
+  			return new Appearance ( l_oMaterial );
+  		}
+  		
 	  	private function load():void
 	  	{
 	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/box.DAE", Parser.COLLADA, 1 ) as ColladaParser;
 	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/tank3.DAE", Parser.COLLADA, 1 ) as ColladaParser;
 	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/Focus.DAE", Parser.COLLADA, 10 ) as ColladaParser;
-	  		var l_oParser:ColladaParser = Parser.create( "assets/models/Cube.DAE", Parser.COLLADA, 10 ) as ColladaParser;
-
+	  		//var l_oParser:ColladaParser = Parser.create( "assets/models/Cube.DAE", Parser.COLLADA, 10 ) as ColladaParser;
+			var l_oParser:Parser3DS = Parser.create( "assets/models/impreza.3ds", Parser.MAX_3DS, 10 ) as Parser3DS;
 			// Important to make Sandy load the textures from DAE file directly
-	  		l_oParser.RELATIVE_TEXTURE_PATH = "assets/textures/";
+	  		//l_oParser.RELATIVE_TEXTURE_PATH = "assets/textures/";
+	  		l_oParser.standardAppearance = appearance;
 	  		l_oParser.addEventListener( ParserEvent.INIT, _createScene3D );
 	  		l_oParser.addEventListener( ParserEvent.FAIL, _onFail );
 	  		l_oParser.parse();

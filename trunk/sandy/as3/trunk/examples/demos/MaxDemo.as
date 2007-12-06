@@ -15,12 +15,14 @@ package demos
 	import sandy.materials.attributes.IAttributes;
 	import sandy.materials.attributes.LightAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.materials.attributes.PhongAttributes;
 	import sandy.parser.IParser;
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
 	
 	public final class MaxDemo extends Sprite
 	{	
+		public static const PHONG:String = "phong";	
 		public static const GOURAUD:String = "gouraud";	
 		public static const FLAT:String = "flat";	
 		public static const NONE:String = "none";	
@@ -74,6 +76,9 @@ package demos
   				case GOURAUD:
   					l_oAttr = new GouraudAttributes( true, 0.2 );
   					break;
+  				case  PHONG:
+  					l_oAttr = new PhongAttributes( true, 0.2 );
+  					break;
   				case FLAT:
   					l_oAttr = new LightAttributes( false, 0.2 );
   					break;
@@ -97,7 +102,7 @@ package demos
 	  	{
 	  		//var l_oParser:IParser = Parser.create( "assets/models/SpaceFighter02.3ds", Parser.MAX_3DS );`
 	  		var l_oParser:IParser = Parser.create( new Kitty(), Parser.ASE, 0.2 );
-	  		l_oParser.standardAppearance = _createAppearance( NONE );
+	  		l_oParser.standardAppearance = _createAppearance( PHONG );
 	  		l_oParser.addEventListener( ParserEvent.INIT, _createScene3D );
 	  		l_oParser.parse();
 	  	}

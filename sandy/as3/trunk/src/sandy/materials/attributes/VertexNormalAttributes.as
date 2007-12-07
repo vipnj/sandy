@@ -146,6 +146,7 @@ package sandy.materials.attributes
 			var l_oVertex:Vertex;
 			
 			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
+			p_oGraphics.beginFill(0);
 			// --
 			var lId:int = l_aPoints.length;
 			while( l_oVertex = l_aPoints[ --lId ] )
@@ -166,7 +167,7 @@ package sandy.materials.attributes
 				l_oNormal = null;
 				l_oDiff = null;
 			}
-			
+			p_oGraphics.endFill();
 		}
 	}
 }

@@ -265,6 +265,22 @@ package sandy.materials.attributes
 					aNP[i].y = (16384 - 1) * 0.05 * aNP[i].y;
 				}
 
+				// simple hack to resolve bad projections
+				// this needs to be done some other way though
+				while ((Math.abs(
+						(aNP[0].x - aNP[1].x) * (aNP[0].x - aNP[2].x) + (aNP[0].y - aNP[1].y) * (aNP[0].y - aNP[2].y)
+						) > (1 - NumberUtil.TOL) *
+						Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[0], aNP[2])
+					)
+					|| (Math.abs(
+						(aNP[0].x - aNP[1].x) * (aNP[2].x - aNP[1].x) + (aNP[0].y - aNP[1].y) * (aNP[2].y - aNP[1].y)
+						) > (1 - NumberUtil.TOL) *
+						Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[2], aNP[1])
+					))
+				{
+					aNP[0].x--; aNP[1].y++; aNP[2].x++;
+				}
+
 				// compute gradient matrix
 				matrix.a = aNP[1].x - aNP[0].x;
 				matrix.b = aNP[1].y - aNP[0].y;

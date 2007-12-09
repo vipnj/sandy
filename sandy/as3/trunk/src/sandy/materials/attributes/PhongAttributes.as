@@ -99,9 +99,10 @@ package sandy.materials.attributes
 			for (i = 0; i < l_nQuality; i++)
 			{
 				// radius in the map (scaled 0..1) and its complimentary number
-				var r:Number = i * 1.0 / (l_nQuality - 1), q:Number = Math.sqrt (1 - r * r);
+				var r:Number = i * 1.0 / (l_nQuality - 1), q:Number = 0.5 * (1 - r * r);
 				// virtual normal vector
 				var n:Vector = new Vector (e.x * r - d.x * q, e.y * r - d.y * q, e.z * r - d.z * q);
+				n.normalize ();
 				// add ambient to Light3D response
 				l_aResponse [i] = NumberUtil.constrain (p_oLight.calculate (n) + ambient, 0, 1);
 			}
@@ -193,28 +194,7 @@ package sandy.materials.attributes
 				computeLightMap (p_oEvent.target as Light3D, m_nQuality);
 			}
 		}
-		
-		// -- todo: remove unused vars
-		internal var v0:Vertex, v1:Vertex, v2:Vertex;
-		internal var id0:int, id1:int, id2:int;
-		internal var v0N:Vector, v1N:Vector, v2N:Vector;
-		internal var v0L:Number, v1L:Number, v2L:Number;
-		internal var aL:Array = new Array(3);
-		internal var aLId:Array;
-		
-		internal var alpha:Array;
-		internal var matrix:Matrix = new Matrix();
-		internal var l_oVertex:Vertex;
-		 
-		internal var colours:Array; 
-		internal var ratios:Array;
 
-		// -- (todo: remove comment - new vars in Phong)
-		internal var aN:Array = new Array (3);
-		internal var aNP:Array = [new Point (), new Point (), new Point ()], aNPinorm:Number;
-		internal var e1:Vector, e2:Vector, vN:Vector;
-		internal var matrix2:Matrix = new Matrix();
-		
 		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
 			var i:int;
@@ -271,45 +251,19 @@ package sandy.materials.attributes
 				e1.normalize ();
 				e2.normalize ();
 
-				// sideface
-				var sideface:Boolean = false;
-
 				for (i = 0; i < 3; i++)
 				{
+					// intersect with parabola
+					aN[i].scale (1 / (1 - d.dot (aN[i])));
+
 					// project normals onto e1 and e2
 					aNP[i].x = e1.dot (aN[i]);
 					aNP[i].y = e2.dot (aN[i]);
-
-					if (d.dot (aN[i]) > 0)
-					{
-						// scale up into ambient
-						aNP[i].normalize (2 - aNP[i].length); sideface = true;
-					}
 
 					// re-calculate into light map coordinates
 					aNP[i].x = (16384 - 1) * 0.05 * aNP[i].x;
 					aNP[i].y = (16384 - 1) * 0.05 * aNP[i].y;
 				}
-
-/*				// check for side faces
-				vN = p_oPolygon.normal.getVector().clone();
-				p_oPolygon.shape.modelMatrix.vectorMult3x3( vN );
-				if (d.dot (vN) > 0)*/
-				/*if (sideface)
-				{
-					// after we normalized some aNP[i] above, gradients are nor longer correct
-					// we need to patch against this here
-					var l_aInd:Array = aNP.sortOn ("length", Array.NUMERIC | Array.RETURNINDEXEDARRAY);
-					for (i = 0; i < 3; i++)
-					{
-						var j:int = l_aInd[i]
-						var a:Number = 0.1 * ((j > 1) ? -1 : j);
-						var l:Number = aNP[j].length;
-						aNP[j].x = Math.cos (a);
-						aNP[j].y = Math.sin (a);
-						aNP[j].normalize (l);
-					}
-				}*/
 
 				// compute gradient matrix
 				matrix.a = aNP[1].x - aNP[0].x;
@@ -349,6 +303,17 @@ package sandy.materials.attributes
 
 		private var _useBright:Boolean = false;
 		private var _ambient:Number = 0.3;
+
+		private var v0:Vertex, v1:Vertex, v2:Vertex;
+		private var v0N:Vector, v1N:Vector, v2N:Vector;
+		
+		private var matrix:Matrix = new Matrix();
+		private var l_oVertex:Vertex;
+
+		private var aN:Array = new Array (3);
+		private var aNP:Array = [new Point (), new Point (), new Point ()], aNPinorm:Number;
+		private var e1:Vector, e2:Vector;
+		private var matrix2:Matrix = new Matrix();
 	}
 }
 

@@ -19,6 +19,9 @@ package demos
 	import sandy.parser.IParser;
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
+	import sandy.core.scenegraph.ATransformable;
+	import sandy.materials.attributes.VertexNormalAttributes;
+	import flash.utils.getTimer;
 	
 	public final class MaxDemo extends Sprite
 	{	
@@ -31,10 +34,10 @@ package demos
 		{
 			super();
 		}
-		[Embed(source="assets/textures/textureKitty.jpg")]
+		[Embed(source="../assets/textures/textureKitty.jpg")]
 		private var Texture:Class;
 		
-		[Embed( source="assets/models/kitty.ase", mimeType="application/octet-stream" )]
+		[Embed( source="../assets/models/kitty.ase", mimeType="application/octet-stream" )]
 		private var Kitty:Class;
 		
 		private var m_oScene:Scene3D;
@@ -80,14 +83,14 @@ package demos
   					l_oAttr = new PhongAttributes( true, 0.2 );
   					break;
   				case FLAT:
-  					l_oAttr = new LightAttributes( false, 0.2 );
+  					l_oAttr = new LightAttributes( true, 0.2 );
   					break;
   				case NONE:
   				default :
   					l_oAttr = null
   					break;
   			}
-  			return new MaterialAttributes( l_oAttr );
+  			return new MaterialAttributes( l_oAttr, new VertexNormalAttributes(10, 1, 0xFF, 1 ) );
   		}
   		
 	  	private function _createAppearance( p_sType:String ):Appearance
@@ -148,6 +151,12 @@ package demos
 			{ 
 			    cam.moveHorizontally( -10 );
 			}
+			for each( var l_oShape:ATransformable in m_oScene.root.children )
+			{
+				if( l_oShape is Shape3D )
+					l_oShape.rotateY++;
+			}
+
 			m_oScene.render();
 		}
 		

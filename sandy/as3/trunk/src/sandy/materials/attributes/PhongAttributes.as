@@ -127,7 +127,10 @@ package sandy.materials.attributes
 				{
 					l_oLightMap.alphas.push ((l_aResponse [i] > 0.5) ? 2 * l_aResponse [i] - 1 : 1 - 2 * l_aResponse [i]);
 					l_oLightMap.colors.push ((l_aResponse [i] > 0.5) ? 0xFFFFFF : 0);
-					l_oLightMap.ratios.push ((i * 255) / (l_nQuality - 1));
+					
+					// It is linear ratio here, it can be something like exponential right?
+					l_oLightMap.ratios.push ( Math.exp(i) / Math.exp(l_nQuality - 1) * 255 );//(i * 255) / (l_nQuality - 1) );
+					
 					if ((i <= j) && (j <= i + 1))
 					{
 						// we need to add two transparent points, but the number of points is limited
@@ -145,11 +148,14 @@ package sandy.materials.attributes
 
 						l_oLightMap.alphas.push (0);
 						l_oLightMap.colors.push (0xFFFFFF);
-						l_oLightMap.ratios.push ((j * 255) / (l_nQuality - 1));
+						
+						l_oLightMap.ratios.push ( Math.exp(j) / Math.exp(l_nQuality - 1) * 255 );
+						//l_oLightMap.ratios.push ((j * 255) / (l_nQuality - 1));
 
 						l_oLightMap.alphas.push (0);
 						l_oLightMap.colors.push (0);
-						l_oLightMap.ratios.push ((j * 255) / (l_nQuality - 1));
+						l_oLightMap.ratios.push ( Math.exp(j) / Math.exp(l_nQuality - 1) * 255 );
+						//l_oLightMap.ratios.push ((j * 255) / (l_nQuality - 1));
 					}
 				}
 			}
@@ -160,7 +166,10 @@ package sandy.materials.attributes
 				{
 					l_oLightMap.alphas.push (1 - l_aResponse [i]);
 					l_oLightMap.colors.push (0);
-					l_oLightMap.ratios.push ((i * 255) / (l_nQuality - 1));
+					
+					// It is linear ratio here, it can be something like exponential right?
+					//l_oLightMap.ratios.push ((i * 255) / (l_nQuality - 1));
+					l_oLightMap.ratios.push ( Math.exp(i) / Math.exp(l_nQuality - 1) * 255 );
 				}
 			}
 

@@ -104,7 +104,7 @@ package demos
 		
 		private function enterFrameHandler( event : Event ) : void
 		{
-			var cam:Camera3D = m_oScene.camera;
+ 			var cam:Camera3D = m_oScene.camera;
 			// --
 			if( keyPressed[Keyboard.RIGHT] ) 
 			{   
@@ -114,11 +114,20 @@ package demos
 			{
 			    cam.rotateY += 5;
 			}		
-			if( keyPressed[Keyboard.UP] )
+			if( keyPressed[Keyboard.UP] && !keyPressed[Keyboard.SPACE] )
+			{ 
+			    cam.moveForward( 10 );
+			}
+			if( keyPressed[Keyboard.DOWN] && !keyPressed[Keyboard.SPACE]  )
+			{ 
+			    cam.moveForward( -10 );
+			}
+			
+			if( keyPressed[Keyboard.UP] && keyPressed[Keyboard.SPACE]  )
 			{ 
 			    cam.moveVertically( 10 );
 			}
-			if( keyPressed[Keyboard.DOWN] )
+			if( keyPressed[Keyboard.DOWN] && keyPressed[Keyboard.SPACE]  )
 			{ 
 			    cam.moveVertically( -10 );
 			}

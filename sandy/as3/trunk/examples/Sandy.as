@@ -7,9 +7,9 @@ package
 
 	[SWF(width="640", height="500", backgroundColor="#cccccc", frameRate=25)] 
 
-	public class SandyDemos extends Sprite 
+	public class Sandy extends Sprite 
 	{
-		public function SandyDemos() 
+		public function Sandy() 
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			//var demo:InteractionDemo = new InteractionDemo();

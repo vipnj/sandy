@@ -156,26 +156,6 @@ package sandy.materials.attributes
 			blurPolygonBy (p_oPolygon, Math.min (255, Math.max (0, blurAmount * r0)));
 		}
 
-		/**
-		 * Gives rough estimate for object alpha lower bound, if this attribute is applied.
-		 *
-		 * @example	You can use this method to save yourself few CPU cycles:
-		 *
-		 * <listing version="3.0">
-		 * box.visible = (attr.getAlpha (box) > 0.2);
-		 * </listing>
-		 *
-		 * @param p_oShape - object to estimate alpha lower bound for.
-		 */
-		public function getAlpha (p_oShape:Shape3D):Number
-		{
-			if (!p_oShape.boundingBox.uptodate || !p_oShape.visible)
-				p_oShape.boundingBox.transform (p_oShape.viewMatrix);
-
-			return Math.min (1, Math.max (0,
-				1 - _a * ratioFromWorldVector (p_oShape.boundingBox.tmin) ));
-		}
-
 		// --
 		private function ratioFromWorldVector (p_oW:Vector):Number
 		{
@@ -216,10 +196,10 @@ package sandy.materials.attributes
 		}
 
 		// --
-		internal var _m:Matrix = new Matrix();
-		internal var _c:uint;
-		internal var _a:Number;
-		internal var _fadeTo:Vector;
-		internal var _fadeToN2:Number;
+		private var _m:Matrix = new Matrix();
+		private var _c:uint;
+		private var _a:Number;
+		private var _fadeTo:Vector;
+		private var _fadeToN2:Number;
 	}
 }

@@ -35,7 +35,7 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
-	public final class LightAttributes implements IAttributes
+	public final class LightAttributes extends ALightAttributes
 	{
 		/**
 		 * Flag for lightening mode.
@@ -44,10 +44,6 @@ package sandy.materials.attributes
 		 */
 		public var useBright:Boolean = false;
 		
-		/**
-		 * Level of ambient light, added to the scene if lighting is enabled.
-		 */
-		public var ambient:Number = 0.3;
 		// --
 		public var modified:Boolean;
 		
@@ -73,15 +69,17 @@ package sandy.materials.attributes
 		 * @param p_oMaterial the refering material
 		 * @param p_oScene the scene
 		 */
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
+		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
+			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
+
 			if( p_oMaterial.lightingEnable )
 			{
 				var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;
 				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();
 				p_oPolygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
 				// --
-				var lightStrength:Number = p_oScene.light.calculate( l_oNormal ) + ambient;				
+				var lightStrength:Number = NumberUtil.constrain (calculate (l_oNormal), 0, 1);
 				// --
 				if( useBright) 
 					p_oGraphics.beginFill( (lightStrength < 0.5) ? 0 : 0xFFFFFF, (lightStrength < 0.5) ? (1-2 * lightStrength) : (2 * lightStrength - 1) );

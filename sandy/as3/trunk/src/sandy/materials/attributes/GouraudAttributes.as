@@ -39,7 +39,7 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		13.11.2007
 	 */
-	public final class GouraudAttributes implements IAttributes
+	public final class GouraudAttributes extends ALightAttributes
 	{
 		/**
 		 * Flag for lightening mode.
@@ -48,11 +48,6 @@ package sandy.materials.attributes
 		 */
 		public var useBright:Boolean = false;
 				
-		/**
-		 * Level of ambient light, added to the scene if lighting is enabled.
-		 */
-		public var ambient:Number = 0.3;
-		
 		/**
 		 * Create the GouraudAttribute object.
 		 * @param p_nAmbient The ambient light value. A value between O and 1 is expected.
@@ -77,8 +72,10 @@ package sandy.materials.attributes
 		internal var colours:Array = new Array(0,0); 
 		internal var ratios:Array = [ 0x00, 0xFF ];
 		
-		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
+		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
+			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
+
 			var m:Number;
 			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
 			v0 = l_aPoints[0];
@@ -92,9 +89,9 @@ package sandy.materials.attributes
 			v2N = p_oPolygon.vertexNormals[2].getVector().clone();
 			p_oPolygon.shape.modelMatrix.vectorMult3x3( v2N );
 			// --
-			v0L = p_oScene.light.calculate( v0N ) + ambient;	
-			v1L = p_oScene.light.calculate( v1N ) + ambient;		
-			v2L = p_oScene.light.calculate( v2N ) + ambient;	
+			v0L = NumberUtil.constrain (calculate (v0N), 0, 1);
+			v1L = NumberUtil.constrain (calculate (v1N), 0, 1);
+			v2L = NumberUtil.constrain (calculate (v2N), 0, 1);
 			v0L = NumberUtil.constrain( v0L, 0, 1 );
 			v1L = NumberUtil.constrain( v1L, 0, 1 );
 			v2L = NumberUtil.constrain( v2L, 0, 1 );	

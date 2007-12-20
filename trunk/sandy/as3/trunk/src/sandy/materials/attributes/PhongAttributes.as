@@ -33,146 +33,183 @@ package sandy.materials.attributes
 
 	/**
 	 * Realize a Phong shading on a material.
+	 * <p>In true Phong shading, normals are supposed to be interpolated across the surface;
+	 * here scaled normal projections are interpolated in the light map space. The downside of
+	 * this method is that in case of low poly models interpolation results are inaccurate -
+	 * in this case you can improve the result using GouraudAttributes for ambient and diffuse,
+	 * and then this attribute for specular reflection.</p>
 	 *
 	 * @author		Makc
 	 * @version		3.0.2
-	 * @date 		06.12.2007
+	 * @date 		15.12.2007
 	 */
-	public final class PhongAttributes implements IAttributes
+	public final class PhongAttributes extends ALightAttributes
 	{
 		/**
-		 * Flag for lightening mode.
-		 * <p>If true, the lit objects use full light range from black to white.<br />
-		 * If false (the default) they just range from black to their normal appearance.</p>
+		 * Non-zero value adds sphere normals to actual normals for light rendering.
+		 * Use this with flat surfaces or cylinders.
 		 */
-		public function set useBright (p_bUseBright:Boolean):void
-		{
-			_useBright = p_bUseBright; m_oLightMaps = new Dictionary ();
-		}
-		
+		public var spherize:Number = 0;
+
 		/**
-		 * @private
+		 * Flag for rendering mode.
+		 * <p>If true, only specular highlight is rendered, when useBright is also true.<br />
+		 * If false (the default) ambient and diffuse reflections will also be rendered.</p>
+		 */
+		public var onlySpecular:Boolean = false;
+
+		/**
+		 * Flag for lightening mode.
+		 * <p>If true (the default), the lit objects use full light range from black to white.<br />
+		 * If false they just range from black to their normal appearance; additionally, current
+		 * implementation does not render specular reflection in this case.</p>
 		 */
 		public function get useBright ():Boolean
 		{return _useBright;}
-
-				
-		/**
-		 * Level of ambient light, added to the scene if lighting is enabled.
-		 */
-		public function set ambient (p_nAmbient:Number):void
-		{
-			_ambient = p_nAmbient; m_oLightMaps = new Dictionary ();
-		}
 		
 		/**
 		 * @private
 		 */
-		public function get ambient ():Number
-		{return _ambient;}
+		public function set useBright (p_bUseBright:Boolean):void
+		{
+			if (_useBright != p_bUseBright)
+			{
+				_useBright = p_bUseBright; m_oLightMaps = new Dictionary ();
+			}
+		}
 
 		/**
 		 * Compute the light map.
-		 * <p>In true Phong shading, normal vectors are supposed to be interpolated across the surface;
-		 * here normal vectors projections are interpolated in a lightmap space. The light map is then
-		 * used to translate normal vector projection into corresponding color value. We use radial
-		 * gradient as a basis for light map, thus we can only roughly approximate Light3D response
-		 * as a function of normal vector projection.</p>
 		 * <p>Normally you should not need to call this function, as it is done for you automatically
 		 * when it is needed. You might call it to compute light map in advance, though.</p>
 		 * 
 		 * @param p_oLight Light3D object to make the light map for.
-		 * @param p_nQuality Quality of light response approximation. A value between 2 and 15 is expected.
+		 * @param p_nQuality Quality of light response approximation. A value between 2 and 15 is expected
+		 * (Flash radial gradient is used internally light map, thus we can only roughly approximate exact
+		 * lighting).
+		 * @param p_nSamples A number of calculated samples per anchor. Positive value is expected (greater
+		 * values will produce a little bit more accurate interpolation with non-equally spaced anchors).
 		 */
-		public function computeLightMap (p_oLight:Light3D, p_nQuality:int = 4):void
+		public function computeLightMap (p_oLight:Light3D, p_nQuality:int = 4, p_nSamples:int = 4):void
 		{
-			var i:int;
+			var i:int, j:int;
 			var l_nQuality:int = NumberUtil.constrain (p_nQuality, 2, 15);
+			var l_nSamples:int = Math.max (p_nSamples, 1);
+			var N:int = l_nQuality * l_nSamples;
 
-			// get light direction and make any perpendicular vector
-			var d:Vector = p_oLight.getDirectionVector ();
-			var e:Vector = (Math.abs (d.x) + Math.abs (d.y) > 0) ? new Vector (d.y, -d.x, 0) : new Vector (d.z, 0, -d.x);
-			e.normalize ();
+			// store Blinn vector, and replace it with light direction
+			// this is to simplify specular map calculation
+			var l_oH = m_oH.clone (); m_oH.copy (m_oL);
+
+			// take arbitrary vector perpendicular to light direction and normalize it
+			var e:Vector = (Math.abs (m_oL.x) + Math.abs (m_oL.y) > 0) ?
+				new Vector (m_oL.y, -m_oL.x, 0) : new Vector (m_oL.z, 0, -m_oL.x); e.normalize ();
 	
-			// sample Light3D response function
-			var l_aResponse:Array = new Array (l_nQuality);
-			for (i = 0; i < l_nQuality; i++)
+			// sample ambient + diffuse and specular separately
+			var n:Vector = new Vector ();
+			var l_aReflection:Array = [new Array (l_nQuality), new Array (l_nQuality)];
+			var S:Array = [0, 0], t:Array = [-1, -1];
+			for (i = 0; i < N; i++)
 			{
-				// radius in the map (scaled 0..1) and its complimentary number
-				var r:Number = i * 1.0 / (l_nQuality - 1), q:Number = 0.5 * (1 - r * r);
-				// virtual normal vector
-				var n:Vector = new Vector (e.x * r - d.x * q, e.y * r - d.y * q, e.z * r - d.z * q);
+				// radius in the lightmap (scaled 0 to 1) and its complimentary number (to parabola)
+				var r:Number = i * 1.0 / (N - 1), q:Number = 0.5 * (1 - r * r);
+				// take arbitrary normal that will map to radius r in the lightmap
+				n.x = e.x * r - m_oL.x * q;
+				n.y = e.y * r - m_oL.y * q;
+				n.z = e.z * r - m_oL.z * q;
 				n.normalize ();
-				// add ambient to Light3D response
-				l_aResponse [i] = NumberUtil.constrain (p_oLight.calculate (n) + ambient, 0, 1);
-			}
+				// calculate reflection from that normal
+				l_aReflection [0] [i] = calculate (n, true);
+				l_aReflection [1] [i] = calculate (n) - l_aReflection [0] [i];
 
-			// compute the light map
-			var l_oLightMap:PhongAttributesLightMap = new PhongAttributesLightMap ();
-
-			if (useBright)
-			{
-				// find transparent point in a gradient
-				// assume that Light3D response gradually decreases (true for Sandy 3.0.1)
-				var j:Number = -1;
-				if (l_aResponse [0] > 0.5)
-				{
-					for (i = 1; i < l_nQuality; i++)
-						if (l_aResponse [i] <= 0.5)
-							j = ((l_aResponse [i-1] - 0.5) * i + (0.5 - l_aResponse [i]) * (i-1)) /
-								(l_aResponse [i-1] - l_aResponse [i]);
-				}
-
-				for (i = 0; i < l_nQuality; i++)
-				{
-					l_oLightMap.alphas.push ((l_aResponse [i] > 0.5) ? 2 * l_aResponse [i] - 1 : 1 - 2 * l_aResponse [i]);
-					l_oLightMap.colors.push ((l_aResponse [i] > 0.5) ? 0xFFFFFF : 0);
-					
-					// It is linear ratio here, it can be something like exponential right?
-					l_oLightMap.ratios.push ( Math.exp(i) / Math.exp(l_nQuality - 1) * 255 );//(i * 255) / (l_nQuality - 1) );
-					
-					if ((i <= j) && (j <= i + 1))
+				for (j = 0; j < 2; j++)
+				{				
+					// constrain values (note: this is different from constraining their sum)
+					l_aReflection [j] [i] = NumberUtil.constrain (l_aReflection [j] [i], 0, 1);
+					// integrate it
+					S [j] += l_aReflection [j] [i];
+					// find transparent points for maps with useBright enabled
+					if (useBright)
 					{
-						// we need to add two transparent points, but the number of points is limited
-						// we might have to remove one or two points in order to do this
-						if (l_nQuality > 13)
-						{
-							i++;
-							if (l_nQuality > 14)
-							{
-								l_oLightMap.alphas.pop ();
-								l_oLightMap.colors.pop ();
-								l_oLightMap.ratios.pop ();
-							}
-						}
-
-						l_oLightMap.alphas.push (0);
-						l_oLightMap.colors.push (0xFFFFFF);
-						
-						l_oLightMap.ratios.push ( Math.exp(j) / Math.exp(l_nQuality - 1) * 255 );
-						//l_oLightMap.ratios.push ((j * 255) / (l_nQuality - 1));
-
-						l_oLightMap.alphas.push (0);
-						l_oLightMap.colors.push (0);
-						l_oLightMap.ratios.push ( Math.exp(j) / Math.exp(l_nQuality - 1) * 255 );
-						//l_oLightMap.ratios.push ((j * 255) / (l_nQuality - 1));
+						if (l_aReflection [j] [0] > 0.5)
+							if (l_aReflection [j] [i] <= 0.5)
+								t [j] = ((l_aReflection [j] [i-1] - 0.5) * i + (0.5 - l_aReflection [j] [i]) * (i-1)) /
+								         (l_aReflection [j] [i-1] - l_aReflection [j] [i]);
 					}
 				}
 			}
 
-			else
+			// restore original Blinn vector
+			m_oH.copy (l_oH);
+
+			// compute the light map
+			var l_oLightMap:PhongAttributesLightMap = new PhongAttributesLightMap ();
+			var I:Array = [0, 0], s:Array = [0, 0];
+			for (i = 0; i < N; i++)
+			for (j = 0; j < 2; j++)
 			{
-				for (i = 0; i < l_nQuality; i++)
+				// skip if we have enough points for j-th map
+				// if this happens, algorithm below doesnt work well :(
+				if (I [j] > l_nQuality -1) continue;
+				
+				// try to fit curve better with non-equally spaced anchors
+				s [j] += l_aReflection [j] [i];
+				if ((s [j] >= S [j] * I [j] / (l_nQuality -1)) || (N - i <= l_nQuality - I [j]))
 				{
-					l_oLightMap.alphas.push (1 - l_aResponse [i]);
-					l_oLightMap.colors.push (0);
-					
-					// It is linear ratio here, it can be something like exponential right?
-					//l_oLightMap.ratios.push ((i * 255) / (l_nQuality - 1));
-					l_oLightMap.ratios.push ( Math.exp(i) / Math.exp(l_nQuality - 1) * 255 );
+					if (useBright)
+					{
+						if (j == 0)
+						{
+							// this is in effect only for ambient + diffuse
+							l_oLightMap.alphas [j].push ((l_aReflection [j] [i] > 0.5) ? 2 * l_aReflection [j] [i] - 1 : 1 - 2 * l_aReflection [j] [i]);
+							l_oLightMap.colors [j].push ((l_aReflection [j] [i] > 0.5) ? 0xFFFFFF : 0);
+							l_oLightMap.ratios [j].push ((i * 255) / (N - 1));
+							if ((i <= t [j]) && (t [j] <= i + 1))
+							{
+								// we need to add two transparent points, but the number of points is limited
+								// we might have to remove one or two points in order to do this
+								if (l_nQuality > 13)
+								{
+									I [j] += 1;
+									if (l_nQuality > 14)
+									{
+										l_oLightMap.alphas [j].pop ();
+										l_oLightMap.colors [j].pop ();
+										l_oLightMap.ratios [j].pop ();
+									}
+								}
+	
+								l_oLightMap.alphas [j].push (0);
+								l_oLightMap.colors [j].push (0xFFFFFF);
+								l_oLightMap.ratios [j].push ((t [j] * 255) / (N - 1));
+		
+								l_oLightMap.alphas [j].push (0);
+								l_oLightMap.colors [j].push (0);
+								l_oLightMap.ratios [j].push ((t [j] * 255) / (N - 1));
+							}
+						}
+
+						else
+						{
+							// it is not really possible to support specular with this method in our limited 3.0 system
+							// so what we do here is not correct light map, but a hack losely based on actual values
+							l_oLightMap.alphas [j].push (2.5 * l_aReflection [j] [i] * l_aReflection [j] [i]);
+							l_oLightMap.colors [j].push (0xFFFFFF);
+							l_oLightMap.ratios [j].push ((i * 255) / (N - 1));
+						}
+					}
+
+					else
+					{
+						l_oLightMap.alphas [j].push (1 - l_aReflection [j] [i]);
+						l_oLightMap.colors [j].push (0);
+						l_oLightMap.ratios [j].push ((i * 255) / (N - 1));
+					}
+					I [j] += 1;
 				}
 			}
 
+			// store light map
 			m_oLightMaps [p_oLight] = l_oLightMap;
 		}
 		
@@ -180,171 +217,213 @@ package sandy.materials.attributes
 		 * Create the PhongAttributes object.
 		 * @param p_nAmbient The ambient light value. A value between 0 and 1 is expected.
 		 * @param p_nQuality Quality of light response approximation. A value between 2 and 15 is expected.
+		 * @param p_nSamples A number of calculated samples per anchor. Positive value is expected.
 		 */
-		public function PhongAttributes (p_bBright:Boolean = false, p_nAmbient:Number = 0.0, p_nQuality:int = 4)
+		public function PhongAttributes (p_bBright:Boolean = false, p_nAmbient:Number = 0.0, p_nQuality:int = 4, p_nSamples:int = 4)
 		{
 			useBright = p_bBright;
 			ambient = NumberUtil.constrain (p_nAmbient, 0, 1);
 
 			m_nQuality = p_nQuality;
+			m_nSamples = p_nSamples;
 		}
 
 		// default quality to pass to computeLightMap (set in constructor)
 		private var m_nQuality:int;
 
+		// default samples to pass to computeLightMap (set in constructor)
+		private var m_nSamples:int;
+
 		// dictionary to hold light maps
 		private var m_oLightMaps:Dictionary = new Dictionary ();
 
-		// on SandyEvent.LIGHT_UPDATED we re-do light map for this light, if we already have it
+		// on SandyEvent.LIGHT_UPDATED we update the light map for this light *IF* we have it
 		private function watchForUpdatedLights (p_oEvent:SandyEvent):void
 		{
 			if (m_oLightMaps [p_oEvent.target as Light3D] as PhongAttributesLightMap != null)
 			{
-				computeLightMap (p_oEvent.target as Light3D, m_nQuality);
+				computeLightMap (p_oEvent.target as Light3D, m_nQuality, m_nSamples);
 			}
 		}
 
-		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
+		// light map to use in this rendering session
+		private var m_oCurrentLightMap:PhongAttributesLightMap;
+
+		// set current light map for "draw" to use
+		override protected function onRenderDisplayList (p_oArg:*):void
 		{
-			var i:int;
+			super.onRenderDisplayList (p_oArg);
+
+			var l_oScene = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
+			var l_oLight:Light3D = l_oScene.light;
+
+			if (m_oLightMaps [l_oLight] as PhongAttributesLightMap == null)
+			{
+				// if we have no map yet, subscribe to this light updates and make the map
+				l_oLight.addEventListener (SandyEvent.LIGHT_UPDATED, watchForUpdatedLights);
+				computeLightMap (l_oLight, m_nQuality, m_nSamples);
+			}
+
+			m_oCurrentLightMap = m_oLightMaps [l_oLight] as PhongAttributesLightMap;
+		}
+
+		// --
+		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
+		{
+			super.draw (p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
+
+			var i:int, j:int, l_oVertex:Vertex;
+
+			// got anything at all to do?
 			if( !p_oMaterial.lightingEnable )
 				return;
 
-			// get the light
-			var l_oLight:Light3D = p_oScene.light;
-			
-			// get its light map
-			var l_oLightMap:PhongAttributesLightMap;
-			if (m_oLightMaps [l_oLight] as PhongAttributesLightMap == null)
-			{
-				// when no map, subscribe to this light and make the map
-				l_oLight.addEventListener (SandyEvent.LIGHT_UPDATED, watchForUpdatedLights);
-				computeLightMap (l_oLight, m_nQuality);
-			}
-			l_oLightMap = m_oLightMaps [l_oLight] as PhongAttributesLightMap;
-
-			// get its light vector
-			var d:Vector = l_oLight.getDirectionVector ();
-
-			// get vertices list
+			// get vertices and prepare matrix2
 			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
+			matrix2.a = l_aPoints[1].sx - l_aPoints[0].sx;
+			matrix2.b = l_aPoints[1].sy - l_aPoints[0].sy;
+			matrix2.c = l_aPoints[2].sx - l_aPoints[0].sx;
+			matrix2.d = l_aPoints[2].sy - l_aPoints[0].sy;
+			matrix2.tx = l_aPoints[0].sx;
+			matrix2.ty = l_aPoints[0].sy;
 
-			// transform all normals
-			v0 = l_aPoints[0];
-			v1 = l_aPoints[1];
-			v2 = l_aPoints[2];
-
-			v0N = p_oPolygon.vertexNormals[0].getVector().clone();
-			p_oPolygon.shape.modelMatrix.vectorMult3x3( v0N );
-			v1N = p_oPolygon.vertexNormals[1].getVector().clone();
-			p_oPolygon.shape.modelMatrix.vectorMult3x3( v1N );
-			v2N = p_oPolygon.vertexNormals[2].getVector().clone();
-			p_oPolygon.shape.modelMatrix.vectorMult3x3( v2N );
-
-			if ((d.dot (v0N) > 0) && (d.dot (v1N) > 0) && (d.dot (v2N) > 0))
+			// transform 1st three normals
+			for (i = 0; i < 3; i++)
 			{
-				// no directional light here - render the face in solid ambient
-				if( useBright) 
-					p_oGraphics.beginFill( (ambient < 0.5) ? 0 : 0xFFFFFF, (ambient < 0.5) ? (1 - 2 * ambient) : (2 * ambient - 1) );
-				else 
-					p_oGraphics.beginFill( 0, 1 - ambient );
+				aN0 [i].copy (p_oPolygon.vertexNormals [i].getVector ());
+				if (spherize > 0)
+				{
+					var dv:Vector = l_aPoints [i].getVector ();
+					dv.sub (p_oPolygon.shape.geometryCenter);
+					dv.normalize ();
+					dv.scale (spherize);
+					aN0 [i].add (dv);
+					aN0 [i].normalize ();
+				}
+				p_oPolygon.shape.modelMatrix.vectorMult3x3 (aN0 [i]);
 			}
 
-			else
+			// apply ambient + diffuse and specular maps separately
+			// note we cannot correctly render specular with useBright off
+			for (j = onlySpecular ? 1 : 0; j < (_useBright ? 2 : 1); j++)
 			{
-				aN[0] = v0N; aN[1] = v1N; aN[2] = v2N;
+				// get highlight direction vector
+				var d:Vector = (j == 0) ? m_oL : m_oH;
 
-				// calculate two arbitrary vectors perpendicular to light direction
-				e1 = (Math.abs (d.x) + Math.abs (d.y) > 0) ? new Vector (d.y, -d.x, 0) : new Vector (d.z, 0, -d.x);
-				e2 = d.cross (e1);
-				e1.normalize ();
-				e2.normalize ();
-
+				// see if we are on the backside
+				var backside:Boolean = true
 				for (i = 0; i < 3; i++)
 				{
-					// intersect with parabola
-					aN[i].scale (1 / (1 - d.dot (aN[i])));
+					aN [i].copy (aN0 [i]);
 
-					// project normals onto e1 and e2
-					aNP[i].x = e1.dot (aN[i]);
-					aNP[i].y = e2.dot (aN[i]);
+					var d_dot_aNi = d.dot (aN [i]);
+					if (d_dot_aNi < 0) backside = false;
 
-					// re-calculate into light map coordinates
-					aNP[i].x = (16384 - 1) * 0.05 * aNP[i].x;
-					aNP[i].y = (16384 - 1) * 0.05 * aNP[i].y;
+					// intersect with parabola - q(r) in computeLightMap() corresponds to this
+					aN[i].scale (1 / (1 - d_dot_aNi));
 				}
 
-				// simple hack to resolve bad projections
-				// this needs to be done some other way though
-				while ((Math.abs(
-						(aNP[0].x - aNP[1].x) * (aNP[0].x - aNP[2].x) + (aNP[0].y - aNP[1].y) * (aNP[0].y - aNP[2].y)
-						) > (1 - NumberUtil.TOL) *
-						Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[0], aNP[2])
-					)
-					|| (Math.abs(
-						(aNP[0].x - aNP[1].x) * (aNP[2].x - aNP[1].x) + (aNP[0].y - aNP[1].y) * (aNP[2].y - aNP[1].y)
-						) > (1 - NumberUtil.TOL) *
-						Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[2], aNP[1])
-					))
+				if (backside)
 				{
-					aNP[0].x--; aNP[1].y++; aNP[2].x++;
+					// no reflection here - render the face in solid ambient
+					// the way specular is done now, we dont need to render it at all on the backside
+					if (j == 0)
+					{
+						const aI:Number = ambient * m_nI;
+						if (useBright) 
+							p_oGraphics.beginFill( (aI < 0.5) ? 0 : 0xFFFFFF, (aI < 0.5) ? (1 - 2 * aI) : (2 * aI - 1) );
+						else
+							p_oGraphics.beginFill( 0, 1 - aI );
+					}
 				}
 
-				// compute gradient matrix
-				matrix.a = aNP[1].x - aNP[0].x;
-				matrix.b = aNP[1].y - aNP[0].y;
-				matrix.c = aNP[2].x - aNP[0].x;
-				matrix.d = aNP[2].y - aNP[0].y;
-				matrix.tx = aNP[0].x;
-				matrix.ty = aNP[0].y;
-				matrix.invert ();
+				else
+				{
+					// calculate two arbitrary vectors perpendicular to light direction
+					var e1:Vector = (Math.abs (d.x) + Math.abs (d.y) > 0) ? new Vector (d.y, -d.x, 0) : new Vector (d.z, 0, -d.x);
+					var e2:Vector = d.cross (e1);
+					e1.normalize ();
+					e2.normalize ();
 
-				matrix2.a = v1.sx - v0.sx;
-				matrix2.b = v1.sy - v0.sy;
-				matrix2.c = v2.sx - v0.sx;
-				matrix2.d = v2.sy - v0.sy;
-				matrix2.tx = v0.sx;
-				matrix2.ty = v0.sy;
+					for (i = 0; i < 3; i++)
+					{
+						// project aN [i] onto e1 and e2
+						aNP [i].x = e1.dot (aN [i]);
+						aNP [i].y = e2.dot (aN [i]);
 
-				matrix.concat (matrix2);
+						// re-calculate into light map coordinates
+						aNP [i].x = (16384 - 1) * 0.05 * aNP [i].x;
+						aNP [i].y = (16384 - 1) * 0.05 * aNP [i].y;
+					}
 
-				p_oGraphics.beginGradientFill( "radial", l_oLightMap.colors, l_oLightMap.alphas, l_oLightMap.ratios, matrix );
+					/*
+					// simple hack to resolve bad projections
+					// this needs to be done some other way though
+					while ((Math.abs(
+							(aNP[0].x - aNP[1].x) * (aNP[0].x - aNP[2].x) + (aNP[0].y - aNP[1].y) * (aNP[0].y - aNP[2].y)
+							) > (1 - NumberUtil.TOL) *
+							Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[0], aNP[2])
+						)
+						|| (Math.abs(
+							(aNP[0].x - aNP[1].x) * (aNP[2].x - aNP[1].x) + (aNP[0].y - aNP[1].y) * (aNP[2].y - aNP[1].y)
+							) > (1 - NumberUtil.TOL) *
+							Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[2], aNP[1])
+						))
+					{
+						aNP[0].x--; aNP[1].y++; aNP[2].x++;
+					}
+					*/
+
+					// compute gradient matrix
+					matrix.a = aNP[1].x - aNP[0].x;
+					matrix.b = aNP[1].y - aNP[0].y;
+					matrix.c = aNP[2].x - aNP[0].x;
+					matrix.d = aNP[2].y - aNP[0].y;
+					matrix.tx = aNP[0].x;
+					matrix.ty = aNP[0].y;
+					matrix.invert ();
+	
+					matrix.concat (matrix2);
+	
+					p_oGraphics.beginGradientFill( "radial", m_oCurrentLightMap.colors [j], m_oCurrentLightMap.alphas [j], m_oCurrentLightMap.ratios [j], matrix );
+				}
+
+				if (!backside || (j == 0))
+				{
+					// render the lighting
+					p_oGraphics.moveTo( l_aPoints[0].sx, l_aPoints[0].sy );
+					for each( l_oVertex in l_aPoints )
+					{
+						p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
+					}
+					p_oGraphics.endFill();
+				}
 			}
-
-			// render the lighting
-			p_oGraphics.moveTo( l_aPoints[0].sx, l_aPoints[0].sy );
-			for each( l_oVertex in l_aPoints )
-			{
-				p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
-			}
-			p_oGraphics.endFill();
-			
 			// --
 			l_aPoints = null;
-			v0N = null;
-			v1N = null;
-			v2N = null;
 		}
 
-		private var _useBright:Boolean = false;
-		private var _ambient:Number = 0.3;
+		// when Phong model parameters change, any light maps we had are no longer valid
+		override protected function onPropertyChange ():void
+		{
+			m_oLightMaps = new Dictionary ();
+		}
 
-		private var v0:Vertex, v1:Vertex, v2:Vertex;
-		private var v0N:Vector, v1N:Vector, v2N:Vector;
-		
+		// --
+		private var _useBright:Boolean = true;
+
+		private var aN0:Array = [new Vector (), new Vector (), new Vector ()];
+		private var aN:Array  = [new Vector (), new Vector (), new Vector ()];
+		private var aNP:Array = [new Point (), new Point (), new Point ()];
+
 		private var matrix:Matrix = new Matrix();
-		private var l_oVertex:Vertex;
-
-		private var aN:Array = new Array (3);
-		private var aNP:Array = [new Point (), new Point (), new Point ()], aNPinorm:Number;
-		private var e1:Vector, e2:Vector;
 		private var matrix2:Matrix = new Matrix();
 	}
 }
 
 class PhongAttributesLightMap
 {
-	public var alphas:Array = [];
-	public var colors:Array = [];
-	public var ratios:Array = [];
+	public var alphas:Array = [[], []];
+	public var colors:Array = [[], []];
+	public var ratios:Array = [[], []];
 }

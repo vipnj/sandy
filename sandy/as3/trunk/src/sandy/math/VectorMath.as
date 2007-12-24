@@ -181,6 +181,26 @@ package sandy.math
 		}
 		
 		/**
+		 * Returns a random vector contained betweeen the first and second values
+		 */
+		public static function sphrand( inner:Number, outer:Number ):Vector
+		{
+			//create and normalize a vector
+			var v:Vector = new Vector(Math.random()-.5, Math.random()-.5,
+			Math.random()-.5);
+			v.normalize();
+		
+			//find a random position between the inner and outer radii
+			var r:Number = Math.random();
+			r = (outer - inner)*r + inner;
+		
+			//set the normalized vector to the new radius
+			v.scale(r);
+		
+		   return v;
+		}
+
+		/**
 		 * Clones a 3D vector.
 		 *
 		 * @param p_oV 	The vector

@@ -692,10 +692,17 @@ package sandy.core.data
 		 */
 		public function set appearance( p_oApp:Appearance ):void
 		{
+			if( m_oAppearance )
+			{
+				p_oApp.frontMaterial.unlink( this );
+				if( p_oApp.backMaterial != p_oApp.frontMaterial ) 
+					p_oApp.backMaterial.unlink( this );
+			}
 			m_oAppearance = p_oApp;
 			// --
 			p_oApp.frontMaterial.init( this );
-			p_oApp.backMaterial.init( this );
+			if( p_oApp.backMaterial != p_oApp.frontMaterial ) 
+				p_oApp.backMaterial.init( this );
 		}
 
 		/**
@@ -713,8 +720,8 @@ package sandy.core.data
 		 */
 		public function swapCulling():void
 		{
-			//TODO Check the acuracy of this method
 			// reverse the normal
+			/*
 			var v:Vector = normal.getVector();
 			var m:Matrix4 = Matrix4Math.axisRotation( vertices[0].x - vertices[1].x, vertices[0].y - vertices[1].y, vertices[0].z - vertices[1].z, 180 );
 			m.vectorMult3x3( v );
@@ -724,6 +731,8 @@ package sandy.core.data
 			normal.z = v.z;
 			v = null;
 			m = null;
+			*/
+			normal.negate();
 		}
 
 		/**
@@ -739,6 +748,8 @@ package sandy.core.data
 			cvertices = null;
 			vertices = null;
 			m_oEB = null;
+			// -- memory leak fix from nopmb on mediabox forums
+			delete POLYGON_MAP[id];
 		}
 
 

@@ -15,7 +15,7 @@ package
 			//var demo:InteractionDemo = new InteractionDemo();
 			//var demo : PerspectiveCorrectionDemo = new PerspectiveCorrectionDemo();
 			//var demo:PanoDemo = new PanoDemo();
-			//var demo:LightDemo = new LightDemo();
+			var demo:LightDemo = new LightDemo();
 			//var demo:BugTest = new BugTest();
 			//var demo:MaxDemo = new MaxDemo();
 			//var demo:ColladaDemo = new ColladaDemo();
@@ -24,7 +24,7 @@ package
 			//var demo:VertexNormalDemo = new VertexNormalDemo();
 			//var demo:ClippingDemo = new ClippingDemo();
 			//var demo:RoomDemo = new RoomDemo();
-			var demo:SpriteWorld = new SpriteWorld();
+			//var demo:SpriteWorld = new SpriteWorld();
 			// --
 			addChild(demo);
 			demo.init();

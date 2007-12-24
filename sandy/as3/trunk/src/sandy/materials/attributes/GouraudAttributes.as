@@ -77,7 +77,7 @@ package sandy.materials.attributes
 			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
 
 			var m:Number;
-			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
+			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			v0 = l_aPoints[0];
 	        v1 = l_aPoints[1];
 	        v2 = l_aPoints[2];

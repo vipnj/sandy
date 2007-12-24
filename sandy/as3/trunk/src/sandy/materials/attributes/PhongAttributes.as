@@ -99,7 +99,7 @@ package sandy.materials.attributes
 
 			// store Blinn vector, and replace it with light direction
 			// this is to simplify specular map calculation
-			var l_oH = m_oH.clone (); m_oH.copy (m_oL);
+			var l_oH:Vector = m_oH.clone (); m_oH.copy (m_oL);
 
 			// take arbitrary vector perpendicular to light direction and normalize it
 			var e:Vector = (Math.abs (m_oL.x) + Math.abs (m_oL.y) > 0) ?
@@ -279,7 +279,7 @@ package sandy.materials.attributes
 				return;
 
 			// get vertices and prepare matrix2
-			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
+			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			matrix2.a = l_aPoints[1].sx - l_aPoints[0].sx;
 			matrix2.b = l_aPoints[1].sy - l_aPoints[0].sy;
 			matrix2.c = l_aPoints[2].sx - l_aPoints[0].sx;
@@ -316,7 +316,7 @@ package sandy.materials.attributes
 				{
 					aN [i].copy (aN0 [i]);
 
-					var d_dot_aNi = d.dot (aN [i]);
+					var d_dot_aNi:Number = d.dot (aN [i]);
 					if (d_dot_aNi < 0) backside = false;
 
 					// intersect with parabola - q(r) in computeLightMap() corresponds to this

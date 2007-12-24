@@ -24,10 +24,9 @@ package sandy.materials
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
-	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.util.NumberUtil;
@@ -88,7 +87,7 @@ package sandy.materials
 			texture = temp;
 			// --
 			m_oCmf = new ColorMatrixFilter();
-			m_oPolygonMatrixMap = new Dictionary();
+			m_oPolygonMatrixMap = new Dictionary( true );
 			precision = p_nPrecision;
 		}
 
@@ -103,22 +102,30 @@ package sandy.materials
 		{
         	if( m_oTexture == null ) return;
         	// --
-			var l_points:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices.slice() : p_oPolygon.vertices.slice();
-			var l_uv:Array = (p_oPolygon.isClipped) ? p_oPolygon.caUVCoord.slice() : p_oPolygon.aUVCoord.slice();
-			// --
-			if( !l_points.length ) return;
+			var l_points:Array, l_uv:Array;
 			// --
 			polygon = p_oPolygon;
         	graphics = p_mcContainer.graphics;
 			// --
 			m_nRecLevel = 0;
 			// --
-			if( polygon.isClipped || l_points.length > 3 )
+			if( polygon.isClipped )
 			{
+				l_points = p_oPolygon.cvertices.slice();
+				l_uv = p_oPolygon.caUVCoord.slice();
+				_tesselatePolygon( l_points, l_uv );
+			}
+			else if( polygon.vertices.length > 3 )
+			{
+				l_points = p_oPolygon.vertices.slice();
+				l_uv = p_oPolygon.aUVCoord.slice();
 				_tesselatePolygon( l_points, l_uv );
 			}
 			else
 			{
+				l_points = p_oPolygon.vertices;
+				l_uv = p_oPolygon.aUVCoord;
+				// --
 				map = (m_oPolygonMatrixMap[polygon.id] as Matrix );
 				var v0:Vertex = l_points[0];
 	        	var v1:Vertex = l_points[1];
@@ -282,7 +289,7 @@ package sandy.materials
 			var b2:Number = v1y - v0y;
 			var c2:Number = v2x - v0x;
 			var d2:Number = v2y - v0y;
-
+			
 			matrix.a = a*a2 + b*c2;
 			matrix.b = a*b2 + b*d2;
 			matrix.c = c*a2 + d*c2;
@@ -301,12 +308,12 @@ package sandy.materials
 
 		protected function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
-			var u0: Number = p_aUv[0].u * m_nWidth,
-				v0: Number = p_aUv[0].v * m_nHeight,
-				u1: Number = p_aUv[1].u * m_nWidth,
-				v1: Number = p_aUv[1].v * m_nHeight,
-				u2: Number = p_aUv[2].u * m_nWidth,
-				v2: Number = p_aUv[2].v * m_nHeight;
+			var u0: Number = p_aUv[0].u * m_nWidth * m_oTiling.x,
+				v0: Number = p_aUv[0].v * m_nHeight * m_oTiling.y,
+				u1: Number = p_aUv[1].u * m_nWidth * m_oTiling.x,
+				v1: Number = p_aUv[1].v * m_nHeight * m_oTiling.y,
+				u2: Number = p_aUv[2].u * m_nWidth * m_oTiling.x,
+				v2: Number = p_aUv[2].v * m_nHeight * m_oTiling.y;
 			// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 			if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 			{
@@ -365,6 +372,19 @@ package sandy.materials
 			}
 		}
 
+		public function setTiling( p_nW:uint, p_nH:uint ):void
+		{
+			m_oTiling.x = p_nW;
+			m_oTiling.y = p_nH;
+			// --
+			for( var l_sID:String in m_oPolygonMatrixMap )
+			{
+				var l_oPoly:Polygon = Polygon.POLYGON_MAP[ l_sID ];
+				init( l_oPoly );
+			}
+		}
+		
+
 		/**
 		 * Changes the transparency of the texture.
 		 *
@@ -385,6 +405,11 @@ package sandy.materials
 			texture.applyFilter( m_orgTexture, texture.rect, m_oPoint, m_oCmf );
 		}
 
+		public override function unlink( p_oPolygon:Polygon ):void
+		{
+			if( m_oPolygonMatrixMap[p_oPolygon.id] )
+				delete m_oPolygonMatrixMap[p_oPolygon.id];
+		}
 		/**
 		 * Initiates this material.
 		 *
@@ -395,7 +420,6 @@ package sandy.materials
 			if( p_oPolygon.vertices.length >= 3 )
 			{
 				var m:Matrix = null;
-				var l_oRect:Rectangle = null;
 				// --
 				if( m_nWidth > 0 && m_nHeight > 0 )
 				{
@@ -431,5 +455,6 @@ package sandy.materials
 		protected var m_oPoint:Point = new Point();
 		protected var m_oCmf:ColorMatrixFilter;
 		protected var matrix:Matrix = new Matrix();
+		protected const m_oTiling:Point = new Point( 1, 1 );
 	}
 }

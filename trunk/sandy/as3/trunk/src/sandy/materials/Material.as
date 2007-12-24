@@ -95,6 +95,10 @@ package sandy.materials
 			;
 		}
 	
+		public function unlink( p_oPolygon:Polygon ):void
+		{
+			;
+		}
 		/**
 		 * The material type of this material.
 		 * 

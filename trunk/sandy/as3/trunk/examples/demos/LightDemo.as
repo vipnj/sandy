@@ -4,18 +4,14 @@ package demos
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
-	import flash.ui.Keyboard;
+	import flash.utils.getTimer;
 	
 	import sandy.core.Scene3D;
-	import sandy.core.data.Vector;
-	import sandy.core.scenegraph.ATransformable;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
-	import sandy.materials.ColorMaterial;
 	import sandy.materials.attributes.MaterialAttributes;
-	import sandy.materials.attributes.OutlineAttributes;
 	import sandy.materials.attributes.PhongAttributes;
 	import sandy.parser.IParser;
 	import sandy.parser.Parser;
@@ -27,6 +23,9 @@ package demos
 		[Embed(source="../assets/texrin2.jpg")]
 		private var Texture:Class;
 		
+		private var t:int = 0;
+		private var frame:int = 0;
+		
 		public function LightDemo()
 		{
 			super();
@@ -34,13 +33,15 @@ package demos
 		
 		private var m_oSphere:Sphere;
 		private var m_oScene:Scene3D;
+		private var rhino:Shape3D;
+		
 		private var keyPressed:Array = new Array();
 		
 		public function init():void
 		{
 			var lCamera:Camera3D = new Camera3D( 640, 480 );
-			lCamera.z = -400;
-			lCamera.y = 40;
+			lCamera.z = -1500;
+			//lCamera.y = 40;
 			m_oScene = new Scene3D( "mainScene", this, lCamera );	
 			// --
 			load();
@@ -48,8 +49,8 @@ package demos
 		
 		private function _enableEvents():void
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
-			stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
+			//stage.addEventListener(KeyboardEvent.KEY_DOWN, __onKeyDown);
+			//stage.addEventListener(KeyboardEvent.KEY_UP, __onKeyUp);
 			addEventListener( Event.ENTER_FRAME, enterFrameHandler );
 		}
 	
@@ -66,20 +67,20 @@ package demos
   
   		private function _createMaterialAttributes():MaterialAttributes
   		{
-  			return new MaterialAttributes( new PhongAttributes(true, 0.3), new OutlineAttributes(3, 0xFF, 1 ) );
+  			return new MaterialAttributes( new PhongAttributes(true, 0.2) );
   		}
   		
 	  	private function _createAppearance():Appearance
 	  	{
 	  		var l_oBitmap:Bitmap = new Texture();
-	  		var l_oMat:BitmapMaterial = new BitmapMaterial( l_oBitmap.bitmapData, _createMaterialAttributes() );
-	  		l_oMat.lightingEnable = true;
+	  		var l_oMat:BitmapMaterial = new BitmapMaterial( l_oBitmap.bitmapData );//, _createMaterialAttributes() );
+	  		//l_oMat.lightingEnable = true;
 	  		return new Appearance( l_oMat );
 	  	}
 	  	
 	  	private function load():void
 	  	{
-	  		var l_oParser:IParser = Parser.create( "../assets/Rhino.ASE", null, 0.03 );
+	  		var l_oParser:IParser = Parser.create( "../assets/Rhino.ASE", null, 0.1 );
 	  		l_oParser.standardAppearance = _createAppearance();
 	  		l_oParser.addEventListener( ParserEvent.INIT, _createScene3D );
 	  		l_oParser.parse();
@@ -88,7 +89,9 @@ package demos
   		private function _createScene3D( p_oEvt:ParserEvent ):void
 		{
 			m_oScene.root = p_oEvt.group;
+			rhino = m_oScene.root.children[0];
 			//m_oScene.root = new Group();
+			/*
 			m_oSphere = new Sphere("mySphere", 30 );
 			m_oSphere.x = 200;
 			m_oSphere.geometryCenter = new Vector( 50, 0, 0 );
@@ -96,7 +99,7 @@ package demos
 			l_oSphereMaterial.lightingEnable = true;
 			m_oSphere.appearance = new Appearance( l_oSphereMaterial  );
 			m_oScene.root.addChild( m_oSphere );
-			
+			*/
 			m_oScene.root.addChild( m_oScene.camera );
 			
 			_enableEvents();
@@ -104,6 +107,7 @@ package demos
 		
 		private function enterFrameHandler( event : Event ) : void
 		{
+ 			/*
  			var cam:Camera3D = m_oScene.camera;
 			// --
 			if( keyPressed[Keyboard.RIGHT] ) 
@@ -131,6 +135,7 @@ package demos
 			{ 
 			    cam.moveVertically( -10 );
 			}
+
 			// --
 			for each( var l_oObject:ATransformable in m_oScene.root.children )
 			{
@@ -139,8 +144,18 @@ package demos
 					l_oObject.rotateY ++;
 				}
 			}
+			*/
+			frame++;
+			
+			rhino.rotateY++;
 			// --
 			m_oScene.render();
+			
+			if( frame == 100 )
+			{
+				trace("Temps de rendu Sandy:"+ (getTimer() - t) );
+				removeEventListener(Event.ENTER_FRAME, enterFrameHandler );
+			}
 		}
 		
 	}

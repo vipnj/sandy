@@ -376,7 +376,7 @@ package sandy.core.scenegraph
 			if( hasParent() == true ) parent.removeChildById( id );
 
 			// should we kill all the childs, or just make them childs of current node parent ?
-			for each( var lNode:Node in children )
+			for each( var lNode:Node in children.concat() )
 			{
 				lNode.destroy();
 			}
@@ -397,7 +397,7 @@ package sandy.core.scenegraph
 			// we do not update rigth now, but a little bit later ;)
 			parent.removeChildById( id );
 			// now we make current node children the current parent's node children
-			for each( var lNode:Node in children )
+			for each( var lNode:Node in children.concat() )
 			{
 				parent.addChild( lNode );
 			}

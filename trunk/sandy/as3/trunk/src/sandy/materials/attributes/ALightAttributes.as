@@ -17,7 +17,7 @@ package sandy.materials.attributes
 {
 	import flash.display.Graphics;
 	import flash.utils.Dictionary;
-
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -142,7 +142,7 @@ package sandy.materials.attributes
 		 */
 		protected function onRenderDisplayList (p_oArg:*):void
 		{
-			var l_oScene = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
+			var l_oScene:Scene3D = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
 
 			// fetch light power
 			m_nI = l_oScene.light.getNormalizedPower ();

@@ -115,7 +115,7 @@ package sandy.primitive
 					{
 						l_geometry.setVertex( l_geometry.getNextVertexID(), iL, iH, 0 );
 					}
-					l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), iTH/_h, iTL/_lg );
+					l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), 1-iTL/_h, 1-iTH/_lg );
 				}
 			}
 			

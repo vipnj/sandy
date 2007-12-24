@@ -3,17 +3,19 @@ package demos
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
+	import sandy.events.BubbleEvent;
 	import sandy.events.QueueEvent;
 	import sandy.events.SandyEvent;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
-	import sandy.materials.attributes.LineAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.materials.attributes.OutlineAttributes;
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.PrimitiveMode;
 	import sandy.util.LoaderQueue;
@@ -31,7 +33,7 @@ package demos
 		
 		public function init():void
 		{
-			queue.add( "texture1", new URLRequest("../assets/textures/texture3.jpg") );
+			queue.add( "texture1", new URLRequest("../assets/textures/may.jpg") );
 			queue.add( "texture2", new URLRequest("../assets/textures/texture5.jpg") );
 			// --
 			queue.addEventListener(SandyEvent.QUEUE_COMPLETE, sceneInit );
@@ -57,8 +59,12 @@ package demos
 		
 		private function createAppearance():Appearance
 		{
-			var l_oMaterialFront:BitmapMaterial = new BitmapMaterial( (queue.data["texture1"] as Bitmap).bitmapData, new MaterialAttributes( new LineAttributes(3, 0xFF, 1) ), 4);
+			var l_oMaterialFront:BitmapMaterial = new BitmapMaterial( (queue.data["texture1"] as Bitmap).bitmapData, new MaterialAttributes( new OutlineAttributes(3, 0xFF, 1) ), 4);
 			var l_oMaterialBack:BitmapMaterial = new BitmapMaterial( (queue.data["texture2"] as Bitmap).bitmapData, null, 4);
+			// --
+			l_oMaterialFront.repeat = true;
+			l_oMaterialBack.repeat = true;
+			// --
 			return new Appearance( l_oMaterialFront, l_oMaterialBack );
 		}
 		
@@ -66,14 +72,26 @@ package demos
 		{
 			var lG:Group = new Group("rootGroup");
 			// --
-			m_oPlane = new Plane3D("myPlane", 200, 200, 1, 1, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
+			m_oPlane = new Plane3D("myPlane", 200, 200, 1, 1, Plane3D.XY_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableBackFaceCulling = false;
-			//m_oPlane.swapCulling();
+			m_oPlane.enableEvents = true;
+			m_oPlane.addEventListener( MouseEvent.CLICK, onPlaneClick );
+			
 			m_oPlane.appearance = createAppearance();
 			// --
 			lG.addChild( m_oPlane );
 			// --
 			return lG;
+		}
+		
+		private function onPlaneClick( pEvt:BubbleEvent ):void
+		{	
+			m_nTilingW %= 10; m_nTilingW++;
+			m_nTilingH %= 10; m_nTilingH++;
+			// --
+			(m_oPlane.appearance.frontMaterial as BitmapMaterial).setTiling( m_nTilingW, m_nTilingH );
+			(m_oPlane.appearance.backMaterial as BitmapMaterial).setTiling( m_nTilingW, m_nTilingH );
+			//m_oPlane.removeEventListener( MouseEvent.CLICK, onPlaneClick );
 		}
 		
 		private function enterFrameHandler( event : Event ) : void
@@ -83,5 +101,7 @@ package demos
 			m_oScene.render();
 		}
 		
+		protected var m_nTilingH:int = 1;
+		protected var m_nTilingW:int = 1;
 	}
 }

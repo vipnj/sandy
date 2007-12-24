@@ -10,6 +10,7 @@ package sandy.events
 	    private var m_oAll:Dictionary = new Dictionary(true);
 	    private var m_oType:Dictionary = new Dictionary(true);
 	    private var m_oEventListener:Dictionary = new Dictionary(true);
+	    private var m_oDelegateDico:Dictionary = new Dictionary(true);
 	    private var listeners:Array;
 	
 	    public function EventBroadcaster() 
@@ -55,6 +56,7 @@ package sandy.events
 			{ 
 				var d : Delegate = new Delegate( listener as Function );
 				if ( rest ) d.setArgumentsArray( rest );
+				m_oDelegateDico[listener] = d;
 				listener = d;
 
 			} 
@@ -101,19 +103,26 @@ package sandy.events
 			if ( hasListenerCollection( type ) )
 			{
 				var c : Dictionary = getListenerCollection( type );
-				if ( delete c[listener] )
+				if( listener is Function )
+				{
+					listener = m_oDelegateDico[listener];
+				}
+				// --
+				if ( c[listener] )
 				{
 					_removeRef( type, listener );
 					if ( isDicoEmpty( c ) ) removeListenerCollection( type );
+					
+					delete c[listener];
+					
 					return true;
-
 				} 
 				else
 				{
 					return false;
 				}
-
-			} else
+			} 
+			else
 			{
 				return false;
 			}

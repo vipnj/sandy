@@ -273,6 +273,50 @@ package sandy.core.scenegraph
 			return uint(a);
 		}
 
+		public function get enableEvents():Boolean
+		{
+			return m_bEv;
+		}
+		
+		public function set enableEvents( b:Boolean ):void
+		{
+			if( b &&!m_bEv )
+			{
+				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
+	    		m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+	    		m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+	    		m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+	    		m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+	    		
+				m_oContainer.addEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
+			}
+			else if( !b && m_bEv )
+			{
+				m_oContainer.removeEventListener(MouseEvent.CLICK, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+				
+				m_oContainer.removeEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
+			}
+		}
+		
+		protected function _onInteraction( p_oEvt:Event ):void
+		{
+			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
+		}
+		
+		private var m_bEv:Boolean = false; // The event system state (enable or not)
+		
 		// -- frames offset
 		private var _vView:Vector;
 		private var _dir:Vertex;

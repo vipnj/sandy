@@ -7,21 +7,19 @@ package demos
 	import flash.ui.Keyboard;
 	
 	import sandy.core.Scene3D;
+	import sandy.core.scenegraph.ATransformable;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
+	import sandy.materials.attributes.ALightAttributes;
 	import sandy.materials.attributes.GouraudAttributes;
-	import sandy.materials.attributes.IAttributes;
 	import sandy.materials.attributes.LightAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
 	import sandy.materials.attributes.PhongAttributes;
 	import sandy.parser.IParser;
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
-	import sandy.core.scenegraph.ATransformable;
-	import sandy.materials.attributes.VertexNormalAttributes;
-	import flash.utils.getTimer;
 	
 	public final class MaxDemo extends Sprite
 	{	
@@ -73,7 +71,7 @@ package demos
   
   		private function _createMaterialAttributes( p_sType:String ):MaterialAttributes
   		{
-  			var l_oAttr:IAttributes = null;
+  			var l_oAttr:ALightAttributes = null;
   			switch( p_sType )
   			{
   				case GOURAUD:
@@ -81,6 +79,9 @@ package demos
   					break;
   				case  PHONG:
   					l_oAttr = new PhongAttributes( true, 0.2 );
+  					//l_oAttr.diffuse = 0.3;
+  					l_oAttr.specular = 0.5;
+  					l_oAttr.gloss = 20;
   					break;
   				case FLAT:
   					l_oAttr = new LightAttributes( true, 0.2 );
@@ -90,7 +91,7 @@ package demos
   					l_oAttr = null
   					break;
   			}
-  			return new MaterialAttributes( l_oAttr, new VertexNormalAttributes(10, 1, 0xFF, 1 ) );
+  			return new MaterialAttributes( l_oAttr/*, new VertexNormalAttributes(10, 1, 0xFF, 1 )*/ );
   		}
   		
 	  	private function _createAppearance( p_sType:String ):Appearance

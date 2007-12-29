@@ -330,6 +330,7 @@ package sandy.materials.attributes
 					if (j == 0)
 					{
 						const aI:Number = ambient * m_nI;
+						p_oGraphics.lineStyle();
 						if (useBright) 
 							p_oGraphics.beginFill( (aI < 0.5) ? 0 : 0xFFFFFF, (aI < 0.5) ? (1 - 2 * aI) : (2 * aI - 1) );
 						else
@@ -384,7 +385,8 @@ package sandy.materials.attributes
 					matrix.invert ();
 	
 					matrix.concat (matrix2);
-	
+					
+					p_oGraphics.lineStyle();
 					p_oGraphics.beginGradientFill( "radial", m_oCurrentLightMap.colors [j], m_oCurrentLightMap.alphas [j], m_oCurrentLightMap.ratios [j], matrix );
 				}
 

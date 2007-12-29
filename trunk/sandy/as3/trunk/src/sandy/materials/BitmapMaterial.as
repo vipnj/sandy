@@ -308,11 +308,11 @@ package sandy.materials
 
 		protected function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
-			var u0: Number = p_aUv[0].u * m_nWidth * m_oTiling.x,
+			var u0: Number = p_aUv[0].u * m_nWidth  * m_oTiling.x,
 				v0: Number = p_aUv[0].v * m_nHeight * m_oTiling.y,
-				u1: Number = p_aUv[1].u * m_nWidth * m_oTiling.x,
+				u1: Number = p_aUv[1].u * m_nWidth  * m_oTiling.x,
 				v1: Number = p_aUv[1].v * m_nHeight * m_oTiling.y,
-				u2: Number = p_aUv[2].u * m_nWidth * m_oTiling.x,
+				u2: Number = p_aUv[2].u * m_nWidth  * m_oTiling.x,
 				v2: Number = p_aUv[2].v * m_nHeight * m_oTiling.y;
 			// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 			if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )

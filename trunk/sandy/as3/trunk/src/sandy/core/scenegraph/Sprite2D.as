@@ -18,11 +18,14 @@ package sandy.core.scenegraph
 {	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
+	import sandy.events.BubbleEvent;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	

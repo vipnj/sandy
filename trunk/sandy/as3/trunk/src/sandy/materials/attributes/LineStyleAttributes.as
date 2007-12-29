@@ -45,7 +45,7 @@ package sandy.materials.attributes
 		 * @param p_nAlpha	The alpha value in percent of full opacity ( 0 - 1 )
 		 * @param p_style		The Style you want to use
 		 */
-		public function LineStyleAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1, p_lenght:Number = 0, p_gap:Number = 0 )
+		public function LineStyleAttributes( p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1, p_lenght:Number = 10, p_gap:Number = 10 )
 		{
 			super(p_nThickness,p_nColor,p_nAlpha);
 			thisLenght = p_lenght;
@@ -72,58 +72,60 @@ package sandy.materials.attributes
 			var lId:int = l_aPoints.length;
 			while( l_oVertex = l_aPoints[ --lId ] )
 			{
-			  
-			  dashTo(p_oGraphics,l_aPoints[0].sx,l_aPoints[0].sy, l_oVertex.sx, l_oVertex.sy, thisLenght, thisGap);
-			  
-			  //p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
+				if(  thisGap != 0 ) dashTo(p_oGraphics,l_aPoints[0].sx,l_aPoints[0].sy, l_oVertex.sx, l_oVertex.sy, thisLenght, thisGap); 
+			  	else p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
 			}	
 		}
 		
 	       
-	       private function dashTo(p_oGraphics:Graphics,startx:Number, starty:Number, endx:Number, endy:Number, len:Number, gap:Number) 
-	       {
-	 	  // startx, starty = beginning of dashed line
-		  // endx, endy = end of dashed line
-		  // len = length of dash
-		  // gap = length of gap between dashes
-		 
-	        // init vars
-		var seglength, deltax, deltay, delta, segs, radians, cx, cy;
-		// calculate the legnth of a segment
-		seglength = len + gap;
-		// calculate the length of the dashed line
-		deltax = endx - startx;
-		deltay = endy - starty;
-		delta = Math.sqrt((deltax * deltax) + (deltay * deltay));
-		// calculate the number of segments needed
-		segs = Math.floor(Math.abs(delta / seglength));
-		// get the angle of the line in radians
-		radians = Math.atan2(deltay,deltax);
-		// start the line here
-		cx = startx;
-		cy = starty;
-		// add these to cx, cy to get next seg start
-		deltax = Math.cos(radians)*seglength;
-		deltay = Math.sin(radians)*seglength;
-		// loop through each seg
-		for (var n = 0; n < segs; n++) {
+       private function dashTo(p_oGraphics:Graphics,startx:Number, starty:Number, endx:Number, endy:Number, len:Number, gap:Number):void 
+       {
+			// startx, starty = beginning of dashed line
+			// endx, endy = end of dashed line
+			// len = length of dash
+			// gap = length of gap between dashes
+			 
+			// init vars
+			var seglength:Number, deltax:Number, deltay:Number, delta:Number, segs:Number, radians:Number, cx:Number, cy:Number;
+			// calculate the legnth of a segment
+			seglength = len + gap;
+			// calculate the length of the dashed line
+			deltax = endx - startx;
+			deltay = endy - starty;
+			delta = Math.sqrt((deltax * deltax) + (deltay * deltay));
+			// calculate the number of segments needed
+			segs = Math.floor(Math.abs(delta / seglength));
+			// get the angle of the line in radians
+			radians = Math.atan2(deltay,deltax);
+			// start the line here
+			cx = startx;
+			cy = starty;
+			// add these to cx, cy to get next seg start
+			deltax = Math.cos(radians)*seglength;
+			deltay = Math.sin(radians)*seglength;
+			// loop through each seg
+			for ( var n:int = 0; n < segs; n+=1 ) 
+			{
+				p_oGraphics.moveTo(cx,cy);
+				p_oGraphics.lineTo(cx+Math.cos(radians)*len,cy+Math.sin(radians)*len);
+				cx += deltax;
+				cy += deltay;
+			}
+			// handle last segment as it is likely to be partial
 			p_oGraphics.moveTo(cx,cy);
-			p_oGraphics.lineTo(cx+Math.cos(radians)*len,cy+Math.sin(radians)*len);
-			cx += deltax;
-			cy += deltay;
-		}
-		// handle last segment as it is likely to be partial
-		p_oGraphics.moveTo(cx,cy);
-		delta = Math.sqrt((endx-cx)*(endx-cx)+(endy-cy)*(endy-cy));
-		if(delta>len){
-			// segment ends in the gap, so draw a full dash
-			p_oGraphics.lineTo(cx+Math.cos(radians)*len,cy+Math.sin(radians)*len);
-		} else if(delta>0) {
-			// segment is shorter than dash so only draw what is needed
-			p_oGraphics.lineTo(cx+Math.cos(radians)*delta,cy+Math.sin(radians)*delta);
-		}
-		// move the pen to the end position
-		p_oGraphics.moveTo(endx,endy);
-	       };
+			delta = Math.sqrt((endx-cx)*(endx-cx)+(endy-cy)*(endy-cy));
+			if(delta>len)
+			{
+				// segment ends in the gap, so draw a full dash
+				p_oGraphics.lineTo(cx+Math.cos(radians)*len,cy+Math.sin(radians)*len);
+			} 
+			else if(delta>0) 
+			{
+				// segment is shorter than dash so only draw what is needed
+				p_oGraphics.lineTo(cx+Math.cos(radians)*delta,cy+Math.sin(radians)*delta);
+			}
+			// move the pen to the end position
+			p_oGraphics.moveTo(endx,endy);
+       }
 	}
 }

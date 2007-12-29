@@ -74,13 +74,14 @@ package sandy.materials.attributes
 			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
 
 			if( p_oMaterial.lightingEnable )
-			{
+			{	
 				var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;
 				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();
 				p_oPolygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
 				// --
 				var lightStrength:Number = NumberUtil.constrain (calculate (l_oNormal), 0, 1);
 				// --
+				p_oGraphics.lineStyle();
 				if( useBright) 
 					p_oGraphics.beginFill( (lightStrength < 0.5) ? 0 : 0xFFFFFF, (lightStrength < 0.5) ? (1-2 * lightStrength) : (2 * lightStrength - 1) );
 				else 

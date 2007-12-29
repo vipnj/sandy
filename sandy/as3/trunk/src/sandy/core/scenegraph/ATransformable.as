@@ -18,6 +18,7 @@ package sandy.core.scenegraph
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
+	import sandy.util.NumberUtil;
 
 	/**
 	 * ABSTRACT CLASS - super class for all movable objects in the object tree.
@@ -62,8 +63,6 @@ package sandy.core.scenegraph
 			_oScale = new Vector( 1, 1, 1 );
 			_vRotation = new Vector(0,0,0);
 			// --
-			_vLookatDown = new Vector(0.00000000001, -1, 0);// value to avoid some colinearity problems.;
-			// --
 			_nRoll 	= 0;
 			_nTilt 	= 0;
 			_nYaw  	= 0;
@@ -81,6 +80,7 @@ package sandy.core.scenegraph
 			_vSide 	= new Vector( 1, 0, 0 );
 			_vUp 	= new Vector( 0, 1 ,0 );
 			_vOut 	= new Vector( 0, 0, 1 );
+			changed = true;
 		}
 
 		public function get matrix():Matrix4
@@ -374,6 +374,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
+			_vRotationInvalid = true;
 		}
 		
 		/**
@@ -399,20 +400,64 @@ package sandy.core.scenegraph
 		 */
 		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number ):void
 		{
-			changed = true;
-			//
-			_vOut.x = p_nX; _vOut.y = p_nY; _vOut.z = p_nZ;
-			//
-			_vOut.sub( _p );
-			_vOut.normalize();
-			// -- the vOut vector should not be colinear with the reference down vector!
-			_vSide = null;
-			_vSide = _vOut.cross( _vLookatDown );
-			_vSide.normalize();
-			//
-			_vUp = null;
-			_vUp = _vOut.cross(_vSide );
-			_vUp.normalize();
+			// compute new _vOut
+			var l_vOut:Vector = new Vector (p_nX, p_nY, p_nZ); l_vOut.sub (_p); l_vOut.normalize ();
+			// compute _vOut.dot (l_vOut)
+			var l_nDot:Number = _vOut.dot (l_vOut);
+			// compute the angle between l_vOut and _vOut
+			var l_nAngle:Number = Math.acos (l_nDot);
+			// compute rotation axis
+			var l_vAxis:Vector = _vOut.cross (l_vOut);
+
+			if (l_vAxis.getNorm () > NumberUtil.TOL)
+				// rotate
+				rotateAxis (l_vAxis.x, l_vAxis.y, l_vAxis.z, l_nAngle * 180 / Math.PI);
+			else
+				// it's either same or the opposite point (l_nDot is 1 or -1)
+				if (l_nDot < 0)
+					rotateAxis (_vUp.x, _vUp.y, _vUp.z, 180);
+		}
+
+		/**
+		 * Makes this object rotated to specified Euler angles in parent frame.
+		 */
+		public function rotateTo( ax:Number, ay:Number, az:Number )
+		{
+			_vRotation.x = ax;
+			_vRotation.y = ay;
+			_vRotation.z = az;
+			_vRotationInvalid = false;
+
+			// this call also sets changed flag
+			initFrame ();
+
+			// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
+			ax *= -1; ay *= -1; az *= -1;
+			// use eulerRotation in order for rotation to be independent of application order
+			m_tmpMt.eulerRotation (ax, ay, az);
+			m_tmpMt.vectorMult3x3 (_vSide);
+			m_tmpMt.vectorMult3x3 (_vUp);
+			m_tmpMt.vectorMult3x3 (_vOut);
+		}
+
+		// this is used by getters
+		private function _reCalcAngles ()
+		{
+			if (_vRotationInvalid)
+			{
+				// if here, pan/tilt/roll setter was called last
+				updateTransform ();
+				_vRotation = Matrix4.getEulerAngles (m_oMatrix);
+				// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
+				_vRotation.x = 360 - _vRotation.x;
+				_vRotation.y = 360 - _vRotation.y;
+				_vRotation.z = 360 - _vRotation.z;
+			}
+			else
+			{
+				// if here, rotateX/Y/Z setter was called last
+				// TODO: calculate pan/tilt/roll - but how? there is no particular order, is there?
+			}
 		}
 
 		/**
@@ -423,16 +468,8 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateX ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - _vRotation.x);
-			if(l_nAngle == 0 ) return;
-			changed = true;
-			// --
-			m_tmpMt.rotationX( l_nAngle );
-			m_tmpMt.vectorMult3x3(_vSide);
-			m_tmpMt.vectorMult3x3(_vUp);
-			m_tmpMt.vectorMult3x3(_vOut);
-			// --
-			_vRotation.x = p_nAngle;
+			if (_vRotationInvalid) _reCalcAngles ();
+			rotateTo (p_nAngle, _vRotation.y, _vRotation.z);
 		}
 
 		/**
@@ -440,7 +477,7 @@ package sandy.core.scenegraph
 		 */
 		public function get rotateX():Number
 		{
-			return _vRotation.x;
+			_reCalcAngles (); return _vRotation.x;
 		}
 
 		/**
@@ -451,16 +488,8 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateY ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - _vRotation.y);
-			if(l_nAngle == 0 ) return;
-			changed = true;
-			// --
-			m_tmpMt.rotationY( l_nAngle );
-			m_tmpMt.vectorMult3x3(_vSide);
-			m_tmpMt.vectorMult3x3(_vUp);
-			m_tmpMt.vectorMult3x3(_vOut);
-			// --
-			_vRotation.y = p_nAngle;
+			if (_vRotationInvalid) _reCalcAngles ();
+			rotateTo (_vRotation.x, p_nAngle, _vRotation.z);
 		}
 
 		/**
@@ -468,7 +497,7 @@ package sandy.core.scenegraph
 		 */
 		public function get rotateY():Number
 		{
-			return _vRotation.y;
+			_reCalcAngles (); return _vRotation.y;
 		}
 
 		/**
@@ -479,16 +508,8 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateZ ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - _vRotation.z );
-			if(l_nAngle == 0 ) return;
-			changed = true;
-			// --
-			m_tmpMt.rotationZ( l_nAngle );
-			m_tmpMt.vectorMult3x3(_vSide);
-			m_tmpMt.vectorMult3x3(_vUp);
-			m_tmpMt.vectorMult3x3(_vOut);
-			// --
-			_vRotation.z = p_nAngle;
+			if (_vRotationInvalid) _reCalcAngles ();
+			rotateTo (_vRotation.x, _vRotation.y, p_nAngle);
 		}
 
 		/**
@@ -496,7 +517,7 @@ package sandy.core.scenegraph
 		 */
 		public function get rotateZ():Number
 		{
-			return _vRotation.z;
+			_reCalcAngles (); return _vRotation.z;
 		}
 
 		/**
@@ -519,6 +540,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
 			_nRoll = p_nAngle;
+			_vRotationInvalid = true;
 		}
 
 		/**
@@ -549,6 +571,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
 			_nTilt = p_nAngle;
+			_vRotationInvalid = true;
 		}
 
 		/**
@@ -578,6 +601,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vSide);
 			// --
 			_nYaw = p_nAngle;
+			_vRotationInvalid = true;
 		}
 
 		/**
@@ -695,6 +719,8 @@ package sandy.core.scenegraph
 		{
 		    	return "sandy.core.scenegraph.ATransformable";
 		}
+
+
 		//
 		private var m_oMatrix:Matrix4;
 		// Side Orientation Vector
@@ -710,7 +736,8 @@ package sandy.core.scenegraph
 		// current roll value
 		private var _nRoll:Number;
 		private var _vRotation:Vector;
-		private var _vLookatDown:Vector; // Private absolute down vector
+		private var _vRotationInvalid:Boolean = false;
+
 		protected var _p:Vector;
 		protected var _oScale:Vector;
 		protected var m_tmpMt:Matrix4; // temporary transform matrix used at updateTransform

@@ -33,7 +33,7 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
-	public final class LineAttributes implements IAttributes
+	public class LineAttributes implements IAttributes
 	{
 		private var m_nThickness:Number;
 		private var m_nColor:Number;

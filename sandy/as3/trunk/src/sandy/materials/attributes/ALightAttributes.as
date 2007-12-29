@@ -123,7 +123,7 @@ package sandy.materials.attributes
 		/**
 		 * Latest Blinn halfway vector between camera and light.
 		 */
-		protected var m_oH:Vector;
+		protected const m_oH:Vector = new Vector();
 
 		/**
 		 * Calculates the reflection for given normal.
@@ -140,9 +140,10 @@ package sandy.materials.attributes
 		 * Override this to perform per-frame tasks.
 		 * Always call it first in sub classes.
 		 */
-		protected function onRenderDisplayList (p_oArg:*):void
+		protected function onRenderDisplayList ( p_oArg:* ):void
 		{
-			var l_oScene:Scene3D = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
+			var l_oScene:Scene3D;
+			l_oScene = ((p_oArg as Scene3D != null) ? p_oArg: (p_oArg as SandyEvent).target) as Scene3D;
 
 			// fetch light power
 			m_nI = l_oScene.light.getNormalizedPower ();
@@ -154,7 +155,7 @@ package sandy.materials.attributes
 			m_oV = l_oScene.camera.getPosition ("absolute"); m_oV.scale (-1); m_oV.normalize ();
 			
 			// compute Blinn halfway vector
-			m_oH = m_oL.clone (); m_oH.add (m_oV); m_oH.normalize ();
+			m_oH.copy( m_oL ); m_oH.add (m_oV); m_oH.normalize ();
 		}
 
 		/**
@@ -165,7 +166,9 @@ package sandy.materials.attributes
 		{
 			if (p_oMaterial.lightingEnable)
 			{
-				if (_scenes [p_oScene]) ; else
+				if (_scenes [p_oScene]) 
+					; 
+				else
 				{
 					p_oScene.addEventListener (SandyEvent.SCENE_RENDER_DISPLAYLIST, onRenderDisplayList);
 					onRenderDisplayList (p_oScene); _scenes [p_oScene] = true;

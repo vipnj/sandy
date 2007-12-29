@@ -144,7 +144,7 @@ package sandy.materials.attributes
 		{
 			var l_aPoints:Array = p_oPolygon.vertices;
 			var l_oVertex:Vertex;
-			
+			// --
 			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
 			p_oGraphics.beginFill(0);
 			// --
@@ -167,6 +167,7 @@ package sandy.materials.attributes
 				l_oNormal = null;
 				l_oDiff = null;
 			}
+			// --
 			p_oGraphics.endFill();
 		}
 	}

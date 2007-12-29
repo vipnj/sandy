@@ -74,8 +74,10 @@ package sandy.materials.attributes
 		
 		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
+			if( !p_oMaterial.lightingEnable ) return;
+			
 			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
-
+			
 			var m:Number;
 			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;
 			v0 = l_aPoints[0];
@@ -149,6 +151,7 @@ package sandy.materials.attributes
 			// matrix
 			VertexMath.linearGradientMatrix (v0, v1, v2, aL[int(id0)], aL[int(id1)], aL[int(id2)], matrix);
 
+			p_oGraphics.lineStyle();
 			p_oGraphics.beginGradientFill( "linear",colours, alpha, ratios, matrix );
 			p_oGraphics.moveTo( l_aPoints[0].sx, l_aPoints[0].sy );
 			for each( l_oVertex in l_aPoints )

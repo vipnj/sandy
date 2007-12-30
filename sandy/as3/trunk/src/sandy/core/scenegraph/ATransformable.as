@@ -61,10 +61,6 @@ package sandy.core.scenegraph
 			_oScale = new Vector (1, 1, 1);
 			_vRotation = new Vector ();
 			// --
-			_nRoll 	= 0;
-			_nTilt 	= 0;
-			_nYaw  	= 0;
-			// --
 			initFrame();
 			// --
 			m_tmpMt = new Matrix4();
@@ -84,6 +80,9 @@ package sandy.core.scenegraph
 			_vRotation.y = 0;
 			_vRotation.z = 0;
 			_vRotationInvalid = false;
+			_nRoll 	= 0;
+			_nTilt 	= 0;
+			_nYaw  	= 0;
 			changed = true;
 		}
 
@@ -455,11 +454,54 @@ package sandy.core.scenegraph
 				_vRotation.x = 360 - _vRotation.x;
 				_vRotation.y = 360 - _vRotation.y;
 				_vRotation.z = 360 - _vRotation.z;
+				_vRotationInvalid = false;
+			}
+		}
+		
+		private function _reCalcAngles2 ()
+		{
+			// since there is no particular order, pan/tilt/roll are inter-dependent
+			// we need to restore their values at all times when rotation is changed
+
+			// get _vOut projection on horizontal plane x0z
+			var l_oOut:Vector = new Vector (_vOut.x, 0, _vOut.z);
+
+			// rotate 90 degrees clockwise
+			var l_oSide1:Vector = new Vector (l_oOut.z, 0, -l_oOut.x);
+
+			// roll and tilt
+			if (l_oOut.getNorm () > NumberUtil.TOL)
+			{
+				l_oOut.normalize ();
+				l_oSide1.normalize ();
+				_nRoll = ((_vSide.y > 0) ? 1 : -1) * Math.acos (NumberUtil.constrain (_vSide.dot (l_oSide1), -1, 1)) * (180 / Math.PI);
+				_nTilt = ((_vOut.y > 0) ? 1 : -1) * Math.acos (NumberUtil.constrain (_vOut.dot (l_oOut), -1, 1)) * (180 / Math.PI);
 			}
 			else
 			{
-				// if here, rotateX/Y/Z setter was called last
-				// TODO: calculate pan/tilt/roll - but how? there is no particular order, is there?
+				// _vOut points up or down
+				// roll is undefined, we have no choise but keep last value
+				// tilt is either +90 or -90 degrees
+				_nTilt = (_vOut.y > 0) ? 90 : -90;
+			}
+
+
+			// get _vUp projection on screen plane x0y
+			var l_oUp:Vector = new Vector (_vUp.x, _vUp.y, 0);
+
+			// rotate 90 degrees clockwise
+			var l_oSide2:Vector = new Vector (l_oUp.y, -l_oUp.x, 0);
+
+			// pan
+			if (l_oSide2.getNorm () > NumberUtil.TOL)
+			{
+				l_oSide2.normalize ();
+				_nYaw = ((_vSide.z < 0) ? 1 : -1) * Math.acos (NumberUtil.constrain (_vSide.dot (l_oSide2), -1, 1)) * (180 / Math.PI);
+			}
+			else
+			{
+				// _vUp points out or back
+				// pan is undefined, we have no choise but keep last value
 			}
 		}
 
@@ -471,8 +513,7 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateX ( p_nAngle:Number ):void
 		{
-			if (_vRotationInvalid) _reCalcAngles ();
-			rotateTo (p_nAngle, _vRotation.y, _vRotation.z);
+			rotateTo (p_nAngle, rotateY, rotateZ);
 		}
 
 		/**
@@ -491,8 +532,7 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateY ( p_nAngle:Number ):void
 		{
-			if (_vRotationInvalid) _reCalcAngles ();
-			rotateTo (_vRotation.x, p_nAngle, _vRotation.z);
+			rotateTo (rotateX, p_nAngle, rotateZ);
 		}
 
 		/**
@@ -511,8 +551,7 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateZ ( p_nAngle:Number ):void
 		{
-			if (_vRotationInvalid) _reCalcAngles ();
-			rotateTo (_vRotation.x, _vRotation.y, p_nAngle);
+			rotateTo (rotateX, rotateY, p_nAngle);
 		}
 
 		/**
@@ -534,7 +573,7 @@ package sandy.core.scenegraph
 		 */
 		public function set roll ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - _nRoll)
+			var l_nAngle:Number = (p_nAngle - roll)
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
@@ -551,7 +590,7 @@ package sandy.core.scenegraph
 		 */
 		public function get roll():Number
 		{
-			return _nRoll;
+			_reCalcAngles2 (); return _nRoll;
 		}
 
 		/**
@@ -565,7 +604,7 @@ package sandy.core.scenegraph
 		 */
 		public function set tilt ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - _nTilt);
+			var l_nAngle:Number = (p_nAngle - tilt);
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
@@ -582,7 +621,7 @@ package sandy.core.scenegraph
 		 */
 		public function get tilt():Number
 		{
-			return _nTilt;
+			_reCalcAngles2 (); return _nTilt;
 		}
 
 		/**
@@ -595,7 +634,7 @@ package sandy.core.scenegraph
 		 */
 		public function set pan ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - _nYaw);
+			var l_nAngle:Number = (p_nAngle - pan);
 			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
@@ -612,7 +651,7 @@ package sandy.core.scenegraph
 		 */
 		public function get pan():Number
 		{
-			return _nYaw;
+			_reCalcAngles2 (); return _nYaw;
 		}
 
 		/**

@@ -57,15 +57,15 @@ package sandy.core.scenegraph
 		{
 			super( p_sName );
 			// --
-			initFrame();
-			// --
-			_p 		= new Vector();
-			_oScale = new Vector( 1, 1, 1 );
-			_vRotation = new Vector(0,0,0);
+			_p 		= new Vector ();
+			_oScale = new Vector (1, 1, 1);
+			_vRotation = new Vector ();
 			// --
 			_nRoll 	= 0;
 			_nTilt 	= 0;
 			_nYaw  	= 0;
+			// --
+			initFrame();
 			// --
 			m_tmpMt = new Matrix4();
 			m_oMatrix = new Matrix4();
@@ -80,6 +80,10 @@ package sandy.core.scenegraph
 			_vSide 	= new Vector( 1, 0, 0 );
 			_vUp 	= new Vector( 0, 1 ,0 );
 			_vOut 	= new Vector( 0, 0, 1 );
+			_vRotation.x = 0;
+			_vRotation.y = 0;
+			_vRotation.z = 0;
+			_vRotationInvalid = false;
 			changed = true;
 		}
 
@@ -423,13 +427,12 @@ package sandy.core.scenegraph
 		 */
 		public function rotateTo( ax:Number, ay:Number, az:Number )
 		{
+			// this call also sets changed flag and clears _vRotationInvalid for us
+			initFrame ();
+
 			_vRotation.x = ax;
 			_vRotation.y = ay;
 			_vRotation.z = az;
-			_vRotationInvalid = false;
-
-			// this call also sets changed flag
-			initFrame ();
 
 			// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
 			ax *= -1; ay *= -1; az *= -1;

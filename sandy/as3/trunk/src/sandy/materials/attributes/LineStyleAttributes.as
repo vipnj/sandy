@@ -28,7 +28,7 @@ package sandy.materials.attributes
 	 *
 	 * 
 	 * @author		Max Pellizzaro
-	 * @version		3.0
+	 * @version		3.0.2
 	 * @date 		29.12.2007
 	 */
 	public class LineStyleAttributes extends LineAttributes

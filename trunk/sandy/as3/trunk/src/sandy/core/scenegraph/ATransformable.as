@@ -424,7 +424,7 @@ package sandy.core.scenegraph
 		/**
 		 * Makes this object rotated to specified Euler angles in parent frame.
 		 */
-		public function rotateTo( ax:Number, ay:Number, az:Number )
+		public function rotateTo( ax:Number, ay:Number, az:Number ):void
 		{
 			// this call also sets changed flag and clears _vRotationInvalid for us
 			initFrame ();
@@ -443,7 +443,7 @@ package sandy.core.scenegraph
 		}
 
 		// this is used by getters
-		private function _reCalcAngles ()
+		private function _reCalcAngles ():void
 		{
 			if (_vRotationInvalid)
 			{

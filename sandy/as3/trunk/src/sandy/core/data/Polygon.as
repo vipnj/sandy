@@ -18,7 +18,9 @@ package sandy.core.data
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
@@ -32,11 +34,8 @@ package sandy.core.data
 	import sandy.events.BubbleEventBroadcaster;
 	import sandy.materials.Appearance;
 	import sandy.math.IntersectionMath;
-	import sandy.math.Matrix4Math;
 	import sandy.math.VectorMath;
-	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
-	import flash.events.KeyboardEvent;
 
 	/**
 	 * Polygon's are the building blocks of visible 3D shapes.
@@ -269,8 +268,11 @@ package sandy.core.data
          */
 		public function get3DFrom2D( p_oScreenPoint:Point ):Vector
 		{
+/*
 			var l_nX:Number = (p_oScreenPoint.x - scene.camera.viewport.width2)/ scene.camera.viewport.width2;
             var l_nY:Number = -(p_oScreenPoint.y - scene.camera.viewport.height2)/scene.camera.viewport.height2;
+
+
             var l_oPoint:Vector = new Vector( l_nX, l_nY, 0 );
 
             // -- on prend la matrice de projection inverse
@@ -311,7 +313,29 @@ package sandy.core.data
             // -- intersection point
           return new Vector( 	l_oOrigineRayon.x + t * l_oPoint.x,
 								l_oOrigineRayon.y + t * l_oPoint.y,
-                      			l_oOrigineRayon.z + t * l_oPoint.z );;
+                      			l_oOrigineRayon.z + t * l_oPoint.z );
+    */      
+			var l_nX:Number = p_oScreenPoint.x;
+			var l_nY:Number = p_oScreenPoint.y;
+			var a:Number = vertices[1].sx-vertices[0].sx;
+			var b:Number = vertices[2].sx-vertices[0].sx;
+			var c:Number = vertices[1].sy-vertices[0].sy;
+			var d:Number = vertices[2].sy-vertices[0].sy;
+			var tx:Number = 0;
+			var ty:Number = 0;
+			
+			var m1:Matrix= new Matrix(a,b,c,d,0,0);
+			m1.invert();
+			
+			var capA:Number = m1.a *(l_nX-vertices[0].sx) + m1.b * (l_nY -vertices[0].sy);
+			var capB:Number = m1.c *(l_nX-vertices[0].sx) + m1.d * (l_nY -vertices[0].sy);
+			
+			var x:Number = vertices[0].x + capA*(vertices[1].x -vertices[0].x) + capB *(vertices[2].x - vertices[0].x);
+			var y:Number = vertices[0].y + capA*(vertices[1].y -vertices[0].y) + capB *(vertices[2].y - vertices[0].y);
+			var z:Number = vertices[0].z + capA*(vertices[1].z -vertices[0].z) + capB *(vertices[2].z - vertices[0].z);
+			
+			// and this is the vector we should return from the method.
+			return new Vector(x,y,z);
 		}
 		
 		/**

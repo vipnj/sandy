@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -139,17 +139,11 @@ package sandy.materials
 		}
 				
 		/**
-		 * The repeat property (?).
+		 * The repeat property.
 		 * 
-		 * Property that has to be updated when the material needs to have the normals 
-		 * vector in order to compute the correct effect.
-		 * For example, with ligthening enabled, this property must be set to true 
-		 * in order to render the light effect correctly.
-		 * .
-		 * <p>[<strong>ToDo</strong>: Explain this better!]</p>
-		 * NOTE: The variable is READ ONLY unless you perfectly know what you are doing.
+		 * This affects the way textured materials are mapped for U or V out of 0-1 range.
 		 */
-		public var repeat:Boolean;
+		public var repeat:Boolean = true;
 		
 		//////////////////
 		// PROPERTIES

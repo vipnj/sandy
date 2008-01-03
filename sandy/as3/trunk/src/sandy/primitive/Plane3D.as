@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -115,7 +115,7 @@ package sandy.primitive
 					{
 						l_geometry.setVertex( l_geometry.getNextVertexID(), iL, iH, 0 );
 					}
-					l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), 1-iTL/_lg, 1-iTH/_h );
+					l_geometry.setUVCoords( l_geometry.getNextUVCoordID(), iTL/_lg, 1-iTH/_h );
 				}
 			}
 			

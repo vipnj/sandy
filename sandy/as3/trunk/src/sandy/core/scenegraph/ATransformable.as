@@ -400,8 +400,9 @@ package sandy.core.scenegraph
 		 * @param	p_nX	Number	The x position to look at
 		 * @param	p_nY	Number	The y position to look at
 		 * @param	p_nZ	Number	The z position to look at
+		 * @param	p_bRoll	Boolean	If true, this object is vertically aligned (default)
 		 */
-		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number ):void
+		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll = true ):void
 		{
 			// compute new _vOut
 			var l_vOut:Vector = new Vector (p_nX, p_nY, p_nZ); l_vOut.sub (_p); l_vOut.normalize ();
@@ -413,12 +414,18 @@ package sandy.core.scenegraph
 			var l_vAxis:Vector = _vOut.cross (l_vOut);
 
 			if (l_vAxis.getNorm () > NumberUtil.TOL)
+			{
 				// rotate
 				rotateAxis (l_vAxis.x, l_vAxis.y, l_vAxis.z, l_nAngle * 180 / Math.PI);
+				if (p_bRoll) roll = 0;
+			}
 			else
 				// it's either same or the opposite point (l_nDot is 1 or -1)
 				if (l_nDot < 0)
+				{
 					rotateAxis (_vUp.x, _vUp.y, _vUp.z, 180);
+					if (p_bRoll) roll = 0;
+				}
 		}
 
 		/**
@@ -458,7 +465,7 @@ package sandy.core.scenegraph
 			}
 		}
 		
-		private function _reCalcAngles2 ()
+		private function _reCalcAngles2 ():void
 		{
 			// since there is no particular order, pan/tilt/roll are inter-dependent
 			// we need to restore their values at all times when rotation is changed

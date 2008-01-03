@@ -254,7 +254,7 @@ package sandy.materials.attributes
 		{
 			super.onRenderDisplayList (p_oArg);
 
-			var l_oScene = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
+			var l_oScene:Scene3D = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
 			var l_oLight:Light3D = l_oScene.light;
 
 			if (m_oLightMaps [l_oLight] as PhongAttributesLightMap == null)

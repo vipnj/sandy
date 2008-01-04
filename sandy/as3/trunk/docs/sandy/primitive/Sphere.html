@@ -10,13 +10,13 @@
 <body>
 <script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
 <!--
-				asdocTitle = 'Sphere - Sandy 3.0 API Documentation';
+				asdocTitle = 'Sphere - Sandy 3.0(+) API Documentation';
 				var baseRef = '../../';
 				window.onload = configPage;
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">Sandy 3.0 API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?sandy/primitive/Sphere.html&amp;sandy/primitive/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">Sandy 3D AS3 Developer</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?sandy/primitive/Sphere.html&amp;sandy/primitive/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Sphere</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -606,7 +606,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../core/scenegraph/ATransformable.html#lookAt()">lookAt</a>(p_nX:Number, p_nY:Number, p_nZ:Number):void</div>
+<a class="signatureLink" href="../core/scenegraph/ATransformable.html#lookAt()">lookAt</a>(p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll:Boolean = true):void</div>
 <div class="summaryTableDescription">
    Makes this object "look at" the specified position in the parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
@@ -705,6 +705,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="../core/scenegraph/ATransformable.html#rotateAxis()">rotateAxis</a>(p_nX:Number, p_nY:Number, p_nZ:Number, p_nAngle:Number):void</div>
 <div class="summaryTableDescription">
    Rotate this object around the specified axis in the parent frame by the specified angle.</div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="../core/scenegraph/ATransformable.html#rotateTo()">rotateTo</a>(ax:Number, ay:Number, az:Number):void</div>
+<div class="summaryTableDescription">
+   Makes this object rotated to specified Euler angles in parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -1003,8 +1011,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0.1</center>
+<center class="copyright">ASDoc Documentation for Sandy 3D Engine,AS3 Trunk version</center>
 </div>
 </body>
 </html>
-<!--ASDoc: Preliminary documentation for the Sandy 3D Engine, version 3.0.1-->
+<!--ASDoc Documentation for Sandy 3D Engine,AS3 Trunk version-->

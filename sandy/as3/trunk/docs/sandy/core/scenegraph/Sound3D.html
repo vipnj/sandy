@@ -4,22 +4,22 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Sprite2D,sandy.core.scenegraph.Sprite2D,_v,autoCenter,container,content,depth,enableEvents,scale,_onInteraction,clear,cull,display,remove,render,setBoundingSphereRadius" name="keywords">
-<title>sandy.core.scenegraph.Sprite2D</title>
+<meta content="Sound3D,sandy.core.scenegraph.Sound3D,CULL_PLAY,CULL_STOP,LOOP,NOISE,SPEECH,flipPan,loopStartTime,loops,maxPan,soundPan,soundRadius,soundVolume,startTime,stereo,type,currentLoop,isFlipped,soundChannel,soundMode,soundSource,cull,play,stop,toString" name="keywords">
+<title>sandy.core.scenegraph.Sound3D</title>
 </head>
 <body>
 <script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
 <!--
-				asdocTitle = 'Sprite2D - Sandy 3.0(+) API Documentation';
+				asdocTitle = 'Sound3D - Sandy 3.0(+) API Documentation';
 				var baseRef = '../../../';
 				window.onload = configPage;
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">Sandy 3D AS3 Developer</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/scenegraph/Sprite2D.html&amp;sandy/core/scenegraph/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">Sandy 3D AS3 Developer</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/scenegraph/Sound3D.html&amp;sandy/core/scenegraph/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Sprite2D</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Sound3D</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
 </tr>
 <tr class="titleTableRow3">
 <td colspan="2">&nbsp;</td>
@@ -27,7 +27,7 @@
 </table>
 <script type="text/javascript" language="javascript">
 <!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Sprite2D"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Sound3D"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
 --></script>
 <div class="MainContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable">
@@ -35,22 +35,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">sandy.core.scenegraph</a></td>
 </tr>
 <tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Sprite2D</td>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Sound3D</td>
 </tr>
 <tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Sprite2D <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> <a href="ATransformable.html">ATransformable</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> <a href="Node.html">Node</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Implements</td><td><a href="IDisplayable.html">IDisplayable</a></td>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Sound3D <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> <a href="ATransformable.html">ATransformable</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> <a href="Node.html">Node</a></td>
 </tr>
 </table>
 <p></p>
-  The Sprite2D class is use to create a 2D sprite.
-    <p>A Sprite2D object is used to display a static or dynamic texture in the Sandy world.<br/>
-  The sprite always shows the same side to the camera. This is useful when you want to show more
-  or less complex images, without heavy calculations of perspective distortion.</p>
-  <p>The Sprite2D has a fixed bounding sphere radius, set by default to 30.<br />
-  In case your sprite is bigger, you can adjust it to avoid any frustum culling issue</p>
+  Transform audio volume and pan relative to the Camera3D 
   
   <p></p>
 <br>
@@ -70,11 +62,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#autoCenter">autoCenter</a> : Boolean = true<div class="summaryTableDescription">
-   When enabled, the sprite will be displayed at its graphical center.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Node.html#boundingBox">boundingBox</a> : <a href="../../bounds/BBox.html">BBox</a>
@@ -111,18 +98,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    The children of this node are stored inside this array.</div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
 </tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#container">container</a> : Sprite<div class="summaryTableDescription">[read-only]
-   The container of this sprite ( canvas )
-   </div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#content">content</a> : DisplayObject<div class="summaryTableDescription">
-   Get the content DisplayObject reference
-   </div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
-</tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Node.html#culled">culled</a> : <a href="../../view/CullingState.html">CullingState</a>
 <div class="summaryTableDescription">
@@ -130,9 +105,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#depth">depth</a> : Number<div class="summaryTableDescription">[read-only]
-   The depth to draw this sprite at.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CULL_PLAY">CULL_PLAY</a> : String = "cullPlay"<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CULL_STOP">CULL_STOP</a> : String = "cullStop"<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#currentLoop">currentLoop</a> : int<div class="summaryTableDescription">[read-only]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#disable">disable</a> : Boolean = false<div class="summaryTableDescription">
@@ -140,13 +122,43 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableEvents">enableEvents</a> : Boolean<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#flipPan">flipPan</a> : Boolean = true<div class="summaryTableDescription">
+   If flipPan is true the left and right channels of the sound are mirrored if the camera is facing away from the sound
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#isFlipped">isFlipped</a> : Boolean<div class="summaryTableDescription">[read-only]
+   Returns true if the stereo panorama is mirrored, flipPan have to be true to enable stereo flipping
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LOOP">LOOP</a> : String = "loop"<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#loops">loops</a> : int = 0xffffff<div class="summaryTableDescription">
+   Number of loops before the sound stops
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#loopStartTime">loopStartTime</a> : Number = 0<div class="summaryTableDescription">
+   Start time to play the audio from if the sound loops
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#matrix">matrix</a> : <a href="../data/Matrix4.html">Matrix4</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#maxPan">maxPan</a> : Number = 1<div class="summaryTableDescription">
+   Maximal pan is a positive Number from 0-1 or higher
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Node.html#modelMatrix">modelMatrix</a> : <a href="../data/Matrix4.html">Matrix4</a>
@@ -197,11 +209,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Rotates this object around an axis paralell to the parents z axis.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#scale">scale</a> : Number<div class="summaryTableDescription">
-   The scale of this sprite.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
-</tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#scaleX">scaleX</a> : Number<div class="summaryTableDescription">
    x scale of this object.</div>
@@ -228,6 +235,50 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Side direction ( local x ) in parent coordinates.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#soundChannel">soundChannel</a> : SoundChannel<div class="summaryTableDescription">[read-only]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#soundMode">soundMode</a> : String<div class="summaryTableDescription">[read-only]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#soundPan">soundPan</a> : Boolean = true<div class="summaryTableDescription">
+  If pan is true the panning of the sound is relative to the camera rotation
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#soundRadius">soundRadius</a> : Number<div class="summaryTableDescription">
+   The radius of the sound
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#soundSource">soundSource</a> : *<div class="summaryTableDescription">
+   Returns the sound source, the sound source may be a URLRequest, Sound or SoundChannel object
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#soundVolume">soundVolume</a> : Number<div class="summaryTableDescription">
+   Max volume of the sound if camera position is at sound position
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#startTime">startTime</a> : Number = 0<div class="summaryTableDescription">
+   The start time to play the audio from
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#stereo">stereo</a> : Boolean = false<div class="summaryTableDescription">
+   If the sound contains two channels, stereo have to be set to true in order to mix left and right channels correctly
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#target">target</a> : <a href="../data/Vector.html">Vector</a>
 <div class="summaryTableDescription">
@@ -239,6 +290,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Getter for the tilt value
    </div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#type">type</a> : String = "speech"<div class="summaryTableDescription">
+   Type is either SPEECH or NOISE, SPEECH will start the sound at the last position if the camera enters the sphere of the sound
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#up">up</a> : <a href="../data/Vector.html">Vector</a>
@@ -286,7 +343,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a onclick="javascript:setInheritedVisible(true,'ProtectedProperty');" href="#protectedPropertySummary" class="showHideLink"><img src="../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Protected Properties</a>
 </div>
 </div>
-<table id="summaryTableProtectedProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<table id="summaryTableProtectedProperty" class="summaryTable hideInheritedProtectedProperty" cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
@@ -314,11 +371,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#_p">_p</a> : <a href="../data/Vector.html">Vector</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#_v">_v</a> : <a href="../data/Vertex.html">Vertex</a>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#_vOut">_vOut</a> : <a href="../data/Vector.html">Vector</a>
@@ -355,10 +407,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#Sprite2D()">Sprite2D</a>(p_sName:String = "", p_oContent:DisplayObject = null, p_nScale:Number = 1)</div>
+<a class="signatureLink" href="#Sound3D()">Sound3D</a>(p_sName:String = "", p_oSoundSource:Number = null, p_nVolume:Number = 1, p_nMaxPan:Number = 0, p_nRadius:Boolean = 1, p_bStereo:* = false)</div>
 <div class="summaryTableDescription">
-   Creates a Sprite2D.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
+   Creates a 3D sound object wich can be placed in the 3d scene.</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -379,18 +431,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#clear()">clear</a>():void</div>
-<div class="summaryTableDescription">
-   Clears the graphics object of this object's container.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
 <a class="signatureLink" href="#cull()">cull</a>(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oFrustum:<a href="../../view/Frustum.html">Frustum</a>, p_oViewMatrix:<a href="../data/Matrix4.html">Matrix4</a>, p_bChanged:Boolean):void</div>
-<div class="summaryTableDescription">
-   Tests this node against the camera frustum to get its visibility.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -399,14 +442,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    Delete this node and all its child nodes.</div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#display()">display</a>(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oContainer:Sprite = null):void</div>
-<div class="summaryTableDescription">
-   Displays this sprite.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -526,10 +561,18 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#remove()">remove</a>():void</div>
+<a class="signatureLink" href="#play()">play</a>(p_nStartTime:Number = -1, p_iLoops:int = -1, p_nLoopStartTime:Number = -1, p_bResume:Boolean = false):void</div>
 <div class="summaryTableDescription">
-   Provide the classical remove behaviour, plus remove the container to the display list.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
+   Start Sound sources of type Sound or UrlRequest.</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Node.html#remove()">remove</a>():void</div>
+<div class="summaryTableDescription">
+   Removes this node from the node tree, saving its child nodes.</div>
+</td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -555,14 +598,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Removes a listener for the specified event.</div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
 </tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#render()">render</a>(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oCamera:<a href="Camera3D.html">Camera3D</a>):void</div>
+<a class="signatureLink" href="Node.html#render()">render</a>(p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>, p_oCamera:<a href="../scenegraph/Camera3D.html">Camera3D</a>):void</div>
 <div class="summaryTableDescription">
-   Renders this 2D sprite
-      </div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
+   Renders this node.</div>
+</td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -580,14 +622,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Makes this object rotated to specified Euler angles in parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#setBoundingSphereRadius()">setBoundingSphereRadius</a>(p_nRadius:Number):void</div>
-<div class="summaryTableDescription">
-   Sets the radius of bounding sphere for this sprite.</div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
-</tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -595,6 +629,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    Sets the position of this object in coordinates of its parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#stop()">stop</a>():void</div>
+<div class="summaryTableDescription">
+   Stop the sound source and SoundChannel
+   </div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -604,14 +647,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    Moves this node to another parent node.</div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
 </tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="ATransformable.html#toString()">toString</a>():String</div>
-<div class="summaryTableDescription">
-   Returns a string representation of this object
-      </div>
-</td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
+<a class="signatureLink" href="#toString()">toString</a>():String</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -639,22 +680,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 </div>
-<a name="protectedMethodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Protected Methods</div>
-<table id="summaryTableProtectedMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#_onInteraction()">_onInteraction</a>(p_oEvt:Event):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Sprite2D</td>
-</tr>
-</table>
-</div>
 <a name="constantSummary"></a>
 <div class="summarySection">
 <div class="summaryTableTitle">Public Constants</div>
@@ -666,7 +691,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a onclick="javascript:setInheritedVisible(true,'Constant');" href="#constantSummary" class="showHideLink"><img src="../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Constants</a>
 </div>
 </div>
-<table id="summaryTableConstant" class="summaryTable hideInheritedConstant" cellpadding="3" cellspacing="0">
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
@@ -674,6 +699,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Node.html#id">id</a> : uint<div class="summaryTableDescription">
    The unique id of this node in the node graph.</div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#NOISE">NOISE</a> : String = "noise"<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SPEECH">SPEECH</a> : String = "speech"<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Sound3D</td>
 </tr>
 </table>
 </div>
@@ -684,201 +717,281 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="autoCenter"></a>
+<a name="CULL_PLAY"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">autoCenter</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">CULL_PLAY</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public var autoCenter:Boolean = true</code><p>
-   When enabled, the sprite will be displayed at its graphical center.
-   Otherwise its top left corner will be set at the computed screen position
+<code>public static var CULL_PLAY:String = "cullPlay"</code>
+</div>
+<a name="CULL_STOP"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">CULL_STOP</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var CULL_STOP:String = "cullStop"</code>
+</div>
+<a name="currentLoop"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">currentLoop</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>currentLoop:int</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get currentLoop():int</code>
+<br>
+</div>
+<a name="flipPan"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">flipPan</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var flipPan:Boolean = true</code><p>
+   If flipPan is true the left and right channels of the sound are mirrored if the camera is facing away from the sound
    </p></div>
-<a name="container"></a>
+<a name="isFlipped"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">container</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">isFlipped</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>container:Sprite</code>&nbsp;&nbsp;[read-only]<p>
-   The container of this sprite ( canvas )
+<code>isFlipped:Boolean</code>&nbsp;&nbsp;[read-only]<p>
+   Returns true if the stereo panorama is mirrored, flipPan have to be true to enable stereo flipping
    </p><span class="label">Implementation</span>
 <br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get container():Sprite</code>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get isFlipped():Boolean</code>
 <br>
 </div>
-<a name="content"></a>
+<a name="LOOP"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">content</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">LOOP</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>content:DisplayObject</code>&nbsp;&nbsp;[read-write]<p>
-   Get the content DisplayObject reference
+<code>public static var LOOP:String = "loop"</code>
+</div>
+<a name="loops"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">loops</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var loops:int = 0xffffff</code><p>
+   Number of loops before the sound stops
+   </p></div>
+<a name="loopStartTime"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">loopStartTime</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var loopStartTime:Number = 0</code><p>
+   Start time to play the audio from if the sound loops
+   </p></div>
+<a name="maxPan"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">maxPan</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var maxPan:Number = 1</code><p>
+   Maximal pan is a positive Number from 0-1 or higher
+   </p></div>
+<a name="soundChannel"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">soundChannel</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>soundChannel:SoundChannel</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get soundChannel():SoundChannel</code>
+<br>
+</div>
+<a name="soundMode"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">soundMode</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>soundMode:String</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get soundMode():String</code>
+<br>
+</div>
+<a name="soundPan"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">soundPan</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var soundPan:Boolean = true</code><p>
+  If pan is true the panning of the sound is relative to the camera rotation
+   </p></div>
+<a name="soundRadius"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">soundRadius</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var soundRadius:Number</code><p>
+   The radius of the sound
+   </p></div>
+<a name="soundSource"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">soundSource</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>soundSource:*</code>&nbsp;&nbsp;[read-write]<p>
+   Returns the sound source, the sound source may be a URLRequest, Sound or SoundChannel object
    </p><span class="label">Implementation</span>
 <br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get content():DisplayObject</code>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get soundSource():*</code>
 <br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set content(value:DisplayObject):void</code>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set soundSource(value:*):void</code>
 <br>
 </div>
-<a name="depth"></a>
+<a name="soundVolume"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">depth</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">soundVolume</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>depth:Number</code>&nbsp;&nbsp;[read-only]<p>
-   The depth to draw this sprite at.
-   </p><p>[<b>ToDo</b>: Explain ]</p>
-   <span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get depth():Number</code>
-<br>
-</div>
-<a name="enableEvents"></a>
+<code>public var soundVolume:Number</code><p>
+   Max volume of the sound if camera position is at sound position
+   </p></div>
+<a name="startTime"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">enableEvents</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">startTime</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>enableEvents:Boolean</code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get enableEvents():Boolean</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set enableEvents(value:Boolean):void</code>
-<br>
-</div>
-<a name="scale"></a>
+<code>public var startTime:Number = 0</code><p>
+   The start time to play the audio from
+   </p></div>
+<a name="stereo"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">scale</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">stereo</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>scale:Number</code>&nbsp;&nbsp;[read-write]<p>
-   The scale of this sprite.
-      </p><p>Using scale, you can change the dimension of the sprite rapidly.</p>
-   <span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get scale():Number</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set scale(value:Number):void</code>
-<br>
-</div>
-<a name="_v"></a>
+<code>public var stereo:Boolean = false</code><p>
+   If the sound contains two channels, stereo have to be set to true in order to mix left and right channels correctly
+   </p></div>
+<a name="type"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">_v</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">type</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>protected var _v:<a href="../data/Vertex.html">Vertex</a></code>
-</div>
+<code>public var type:String = "speech"</code><p>
+   Type is either SPEECH or NOISE, SPEECH will start the sound at the last position if the camera enters the sphere of the sound
+   </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
-<a name="Sprite2D()"></a>
+<a name="Sound3D()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">Sprite2D</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+<td class="detailHeaderName">Sound3D</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function Sprite2D(p_sName:String = "", p_oContent:DisplayObject = null, p_nScale:Number = 1)</code><p>
-   Creates a Sprite2D.
-      </p><span class="label">Parameters</span>
+<code>public function Sound3D(p_sName:String = "", p_oSoundSource:Number = null, p_nVolume:Number = 1, p_nMaxPan:Number = 0, p_nRadius:Boolean = 1, p_bStereo:* = false)</code><p>
+   Creates a 3D sound object wich can be placed in the 3d scene. Set stereo to true if the sound source is in stereo.
+   If stereo is true, both channels are at the same position in 3d space, but the stereo panorama is kept and mirrored if required.
+   To create a true stereo effect, take two Sound3D instances and two mono sound sources on different locations in 3d space.
+   
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> (default = "<code></code>")<code></code> &mdash; A string identifier for this object
+<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> (default = "<code></code>")<code></code> &mdash; p_sName    A string identifier for this object
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oContent</span>:DisplayObject</code> (default = <code>null</code>)<code></code> &mdash; The container containing all the pre-rendered picture
+<td width="20px"></td><td><code><span class="label">p_oSoundSource</span>:Number</code> (default = <code>null</code>)<code></code> &mdash;  The sound source, a String, UrlRequest, Sound or a SoundChannel object
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nScale</span>:Number</code> (default = <code>1</code>)<code></code> &mdash;  A number used to change the scale of the displayed object.
-      In case that the object projected dimension
-     isn't adapted to your needs. 
-     Default value is 1.0 which means unchanged. 
-      A value of 2.0 will make the object will double the size
+<td width="20px"></td><td><code><span class="label">p_nVolume</span>:Number</code> (default = <code>1</code>)<code></code> &mdash;   Volume of the sound
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nMaxPan</span>:Number</code> (default = <code>0</code>)<code></code> &mdash;   Max pan of the sound, if zero panning is disabled
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nRadius</span>:Boolean</code> (default = <code>1</code>)<code></code> &mdash;   Radius of the sound in 3d units
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_bStereo</span>:*</code> (default = <code>false</code>)<code></code> &mdash;   If the sound contains two different channels
    </td>
 </tr>
 </table>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
-<a name="_onInteraction()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">_onInteraction</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>protected function _onInteraction(p_oEvt:Event):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">p_oEvt</span>:Event</code></td>
-</tr>
-</table>
-</div>
-<a name="clear()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function clear():void</code><p>
-   Clears the graphics object of this object's container.
-      </p><p>The the graphics that were drawn on the Graphics object is erased, 
-   and the fill and line style settings are reset.</p>
-   </div>
 <a name="cull()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">cull</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">cull</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public override function cull(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oFrustum:<a href="../../view/Frustum.html">Frustum</a>, p_oViewMatrix:<a href="../data/Matrix4.html">Matrix4</a>, p_bChanged:Boolean):void</code><p>
-   Tests this node against the camera frustum to get its visibility.
-      </p><p>If this node and its children are not within the frustum, 
-   the node is set to cull and it would not be displayed.<p/>
-   <p>The method also updates the bounding volumes to make the more accurate culling system possible.<br/>
-   First the bounding sphere is updated, and if intersecting, 
-   the bounding box is updated to perform the more precise culling.</p>
-   <p><b>[MANDATORY] The update method must be called first!</b></p>
-      <span class="label">Parameters</span>
+<code>public override function cull(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oFrustum:<a href="../../view/Frustum.html">Frustum</a>, p_oViewMatrix:<a href="../data/Matrix4.html">Matrix4</a>, p_bChanged:Boolean):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../Scene3D.html">Scene3D</a></code> &mdash; The current scene
-   </td>
+<td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../Scene3D.html">Scene3D</a></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oFrustum</span>:<a href="../../view/Frustum.html">Frustum</a></code> &mdash; The frustum of the current camera
-   </td>
+<td width="20px"></td><td><code><span class="label">p_oFrustum</span>:<a href="../../view/Frustum.html">Frustum</a></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oViewMatrix</span>:<a href="../data/Matrix4.html">Matrix4</a></code> &mdash; The view martix of the curren camera
-   </td>
+<td width="20px"></td><td><code><span class="label">p_oViewMatrix</span>:<a href="../data/Matrix4.html">Matrix4</a></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -888,83 +1001,86 @@ showHideInherited();
 </tr>
 </table>
 </div>
-<a name="display()"></a>
+<a name="play()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">display</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">play</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function display(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oContainer:Sprite = null):void</code><p>
-   Displays this sprite.
-      </p><p>display the object onto the scene.
-   If the object has autocenter enabled, sprite center is set at screen position.
-   Otherwise the sprite top left corner will be at that position.</p>
-      <span class="label">Parameters</span>
+<code>public function play(p_nStartTime:Number = -1, p_iLoops:int = -1, p_nLoopStartTime:Number = -1, p_bResume:Boolean = false):void</code><p>
+   Start Sound sources of type Sound or UrlRequest. 
+   Sound sources of type SoundChannel don't support the play method
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../Scene3D.html">Scene3D</a></code> &mdash; The current scene
-   </td>
+<td width="20px"></td><td><code><span class="label">p_nStartTime</span>:Number</code> (default = <code>-1</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oContainer</span>:Sprite</code> (default = <code>null</code>)<code></code> &mdash; The container to draw on
-   </td>
+<td width="20px"></td><td><code><span class="label">p_iLoops</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nLoopStartTime</span>:Number</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_bResume</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 </table>
 </div>
-<a name="remove()"></a>
+<a name="stop()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">remove</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">stop</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public override function remove():void</code><p>
-   Provide the classical remove behaviour, plus remove the container to the display list.
+<code>public function stop():void</code><p>
+   Stop the sound source and SoundChannel
    </p></div>
-<a name="render()"></a>
+<a name="toString()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">render</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">toString</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public override function render(p_oScene:<a href="../Scene3D.html">Scene3D</a>, p_oCamera:<a href="Camera3D.html">Camera3D</a>):void</code><p>
-   Renders this 2D sprite
-      </p><span class="label">Parameters</span>
+<code>public override function toString():String</code>
+<p></p>
+<span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../Scene3D.html">Scene3D</a></code> &mdash; The current scene
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">p_oCamera</span>:<a href="Camera3D.html">Camera3D</a></code> &mdash; The current camera
-   </td>
+<td width="20"></td><td><code>String</code></td>
 </tr>
 </table>
 </div>
-<a name="setBoundingSphereRadius()"></a>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="NOISE"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">setBoundingSphereRadius</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">NOISE</td><td class="detailHeaderType">constant</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function setBoundingSphereRadius(p_nRadius:Number):void</code><p>
-   Sets the radius of bounding sphere for this sprite.
-      </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
+<code>public static const NOISE:String = "noise"</code>
+</div>
+<a name="SPEECH"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nRadius</span>:Number</code> &mdash; The radius
-   </td>
+<td class="detailHeaderName">SPEECH</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
+<div class="detailBody">
+<code>public static const SPEECH:String = "speech"</code>
 </div>
 <br>
 <br>

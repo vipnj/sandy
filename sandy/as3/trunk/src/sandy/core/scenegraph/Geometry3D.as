@@ -192,7 +192,7 @@ package sandy.core.scenegraph
 		 */
 		public function getNextVertexNormalID():Number
 		{
-			return m_nLastNormalId;
+			return m_nLastVertexNormalId;
 		}
 		
 		/**

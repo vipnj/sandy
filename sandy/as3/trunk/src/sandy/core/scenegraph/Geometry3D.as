@@ -18,11 +18,12 @@ package sandy.core.scenegraph
 {
 	//import flash.utils.Dictionary;
 	
+	import flash.utils.Dictionary;
+	
+	import sandy.core.data.Edge3D;
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
-	import sandy.core.data.Edge3D;
-	import flash.utils.Dictionary;
 	
 	
 	/**
@@ -496,6 +497,19 @@ package sandy.core.scenegraph
 				i++;
 			}
 			
+			i=0;
+			for each( var l_oEdge:Edge3D in aEdges )
+			{
+				l_result.aEdges[i] = l_oEdge.clone();
+				i++;
+			}
+			
+			i = 0;
+			for each( var l_oEdges:Array in aFaceEdges )
+			{
+				l_result.aFaceEdges[i] = l_oEdges.concat();
+				i++;
+			}
 			
 			return l_result;
 		}

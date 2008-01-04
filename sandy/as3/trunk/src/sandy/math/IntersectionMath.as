@@ -19,7 +19,11 @@ package sandy.math
 	import flash.geom.Point;
 	
 	import sandy.bounds.BSphere;
+	import sandy.core.Scene3D;
+	import sandy.core.data.Matrix4;
+	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
+	import sandy.core.data.Vertex;
 	import sandy.util.NumberUtil;
 	
 	/**

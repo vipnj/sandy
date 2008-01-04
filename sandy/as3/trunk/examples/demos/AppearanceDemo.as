@@ -72,7 +72,7 @@ package demos
 		{
 			var lG:Group = new Group("rootGroup");
 			// --
-			m_oPlane = new Plane3D("myPlane", 200, 200, 1, 1, Plane3D.XY_ALIGNED, PrimitiveMode.TRI );
+			m_oPlane = new Plane3D("myPlane", 400, 200, 1, 1, Plane3D.XY_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableBackFaceCulling = false;
 			m_oPlane.enableEvents = true;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onPlaneClick );
@@ -96,8 +96,8 @@ package demos
 		
 		private function enterFrameHandler( event : Event ) : void
 		{
-			m_oPlane.rotateX += (stage.width/2 - mouseX)*0.0055;
-			m_oPlane.rotateY += (stage.height/2 - mouseY)*0.0055;
+			//m_oPlane.rotateX += (stage.width/2 - mouseX)*0.0055;
+			//m_oPlane.rotateY += (stage.height/2 - mouseY)*0.0055;
 			m_oScene.render();
 		}
 		

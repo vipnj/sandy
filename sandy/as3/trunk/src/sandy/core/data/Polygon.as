@@ -267,75 +267,30 @@ package sandy.core.data
          * @return the real 3D position which correspond to the intersection onto that polygone
          */
 		public function get3DFrom2D( p_oScreenPoint:Point ):Vector
-		{
-/*
-			var l_nX:Number = (p_oScreenPoint.x - scene.camera.viewport.width2)/ scene.camera.viewport.width2;
-            var l_nY:Number = -(p_oScreenPoint.y - scene.camera.viewport.height2)/scene.camera.viewport.height2;
-
-
-            var l_oPoint:Vector = new Vector( l_nX, l_nY, 0 );
-
-            // -- on prend la matrice de projection inverse
-            var l_oMatrix:Matrix4 = scene.camera.invProjectionMatrix;
-            l_oMatrix.vectorMult( l_oPoint );
-            l_oMatrix = scene.camera.matrix;
-            l_oMatrix.vectorMult( l_oPoint );
-
-            // -- maintenant nous avons la direction du rayon logiquement.
-            // -- reste a calculer son intersection avec le polygone
-            var l_oNormale:Vector = normal.getVector();
-            var l_oOrigineRayon:Vector = scene.camera.getPosition();
-                 
-            l_oPoint.sub( l_oOrigineRayon );
-            //on normalise le vecteur car c'est lui qui sert de vecteur directeur du rayon qui part
-            l_oPoint.normalize();
- 
-            // on chope la constante du plan
-            var l_nPlaneConst:Number = VectorMath.dot( (vertices[0] as Vertex).getVector(), l_oNormale );
-         
-            // Calcul le produit scalaire Normale du plan avec le vecteur directeur du rayon
-            var l_nDotNormalePlanRayon:Number = l_oNormale.dot( l_oPoint );
-
-            // In case the ray is parallel to the plane
-            if( l_nDotNormalePlanRayon >= -NumberUtil.TOL && l_nDotNormalePlanRayon <= NumberUtil.TOL )
-                return null;
-         
-            // distance from ray to plane
-            var l_nDistRayonPlan:Number = (l_oOrigineRayon.dot( l_oNormale ))/(l_oNormale.getNorm());         
-     
-            // lpane distance
-            var t:Number =  - l_nDistRayonPlan / l_nDotNormalePlanRayon
-     
-            // No collision
-            if( t < NumberUtil.TOL )
-                return null;
-         
-            // -- intersection point
-          return new Vector( 	l_oOrigineRayon.x + t * l_oPoint.x,
-								l_oOrigineRayon.y + t * l_oPoint.y,
-                      			l_oOrigineRayon.z + t * l_oPoint.z );
-    */      
-			var l_nX:Number = p_oScreenPoint.x;
-			var l_nY:Number = p_oScreenPoint.y;
-			var a:Number = vertices[1].sx-vertices[0].sx;
-			var b:Number = vertices[2].sx-vertices[0].sx;
-			var c:Number = vertices[1].sy-vertices[0].sy;
-			var d:Number = vertices[2].sy-vertices[0].sy;
-			var tx:Number = 0;
-			var ty:Number = 0;
+		{      
+    		/// NEW CODE ADDED BY MAX with the help of makc ///
 			
-			var m1:Matrix= new Matrix(a,b,c,d,0,0);
+			var m1:Matrix= new Matrix(
+						vertices[1].sx-vertices[0].sx,
+						vertices[2].sx-vertices[0].sx,
+						vertices[1].sy-vertices[0].sy,
+						vertices[2].sy-vertices[0].sy,
+						0,
+						0);
 			m1.invert();
+								
+			var capA:Number = m1.a *(p_oScreenPoint.x-vertices[0].sx) + m1.b * (p_oScreenPoint.y -vertices[0].sy);
+			var capB:Number = m1.c *(p_oScreenPoint.x-vertices[0].sx) + m1.d * (p_oScreenPoint.y -vertices[0].sy);
 			
-			var capA:Number = m1.a *(l_nX-vertices[0].sx) + m1.b * (l_nY -vertices[0].sy);
-			var capB:Number = m1.c *(l_nX-vertices[0].sx) + m1.d * (l_nY -vertices[0].sy);
-			
-			var x:Number = vertices[0].x + capA*(vertices[1].x -vertices[0].x) + capB *(vertices[2].x - vertices[0].x);
-			var y:Number = vertices[0].y + capA*(vertices[1].y -vertices[0].y) + capB *(vertices[2].y - vertices[0].y);
-			var z:Number = vertices[0].z + capA*(vertices[1].z -vertices[0].z) + capB *(vertices[2].z - vertices[0].z);
-			
-			// and this is the vector we should return from the method.
-			return new Vector(x,y,z);
+			var l_oPoint:Vector = new Vector(			
+				vertices[0].x + capA*(vertices[1].x -vertices[0].x) + capB *(vertices[2].x - vertices[0].x),
+				vertices[0].y + capA*(vertices[1].y -vertices[0].y) + capB *(vertices[2].y - vertices[0].y),
+				vertices[0].z + capA*(vertices[1].z -vertices[0].z) + capB *(vertices[2].z - vertices[0].z)
+				);
+											
+			// transform the vertex with the model Matrix
+			this.shape.matrix.vectorMult( l_oPoint );
+			return l_oPoint;
 		}
 		
 		/**
@@ -744,18 +699,6 @@ package sandy.core.data
 		 */
 		public function swapCulling():void
 		{
-			// reverse the normal
-			/*
-			var v:Vector = normal.getVector();
-			var m:Matrix4 = Matrix4Math.axisRotation( vertices[0].x - vertices[1].x, vertices[0].y - vertices[1].y, vertices[0].z - vertices[1].z, 180 );
-			m.vectorMult3x3( v );
-			v.normalize();
-			normal.x = v.x;
-			normal.y = v.y;
-			normal.z = v.z;
-			v = null;
-			m = null;
-			*/
 			normal.negate();
 		}
 

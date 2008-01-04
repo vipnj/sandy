@@ -12,11 +12,7 @@ package demos
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
-	import sandy.materials.attributes.ALightAttributes;
-	import sandy.materials.attributes.GouraudAttributes;
-	import sandy.materials.attributes.LightAttributes;
-	import sandy.materials.attributes.MaterialAttributes;
-	import sandy.materials.attributes.PhongAttributes;
+	import sandy.materials.attributes.*;
 	import sandy.parser.IParser;
 	import sandy.parser.Parser;
 	import sandy.parser.ParserEvent;
@@ -91,7 +87,9 @@ package demos
   					l_oAttr = null
   					break;
   			}
-  			return new MaterialAttributes( l_oAttr/*, new VertexNormalAttributes(10, 1, 0xFF, 1 )*/ );
+  			// --
+  			return new MaterialAttributes( l_oAttr, new OutlineAttributes( 1, 0xFF00, 1 )/*, new VertexNormalAttributes(10, 1, 0xFF, 1 )*/ );
+ 
   		}
   		
 	  	private function _createAppearance( p_sType:String ):Appearance
@@ -152,12 +150,13 @@ package demos
 			{ 
 			    cam.moveHorizontally( -10 );
 			}
+			// --
 			for each( var l_oShape:ATransformable in m_oScene.root.children )
 			{
 				if( l_oShape is Shape3D )
 					l_oShape.rotateY++;
 			}
-
+			// --
 			m_oScene.render();
 		}
 		

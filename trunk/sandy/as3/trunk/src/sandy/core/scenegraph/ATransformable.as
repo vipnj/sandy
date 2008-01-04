@@ -402,7 +402,7 @@ package sandy.core.scenegraph
 		 * @param	p_nZ	Number	The z position to look at
 		 * @param	p_bRoll	Boolean	If true, this object is vertically aligned (default)
 		 */
-		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll = true ):void
+		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll:Boolean = true ):void
 		{
 			// compute new _vOut
 			var l_vOut:Vector = new Vector (p_nX, p_nY, p_nZ); l_vOut.sub (_p); l_vOut.normalize ();

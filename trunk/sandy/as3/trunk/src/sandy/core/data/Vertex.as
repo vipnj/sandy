@@ -133,6 +133,8 @@ package sandy.core.data
 		    l_oV.wx = wx;    l_oV.sx = sx;
 		    l_oV.wy = wy;    l_oV.sy = sy;
 		    l_oV.wz = wz;
+		    l_oV.nbFaces = nbFaces;
+		    l_oV.aFaces = aFaces.concat();
 		    return l_oV;
 		}
 

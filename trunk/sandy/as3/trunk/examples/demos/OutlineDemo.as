@@ -1,18 +1,15 @@
 package demos
 {
-	import flash.display.Sprite; 
+	import flash.display.BitmapData;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.events.*;
-	import flash.display.Stage;
-	import flash.display.BitmapData;	
 	import flash.ui.Keyboard;
-//	import fl.controls.Slider;
-//	import fl.events.SliderEvent;
+	
 	import sandy.core.World3D;
-	import sandy.core.data.Vector;
 	import sandy.core.scenegraph.*;
 	import sandy.materials.*;
-	import sandy.materials.attributes.*;	
+	import sandy.materials.attributes.*;
 	import sandy.primitive.*;
 
 	/**
@@ -37,7 +34,7 @@ package demos
 			world.container = this;
 			world.root = createScene();
 			
-			camera = new Camera3D( 200, 200 );
+			camera = new Camera3D( 600, 500 );
 			world.camera = camera;
 			camera.z = -200;
 			world.root.addChild( camera );
@@ -62,13 +59,20 @@ package demos
 
 			//material = new OutlineMaterial( 3, 0x96EF3A, 0.3); // alpha < 1 -> no lines
 			var materialAttr:MaterialAttributes = new MaterialAttributes ( new OutlineAttributes( 3, 0xFF, 0.2 ));
-			material = new ColorMaterial(  0xFFFF99, 0.4, materialAttr);
+			//material = new ColorMaterial(  0xFFFF99, 0.4, materialAttr);
+			material = new BitmapMaterial( new BitmapData(10,10, false, 0xCF453), materialAttr );
 			var app:Appearance = new Appearance( material );
-			box.useSingleContainer = false;
+			//box.useSingleContainer = true;
 			box.appearance = app;
 			//box.enableBackFaceCulling = false;
-			box.enableNearClipping = true;
+			//box.enableNearClipping = true;
 			root.addChild( box );
+			
+			var sphere2:Shape3D = box.clone("box2") as Shape3D;
+			sphere2.appearance = app;
+			sphere2.x = 100;
+			
+			root.addChild( sphere2 );
 			return root;
 		}
 	

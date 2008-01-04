@@ -23,10 +23,9 @@ package demos
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.Material;
 	import sandy.materials.attributes.GouraudAttributes;
-	import sandy.materials.attributes.LineAttributes;
+	import sandy.materials.attributes.LineStyleAttributes;
 	import sandy.materials.attributes.MaterialAttributes;
-	import sandy.primitive.Line3D;
-	import sandy.primitive.Sphere;
+	import sandy.primitive.*;
 
 
 	public class InteractionDemo extends Sprite
@@ -105,7 +104,7 @@ package demos
 			{ 
 			    cam.moveHorizontally( -10 );
 			}
-			//lTg.rotateY ++;
+			lTg.rotateY ++;
 			m_oScene.render();
 
 		}
@@ -119,11 +118,11 @@ package demos
 			m_oPlane = new Sphere("sphere");//new Plane3D("myPlane", 300, 300, 2, 2, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.useSingleContainer = false;
 			m_oPlane.enableEvents = true;
-			m_oPlane.enableForcedDepth = true;
-			m_oPlane.forcedDepth = 99999999;
+			//m_oPlane.enableForcedDepth = true;
+			//m_oPlane.forcedDepth = 99999999;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onClick );
 
-			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineAttributes(), new GouraudAttributes() );
+			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineStyleAttributes(), new GouraudAttributes() );
 			var l_oMat:Material = new BitmapMaterial( texture, l_oAttr );
 			l_oMat.lightingEnable = true;
 			m_oPlane.appearance = new Appearance( l_oMat );
@@ -152,10 +151,10 @@ package demos
           
             info.text = l_oIntersectionPoint.x+" \n "+l_oIntersectionPoint.y+"  \n "+l_oIntersectionPoint.z;
           
-            if( m_oLine3D ) m_oLine3D.remove();
+           // if( m_oLine3D ) m_oLine3D.remove();
           
             var top:Vector = l_oPoly.normal.getVector().clone();
-            top.scale( 50 );
+            top.scale( 10 );
             top.add( l_oIntersectionPoint );
             m_oLine3D = new Line3D("normal", l_oIntersectionPoint, top );
             lTg.addChild( m_oLine3D );

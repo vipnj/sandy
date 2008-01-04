@@ -63,5 +63,11 @@ package sandy.core.data
 			vertexId2 = p_nVertexId2;
 		}
 		
+		public function clone():Edge3D
+		{
+			var l_oEdge:Edge3D = new Edge3D( vertexId1, vertexId2 );
+			return l_oEdge;
+		}
+		
 	}
 }

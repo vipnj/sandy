@@ -7,6 +7,7 @@ package demos
 	import flash.utils.getTimer;
 	
 	import sandy.core.Scene3D;
+	import sandy.core.scenegraph.ATransformable;
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Shape3D;
 	import sandy.materials.Appearance;
@@ -155,6 +156,7 @@ package demos
 			{
 				trace("Temps de rendu Sandy:"+ (getTimer() - t) );
 				removeEventListener(Event.ENTER_FRAME, enterFrameHandler );
+				rhino.destroy();
 			}
 		}
 		

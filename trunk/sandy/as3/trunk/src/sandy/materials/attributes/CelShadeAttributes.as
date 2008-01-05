@@ -48,21 +48,6 @@ package sandy.materials.attributes
 		 */
 		public var spherize:Number = 0;
 
-		/**
-		 * Flag for rendering mode.
-		 * <p>If true, only specular highlight is rendered, when useBright is also true.<br />
-		 * If false (the default) ambient and diffuse reflections will also be rendered.</p>
-		 */
-		public var onlySpecular:Boolean = false;
-
-		/**
-		 * Flag for lightening mode.
-		 * <p>If true (the default), the lit objects use full light range from black to white.<br />
-		 * If false they just range from black to their normal appearance; additionally, current
-		 * implementation does not render specular reflection in this case.</p>
-		 */
-		public function set useBright (p_bIgnore:Boolean):void { }
-		public function get useBright ():Boolean {return false;}
 
 		/**
 		 * Compute the light map.
@@ -184,89 +169,64 @@ package sandy.materials.attributes
 				p_oPolygon.shape.modelMatrix.vectorMult3x3 (aN0 [i]);
 			}
 
-			// apply ambient + diffuse and specular maps separately
-			// note we cannot correctly render specular with useBright off
-			for (j = onlySpecular ? 1 : 0; j < (useBright ? 2 : 1); j++)
-			{
-				// get highlight direction vector
-				var d:Vector = (j == 0) ? m_oL : m_oH;
+			// get highlight direction vector
+			var d:Vector =  m_oL ;
 
-				// see if we are on the backside
-				var backside:Boolean = true
+			// see if we are on the backside
+			var backside:Boolean = true
+			for (i = 0; i < 3; i++)
+			{
+				aN [i].copy (aN0 [i]);
+
+				var d_dot_aNi:Number = d.dot (aN [i]);
+				if (d_dot_aNi < 0) backside = false;
+
+				// intersect with parabola - q(r) in computeLightMap() corresponds to this
+				aN[i].scale (1 / (1 - d_dot_aNi));
+			}
+
+			if (backside)
+			{
+				// no reflection here - render the face in solid ambient
+				// the way specular is done now, we dont need to render it at all on the backside
+				if (j == 0)
+				{
+					const aI:Number = ambient * m_nI;
+					p_oGraphics.beginFill( 0, 1 - aI );
+				}
+			}
+
+			else
+			{
+				// calculate two arbitrary vectors perpendicular to light direction
+				var e1:Vector = (Math.abs (d.x) + Math.abs (d.y) > 0) ? new Vector (d.y, -d.x, 0) : new Vector (d.z, 0, -d.x);
+				var e2:Vector = d.cross (e1);
+				e1.normalize ();
+				e2.normalize ();
+
 				for (i = 0; i < 3; i++)
 				{
-					aN [i].copy (aN0 [i]);
+					// project aN [i] onto e1 and e2
+					aNP [i].x = e1.dot (aN [i]);
+					aNP [i].y = e2.dot (aN [i]);
 
-					var d_dot_aNi:Number = d.dot (aN [i]);
-					if (d_dot_aNi < 0) backside = false;
-
-					// intersect with parabola - q(r) in computeLightMap() corresponds to this
-					aN[i].scale (1 / (1 - d_dot_aNi));
+					// re-calculate into light map coordinates
+					aNP [i].x = (16384 - 1) * 0.05 * aNP [i].x;
+					aNP [i].y = (16384 - 1) * 0.05 * aNP [i].y;
 				}
 
-				if (backside)
-				{
-					// no reflection here - render the face in solid ambient
-					// the way specular is done now, we dont need to render it at all on the backside
-					if (j == 0)
-					{
-						const aI:Number = ambient * m_nI;
-						if (useBright) 
-							p_oGraphics.beginFill( (aI < 0.5) ? 0 : 0xFFFFFF, (aI < 0.5) ? (1 - 2 * aI) : (2 * aI - 1) );
-						else
-							p_oGraphics.beginFill( 0, 1 - aI );
-					}
-				}
+				// compute gradient matrix
+				matrix.a = aNP[1].x - aNP[0].x;
+				matrix.b = aNP[1].y - aNP[0].y;
+				matrix.c = aNP[2].x - aNP[0].x;
+				matrix.d = aNP[2].y - aNP[0].y;
+				matrix.tx = aNP[0].x;
+				matrix.ty = aNP[0].y;
+				matrix.invert ();
 
-				else
-				{
-					// calculate two arbitrary vectors perpendicular to light direction
-					var e1:Vector = (Math.abs (d.x) + Math.abs (d.y) > 0) ? new Vector (d.y, -d.x, 0) : new Vector (d.z, 0, -d.x);
-					var e2:Vector = d.cross (e1);
-					e1.normalize ();
-					e2.normalize ();
-
-					for (i = 0; i < 3; i++)
-					{
-						// project aN [i] onto e1 and e2
-						aNP [i].x = e1.dot (aN [i]);
-						aNP [i].y = e2.dot (aN [i]);
-
-						// re-calculate into light map coordinates
-						aNP [i].x = (16384 - 1) * 0.05 * aNP [i].x;
-						aNP [i].y = (16384 - 1) * 0.05 * aNP [i].y;
-					}
-
-					/*
-					// simple hack to resolve bad projections
-					// this needs to be done some other way though
-					while ((Math.abs(
-							(aNP[0].x - aNP[1].x) * (aNP[0].x - aNP[2].x) + (aNP[0].y - aNP[1].y) * (aNP[0].y - aNP[2].y)
-							) > (1 - NumberUtil.TOL) *
-							Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[0], aNP[2])
-						)
-						|| (Math.abs(
-							(aNP[0].x - aNP[1].x) * (aNP[2].x - aNP[1].x) + (aNP[0].y - aNP[1].y) * (aNP[2].y - aNP[1].y)
-							) > (1 - NumberUtil.TOL) *
-							Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[2], aNP[1])
-						))
-					{
-						aNP[0].x--; aNP[1].y++; aNP[2].x++;
-					}
-					*/
-
-					// compute gradient matrix
-					matrix.a = aNP[1].x - aNP[0].x;
-					matrix.b = aNP[1].y - aNP[0].y;
-					matrix.c = aNP[2].x - aNP[0].x;
-					matrix.d = aNP[2].y - aNP[0].y;
-					matrix.tx = aNP[0].x;
-					matrix.ty = aNP[0].y;
-					matrix.invert ();
-	
-					matrix.concat (matrix2);
-					p_oGraphics.beginGradientFill( "radial", m_oCurrentLightMap.colors [j], m_oCurrentLightMap.alphas [j], m_oCurrentLightMap.ratios [j], matrix );
-				}
+				matrix.concat (matrix2);
+				p_oGraphics.beginGradientFill( "radial", m_oCurrentLightMap.colors [j], m_oCurrentLightMap.alphas [j], m_oCurrentLightMap.ratios [j], matrix );
+			
 
 				if (!backside || (j == 0))
 				{
@@ -290,7 +250,6 @@ package sandy.materials.attributes
 		}
 
 		// --
-		private var _useBright:Boolean = true;
 
 		private var aN0:Array = [new Vector (), new Vector (), new Vector ()];
 		private var aN:Array  = [new Vector (), new Vector (), new Vector ()];

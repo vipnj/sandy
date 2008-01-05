@@ -46,6 +46,10 @@ package sandy.materials.attributes
 	public final class PhongAttributes extends ALightAttributes
 	{
 		/**
+		 * Used if a lightmap needs to be overridden.
+		 */
+		public var lightmap:PhongAttributesLightMap = null;
+		/**
 		 * Non-zero value adds sphere normals to actual normals for light rendering.
 		 * Use this with flat surfaces or cylinders.
 		 */
@@ -247,7 +251,7 @@ package sandy.materials.attributes
 		}
 
 		// light map to use in this rendering session
-		private var m_oCurrentLightMap:PhongAttributesLightMap;
+		/*private*/protected var m_oCurrentLightMap:PhongAttributesLightMap;
 
 		// set current light map for "draw" to use
 		override protected function onRenderDisplayList (p_oArg:*):void
@@ -330,7 +334,6 @@ package sandy.materials.attributes
 					if (j == 0)
 					{
 						const aI:Number = ambient * m_nI;
-						p_oGraphics.lineStyle();
 						if (useBright) 
 							p_oGraphics.beginFill( (aI < 0.5) ? 0 : 0xFFFFFF, (aI < 0.5) ? (1 - 2 * aI) : (2 * aI - 1) );
 						else
@@ -385,8 +388,6 @@ package sandy.materials.attributes
 					matrix.invert ();
 	
 					matrix.concat (matrix2);
-					
-					p_oGraphics.lineStyle();
 					p_oGraphics.beginGradientFill( "radial", m_oCurrentLightMap.colors [j], m_oCurrentLightMap.alphas [j], m_oCurrentLightMap.ratios [j], matrix );
 				}
 
@@ -396,7 +397,7 @@ package sandy.materials.attributes
 					p_oGraphics.moveTo( l_aPoints[0].sx, l_aPoints[0].sy );
 					for each( l_oVertex in l_aPoints )
 					{
-						p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy );
+						p_oGraphics.lineTo( l_oVertex.sx, l_oVertex.sy  );
 					}
 					p_oGraphics.endFill();
 				}
@@ -423,9 +424,3 @@ package sandy.materials.attributes
 	}
 }
 
-class PhongAttributesLightMap
-{
-	public var alphas:Array = [[], []];
-	public var colors:Array = [[], []];
-	public var ratios:Array = [[], []];
-}

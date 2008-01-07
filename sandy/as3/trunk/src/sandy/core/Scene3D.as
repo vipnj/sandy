@@ -1,6 +1,6 @@
 ﻿/*
 # ***** BEGIN LICENSE BLOCK *****
-Copyright the original author or authors.
+Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -24,6 +24,7 @@ package sandy.core
 	import sandy.core.scenegraph.Camera3D;
 	import sandy.core.scenegraph.Group;
 	import sandy.events.SandyEvent;
+	import sandy.materials.MaterialManager;
 
 	/**
 	 * The Scene3D object is the central point of a Sandy world.
@@ -66,6 +67,7 @@ package sandy.core
 		 */
 		public var container:Sprite;
 
+		public const materialManager:MaterialManager = new MaterialManager();
 		
 		/**
 		 * Creates a new Scene.
@@ -139,10 +141,11 @@ package sandy.core
 				// --
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_RENDER ) );
 				root.render( this, camera );
-				
 				// -- clear the polygon's container and the projection vertices list
 				dispatchEvent( new SandyEvent( SandyEvent.SCENE_RENDER_DISPLAYLIST ) );
+	            materialManager.begin( this );
 	            camera.renderDisplayList( this );
+	            materialManager.finish( this );
 			}
 		} // end method
 

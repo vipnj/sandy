@@ -102,7 +102,25 @@ package sandy.materials.attributes
 			// --
 			color = p_nColor; fadeTo = p_oFadeTo; fadeFrom = p_oFadeFrom; blurAmount = p_nBlurAmount;
 		}
+
+		/**
+		 * Method called before the display list rendering.
+		 * This is the common place for this attribute to precompute things
+		 */
+		public function begin( p_oScene:Scene3D ):void
+		{
+			;
+		}
 		
+		/**
+		 * Method called right after the display list rendering
+		 * This is the place to remove and dispose memory if necessary.
+		 */
+		public function finish( p_oScene:Scene3D ):void
+		{
+			;
+		}
+			
 		/**
 		 * Draw the attribute onto the graphics object to simulate viewing through partially opaque medium.
 		 *  

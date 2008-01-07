@@ -409,6 +409,8 @@ package sandy.materials
 		{
 			if( m_oPolygonMatrixMap[p_oPolygon.id] )
 				delete m_oPolygonMatrixMap[p_oPolygon.id];
+			// --
+			super.unlink( p_oPolygon );
 		}
 		/**
 		 * Initiates this material.
@@ -432,6 +434,8 @@ package sandy.materials
 				// --
 				m_oPolygonMatrixMap[p_oPolygon.id] = m;
 			}
+			// --
+			super.init( p_oPolygon );
 		}
 
 		public function toString():String

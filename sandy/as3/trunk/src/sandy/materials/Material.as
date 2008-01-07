@@ -75,7 +75,16 @@ package sandy.materials
 			return _id;
 		}
 		
-	
+		public function begin( p_oScene:Scene3D ):void
+		{
+			attributes.begin( p_oScene );
+		}
+		
+		public function finish( p_oScene:Scene3D ):void
+		{
+			attributes.finish(p_oScene );
+		}
+		
 		/**
 		 * Renders the polygon dress in this material.
 		 *
@@ -87,18 +96,23 @@ package sandy.materials
 		}
 			
 		/**
-		 * Not used in this version of Sandy.
-		 *
+		 * Allows to proceed to an initialization
+		 * to know when the polyon isn't lined to the material, look at #unlink
 		 */
-		public function init( f:Polygon ):void
+		public function init( p_oPolygon:Polygon ):void
 		{
-			;
+			attributes.init( p_oPolygon );
 		}
 	
+		/**
+		 * Remove all the initialization
+		 * opposite of init
+		 */
 		public function unlink( p_oPolygon:Polygon ):void
 		{
-			;
+			attributes.unlink( p_oPolygon );
 		}
+		
 		/**
 		 * The material type of this material.
 		 * 

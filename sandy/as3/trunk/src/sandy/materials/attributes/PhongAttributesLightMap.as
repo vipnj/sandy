@@ -1,7 +1,7 @@
 //Used in a few attributes
 package sandy.materials.attributes
 {
-	public class PhongAttributesLightMap
+	public final class PhongAttributesLightMap
 	{
 		public var alphas:Array = [[], []];
 		public var colors:Array = [[], []];

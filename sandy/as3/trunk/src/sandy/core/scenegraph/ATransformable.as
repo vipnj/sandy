@@ -441,7 +441,7 @@ package sandy.core.scenegraph
 			_vRotation.z = az;
 
 			// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
-			ax *= -1; ay *= -1; az *= -1;
+			//ax *= -1; ay *= -1; az *= -1;
 			// use eulerRotation in order for rotation to be independent of application order
 			m_tmpMt.eulerRotation (ax, ay, az);
 			m_tmpMt.vectorMult3x3 (_vSide);

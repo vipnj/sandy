@@ -34,6 +34,14 @@ package sandy.materials.attributes
 	 */
 	public interface IAttributes
 	{
-		function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void;		
+		function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void;
+		
+		function init( p_oPolygon:Polygon ):void;
+	
+		function unlink( p_oPolygon:Polygon ):void;
+		
+		function begin( p_oScene:Scene3D ):void;
+		
+		function finish( p_oScene:Scene3D ):void;		
 	}
 }

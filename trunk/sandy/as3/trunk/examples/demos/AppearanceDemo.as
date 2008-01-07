@@ -19,6 +19,7 @@ package demos
 	import sandy.primitive.Plane3D;
 	import sandy.primitive.PrimitiveMode;
 	import sandy.util.LoaderQueue;
+	import sandy.materials.attributes.DashedLineAttributes;
 	
 	public final class AppearanceDemo extends Sprite
 	{
@@ -59,8 +60,11 @@ package demos
 		
 		private function createAppearance():Appearance
 		{
-			var l_oMaterialFront:BitmapMaterial = new BitmapMaterial( (queue.data["texture1"] as Bitmap).bitmapData, new MaterialAttributes( new OutlineAttributes(3, 0xFF, 1) ), 4);
-			var l_oMaterialBack:BitmapMaterial = new BitmapMaterial( (queue.data["texture2"] as Bitmap).bitmapData, null, 4);
+			var l_oMatAtt:MaterialAttributes = new MaterialAttributes( new DashedLineAttributes(2, 0xFF, 1, 20, 5) );//, new OutlineAttributes(3, 0xFF, 1) );
+			var l_oMaterialFront:BitmapMaterial = new BitmapMaterial( (queue.data["texture1"] as Bitmap).bitmapData, l_oMatAtt, 4);
+			
+			l_oMatAtt = new MaterialAttributes( new DashedLineAttributes(2, 0xFF0000, 1) );
+			var l_oMaterialBack:BitmapMaterial = new BitmapMaterial( (queue.data["texture2"] as Bitmap).bitmapData, l_oMatAtt, 4);
 			// --
 			l_oMaterialFront.repeat = true;
 			l_oMaterialBack.repeat = true;
@@ -72,7 +76,7 @@ package demos
 		{
 			var lG:Group = new Group("rootGroup");
 			// --
-			m_oPlane = new Plane3D("myPlane", 400, 200, 1, 1, Plane3D.XY_ALIGNED, PrimitiveMode.TRI );
+			m_oPlane = new Plane3D("myPlane", 200, 200, 1, 1, Plane3D.XY_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableBackFaceCulling = false;
 			m_oPlane.enableEvents = true;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onPlaneClick );
@@ -96,8 +100,8 @@ package demos
 		
 		private function enterFrameHandler( event : Event ) : void
 		{
-			//m_oPlane.rotateX += (stage.width/2 - mouseX)*0.0055;
-			//m_oPlane.rotateY += (stage.height/2 - mouseY)*0.0055;
+			m_oPlane.rotateX += (stage.width/2 - mouseX)*0.0055;
+			m_oPlane.rotateY += (stage.height/2 - mouseY)*0.0055;
 			m_oScene.render();
 		}
 		

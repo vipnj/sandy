@@ -61,7 +61,7 @@ package demos
   
   		private function _createMaterialAttributes():MaterialAttributes
   		{
-  			return new MaterialAttributes( new VertexNormalAttributes(1, 0xFF, 1 ) );
+  			return new MaterialAttributes( new VertexNormalAttributes(10, 1, 0xFF, 1 ) );
   		}
   		
 	  	

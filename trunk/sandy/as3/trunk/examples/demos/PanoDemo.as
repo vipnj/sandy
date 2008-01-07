@@ -140,9 +140,10 @@ package demos
 			if( running )
 			{
 				// TODO pre compute some values
-				camera.rotateY -= 5*(( this.mouseX - (stage.stageWidth/2)  ) / stage.stageWidth);
+				camera.rotateZ += 5*(( this.mouseX - (stage.stageWidth/2)  ) / stage.stageWidth);
 				camera.tilt = NumberUtil.constrain( camera.tilt + 5*(( this.mouseY - (stage.stageHeight/2) )/stage.stageHeight), -89, 89 );
-
+				//camera.rotateY++;
+				//camera.rotateX ++;
 				var t:int = getTimer();
 				world.render();
 				trace(getTimer() - t+" ms");

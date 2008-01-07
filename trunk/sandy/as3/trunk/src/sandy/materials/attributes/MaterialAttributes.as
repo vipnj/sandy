@@ -35,6 +35,38 @@ package sandy.materials.attributes
 					attributes.push( args[i] );
 			}
 		}
+
+		/**
+		 * Allows to proceed to an initialization
+		 * to know when the polyon isn't lined to the material, look at #unlink
+		 */
+		public function init( p_oPolygon:Polygon ):void
+		{
+			for each( var l_oAttr:IAttributes in attributes )
+				l_oAttr.init( p_oPolygon );
+		}
+	
+		/**
+		 * Remove all the initialization
+		 * opposite of init
+		 */
+		public function unlink( p_oPolygon:Polygon ):void
+		{
+			for each( var l_oAttr:IAttributes in attributes )
+				l_oAttr.unlink( p_oPolygon );
+		}
+			
+		public function begin( p_oScene:Scene3D ):void
+		{
+			for each( var l_oAttr:IAttributes in attributes )
+				l_oAttr.begin( p_oScene );
+		}
+		
+		public function finish( p_oScene:Scene3D ):void
+		{
+			for each( var l_oAttr:IAttributes in attributes )
+				l_oAttr.finish( p_oScene );
+		}
 		
 		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{

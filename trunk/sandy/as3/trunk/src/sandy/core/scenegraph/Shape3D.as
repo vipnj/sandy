@@ -637,6 +637,7 @@ package sandy.core.scenegraph
 	
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
+			// we need to get the polygon which has been clicked.
 			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
 		}
 		

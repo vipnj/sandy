@@ -67,35 +67,33 @@ package sandy.primitive
 			var l_oPlane:Plane3D;
 			// -- LEFT
 			l_oPlane = new Plane3D( p_sName+"_left", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.YZ_ALIGNED );
-			l_oPlane.rotateZ = 180;
+			l_oPlane.swapCulling();
+			l_oPlane.rotateX = -90;
 			l_oPlane.x = -p_nDim/2;
 			m_aPlanes[0] = l_oPlane;
 			// -- RIGHT
 			l_oPlane = new Plane3D( p_sName+"_right", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.YZ_ALIGNED );
-			l_oPlane.rotateY = 180;
-			l_oPlane.rotateZ = 180;
+			l_oPlane.rotateX = -90;
 			l_oPlane.x = p_nDim/2;
 			m_aPlanes[1] = l_oPlane;
 			// -- FRONT
 			l_oPlane = new Plane3D( p_sName+"_front", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.XY_ALIGNED );
-			l_oPlane.rotateZ = 90;
 			l_oPlane.z = p_nDim/2;
 			m_aPlanes[2] = l_oPlane;
 			// -- BACK
 			l_oPlane = new Plane3D( p_sName+"_back", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.XY_ALIGNED );
-			l_oPlane.swapCulling();
 			l_oPlane.rotateY = 180;
-			l_oPlane.rotateZ = -90;
-			l_oPlane.swapCulling();
 			l_oPlane.z = -p_nDim/2;
 			m_aPlanes[3] = l_oPlane;
 			// -- TOP
 			l_oPlane = new Plane3D( p_sName+"_top", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.ZX_ALIGNED );
 			l_oPlane.swapCulling();
+			l_oPlane.rotateY = -90;
 			l_oPlane.y = p_nDim/2;
 			m_aPlanes[4] = l_oPlane;
 			// -- BOTTOM
 			l_oPlane = new Plane3D( p_sName+"_bottom", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.ZX_ALIGNED );
+			l_oPlane.rotateY = -90;
 			l_oPlane.y = -p_nDim/2;
 			m_aPlanes[5] = l_oPlane;
 			

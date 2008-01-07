@@ -478,6 +478,23 @@ package sandy.core.data
 			scene = p_oScene;
 			// --
 			const lCont:Sprite = (p_oContainer)?p_oContainer:m_oContainer;
+			// we are gonna to check this for all polygons, which might sounds a bit too much, but
+			// since each polygon can have its own appearance, this is necessary.
+			if( m_bAppearanceChanged )
+			{
+				if( p_oScene.materialManager.isRegistered( m_oAppearance.frontMaterial ) == false )
+				{
+					p_oScene.materialManager.register( m_oAppearance.frontMaterial );
+				}
+				if( m_oAppearance.frontMaterial != m_oAppearance.backMaterial )
+				{
+					if( p_oScene.materialManager.isRegistered( m_oAppearance.backMaterial ) == false )
+					{
+						p_oScene.materialManager.register( m_oAppearance.backMaterial );
+					}
+				}
+				m_bAppearanceChanged = false;
+			}
 			if( m_bVisible )
 			{
 				m_oAppearance.frontMaterial.renderPolygon( p_oScene, this, lCont );
@@ -568,7 +585,7 @@ package sandy.core.data
 		{ return mouseEvents; }
 
 		protected function _onInteraction( p_oEvt:Event ):void
-		{m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );}
+		{ m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) ); }
 		
 		protected function _startMouseInteraction( e : MouseEvent = null ) : void
 		{
@@ -671,6 +688,13 @@ package sandy.core.data
 		 */
 		public function set appearance( p_oApp:Appearance ):void
 		{
+			if( scene )
+			{
+				if( scene.materialManager.isRegistered( m_oAppearance.frontMaterial ) )
+					scene.materialManager.unregister( m_oAppearance.frontMaterial );
+				if( scene.materialManager.isRegistered( m_oAppearance.backMaterial ) )
+				scene.materialManager.unregister( m_oAppearance.backMaterial );
+			} 
 			if( m_oAppearance )
 			{
 				p_oApp.frontMaterial.unlink( this );
@@ -682,6 +706,8 @@ package sandy.core.data
 			p_oApp.frontMaterial.init( this );
 			if( p_oApp.backMaterial != p_oApp.frontMaterial ) 
 				p_oApp.backMaterial.init( this );
+			// --
+			m_bAppearanceChanged = true;
 		}
 
 		/**
@@ -738,5 +764,6 @@ package sandy.core.data
 		/** Boolean representing the state of the event activation */
 		private var mouseEvents:Boolean = false;
 		private var mouseInteractivity:Boolean = false;
+		private var m_bAppearanceChanged:Boolean = false;
 	}
 }

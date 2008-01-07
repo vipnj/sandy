@@ -176,6 +176,42 @@ package sandy.materials.attributes
 			}
 		}
 		
+		/**
+		 * Method called before the display list rendering.
+		 * This is the common place for this attribute to precompute things
+		 */
+		public function begin( p_oScene:Scene3D ):void
+		{
+			;// TODO, do the vertex normal transformation here
+		}
+		
+		/**
+		 * Method called right after the display list rendering
+		 * This is the place to remove and dispose memory if necessary.
+		 */
+		public function finish( p_oScene:Scene3D ):void
+		{
+			;
+		}
+		
+		/**
+		 * Allows to proceed to an initialization
+		 * to know when the polyon isn't lined to the material, look at #unlink
+		 */
+		public function init( p_oPolygon:Polygon ):void
+		{
+			;// to keep reference to the shapes/polygons that use this attribute
+		}
+	
+		/**
+		 * Remove all the initialization
+		 * opposite of init
+		 */
+		public function unlink( p_oPolygon:Polygon ):void
+		{
+			;// to remove reference to the shapes/polygons that use this attribute
+		}
+		
 		// --
 		private var _ambient:Number = 0.3;
 		private var _diffuse:Number = 1.0;

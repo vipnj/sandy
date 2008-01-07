@@ -217,10 +217,16 @@ package sandy.core.data
 		 *
 		 * @return 	The invers
 		 */
-		public final function negate( /*v:Vertex*/ ): Vertex
+		public final function negate( /*v:Vertex*/ ): void
 		{
 			// The argument is commented out, as it is not used - Petit
-			return new Vertex( - x, - y, - z, -wx, -wy, -wz);
+			x = -x;
+			y = -y;
+			z = -z;
+			wx = -wx;
+			wy = -wy;
+			wz = -wz;
+			//return new Vertex( -x, -y, -z, -wx, -wy, -wz);
 		}
 
 		/**

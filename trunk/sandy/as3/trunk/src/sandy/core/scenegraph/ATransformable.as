@@ -458,9 +458,9 @@ package sandy.core.scenegraph
 				updateTransform ();
 				_vRotation = Matrix4.getEulerAngles (m_oMatrix);
 				// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
-				_vRotation.x = 360 - _vRotation.x;
-				_vRotation.y = 360 - _vRotation.y;
-				_vRotation.z = 360 - _vRotation.z;
+				//_vRotation.x = 360 - _vRotation.x;
+				//_vRotation.y = 360 - _vRotation.y;
+				//_vRotation.z = 360 - _vRotation.z;
 				_vRotationInvalid = false;
 			}
 		}

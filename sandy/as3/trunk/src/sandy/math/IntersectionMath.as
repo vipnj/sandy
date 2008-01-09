@@ -129,5 +129,28 @@ package sandy.math
 			*/
 			return new Point( xA + uA * ( xB - xA ), yA + uA*( yB - yA ) );
 		}
+		
+		/*
+      	** From http://www.blackpawn.com/texts/pointinpoly/default.html
+      	** Points right on the perimeter are NOT treated as in.
+      	** AS3 implementation : tcorbet
+      	*/
+		public static function isPointInTriangle2D ( p_oPoint:Point, p_oA:Point, p_oB:Point, p_oC:Point ):Boolean
+	    {
+		    var oneOverDenom:Number = (1 /
+		        (((p_oA.y - p_oC.y) * (p_oB.x - p_oC.x)) +
+		        ((p_oB.y - p_oC.y) * (p_oC.x - p_oA.x))));
+		    var b1:Number = (oneOverDenom *
+		        (((p_oPoint.y - p_oC.y) * (p_oB.x - p_oC.x)) +
+		        ((p_oB.y - p_oC.y) * (p_oC.x - p_oPoint.x))));
+		    var b2:Number = (oneOverDenom *
+		        (((p_oPoint.y - p_oA.y) * (p_oC.x - p_oA.x)) +
+		        ((p_oC.y - p_oA.y) * (p_oA.x - p_oPoint.x))));
+		    var b3:Number = (oneOverDenom *
+		        (((p_oPoint.y - p_oB.y) * (p_oA.x - p_oB.x)) +
+		        ((p_oA.y - p_oB.y) * (p_oB.x - p_oPoint.x))));
+		 
+		    return ((b1 > 0) && (b2 > 0) && (b3 > 0));      
+	    }
 	}
 }

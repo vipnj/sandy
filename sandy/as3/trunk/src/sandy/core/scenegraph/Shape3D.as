@@ -19,11 +19,11 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
-	import sandy.core.World3D;
 	import sandy.core.data.Edge3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Polygon;
@@ -33,6 +33,7 @@ package sandy.core.scenegraph
 	import sandy.materials.Appearance;
 	import sandy.materials.Material;
 	import sandy.materials.WireFrameMaterial;
+	import sandy.math.IntersectionMath;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 
@@ -638,7 +639,27 @@ package sandy.core.scenegraph
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
 			// we need to get the polygon which has been clicked.
-			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
+			var l_oClick:Point = new Point( m_oContainer.mouseX, m_oContainer.mouseY );
+			var l_oA:Point = new Point(), l_oB:Point = new Point(), l_oC:Point = new Point();
+			for each ( var l_oPoly:Polygon in aPolygons )
+			{
+				if( !l_oPoly.visible && m_bBackFaceCulling ) continue;
+				// --
+				var l_nSize:int = l_oPoly.vertices.length;
+				var l_nTriangles:int = l_nSize - 2;
+				for( var i:int = 0; i < l_nTriangles; i++ )
+				{
+					l_oA.x = l_oPoly.vertices[i].sx; l_oA.y = l_oPoly.vertices[i].sy;
+					l_oB.x = l_oPoly.vertices[i+1].sx; l_oB.y = l_oPoly.vertices[i+1].sy;
+					l_oC.x = l_oPoly.vertices[(i+2)%l_nSize].sx; l_oC.y = l_oPoly.vertices[(i+2)%l_nSize].sy;
+					// --
+					if( IntersectionMath.isPointInTriangle2D( l_oClick, l_oA, l_oB, l_oC ) )
+					{
+						m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, l_oPoly, p_oEvt ) );
+					}
+				}
+			}
+			//m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
 		}
 		
 		/**

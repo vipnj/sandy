@@ -22,9 +22,7 @@ package demos
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.Material;
-	import sandy.materials.attributes.GouraudAttributes;
-	import sandy.materials.attributes.LineStyleAttributes;
-	import sandy.materials.attributes.MaterialAttributes;
+	import sandy.materials.attributes.*;
 	import sandy.primitive.*;
 
 
@@ -116,17 +114,15 @@ package demos
 			//m_oLine3D = new Line3D("normale", new Vector(), new Vector(0, 50, 0) );
 			
 			m_oPlane = new Sphere("sphere");//new Plane3D("myPlane", 300, 300, 2, 2, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
-			m_oPlane.useSingleContainer = false;
 			m_oPlane.enableEvents = true;
 			//m_oPlane.enableForcedDepth = true;
 			//m_oPlane.forcedDepth = 99999999;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onClick );
 
-			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineStyleAttributes(), new GouraudAttributes() );
+			var l_oAttr:MaterialAttributes = new MaterialAttributes( new DashedLineAttributes(), new GouraudAttributes() );
 			var l_oMat:Material = new BitmapMaterial( texture, l_oAttr );
 			l_oMat.lightingEnable = true;
 			m_oPlane.appearance = new Appearance( l_oMat );
-			m_oPlane.enableNearClipping = true;
 			
 			lTg.addChild( m_oPlane );
 			lG.addChild( lTg );

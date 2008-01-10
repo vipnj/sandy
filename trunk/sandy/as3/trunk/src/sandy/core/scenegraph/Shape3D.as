@@ -351,6 +351,24 @@ package sandy.core.scenegraph
 						}
 				 	}
 				}
+				// --
+				// we are gonna to check this for all polygons, which might sounds a bit too much, but
+				// since each polygon can have its own appearance, this is necessary.
+				if( l_oFace.hasAppearanceChanged )
+				{
+					if( p_oScene.materialManager.isRegistered( l_oFace.appearance.frontMaterial ) == false )
+					{
+						p_oScene.materialManager.register( l_oFace.appearance.frontMaterial );
+					}
+					if( l_oFace.appearance.frontMaterial != l_oFace.appearance.backMaterial )
+					{
+						if( p_oScene.materialManager.isRegistered( l_oFace.appearance.backMaterial ) == false )
+						{
+							p_oScene.materialManager.register( l_oFace.appearance.backMaterial );
+						}
+					}
+					l_oFace.hasAppearanceChanged = false;
+				}
 			}
 			// --
 			if( m_bUseSingleContainer )
@@ -641,8 +659,14 @@ package sandy.core.scenegraph
 			// we need to get the polygon which has been clicked.
 			var l_oClick:Point = new Point( m_oContainer.mouseX, m_oContainer.mouseY );
 			var l_oA:Point = new Point(), l_oB:Point = new Point(), l_oC:Point = new Point();
-			for each ( var l_oPoly:Polygon in aPolygons )
+			var l_oPoly:Polygon;
+			var l_aSId:Array = aPolygons.sortOn( 'depth', Array.NUMERIC | Array.RETURNINDEXEDARRAY );
+			var l:int = aPolygons.length, j:int;
+			for( j = 0; j < l; j += 1 )
+			//j = l;
+			//while( --j > -1 )
 			{
+				l_oPoly = aPolygons[ l_aSId[ j ] ];
 				if( !l_oPoly.visible && m_bBackFaceCulling ) continue;
 				// --
 				var l_nSize:int = l_oPoly.vertices.length;
@@ -656,6 +680,7 @@ package sandy.core.scenegraph
 					if( IntersectionMath.isPointInTriangle2D( l_oClick, l_oA, l_oB, l_oC ) )
 					{
 						m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, l_oPoly, p_oEvt ) );
+						return;
 					}
 				}
 			}
@@ -765,32 +790,7 @@ package sandy.core.scenegraph
 				aPolygons[i] = new Polygon( this, p_oGeometry, p_oGeometry.aFacesVertexID[i], p_oGeometry.aFacesUVCoordsID[i], i, i );
 				if( m_oAppearance ) aPolygons[int(i)].appearance = m_oAppearance;
 				this.broadcaster.addChild( aPolygons[int(i)].broadcaster );
-			}
-			// -- attempt to create the neighboors relation between polygons
-	        var a:int = aPolygons.length, lCount:uint = 0;
-	        var lP1:Polygon, lP2:Polygon;
-	        var l_aEdges:Array;
-	        for( i = 0; i < a-1; i+=1 )
-	        {
-	        	for( j=i+1; j < a; j+=1 )
-		        {
-		        	lP1 = aPolygons[int(i)];
-		        	lP2 = aPolygons[int(j)];
-		        	l_aEdges = lP2.aEdges;
-		        	// --
-		        	lCount = 0;
-		        	// -- check if they share at least 2 vertices
-		        	for each( var l_oEdge:Edge3D in lP1.aEdges )
-		        		if( l_aEdges.indexOf( l_oEdge ) > -1 ) lCount += 1;
-		        	// --
-		        	if( lCount > 0 )
-		        	{
-		        		lP1.aNeighboors.push( lP2 );
-		        		lP2.aNeighboors.push( lP1 );
-		        	}
-		        }
-			}
-			
+			}			
 		}
 	    		
 		// ______________

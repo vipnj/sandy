@@ -344,15 +344,19 @@ package sandy.materials
 		 */
 		public function set texture( p_oTexture:BitmapData ):void
 		{
-			if (p_oTexture == m_oTexture)
+			if( p_oTexture == m_oTexture )
+			{
 				return;
-
+			}
+			else
+			{
+				if( m_oTexture ) m_oTexture.dispose();
+				if( m_orgTexture ) m_orgTexture.dispose();
+			}
+			// --
 			var l_bReWrap:Boolean = false;
 			if( m_nHeight != p_oTexture.height) l_bReWrap = true;
 			else if( m_nWidth != p_oTexture.width) l_bReWrap = true;
-			// --
-			if( m_oTexture ) m_oTexture.dispose();
-			if( m_orgTexture ) m_orgTexture.dispose();
 			// --
 			m_oTexture = p_oTexture;
 			m_orgTexture = p_oTexture.clone();

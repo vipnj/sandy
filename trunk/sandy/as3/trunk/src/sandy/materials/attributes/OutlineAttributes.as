@@ -17,6 +17,7 @@ limitations under the License.
 package sandy.materials.attributes
 {
 	import flash.display.Graphics;
+	import flash.utils.Dictionary;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Edge3D;
@@ -35,6 +36,8 @@ package sandy.materials.attributes
 	 */
 	public final class OutlineAttributes implements IAttributes
 	{
+		private const SHAPE_MAP:Dictionary = new Dictionary(true);
+		// --
 		private var m_nThickness:Number;
 		private var m_nColor:Number;
 		private var m_nAlpha:Number;
@@ -135,6 +138,38 @@ package sandy.materials.attributes
 		public function init( p_oPolygon:Polygon ):void
 		{
 			;// to keep reference to the shapes/polygons that use this attribute
+			// -- attempt to create the neighboors relation between polygons
+			if( SHAPE_MAP[p_oPolygon.shape.id] == null )
+			{
+		        // if this shape hasn't been registered yet, we compute its polygon relation to be able
+		        // to draw the outline.
+		        var l_aPoly:Array = p_oPolygon.shape.aPolygons;
+		        var a:int = l_aPoly.length, lCount:uint = 0, i:int, j:int;
+		        var lP1:Polygon, lP2:Polygon;
+		        var l_aEdges:Array;
+		        for( i = 0; i < a-1; i+=1 )
+		        {
+		        	lP1 = l_aPoly[int(i)];
+		        	for( j=i+1; j < a; j+=1 )
+			        {
+			        	lP2 = l_aPoly[int(j)];
+			        	l_aEdges = lP2.aEdges;
+			        	// --
+			        	lCount = 0;
+			        	// -- check if they share at least 2 vertices
+			        	for each( var l_oEdge:Edge3D in lP1.aEdges )
+			        		if( l_aEdges.indexOf( l_oEdge ) > -1 ) lCount += 1;
+			        	// --
+			        	if( lCount > 0 )
+			        	{
+			        		lP1.aNeighboors.push( lP2 );
+			        		lP2.aNeighboors.push( lP1 );
+			        	}
+			        }
+				}
+				// --
+				SHAPE_MAP[p_oPolygon.shape.id] = true;
+			}
 		}
 	
 		/**
@@ -144,6 +179,7 @@ package sandy.materials.attributes
 		public function unlink( p_oPolygon:Polygon ):void
 		{
 			;// to remove reference to the shapes/polygons that use this attribute
+			// TODO : can we free the memory of SHAPE_MAP ? Don't think so, and would it be really necessary? not sure either.
 		}
 		
 		/**

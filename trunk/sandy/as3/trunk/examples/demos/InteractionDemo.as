@@ -22,6 +22,7 @@ package demos
 	import sandy.materials.Appearance;
 	import sandy.materials.BitmapMaterial;
 	import sandy.materials.Material;
+	import sandy.materials.WireFrameMaterial;
 	import sandy.materials.attributes.*;
 	import sandy.primitive.*;
 
@@ -115,14 +116,15 @@ package demos
 			
 			m_oPlane = new Sphere("sphere");//new Plane3D("myPlane", 300, 300, 2, 2, Plane3D.ZX_ALIGNED, PrimitiveMode.TRI );
 			m_oPlane.enableEvents = true;
+			m_oPlane.enableBackFaceCulling = false;
 			//m_oPlane.enableForcedDepth = true;
 			//m_oPlane.forcedDepth = 99999999;
 			m_oPlane.addEventListener( MouseEvent.CLICK, onClick );
 
-			var l_oAttr:MaterialAttributes = new MaterialAttributes( new DashedLineAttributes(), new GouraudAttributes() );
+			var l_oAttr:MaterialAttributes = new MaterialAttributes( new LineAttributes()/*new DashedLineAttributes()*//*new GouraudAttributes() */);
 			var l_oMat:Material = new BitmapMaterial( texture, l_oAttr );
-			l_oMat.lightingEnable = true;
-			m_oPlane.appearance = new Appearance( l_oMat );
+			//l_oMat.lightingEnable = true;
+			m_oPlane.appearance = new Appearance( l_oMat, new WireFrameMaterial(1, 0xFF0000) );
 			
 			lTg.addChild( m_oPlane );
 			lG.addChild( lTg );
@@ -173,7 +175,7 @@ package demos
                 var l_oTexture:BitmapData = l_oMaterial.texture;
                 //l_oTexture.setPixel( l_oRealTexturePosition.u, l_oRealTexturePosition.v, 0xFF0000 );
                 //l_oTexture.fillRect( l_oTexture.rect, Math.random()*0xFFFFFF );
-                l_oTexture.fillRect( new Rectangle( l_oRealTexturePosition.u-2, l_oRealTexturePosition.v-2, 4, 4 ), 0xFF0000 );
+                l_oTexture.fillRect( new Rectangle( l_oRealTexturePosition.u-2, l_oRealTexturePosition.v-2, 4, 4 ),/* Math.random()*0xFFFFFF*/0xFFFF0000 );
                 l_oMaterial.texture = l_oTexture;           
             }
 

@@ -146,6 +146,13 @@ package sandy.core.data
 		public var meanBounds:Vector = new Vector();
 
 		/**
+		 * States if the appearance of the polygon has changed since the previous rendering.
+		 * Often used to update the scene material manager.
+		 * WARNING: Shall not be changed manually
+		 */
+		public var hasAppearanceChanged:Boolean = false;
+		
+		/**
 		 * Creates a new polygon.
 		 *
 		 * @param p_oShape		    The shape this polygon belongs to
@@ -478,23 +485,6 @@ package sandy.core.data
 			scene = p_oScene;
 			// --
 			const lCont:Sprite = (p_oContainer)?p_oContainer:m_oContainer;
-			// we are gonna to check this for all polygons, which might sounds a bit too much, but
-			// since each polygon can have its own appearance, this is necessary.
-			if( m_bAppearanceChanged )
-			{
-				if( p_oScene.materialManager.isRegistered( m_oAppearance.frontMaterial ) == false )
-				{
-					p_oScene.materialManager.register( m_oAppearance.frontMaterial );
-				}
-				if( m_oAppearance.frontMaterial != m_oAppearance.backMaterial )
-				{
-					if( p_oScene.materialManager.isRegistered( m_oAppearance.backMaterial ) == false )
-					{
-						p_oScene.materialManager.register( m_oAppearance.backMaterial );
-					}
-				}
-				m_bAppearanceChanged = false;
-			}
 			if( m_bVisible )
 			{
 				m_oAppearance.frontMaterial.renderPolygon( p_oScene, this, lCont );
@@ -707,7 +697,7 @@ package sandy.core.data
 			if( p_oApp.backMaterial != p_oApp.frontMaterial ) 
 				p_oApp.backMaterial.init( this );
 			// --
-			m_bAppearanceChanged = true;
+			hasAppearanceChanged = true;
 		}
 
 		/**
@@ -764,6 +754,5 @@ package sandy.core.data
 		/** Boolean representing the state of the event activation */
 		private var mouseEvents:Boolean = false;
 		private var mouseInteractivity:Boolean = false;
-		private var m_bAppearanceChanged:Boolean = false;
 	}
 }

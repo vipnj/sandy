@@ -137,43 +137,11 @@ package sandy.materials.attributes
 		}
 		
 		/**
-		 * Override this to perform per-frame tasks.
-		 * Always call it first in sub classes.
-		 */
-		protected function onRenderDisplayList ( p_oArg:* ):void
-		{
-			var l_oScene:Scene3D;
-			l_oScene = ((p_oArg as Scene3D != null) ? p_oArg: (p_oArg as SandyEvent).target) as Scene3D;
-
-			// fetch light power
-			m_nI = l_oScene.light.getNormalizedPower ();
-
-			// fetch light direction vector
-			m_oL = l_oScene.light.getDirectionVector ();
-
-			// fetch camera vector
-			m_oV = l_oScene.camera.getPosition ("absolute"); m_oV.scale (-1); m_oV.normalize ();
-			
-			// compute Blinn halfway vector
-			m_oH.copy( m_oL ); m_oH.add (m_oV); m_oH.normalize ();
-		}
-
-		/**
 		 * Override this to render the light.
-		 * Always call it first in sub classes.
 		 */
 		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
-			if (p_oMaterial.lightingEnable)
-			{
-				if (_scenes [p_oScene]) 
-					; 
-				else
-				{
-					p_oScene.addEventListener (SandyEvent.SCENE_RENDER_DISPLAYLIST, onRenderDisplayList);
-					onRenderDisplayList (p_oScene); _scenes [p_oScene] = true;
-				}
-			}
+			;
 		}
 		
 		/**
@@ -182,7 +150,17 @@ package sandy.materials.attributes
 		 */
 		public function begin( p_oScene:Scene3D ):void
 		{
-			;// TODO, do the vertex normal transformation here
+			// fetch light power
+			m_nI = p_oScene.light.getNormalizedPower ();
+
+			// fetch light direction vector
+			m_oL = p_oScene.light.getDirectionVector ();
+
+			// fetch camera vector
+			m_oV = p_oScene.camera.getPosition ("absolute"); m_oV.scale (-1); m_oV.normalize ();
+			
+			// compute Blinn halfway vector
+			m_oH.copy( m_oL ); m_oH.add (m_oV); m_oH.normalize ();
 		}
 		
 		/**

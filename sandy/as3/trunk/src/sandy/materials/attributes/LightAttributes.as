@@ -44,9 +44,6 @@ package sandy.materials.attributes
 		 */
 		public var useBright:Boolean = false;
 		
-		// --
-		public var modified:Boolean;
-		
 		/**
 		 * Creates a new LineAttributes object.
 		 *
@@ -57,8 +54,6 @@ package sandy.materials.attributes
 		{
 			useBright = p_bBright;
 			ambient = NumberUtil.constrain( p_nAmbient, 0, 1 );
-			// --
-			modified = true;
 		}
 		
 		/**
@@ -71,8 +66,6 @@ package sandy.materials.attributes
 		 */
 		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
-			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
-
 			if( p_oMaterial.lightingEnable )
 			{	
 				var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;

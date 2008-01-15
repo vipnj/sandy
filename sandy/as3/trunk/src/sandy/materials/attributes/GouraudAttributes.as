@@ -47,7 +47,7 @@ package sandy.materials.attributes
 		 * If false (the default) they just range from black to their normal appearance.</p>
 		 */
 		public var useBright:Boolean = false;
-				
+
 		/**
 		 * Create the GouraudAttribute object.
 		 * @param p_nAmbient The ambient light value. A value between O and 1 is expected.
@@ -75,8 +75,6 @@ package sandy.materials.attributes
 		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
 			if( !p_oMaterial.lightingEnable ) return;
-			
-			super.draw(p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
 			
 			var m:Number;
 			var l_aPoints:Array = (p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices;

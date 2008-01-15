@@ -254,12 +254,11 @@ package sandy.materials.attributes
 		/*private*/protected var m_oCurrentLightMap:PhongAttributesLightMap;
 
 		// set current light map for "draw" to use
-		override protected function onRenderDisplayList (p_oArg:*):void
+		override public function begin( p_oScene:Scene3D ):void
 		{
-			super.onRenderDisplayList (p_oArg);
+			super.begin (p_oScene);
 
-			var l_oScene:Scene3D = ((p_oArg as Scene3D != null) ? p_oArg : (p_oArg as SandyEvent).target) as Scene3D;
-			var l_oLight:Light3D = l_oScene.light;
+			var l_oLight:Light3D = p_oScene.light;
 
 			if (m_oLightMaps [l_oLight] as PhongAttributesLightMap == null)
 			{
@@ -274,8 +273,6 @@ package sandy.materials.attributes
 		// --
 		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
-			super.draw (p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
-
 			var i:int, j:int, l_oVertex:Vertex;
 
 			// got anything at all to do?
@@ -360,9 +357,8 @@ package sandy.materials.attributes
 						aNP [i].y = (16384 - 1) * 0.05 * aNP [i].y;
 					}
 
-					/*
 					// simple hack to resolve bad projections
-					// this needs to be done some other way though
+					// where the hell do they keep coming from?
 					while ((Math.abs(
 							(aNP[0].x - aNP[1].x) * (aNP[0].x - aNP[2].x) + (aNP[0].y - aNP[1].y) * (aNP[0].y - aNP[2].y)
 							) > (1 - NumberUtil.TOL) *
@@ -376,7 +372,6 @@ package sandy.materials.attributes
 					{
 						aNP[0].x--; aNP[1].y++; aNP[2].x++;
 					}
-					*/
 
 					// compute gradient matrix
 					matrix.a = aNP[1].x - aNP[0].x;

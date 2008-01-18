@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -47,6 +47,11 @@ package sandy.core.scenegraph
 		// FIXME Create a Sprite as the spriteD container, 
 		//and offer a method to attach a visual content as a child of the sprite
 		
+		/**
+		 * Set this to true if you want this sprite to rotate with camera.
+		 */
+		public var fixedAngle:Boolean = false;
+
 		/**
 		 * When enabled, the sprite will be displayed at its graphical center.
 		 * Otherwise its top left corner will be set at the computed screen position
@@ -197,6 +202,7 @@ package sandy.core.scenegraph
 			_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
 			m_nDepth = _v.wz;
 			m_nPerspScale = _nScale * 100/m_nDepth;
+			m_nAngle = Math.atan2( viewMatrix.n22, viewMatrix.n12 );
 			// --
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
@@ -239,6 +245,8 @@ package sandy.core.scenegraph
 			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
 			m_oContainer.x = _v.sx - (autoCenter ? m_oContainer.width/2 : 0);
 			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
+			// --
+			if (fixedAngle) m_oContainer.rotation = 90 - m_nAngle * 180 / Math.PI;
 		}
 		
 		public function get enableEvents():Boolean
@@ -286,6 +294,7 @@ package sandy.core.scenegraph
 		private var m_bEv:Boolean = false; // The event system state (enable or not)
 		
 		private var m_nPerspScale:Number=0;
+		private var m_nAngle:Number = 0;
 		private var m_nW2:Number=0;
 		private var m_nH2:Number=0;
 		protected var _v:Vertex;

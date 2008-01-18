@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -34,7 +34,7 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		09.09.2007
 	 */
-	public final class OutlineAttributes implements IAttributes
+	public final class OutlineAttributes extends AAttributes
 	{
 		private const SHAPE_MAP:Dictionary = new Dictionary(true);
 		// --
@@ -112,30 +112,12 @@ package sandy.materials.attributes
 			m_nThickness = p_nValue; 
 			modified = true;
 		}
-	
-		/**
-		 * Method called before the display list rendering.
-		 * This is the common place for this attribute to precompute things
-		 */
-		public function begin( p_oScene:Scene3D ):void
-		{
-			;
-		}
-		
-		/**
-		 * Method called right after the display list rendering
-		 * This is the place to remove and dispose memory if necessary.
-		 */
-		public function finish( p_oScene:Scene3D ):void
-		{
-			;
-		}
 		
 		/**
 		 * Allows to proceed to an initialization
 		 * to know when the polyon isn't lined to the material, look at #unlink
 		 */
-		public function init( p_oPolygon:Polygon ):void
+		override public function init( p_oPolygon:Polygon ):void
 		{
 			;// to keep reference to the shapes/polygons that use this attribute
 			// -- attempt to create the neighboors relation between polygons
@@ -176,7 +158,7 @@ package sandy.materials.attributes
 		 * Remove all the initialization
 		 * opposite of init
 		 */
-		public function unlink( p_oPolygon:Polygon ):void
+		override public function unlink( p_oPolygon:Polygon ):void
 		{
 			;// to remove reference to the shapes/polygons that use this attribute
 			// TODO : can we free the memory of SHAPE_MAP ? Don't think so, and would it be really necessary? not sure either.
@@ -190,7 +172,7 @@ package sandy.materials.attributes
 		 * @param p_oMaterial the refering material
 		 * @param p_oScene the scene
 		 */
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
+		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
 			var l_oEdge:Edge3D;
 			var l_oPolygon:Polygon;
@@ -227,6 +209,5 @@ package sandy.materials.attributes
         	
         	p_oGraphics.endFill();
         }
-        
 	}
 }

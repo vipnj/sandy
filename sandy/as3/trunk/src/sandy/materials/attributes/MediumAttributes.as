@@ -38,7 +38,7 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		01.12.2007
 	 */
-	public final class MediumAttributes implements IAttributes
+	public final class MediumAttributes extends AAttributes
 	{
 		/**
 		 * Medium color (32-bit value) at the point given by fadeFrom + fadeTo.
@@ -104,24 +104,6 @@ package sandy.materials.attributes
 		}
 
 		/**
-		 * Method called before the display list rendering.
-		 * This is the common place for this attribute to precompute things
-		 */
-		public function begin( p_oScene:Scene3D ):void
-		{
-			;
-		}
-		
-		/**
-		 * Method called right after the display list rendering
-		 * This is the place to remove and dispose memory if necessary.
-		 */
-		public function finish( p_oScene:Scene3D ):void
-		{
-			;
-		}
-			
-		/**
 		 * Draw the attribute onto the graphics object to simulate viewing through partially opaque medium.
 		 *  
 		 * @param p_oGraphics the Graphics object to draw attributes into
@@ -129,7 +111,7 @@ package sandy.materials.attributes
 		 * @param p_oMaterial the refering material
 		 * @param p_oScene the scene
 		 */
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
+		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
 			const l_points:Array = ((p_oPolygon.isClipped) ? p_oPolygon.cvertices : p_oPolygon.vertices);
 			const n:int = l_points.length; if (n < 3) return;
@@ -183,6 +165,9 @@ package sandy.materials.attributes
 		private function blurPolygonBy (p_oPolygon:Polygon, p_nBlurAmount:Number):void
 		{
 			if (p_nBlurAmount == 0) return;
+
+			// quantize blur amount to make filter reuse more effective
+			p_nBlurAmount = Math.round (10 * p_nBlurAmount) * 0.1;
 
 			var fs:Array = [], changed:Boolean = false;
 			var s:Sprite = (p_oPolygon.shape.useSingleContainer) ? p_oPolygon.shape.container : p_oPolygon.container;

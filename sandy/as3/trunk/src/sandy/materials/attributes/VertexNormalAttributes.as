@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -34,14 +34,9 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
-	public final class VertexNormalAttributes implements IAttributes
+	public final class VertexNormalAttributes extends LineAttributes
 	{
-		private var m_nThickness:Number;
-		private var m_nColor:Number;
-		private var m_nAlpha:Number;
 		private var m_nLength:Number;
-		// --
-		public var modified:Boolean;
 		
 		/**
 		 * Creates a new VertexNormalAttributes object.
@@ -53,35 +48,12 @@ package sandy.materials.attributes
 		public function VertexNormalAttributes( p_nLength:Number = 10, p_nThickness:uint = 1, p_nColor:uint = 0, p_nAlpha:Number = 1 )
 		{
 			m_nLength = p_nLength;
-			m_nThickness = p_nThickness;
-			m_nAlpha = p_nAlpha;
-			m_nColor = p_nColor;
+			// reuse LineAttributes setters
+			thickness = p_nThickness;
+			alpha = p_nAlpha;
+			color = p_nColor;
 			// --
 			modified = true;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function get alpha():Number
-		{
-			return m_nAlpha;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function get color():Number
-		{
-			return m_nColor;
-		}
-		
-		/**
-		 * @private
-		 */
-		public function get thickness():Number
-		{
-			return m_nThickness;
 		}
 		
 		/**
@@ -92,36 +64,6 @@ package sandy.materials.attributes
 			return m_nLength;
 		}
 		
-		
-		/**
-		 * The alpha value for the lines ( 0 - 1 )
-		 *
-		 * Alpha = 0 means fully transparent, alpha = 1 fully opaque.
-		 */
-		public function set alpha(p_nValue:Number):void
-		{
-			m_nAlpha = p_nValue; 
-			modified = true;
-		}
-		
-		/**
-		 * The line color
-		 */
-		public function set color(p_nValue:Number):void
-		{
-			m_nColor = p_nValue; 
-			modified = true;
-		}
-
-		/**
-		 * The line thickness
-		 */	
-		public function set thickness(p_nValue:Number):void
-		{
-			m_nThickness = p_nValue; 
-			modified = true;
-		}
-		
 		/**
 		 * The line length
 		 */
@@ -130,7 +72,6 @@ package sandy.materials.attributes
 			m_nLength = p_nValue; 
 			modified = true;
 		}
-
 		
 		/**
 		 * Draw the edges of the polygon into the graphics object.
@@ -140,12 +81,12 @@ package sandy.materials.attributes
 		 * @param p_oMaterial the refering material
 		 * @param p_oScene the scene
 		 */
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
+		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
 			var l_aPoints:Array = p_oPolygon.vertices;
 			var l_oVertex:Vertex;
 			// --
-			p_oGraphics.lineStyle( m_nThickness, m_nColor, m_nAlpha );
+			p_oGraphics.lineStyle( thickness, color, alpha );
 			p_oGraphics.beginFill(0);
 			// --
 			var lId:int = l_aPoints.length;
@@ -175,36 +116,9 @@ package sandy.materials.attributes
 		 * Method called before the display list rendering.
 		 * This is the common place for this attribute to precompute things
 		 */
-		public function begin( p_oScene:Scene3D ):void
+		override public function begin( p_oScene:Scene3D ):void
 		{
 			; // TODO, do the normal projection here
-		}
-		
-		/**
-		 * Method called right after the display list rendering
-		 * This is the place to remove and dispose memory if necessary.
-		 */
-		public function finish( p_oScene:Scene3D ):void
-		{
-			;
-		}
-		
-		/**
-		 * Allows to proceed to an initialization
-		 * to know when the polyon isn't lined to the material, look at #unlink
-		 */
-		public function init( p_oPolygon:Polygon ):void
-		{
-			;// to keep reference to the shapes/polygons that use this attribute
-		}
-	
-		/**
-		 * Remove all the initialization
-		 * opposite of init
-		 */
-		public function unlink( p_oPolygon:Polygon ):void
-		{
-			;// to remove reference to the shapes/polygons that use this attribute
 		}
 	}
 }

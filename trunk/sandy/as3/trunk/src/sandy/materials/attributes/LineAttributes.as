@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -33,7 +33,7 @@ package sandy.materials.attributes
 	 * @version		3.0
 	 * @date 		26.07.2007
 	 */
-	public class LineAttributes implements IAttributes
+	public class LineAttributes extends AAttributes
 	{
 		private var m_nThickness:Number;
 		private var m_nColor:Number;
@@ -111,50 +111,14 @@ package sandy.materials.attributes
 		}
 	
 		/**
-		 * Method called before the display list rendering.
-		 * This is the common place for this attribute to precompute things
-		 */
-		public function begin( p_oScene:Scene3D ):void
-		{
-			;
-		}
-		
-		/**
-		 * Method called right after the display list rendering
-		 * This is the place to remove and dispose memory if necessary.
-		 */
-		public function finish( p_oScene:Scene3D ):void
-		{
-			;
-		}
-
-		/**
-		 * Allows to proceed to an initialization
-		 * to know when the polyon isn't lined to the material, look at #unlink
-		 */
-		public function init( p_oPolygon:Polygon ):void
-		{
-			;// to keep reference to the shapes/polygons that use this attribute
-		}
-	
-		/**
-		 * Remove all the initialization
-		 * opposite of init
-		 */
-		public function unlink( p_oPolygon:Polygon ):void
-		{
-			;// to remove reference to the shapes/polygons that use this attribute
-		}
-			
-		/**
 		 * Draw the edges of the polygon into the graphics object.
 		 *  
 		 * @param p_oGraphics the Graphics object to draw attributes into
-		 * @param p_oPolygon the polygon which is going o be drawn
-		 * @param p_oMaterial the refering material
+		 * @param p_oPolygon the polygon which is going to be drawn
+		 * @param p_oMaterial the referring material
 		 * @param p_oScene the scene
 		 */
-		public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
+		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
 			var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;
 			var l_oVertex:Vertex;

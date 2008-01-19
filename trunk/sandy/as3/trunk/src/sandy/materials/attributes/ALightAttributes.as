@@ -151,7 +151,7 @@ package sandy.materials.attributes
 				var c:uint = p_oScene.light.color;
 				if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
 				const rgb:Object = ColorMath.hex2rgb (c);
-				const Y:Number = Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
+				const Y:Number = Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b) / Math.sqrt (3);
 				rgb.r /= Y; rgb.g /= Y; rgb.b /= Y;
 				const s:DisplayObject = (p_oPolygon.shape.useSingleContainer) ? p_oPolygon.shape.container : p_oPolygon.container;
 				const ct:ColorTransform = s.transform.colorTransform;

@@ -250,7 +250,7 @@ package sandy.core.scenegraph
 				var c:uint = p_oScene.light.color;
 				if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
 				const rgb:Object = ColorMath.hex2rgb (c);
-				const bY:Number = b / Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
+				const bY:Number = b * Math.sqrt (3) / Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
 				rgb.r *= bY; rgb.g *= bY; rgb.b *= bY;
 				const ct:ColorTransform = m_oContainer.transform.colorTransform;
 				if ((ct.redMultiplier != rgb.r) || (ct.greenMultiplier != rgb.g) || (ct.blueMultiplier != rgb.b))

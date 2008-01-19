@@ -27,7 +27,7 @@ package sandy.core.light
        	/**
 	 * The Light3D class is used for creating the light of the world.
 	 * 
-	 * <p>The light in Sandy is a light source at infinity, emitting parallel whit light.<br/>
+	 * <p>The light in Sandy is a light source at infinity, emitting parallel colored light.<br/>
 	 * The direction of light and the intensity can be varied</p>
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
@@ -132,8 +132,28 @@ package sandy.core.light
 			if(DP < 0) DP = 0;
 			return _nPower * DP;
 		}
-	
-		
+
+		/**
+		 * Color of the light.
+		 * @default: white
+		 */
+		public function get color ():uint
+		{
+			return _color;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set color (p_nColor:uint):void
+		{
+			_color = p_nColor;
+
+			// we don't send LIGHT_UPDATED to avoid recalculating light maps needlessly
+			// some event still has to be sent though, just in case...
+			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_COLOR_CHANGED));
+		}
+
 		public function destroy():void
 		{
 			//How clean the listeners here?
@@ -145,5 +165,6 @@ package sandy.core.light
 		private var _dir:Vector;	
 		private var _power : Number;
 		private var _nPower : Number;
+		private var _color:uint;
 	}
 }

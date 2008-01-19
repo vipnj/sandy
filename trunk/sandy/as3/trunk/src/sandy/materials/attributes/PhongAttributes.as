@@ -273,6 +273,8 @@ package sandy.materials.attributes
 		// --
 		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
+			super.draw (p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
+
 			var i:int, j:int, l_oVertex:Vertex;
 
 			// got anything at all to do?

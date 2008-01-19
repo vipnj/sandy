@@ -28,6 +28,7 @@ package sandy.events
 	{
 		public static const LIGHT_ADDED:String = "lightAdded";
 		public static const LIGHT_UPDATED:String = "lightUpdated";
+		public static const LIGHT_COLOR_CHANGED:String = "lightColorChanged";
 		public static const SCENE_RENDER:String = "scene_render";
 		public static const SCENE_CULL:String = "scene_cull";
 		public static const SCENE_UPDATE:String = "scene_update";

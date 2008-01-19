@@ -20,17 +20,19 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 	
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
 	import sandy.events.BubbleEvent;
+	import sandy.math.ColorMath;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	
 	/**
-	 * The Sprite2D class is use to create a 2D sprite.
+	 * The Sprite2D class is used to create a 2D sprite.
 	 *
 	 * <p>A Sprite2D object is used to display a static or dynamic texture in the Sandy world.<br/>
 	 * The sprite always shows the same side to the camera. This is useful when you want to show more
@@ -89,27 +91,20 @@ package sandy.core.scenegraph
 		 * The DisplayObject that will used as content of this Sprite2D. 
 		 * If this DisplayObject has already a screen position, it will be reseted to 0,0.
 		 * If the DisplayObject has allready a parent, it will be unrelated from it automatically. (its transform matrix property is resetted to identity too).
-		 * @param p_container The DisplayObject to attach to the Sprite2D#container. 
+		 * @param p_content The DisplayObject to attach to the Sprite2D#container. 
 		 */
-		public function set content( p_container:DisplayObject ):void
+		public function set content( p_content:DisplayObject ):void
 		{
-			if( p_container.transform ) p_container.transform.matrix.identity();
-			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
-			m_oContent = p_container;
-			m_oContainer.addChildAt( p_container, 0 );
-			p_container.x = 0;
-			p_container.y = 0;
+//			if( p_content.transform ) p_content.transform.matrix.identity();
+//			if( m_oContent ) m_oContent.parent.removeChild( m_oContent );
+			p_content.transform.matrix.identity();
+			if( m_oContent ) m_oContainer.removeChild( m_oContent );
+			m_oContent = p_content;
+			m_oContainer.addChildAt( m_oContent, 0 );
+			m_oContent.x = 0;
+			m_oContent.y = 0;
 			m_nW2 = m_oContainer.width / 2;
 			m_nH2 = m_oContainer.height / 2;
-		}
-		
-		/**
-		 * Get the content DisplayObject reference
-		 * @return The DisplayObject Sprite2D content reference
-		 */
-		public function get content():DisplayObject
-		{
-			return m_oContainer.getChildAt(0);
 		}
 		
 		/**
@@ -119,17 +114,17 @@ package sandy.core.scenegraph
 		{
 			return m_oContainer;
 		}
-		
+
 		/**
 		 * Sets the radius of bounding sphere for this sprite.
 		 *
 		 * @param p_nRadius	The radius
 		 */
 		public function setBoundingSphereRadius( p_nRadius:Number ):void
-		{ 
-			boundingSphere.radius = p_nRadius; 
+		{
+			boundingSphere.radius = p_nRadius;
 		}
-	
+
 		/**
 		 * The scale of this sprite.
 		 *
@@ -202,7 +197,7 @@ package sandy.core.scenegraph
 			_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
 			m_nDepth = _v.wz;
 			m_nPerspScale = _nScale * 100/m_nDepth;
-			m_nAngle = Math.atan2( viewMatrix.n22, viewMatrix.n12 );
+			m_nRotation = Math.atan2( viewMatrix.n12, viewMatrix.n22 );
 			// --
 			p_oCamera.addToDisplayList( this );
 			// -- We push the vertex to project onto the viewport.
@@ -246,9 +241,42 @@ package sandy.core.scenegraph
 			m_oContainer.x = _v.sx - (autoCenter ? m_oContainer.width/2 : 0);
 			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
 			// --
-			if (fixedAngle) m_oContainer.rotation = 90 - m_nAngle * 180 / Math.PI;
+			if (fixedAngle) m_oContainer.rotation = m_nRotation * 180 / Math.PI;
+
+			// this should correspond to ALightAttributes behavior as closely as possible
+			if (lightingEnable)
+			{
+				var b:Number = ambient * p_oScene.light.getNormalizedPower ();
+				var c:uint = p_oScene.light.color;
+				if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
+				const rgb:Object = ColorMath.hex2rgb (c);
+				const bY:Number = b / Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
+				rgb.r *= bY; rgb.g *= bY; rgb.b *= bY;
+				const ct:ColorTransform = m_oContainer.transform.colorTransform;
+				if ((ct.redMultiplier != rgb.r) || (ct.greenMultiplier != rgb.g) || (ct.blueMultiplier != rgb.b))
+				{
+					ct.redMultiplier = rgb.r; ct.greenMultiplier = rgb.g; ct.blueMultiplier = rgb.b;
+					m_oContainer.transform.colorTransform = ct;
+				}
+			}
 		}
 		
+		/**
+		 * Specify if a sprite will obey scene light when displayed.
+		 * Can be useful to disable very rapidly the light when unused.
+		 * Default value : false
+		 */
+		public var lightingEnable:Boolean = false;
+
+		/**
+		 * Ambient reflection factor. Since we know nothing about sprite geometry,
+		 * only ambient reflection can be supported.
+		 * @default 0.3
+		 */
+		public var ambient:Number = 0.3;
+
+
+
 		public function get enableEvents():Boolean
 		{
 			return m_bEv;
@@ -259,10 +287,10 @@ package sandy.core.scenegraph
 			if( b &&!m_bEv )
 			{
 				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
-	    		m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction);
-	    		m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
-	    		m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
-	    		m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+		    		m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+		    		m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+	    			m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+	    			m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
 	    		
 				m_oContainer.addEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
 				m_oContainer.addEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
@@ -293,14 +321,15 @@ package sandy.core.scenegraph
 		
 		private var m_bEv:Boolean = false; // The event system state (enable or not)
 		
-		private var m_nPerspScale:Number=0;
-		private var m_nAngle:Number = 0;
 		private var m_nW2:Number=0;
 		private var m_nH2:Number=0;
-		protected var _v:Vertex;
-		private var m_nDepth:Number;
-		private var _nScale:Number;
 		private var m_oContainer:Sprite;
-		private var m_oContent:DisplayObject;
+
+		protected var m_nPerspScale:Number=0;
+		protected var m_nRotation:Number = 0;
+		protected var _v:Vertex;
+		protected var m_nDepth:Number;
+		protected var _nScale:Number;
+		protected var m_oContent:DisplayObject;
 	}
 }

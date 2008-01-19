@@ -15,7 +15,9 @@ limitations under the License.
 
 package sandy.materials.attributes
 {
+	import flash.display.DisplayObject;
 	import flash.display.Graphics;
+	import flash.geom.ColorTransform;
 	import flash.utils.Dictionary;
 	
 	import sandy.core.Scene3D;
@@ -23,6 +25,7 @@ package sandy.materials.attributes
 	import sandy.core.data.Vector;
 	import sandy.events.SandyEvent;
 	import sandy.materials.Material;
+	import sandy.math.ColorMath;
 
 	/**
 	 * ABSTRACT CLASS - super class for all light attributes.
@@ -84,7 +87,7 @@ package sandy.materials.attributes
 
 		/**
 		 * Specular exponent.
-		 * @default 1.0
+		 * @default 5.0
 		 */
 		public function get gloss ():Number
 		{return _gloss;}
@@ -137,11 +140,27 @@ package sandy.materials.attributes
 		}
 		
 		/**
-		 * Override this to render the light.
+		 * This method applies light color to polygon containers.
+		 * Always call super.draw() when you override it.
 		 */
 		public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
-			;
+			if (p_oMaterial.lightingEnable)
+			{
+				// to avoid color darkening, we will normalize color; pitch-black is "normalized" to white
+				var c:uint = p_oScene.light.color;
+				if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
+				const rgb:Object = ColorMath.hex2rgb (c);
+				const Y:Number = Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
+				rgb.r /= Y; rgb.g /= Y; rgb.b /= Y;
+				const s:DisplayObject = (p_oPolygon.shape.useSingleContainer) ? p_oPolygon.shape.container : p_oPolygon.container;
+				const ct:ColorTransform = s.transform.colorTransform;
+				if ((ct.redMultiplier != rgb.r) || (ct.greenMultiplier != rgb.g) || (ct.blueMultiplier != rgb.b))
+				{
+					ct.redMultiplier = rgb.r; ct.greenMultiplier = rgb.g; ct.blueMultiplier = rgb.b;
+					s.transform.colorTransform = ct;
+				}
+			}
 		}
 		
 		/**
@@ -194,7 +213,7 @@ package sandy.materials.attributes
 		private var _ambient:Number = 0.3;
 		private var _diffuse:Number = 1.0;
 		private var _specular:Number = 0.0;
-		private var _gloss:Number = 1.0;
+		private var _gloss:Number = 5.0;
 		
 		private var _scenes:Dictionary = new Dictionary (true);
 	}

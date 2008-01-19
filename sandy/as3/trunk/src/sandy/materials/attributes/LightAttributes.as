@@ -66,6 +66,8 @@ package sandy.materials.attributes
 		 */
 		override public function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void
 		{
+			super.draw (p_oGraphics, p_oPolygon, p_oMaterial, p_oScene);
+
 			if( p_oMaterial.lightingEnable )
 			{	
 				var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;

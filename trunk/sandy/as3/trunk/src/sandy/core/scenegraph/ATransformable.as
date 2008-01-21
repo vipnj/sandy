@@ -400,7 +400,7 @@ package sandy.core.scenegraph
 		 * @param	p_nX	Number	The x position to look at
 		 * @param	p_nY	Number	The y position to look at
 		 * @param	p_nZ	Number	The z position to look at
-		 * @param	p_bRoll	Boolean	If true, this object is vertically aligned (default)
+		 * @param	p_bRoll	Boolean	If true (default), this object is vertically aligned
 		 */
 		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll:Boolean = true ):void
 		{
@@ -417,15 +417,27 @@ package sandy.core.scenegraph
 			{
 				// rotate
 				rotateAxis (l_vAxis.x, l_vAxis.y, l_vAxis.z, l_nAngle * 180 / Math.PI);
-				if (p_bRoll) roll = 0;
 			}
 			else
 				// it's either same or the opposite point (l_nDot is 1 or -1)
 				if (l_nDot < 0)
 				{
 					rotateAxis (_vUp.x, _vUp.y, _vUp.z, 180);
-					if (p_bRoll) roll = 0;
 				}
+
+			// rotateAxis must have set _vRotationInvalid
+			if (p_bRoll && _vRotationInvalid)
+			{
+				// _vOut projection on horizontal plane x0z, rotated 90 degrees clockwise
+				var l_oSide:Vector = new Vector (_vOut.z, 0, -_vOut.x);
+
+				// align vertically if possible
+				if (l_oSide.getNorm () > NumberUtil.TOL)
+				{
+					l_oSide.normalize ();
+					rollBy ( ((_vSide.y > 0) ? -1 : 1) * Math.acos (NumberUtil.constrain (_vSide.dot (l_oSide), -1, 1)) * (180 / Math.PI) );
+				}
+			}
 		}
 
 		/**
@@ -462,53 +474,6 @@ package sandy.core.scenegraph
 				//_vRotation.y = 360 - _vRotation.y;
 				//_vRotation.z = 360 - _vRotation.z;
 				_vRotationInvalid = false;
-			}
-		}
-		
-		private function _reCalcAngles2 ():void
-		{
-			// since there is no particular order, pan/tilt/roll are inter-dependent
-			// we need to restore their values at all times when rotation is changed
-
-			// get _vOut projection on horizontal plane x0z
-			var l_oOut:Vector = new Vector (_vOut.x, 0, _vOut.z);
-
-			// rotate 90 degrees clockwise
-			var l_oSide1:Vector = new Vector (l_oOut.z, 0, -l_oOut.x);
-
-			// roll and tilt
-			if (l_oOut.getNorm () > NumberUtil.TOL)
-			{
-				l_oOut.normalize ();
-				l_oSide1.normalize ();
-				_nRoll = ((_vSide.y > 0) ? 1 : -1) * Math.acos (NumberUtil.constrain (_vSide.dot (l_oSide1), -1, 1)) * (180 / Math.PI);
-				_nTilt = ((_vOut.y > 0) ? 1 : -1) * Math.acos (NumberUtil.constrain (_vOut.dot (l_oOut), -1, 1)) * (180 / Math.PI);
-			}
-			else
-			{
-				// _vOut points up or down
-				// roll is undefined, we have no choise but keep last value
-				// tilt is either +90 or -90 degrees
-				_nTilt = (_vOut.y > 0) ? 90 : -90;
-			}
-
-
-			// get _vUp projection on screen plane x0y
-			var l_oUp:Vector = new Vector (_vUp.x, _vUp.y, 0);
-
-			// rotate 90 degrees clockwise
-			var l_oSide2:Vector = new Vector (l_oUp.y, -l_oUp.x, 0);
-
-			// pan
-			if (l_oSide2.getNorm () > NumberUtil.TOL)
-			{
-				l_oSide2.normalize ();
-				_nYaw = ((_vSide.z < 0) ? 1 : -1) * Math.acos (NumberUtil.constrain (_vSide.dot (l_oSide2), -1, 1)) * (180 / Math.PI);
-			}
-			else
-			{
-				// _vUp points out or back
-				// pan is undefined, we have no choise but keep last value
 			}
 		}
 
@@ -570,26 +535,30 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Rolls this object around the local z axis.
-		 *
-		 * <p>The roll angle interval is -180 to +180 degrees<br/>
-		 * At 0 degrees the local x axis is aligned with the horizon of its parent<br/>
-		 * Full roll right = 180 and full roll left = -180 degrees ( upside down ).</p>
+		 * Rolls this object around the local z axis by specified angle.
 		 *
 		 * @param p_nAngle 	The roll angle in degrees.
 		 */
-		public function set roll ( p_nAngle:Number ):void
+		public function rollBy ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - roll)
-			if(l_nAngle == 0 ) return;
+			if (p_nAngle == 0) return;
 			changed = true;
 			// --
-			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
+			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, p_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
-			_nRoll = p_nAngle;
+			_nRoll += p_nAngle;
 			_vRotationInvalid = true;
+		}
+
+		/**
+		 * Rolls this object around the local z axis to specified angle using internal integrator.
+		 */
+		public function set roll ( p_nAngle:Number ):void
+		{
+			var l_nAngle:Number = (p_nAngle - roll);
+			if (l_nAngle != 0) rollBy (l_nAngle);
 		}
 
 		/**
@@ -597,25 +566,20 @@ package sandy.core.scenegraph
 		 */
 		public function get roll():Number
 		{
-			_reCalcAngles2 (); return _nRoll;
+			return _nRoll;
 		}
 
 		/**
-		 * Tilts this object around the local x axis.
-		 *
-		 * <p>The tilt angle interval is -90 to +90 degrees<br/>
-		 * At 0 degrees the local z axis is paralell to the zx plane of its parent coordinate system.<br/>
-		 * Straight up = +90 and stright down = -90 degrees.</p>
+		 * Tilts this object around the local x axis by specified angle.
 		 *
 		 * @param p_nAngle 	The tilt angle in degrees.
 		 */
-		public function set tilt ( p_nAngle:Number ):void
+		public function tiltBy ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - tilt);
-			if(l_nAngle == 0 ) return;
+			if (p_nAngle == 0) return;
 			changed = true;
 			// --
-			m_tmpMt.axisRotation ( _vSide.x, _vSide.y, _vSide.z, l_nAngle );
+			m_tmpMt.axisRotation ( _vSide.x, _vSide.y, _vSide.z, p_nAngle );
 			m_tmpMt.vectorMult3x3(_vOut);
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
@@ -624,28 +588,33 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Getter for the tilt value
+		 * Tilts this object around the local x axis to specified angle using internal integrator.
 		 */
-		public function get tilt():Number
+		public function set tilt ( p_nAngle:Number ):void
 		{
-			_reCalcAngles2 (); return _nTilt;
+			var l_nAngle:Number = (p_nAngle - tilt);
+			if (l_nAngle != 0) tiltBy (l_nAngle);
 		}
 
 		/**
-		 * Pans this object around the local y axis.
-		 *
-		 * <p>The pan angle interval is 0 to 360 degrees<br/>
-		 * Directions within the parent frame are: North = 0, East = 90, South = 180 nad West = 270 degrees.</p>
+		 * @private
+		 */
+		public function get tilt():Number
+		{
+			return _nTilt;
+		}
+
+		/**
+		 * Pans this object around the local y axis by specified angle.
 		 *
 		 * @param p_nAngle 	The pan angle in degrees.
 		 */
-		public function set pan ( p_nAngle:Number ):void
+		public function panBy ( p_nAngle:Number ):void
 		{
-			var l_nAngle:Number = (p_nAngle - pan);
-			if(l_nAngle == 0 ) return;
+			if (p_nAngle == 0) return;
 			changed = true;
 			// --
-			m_tmpMt.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
+			m_tmpMt.axisRotation ( _vUp.x, _vUp.y, _vUp.z, p_nAngle );
 			m_tmpMt.vectorMult3x3(_vOut);
 			m_tmpMt.vectorMult3x3(_vSide);
 			// --
@@ -654,11 +623,20 @@ package sandy.core.scenegraph
 		}
 
 		/**
+		 * Pans this object around the local y axis to specified angle using internal integrator.
+		 */
+		public function set pan ( p_nAngle:Number ):void
+		{
+			var l_nAngle:Number = (p_nAngle - pan);
+			if (l_nAngle != 0) panBy (l_nAngle);
+		}
+
+		/**
 		 * @private
 		 */
 		public function get pan():Number
 		{
-			_reCalcAngles2 (); return _nYaw;
+			return _nYaw;
 		}
 
 		/**

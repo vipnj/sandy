@@ -583,7 +583,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vOut);
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
-			_nTilt = p_nAngle;
+			_nTilt += p_nAngle;
 			_vRotationInvalid = true;
 		}
 
@@ -618,7 +618,7 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vOut);
 			m_tmpMt.vectorMult3x3(_vSide);
 			// --
-			_nYaw = p_nAngle;
+			_nYaw += p_nAngle;
 			_vRotationInvalid = true;
 		}
 

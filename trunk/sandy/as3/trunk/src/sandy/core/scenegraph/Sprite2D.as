@@ -266,14 +266,27 @@ package sandy.core.scenegraph
 		 * Can be useful to disable very rapidly the light when unused.
 		 * Default value : false
 		 */
-		public var lightingEnable:Boolean = false;
+		public function get lightingEnable ():Boolean
+		{
+			return m_bLightingEnabled
+		}
+
+		/**
+		 * @private
+		 */
+		public function set lightingEnable (p_bArg:Boolean):void
+		{
+			m_bLightingEnabled = p_bArg;
+			if (!m_bLightingEnabled)
+				m_oContainer.transform.colorTransform = new ColorTransform ();
+		}
 
 		/**
 		 * Ambient reflection factor. Since we know nothing about sprite geometry,
 		 * only ambient reflection can be supported.
-		 * @default 0.3
+		 * @default 0.6
 		 */
-		public var ambient:Number = 0.3;
+		public var ambient:Number = 0.6;
 
 
 
@@ -324,6 +337,7 @@ package sandy.core.scenegraph
 		private var m_nW2:Number=0;
 		private var m_nH2:Number=0;
 		private var m_oContainer:Sprite;
+		private var m_bLightingEnabled:Boolean = false;
 
 		protected var m_nPerspScale:Number=0;
 		protected var m_nRotation:Number = 0;

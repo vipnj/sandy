@@ -27,6 +27,7 @@ package sandy.parser
 	import sandy.materials.Appearance;
 	import sandy.materials.ColorMaterial;
 	import sandy.materials.attributes.*;
+	import flash.events.ProgressEvent;
 
 	/**
 	 * ABSTRACT CLASS - super class for all parser objects.
@@ -42,7 +43,7 @@ package sandy.parser
 	 */
 	public class AParser extends EventDispatcher implements IParser
 	{
-		protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.PROGRESS );
+		//protected static var m_eProgress:ParserEvent = new ParserEvent( ParserEvent.PROGRESS );
 		protected const m_oLoader:URLLoader = new URLLoader();
 		protected var m_oGroup:Group;
 		protected var m_oFile:Object;
@@ -63,6 +64,7 @@ package sandy.parser
 		 */
 		public function AParser( p_sFile:*, p_nScale:Number )
 		{
+			super( this );
 			m_oGroup = new Group('parser');
 			m_nScale = p_nScale;
 			if( p_sFile is String )
@@ -113,6 +115,13 @@ package sandy.parser
 			}
 		}
 
+		protected function onProgress( p_oEvt:ProgressEvent ):void
+		{
+			var event:ParserEvent = new ParserEvent( ParserEvent.PROGRESS );
+			event.percent = 100 * p_oEvt.bytesLoaded / p_oEvt.bytesTotal;
+			dispatchEvent( event );
+		}
+		
 	    /**
 	     * Load the file that needs to be parsed. When done, call the parseData method.
 	     */
@@ -124,6 +133,7 @@ package sandy.parser
 				var urlRequest:URLRequest = new URLRequest( m_sUrl );
 				// Ecoute de l'evennement COMPLETE
 				m_oFileLoader.addEventListener( Event.COMPLETE, parseData );
+				m_oFileLoader.addEventListener( ProgressEvent.PROGRESS, onProgress );
 				m_oFileLoader.addEventListener( IOErrorEvent.IO_ERROR , _io_error );
 				// Lancer le chargement
 				m_oFileLoader.dataFormat = m_sDataFormat;

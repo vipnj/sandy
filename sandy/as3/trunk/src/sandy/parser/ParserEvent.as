@@ -47,6 +47,11 @@ package sandy.parser
 		 */
 		public static const PROGRESS:String = 'onProgressEVENT';
 		
+		/**
+		 * Parsing is in progress
+		 */
+		public static const PARSING:String = 'onParsingEVENT';
+		
 		public var percent:Number;
 		public var group:Group;
 

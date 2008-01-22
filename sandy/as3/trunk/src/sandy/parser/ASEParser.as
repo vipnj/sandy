@@ -86,8 +86,9 @@ package sandy.parser
 			// --
 			while( lines.length )
 			{
-				m_eProgress.percent = ( 100 - ( lines.length * 100 / lineLength ) );
-				dispatchEvent( m_eProgress );
+				var event:ParserEvent = new ParserEvent( ParserEvent.PARSING );
+				event.percent = ( 100 - ( lines.length * 100 / lineLength ) );
+				dispatchEvent( event );
 				//-- parsing
 				line = String(lines.shift());
 				//-- clear white space from begin

@@ -128,9 +128,16 @@ package sandy.core.data
 		 * Array of polygons that share an edge with the current polygon.
 		 */
 		public var aNeighboors:Array = new Array();
+		/**
+		 * Is this face visible?.
+		 * The method returns the visibility value pre computed after precompute method call. This getter shall be called afer the precompute call.
+		 * @return 	true if this face is visible, false otherwise.
+		 */
+		public var visible:Boolean;
 		
-		public var m_nMinZ:Number;
+		public var minZ:Number;
 		public var m_nDepth:Number;
+		
 		public var a:Vertex, b:Vertex, c:Vertex;
 		/**
 		 * States if the appearance of the polygon has changed since the previous rendering.
@@ -160,6 +167,9 @@ package sandy.core.data
 			POLYGON_MAP[id] = this;
 		}
 
+		public function get depth():Number{ return m_nDepth; }
+		public function set depth( p_nDepth:Number ):void{ m_nDepth = p_nDepth; }
+		
 		/**
 		 * The broadcaster property.
 		 *
@@ -203,24 +213,18 @@ package sandy.core.data
 		 */
 		public function precompute():void
 		{
-			m_nMinZ = a.wz;
-			if (b.wz < m_nMinZ) m_nMinZ = b.wz;
-			if (c.wz < m_nMinZ) m_nMinZ = c.wz;
+			//minZ = a.wz;
+			//if (b.wz < minZ) minZ = b.wz;
+			//if (c.wz < minZ) minZ = c.wz;
+			minZ = Math.min( a.wz, Math.min( b.wz, c.wz ) );
 			m_nDepth = 0.333*(a.wz+b.wz+c.wz);
-			
+			//visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}
 		
 		public function computeVisibility():void
 		{
-			m_bVisible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
+			visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}
-		/**
-		 * Is this face visible?.
-		 * The method returns the visibility value pre computed after precompute method call. This getter shall be called afer the precompute call.
-		 * @return 	true if this face is visible, false otherwise.
-		 */
-		public function get visible(): Boolean
-		{return m_bVisible;}
 
 		/**
 		 * Returns the real 3D position of the 2D screen position.
@@ -462,29 +466,6 @@ package sandy.core.data
 		public function get container():Sprite
 		{
 			return m_oContainer;
-		}
-
-		/**
-		 * @private
-		 */
-		public function get depth():Number
-		{
-			return m_nDepth;
-			//return meanBounds.z;
-		}
-		
-		public function get minZ():Number
-		{
-			return m_nMinZ;
-			//return meanBounds.z;
-		}
-		
-		/**
-		 * The z depth of this polygon.
-		 */
-		public function set depth( p_nDepth:Number ):void
-		{
-			m_nDepth = p_nDepth;
 		}
 
 		/**

@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Light3D,sandy.core.light.Light3D,MAX_POWER,calculate,destroy,getDirectionVector,getNormalizedPower,getPower,setDirection,setDirectionVector,setPower" name="keywords">
+<meta content="Light3D,sandy.core.light.Light3D,MAX_POWER,color,calculate,destroy,getDirectionVector,getNormalizedPower,getPower,setDirection,setDirectionVector,setPower" name="keywords">
 <title>sandy.core.light.Light3D</title>
 </head>
 <body>
@@ -43,8 +43,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
   The Light3D class is used for creating the light of the world.
-  
-  <p>The light in Sandy is a light source at infinity, emitting parallel whit light.<br/>
+    <p>The light in Sandy is a light source at infinity, emitting parallel colored light.<br/>
   The direction of light and the intensity can be varied</p>
     <p></p>
 <br>
@@ -56,6 +55,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#color">color</a> : uint<div class="summaryTableDescription">
+   Color of the light.</div>
+</td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAX_POWER">MAX_POWER</a> : Number = 150<div class="summaryTableDescription">[static]
@@ -169,16 +173,33 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
+<a name="color"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">color</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>color:uint</code>&nbsp;&nbsp;[read-write]<p>
+   Color of the light.
+   </p><p>The default value is <code>white</code>.</p>
+<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get color():uint</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set color(value:uint):void</code>
+<br>
+</div>
 <a name="MAX_POWER"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">MAX_POWER</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">MAX_POWER</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
 <code>public static var MAX_POWER:Number = 150</code><p>
   Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
-  But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1 
+  But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1
   </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
@@ -191,8 +212,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public function Light3D(p_oD:<a href="../data/Vector.html">Vector</a>, p_nPow:Number)</code><p>
    Creates a new light source.
-   
-   </p><span class="label">Parameters</span>
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_oD</span>:<a href="../data/Vector.html">Vector</a></code> &mdash;  The direction of the emitted light.
@@ -203,8 +223,7 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nPow</span>:Number</code> &mdash; Intensity of the emitted light.
-   
-   </td>
+      </td>
 </tr>
 </table>
 </div>
@@ -352,7 +371,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function setPower(p_nPow:Number):void</code><p>
-   The the power of the light. A number between 0 and MAX_POWER is necessary. 
+   The the power of the light. A number between 0 and MAX_POWER is necessary.
    The highter the power of the light is, the less the shadows are visibles.
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">

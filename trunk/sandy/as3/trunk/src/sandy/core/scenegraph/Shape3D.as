@@ -228,16 +228,7 @@ package sandy.core.scenegraph
 				culled = p_oFrustum.boxInFrustum( boundingBox );
 			}
 			
-			// -- We update the clipped property if necessary and requested by the user.
-			m_bClipped = false;
-			// -- FIXME TO SIMPLIFY THIS BECUASE IT CERTAINLY COST A LOT FOR NOTHING!
-			if( culled == CullingState.INTERSECT )
-			{
-				if( enableClipping || enableNearClipping ) 
-				{
-					m_bClipped = true;
-				}
-			}
+			m_bClipped = ((culled == CullingState.INTERSECT) && ( enableClipping || enableNearClipping ));
 		}
 		
 		internal var 	m11:Number, m21:Number, m31:Number,
@@ -305,26 +296,66 @@ package sandy.core.scenegraph
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly = [];//.splice( 0 );
 			m_nDepth = 0;
-			p_oCamera.projectArray( l_aPoints );
-			// --
-			for each( l_oFace in aPolygons )
+			
+			
+			if( m_bClipped )
 			{
-				l_oFace.isClipped = false;
-				// -- lauch precomputation
-				l_oFace.computeVisibility();//  need to always compute it in case there's 2 materials in appearance
-				// --
-				if( l_oFace.visible || !m_bBackFaceCulling) 
+				for each( l_oFace in aPolygons )
 				{
-					l_oFace.precompute();
-					// we process the frustum clipping
-					if( m_bClipped && enableClipping )
+					l_oFace.isClipped = false;
+					// -- lauch precomputation
+					//l_oFace.computeVisibility();//  need to always compute it in case there's 2 materials in appearance
+					l_oVertex = l_oFace.normal;
+					l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
+					l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
+					l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+					l_oFace.visible = l_oFace.a.wx*l_oVertex.wx + l_oFace.a.wy*l_oVertex.wy + l_oFace.a.wz*l_oVertex.wz < 0;
+					// --
+					if( l_oFace.visible || !m_bBackFaceCulling) 
 					{
-						l_oFace.clip( l_oFrustum );
-						// -- We project the vertices
-				 		if( l_oFace.cvertices.length > 0 )
-				 		{
-				 			if( !enableForcedDepth ) m_nDepth += l_oFace.minZ;
-				 			// -- we manage the display list depending on the mode choosen
+						l_oFace.precompute();
+						l_nMinZ = l_oFace.minZ;
+						// --
+						if( enableClipping ) // NEED COMPLETE CLIPPING
+						{
+							l_oFace.clip( l_oFrustum );
+							// -- We project the vertices
+					 		if( l_oFace.cvertices.length > 0 )
+					 		{
+					 			p_oCamera.projectArray( l_oFace.cvertices );
+					 			if( !enableForcedDepth ) m_nDepth += l_oFace.minZ;
+					 			if( m_bUseSingleContainer )
+									m_aVisiblePoly.push( l_oFace );
+								else
+								{
+									if( enableForcedDepth ) l_oFace.depth = forcedDepth;
+									p_oCamera.addToDisplayList( l_oFace );
+								}
+					 		}
+					 	}
+					 	else if( l_nMinZ <= l_nZNear ) // PARTIALLY VISIBLE
+					 	{
+					 		l_oFace.clipFrontPlane( l_oFrustum );
+							// -- We project the vertices
+					 		if( l_oFace.cvertices.length > 0 )
+					 		{
+					 			p_oCamera.projectArray( l_oFace.cvertices );
+					 			if( !enableForcedDepth ) m_nDepth += l_nMinZ;
+					 			// -- we manage the display list depending on the mode choosen
+								if( m_bUseSingleContainer )
+									m_aVisiblePoly.push( l_oFace );
+								else
+								{
+									if( enableForcedDepth ) l_oFace.depth = forcedDepth;
+									p_oCamera.addToDisplayList( l_oFace );
+								}
+					 		}
+					 	}
+					 	else // COMPLETELY VISIBLE
+					 	{
+					 		p_oCamera.projectArray( l_oFace.vertices );
+					 		if( !enableForcedDepth ) m_nDepth += l_nMinZ;
+					    	// -- we manage the display list depending on the mode choosen
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
 							else
@@ -332,10 +363,22 @@ package sandy.core.scenegraph
 								if( enableForcedDepth ) l_oFace.depth = forcedDepth;
 								p_oCamera.addToDisplayList( l_oFace );
 							}
-				 		} 
+					 	}
 					}
-					else
+				}	 
+			}
+			else
+			{
+				p_oCamera.projectArray( l_aPoints );
+				for each( l_oFace in aPolygons )
+				{
+					l_oFace.isClipped = false;
+					// -- lauch precomputation
+					l_oFace.computeVisibility();//  need to always compute it in case there's 2 materials in appearance
+					// --
+					if( l_oFace.visible || !m_bBackFaceCulling) 
 					{
+						l_oFace.precompute();
 						l_nMinZ = l_oFace.minZ;
 				    	if( l_nMinZ > l_nZNear )
 						{	
@@ -348,29 +391,13 @@ package sandy.core.scenegraph
 								if( enableForcedDepth ) l_oFace.depth = forcedDepth;
 								p_oCamera.addToDisplayList( l_oFace );
 							}
-						} 
-						// otherwise we can perform a clipping against the front plane only
-						else if( m_bClipped && enableNearClipping )
-						{
-							l_oFace.clipFrontPlane( l_oFrustum );
-							// -- We project the vertices
-					 		if( l_oFace.cvertices.length > 0 )
-					 		{
-					 			if( !enableForcedDepth ) m_nDepth += l_nMinZ;
-					 			
-					 			// -- we manage the display list depending on the mode choosen
-								if( m_bUseSingleContainer )
-									m_aVisiblePoly.push( l_oFace );
-								else
-								{
-									if( enableForcedDepth ) l_oFace.depth = forcedDepth;
-									p_oCamera.addToDisplayList( l_oFace );
-								}
-					 		} 
 						}
-				 	}
+					}
 				}
-				// --
+			}
+			
+			for each( l_oFace in aPolygons )
+			{
 				// we are gonna to check this for all polygons, which might sounds a bit too much, but
 				// since each polygon can have its own appearance, this is necessary.
 				if( l_oFace.hasAppearanceChanged )
@@ -389,6 +416,7 @@ package sandy.core.scenegraph
 					l_oFace.hasAppearanceChanged = false;
 				}
 			}
+			
 			// --
 			if( m_bUseSingleContainer )
 			{

@@ -44,12 +44,12 @@ package sandy.primitive
 		//////////////////
 		///PRIVATE VARS///
 		//////////////////	
-		private var _h:Number;
-		private var _lg:Number;
-		private var _qH:uint;
-		private var _qV:uint;
-		private var m_sType:String;
-		private var _mode : String;
+		protected var _h:Number;
+		protected var _lg:Number;
+		protected var _qH:uint;
+		protected var _qV:uint;
+		protected var m_sType:String;
+		protected var _mode : String;
 		
 		/**
 		 * Creates a Plane primitive.

@@ -18,7 +18,6 @@ package sandy.core.scenegraph
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vector;
-	import sandy.util.NumberUtil;
 
 	/**
 	 * ABSTRACT CLASS - super class for all movable objects in the object tree.
@@ -57,11 +56,17 @@ package sandy.core.scenegraph
 		{
 			super( p_sName );
 			// --
-			_p 		= new Vector ();
-			_oScale = new Vector (1, 1, 1);
-			_vRotation = new Vector ();
-			// --
 			initFrame();
+			// --
+			_p 		= new Vector();
+			_oScale = new Vector( 1, 1, 1 );
+			_vRotation = new Vector(0,0,0);
+			// --
+			_vLookatDown = new Vector(0.00000000001, -1, 0);// value to avoid some colinearity problems.;
+			// --
+			_nRoll 	= 0;
+			_nTilt 	= 0;
+			_nYaw  	= 0;
 			// --
 			m_tmpMt = new Matrix4();
 			m_oMatrix = new Matrix4();
@@ -76,14 +81,6 @@ package sandy.core.scenegraph
 			_vSide 	= new Vector( 1, 0, 0 );
 			_vUp 	= new Vector( 0, 1 ,0 );
 			_vOut 	= new Vector( 0, 0, 1 );
-			_vRotation.x = 0;
-			_vRotation.y = 0;
-			_vRotation.z = 0;
-			_vRotationInvalid = false;
-			_nRoll 	= 0;
-			_nTilt 	= 0;
-			_nYaw  	= 0;
-			changed = true;
 		}
 
 		public function get matrix():Matrix4
@@ -101,7 +98,7 @@ package sandy.core.scenegraph
 		 */
 		public function set matrix( p_oMatrix:Matrix4 ):void
 		{
-			m_oMatrix.copy( p_oMatrix );
+			m_oMatrix = p_oMatrix;
 		    // --
 		    m_oMatrix.vectorMult3x3(_vSide);
 		    m_oMatrix.vectorMult3x3(_vUp);
@@ -377,9 +374,8 @@ package sandy.core.scenegraph
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			m_tmpMt.vectorMult3x3(_vOut);
-			_vRotationInvalid = true;
 		}
-		
+
 		/**
 		 * The position in the parent frame this object should "look at".
 		 *
@@ -400,81 +396,23 @@ package sandy.core.scenegraph
 		 * @param	p_nX	Number	The x position to look at
 		 * @param	p_nY	Number	The y position to look at
 		 * @param	p_nZ	Number	The z position to look at
-		 * @param	p_bRoll	Boolean	If true (default), this object is vertically aligned
 		 */
-		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll:Boolean = true ):void
+		public function lookAt( p_nX:Number, p_nY:Number, p_nZ:Number ):void
 		{
-			// compute new _vOut
-			var l_vOut:Vector = new Vector (p_nX, p_nY, p_nZ); l_vOut.sub (_p); l_vOut.normalize ();
-			// compute _vOut.dot (l_vOut)
-			var l_nDot:Number = _vOut.dot (l_vOut);
-			// compute the angle between l_vOut and _vOut
-			var l_nAngle:Number = Math.acos (l_nDot);
-			// compute rotation axis
-			var l_vAxis:Vector = _vOut.cross (l_vOut);
-
-			if (l_vAxis.getNorm () > NumberUtil.TOL)
-			{
-				// rotate
-				rotateAxis (l_vAxis.x, l_vAxis.y, l_vAxis.z, l_nAngle * 180 / Math.PI);
-			}
-			else
-				// it's either same or the opposite point (l_nDot is 1 or -1)
-				if (l_nDot < 0)
-				{
-					rotateAxis (_vUp.x, _vUp.y, _vUp.z, 180);
-				}
-
-			// rotateAxis must have set _vRotationInvalid
-			if (p_bRoll && _vRotationInvalid)
-			{
-				// _vOut projection on horizontal plane x0z, rotated 90 degrees clockwise
-				var l_oSide:Vector = new Vector (_vOut.z, 0, -_vOut.x);
-
-				// align vertically if possible
-				if (l_oSide.getNorm () > NumberUtil.TOL)
-				{
-					l_oSide.normalize ();
-					rollBy ( ((_vSide.y > 0) ? -1 : 1) * Math.acos (NumberUtil.constrain (_vSide.dot (l_oSide), -1, 1)) * (180 / Math.PI) );
-				}
-			}
-		}
-
-		/**
-		 * Makes this object rotated to specified Euler angles in parent frame.
-		 */
-		public function rotateTo( ax:Number, ay:Number, az:Number ):void
-		{
-			// this call also sets changed flag and clears _vRotationInvalid for us
-			initFrame ();
-
-			_vRotation.x = ax;
-			_vRotation.y = ay;
-			_vRotation.z = az;
-
-			// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
-			//ax *= -1; ay *= -1; az *= -1;
-			// use eulerRotation in order for rotation to be independent of application order
-			m_tmpMt.eulerRotation (ax, ay, az);
-			m_tmpMt.vectorMult3x3 (_vSide);
-			m_tmpMt.vectorMult3x3 (_vUp);
-			m_tmpMt.vectorMult3x3 (_vOut);
-		}
-
-		// this is used by getters
-		private function _reCalcAngles ():void
-		{
-			if (_vRotationInvalid)
-			{
-				// if here, pan/tilt/roll setter was called last
-				updateTransform ();
-				_vRotation = Matrix4.getEulerAngles (m_oMatrix);
-				// FIXME: why eulerRotation and getEulerAngles in Matrix4 use inverted angles?
-				//_vRotation.x = 360 - _vRotation.x;
-				//_vRotation.y = 360 - _vRotation.y;
-				//_vRotation.z = 360 - _vRotation.z;
-				_vRotationInvalid = false;
-			}
+			changed = true;
+			//
+			_vOut.x = p_nX; _vOut.y = p_nY; _vOut.z = p_nZ;
+			//
+			_vOut.sub( _p );
+			_vOut.normalize();
+			// -- the vOut vector should not be colinear with the reference down vector!
+			_vSide = null;
+			_vSide = _vOut.cross( _vLookatDown );
+			_vSide.normalize();
+			//
+			_vUp = null;
+			_vUp = _vOut.cross(_vSide );
+			_vUp.normalize();
 		}
 
 		/**
@@ -485,7 +423,16 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateX ( p_nAngle:Number ):void
 		{
-			rotateTo (p_nAngle, rotateY, rotateZ);
+			var l_nAngle:Number = (p_nAngle - _vRotation.x);
+			if(l_nAngle == 0 ) return;
+			changed = true;
+			// --
+			m_tmpMt.rotationX( l_nAngle );
+			m_tmpMt.vectorMult3x3(_vSide);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
+			// --
+			_vRotation.x = p_nAngle;
 		}
 
 		/**
@@ -493,7 +440,7 @@ package sandy.core.scenegraph
 		 */
 		public function get rotateX():Number
 		{
-			_reCalcAngles (); return _vRotation.x;
+			return _vRotation.x;
 		}
 
 		/**
@@ -504,7 +451,16 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateY ( p_nAngle:Number ):void
 		{
-			rotateTo (rotateX, p_nAngle, rotateZ);
+			var l_nAngle:Number = (p_nAngle - _vRotation.y);
+			if(l_nAngle == 0 ) return;
+			changed = true;
+			// --
+			m_tmpMt.rotationY( l_nAngle );
+			m_tmpMt.vectorMult3x3(_vSide);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
+			// --
+			_vRotation.y = p_nAngle;
 		}
 
 		/**
@@ -512,7 +468,7 @@ package sandy.core.scenegraph
 		 */
 		public function get rotateY():Number
 		{
-			_reCalcAngles (); return _vRotation.y;
+			return _vRotation.y;
 		}
 
 		/**
@@ -523,7 +479,16 @@ package sandy.core.scenegraph
 		 */
 		public function set rotateZ ( p_nAngle:Number ):void
 		{
-			rotateTo (rotateX, rotateY, p_nAngle);
+			var l_nAngle:Number = (p_nAngle - _vRotation.z );
+			if(l_nAngle == 0 ) return;
+			changed = true;
+			// --
+			m_tmpMt.rotationZ( l_nAngle );
+			m_tmpMt.vectorMult3x3(_vSide);
+			m_tmpMt.vectorMult3x3(_vUp);
+			m_tmpMt.vectorMult3x3(_vOut);
+			// --
+			_vRotation.z = p_nAngle;
 		}
 
 		/**
@@ -531,34 +496,29 @@ package sandy.core.scenegraph
 		 */
 		public function get rotateZ():Number
 		{
-			_reCalcAngles (); return _vRotation.z;
+			return _vRotation.z;
 		}
 
 		/**
-		 * Rolls this object around the local z axis by specified angle.
+		 * Rolls this object around the local z axis.
+		 *
+		 * <p>The roll angle interval is -180 to +180 degrees<br/>
+		 * At 0 degrees the local x axis is aligned with the horizon of its parent<br/>
+		 * Full roll right = 180 and full roll left = -180 degrees ( upside down ).</p>
 		 *
 		 * @param p_nAngle 	The roll angle in degrees.
 		 */
-		public function rollBy ( p_nAngle:Number ):void
+		public function set roll ( p_nAngle:Number ):void
 		{
-			if (p_nAngle == 0) return;
+			var l_nAngle:Number = (p_nAngle - _nRoll)
+			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, p_nAngle );
+			m_tmpMt.axisRotation ( _vOut.x, _vOut.y, _vOut.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vSide);
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
-			_nRoll += p_nAngle;
-			_vRotationInvalid = true;
-		}
-
-		/**
-		 * Rolls this object around the local z axis to specified angle using internal integrator.
-		 */
-		public function set roll ( p_nAngle:Number ):void
-		{
-			var l_nAngle:Number = (p_nAngle - roll);
-			if (l_nAngle != 0) rollBy (l_nAngle);
+			_nRoll = p_nAngle;
 		}
 
 		/**
@@ -570,34 +530,29 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Tilts this object around the local x axis by specified angle.
+		 * Tilts this object around the local x axis.
+		 *
+		 * <p>The tilt angle interval is -90 to +90 degrees<br/>
+		 * At 0 degrees the local z axis is paralell to the zx plane of its parent coordinate system.<br/>
+		 * Straight up = +90 and stright down = -90 degrees.</p>
 		 *
 		 * @param p_nAngle 	The tilt angle in degrees.
 		 */
-		public function tiltBy ( p_nAngle:Number ):void
+		public function set tilt ( p_nAngle:Number ):void
 		{
-			if (p_nAngle == 0) return;
+			var l_nAngle:Number = (p_nAngle - _nTilt);
+			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			m_tmpMt.axisRotation ( _vSide.x, _vSide.y, _vSide.z, p_nAngle );
+			m_tmpMt.axisRotation ( _vSide.x, _vSide.y, _vSide.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vOut);
 			m_tmpMt.vectorMult3x3(_vUp);
 			// --
-			_nTilt += p_nAngle;
-			_vRotationInvalid = true;
+			_nTilt = p_nAngle;
 		}
 
 		/**
-		 * Tilts this object around the local x axis to specified angle using internal integrator.
-		 */
-		public function set tilt ( p_nAngle:Number ):void
-		{
-			var l_nAngle:Number = (p_nAngle - tilt);
-			if (l_nAngle != 0) tiltBy (l_nAngle);
-		}
-
-		/**
-		 * @private
+		 * Getter for the tilt value
 		 */
 		public function get tilt():Number
 		{
@@ -605,30 +560,24 @@ package sandy.core.scenegraph
 		}
 
 		/**
-		 * Pans this object around the local y axis by specified angle.
+		 * Pans this object around the local y axis.
+		 *
+		 * <p>The pan angle interval is 0 to 360 degrees<br/>
+		 * Directions within the parent frame are: North = 0, East = 90, South = 180 nad West = 270 degrees.</p>
 		 *
 		 * @param p_nAngle 	The pan angle in degrees.
 		 */
-		public function panBy ( p_nAngle:Number ):void
+		public function set pan ( p_nAngle:Number ):void
 		{
-			if (p_nAngle == 0) return;
+			var l_nAngle:Number = (p_nAngle - _nYaw);
+			if(l_nAngle == 0 ) return;
 			changed = true;
 			// --
-			m_tmpMt.axisRotation ( _vUp.x, _vUp.y, _vUp.z, p_nAngle );
+			m_tmpMt.axisRotation ( _vUp.x, _vUp.y, _vUp.z, l_nAngle );
 			m_tmpMt.vectorMult3x3(_vOut);
 			m_tmpMt.vectorMult3x3(_vSide);
 			// --
-			_nYaw += p_nAngle;
-			_vRotationInvalid = true;
-		}
-
-		/**
-		 * Pans this object around the local y axis to specified angle using internal integrator.
-		 */
-		public function set pan ( p_nAngle:Number ):void
-		{
-			var l_nAngle:Number = (p_nAngle - pan);
-			if (l_nAngle != 0) panBy (l_nAngle);
+			_nYaw = p_nAngle;
 		}
 
 		/**
@@ -730,8 +679,8 @@ package sandy.core.scenegraph
 			switch( p_sMode )
 			{
 				case "local" 	: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
-				case "camera" 	: l_oPos = new Vector( viewMatrix.n14, viewMatrix.n24, viewMatrix.n34 ); break;
-				case "absolute" : l_oPos = new Vector( modelMatrix.n14, modelMatrix.n24, modelMatrix.n34 ); break;
+				case "camera" : l_oPos = new Vector( viewMatrix.n14, viewMatrix.n24, viewMatrix.n34 ); break;
+				case "absolute" 	: l_oPos = new Vector( modelMatrix.n14, modelMatrix.n24, modelMatrix.n34 ); break;
 				default 		: l_oPos = new Vector( _p.x, _p.y, _p.z ); break;
 			}
 			return l_oPos;
@@ -746,8 +695,6 @@ package sandy.core.scenegraph
 		{
 		    	return "sandy.core.scenegraph.ATransformable";
 		}
-
-
 		//
 		private var m_oMatrix:Matrix4;
 		// Side Orientation Vector
@@ -763,8 +710,7 @@ package sandy.core.scenegraph
 		// current roll value
 		private var _nRoll:Number;
 		private var _vRotation:Vector;
-		private var _vRotationInvalid:Boolean = false;
-
+		private var _vLookatDown:Vector; // Private absolute down vector
 		protected var _p:Vector;
 		protected var _oScale:Vector;
 		protected var m_tmpMt:Matrix4; // temporary transform matrix used at updateTransform

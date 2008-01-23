@@ -209,6 +209,14 @@ package sandy.materials.attributes
 			;// to remove reference to the shapes/polygons that use this attribute
 		}
 		
+		/**
+		 * Returns the specific flags of this attribute.
+		 */
+		public function get flags():uint
+		{ return m_nFlags; }
+		
+		protected var m_nFlags:uint = 0;
+		
 		// --
 		private var _ambient:Number = 0.3;
 		private var _diffuse:Number = 1.0;

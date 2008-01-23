@@ -134,6 +134,12 @@ package sandy.materials
 			_filters = a; m_bModified = true;
 		}
 		
+		public function get flags():uint
+		{
+			var l_nFlags:uint = m_nFlags;
+			l_nFlags |= attributes.flags;
+			return l_nFlags;
+		}
 		/**
 		 * @private
 		 */
@@ -161,7 +167,12 @@ package sandy.materials
 		
 		//////////////////
 		// PROPERTIES
-		//////////////////	
+		//////////////////
+		/**
+		 * DO NOT TOUCH THIS PROPERTY UNLESS YOU EPRFECTLY KNOW WHAT YOU ARE DOING.
+		 * this flag property contains the specific material flags.
+		 */
+		protected var m_nFlags:uint = 0;
 		protected var m_bModified:Boolean;
 		private var _filters:Array;
 		protected var _useLight : Boolean = false;

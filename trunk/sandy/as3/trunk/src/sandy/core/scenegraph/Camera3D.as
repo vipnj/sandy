@@ -22,7 +22,6 @@ package sandy.core.scenegraph
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
-	import sandy.math.Matrix4Math;
 	import sandy.util.NumberUtil;
 	import sandy.view.Frustum;
 	import sandy.view.ViewPort;
@@ -145,7 +144,8 @@ package sandy.core.scenegraph
 				l_oShape.clear();
 			}
 		    // --
-		    nbPolygons = m_aDisplayList.length;
+		    //nbPolygons = m_aDisplayList.length;
+		    nbPolygons = 0;
 		    // --
 		    const l_mcContainer:Sprite = p_oScene.container;
 		    // we go high quality for drawing part
@@ -155,6 +155,9 @@ package sandy.core.scenegraph
 		    // --
 			for each( l_oShape in m_aDisplayList )
 			{
+				if( l_oShape is Shape3D ) nbPolygons += (l_oShape as Shape3D).visiblePolygonsCount;
+				else nbPolygons ++;
+				
 				l_oShape.display( p_oScene );
 				l_mcContainer.addChild( l_oShape.container );
 			}
@@ -186,15 +189,10 @@ package sandy.core.scenegraph
 			var l_nCste:Number;
 			for each( var l_oVertex:Vertex in p_oList )
 			{
-				if( ! l_oVertex.projected )
-				{
-					l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-					l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
-					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
-					// --
-					l_oVertex.projected = true;
-					nbVertices += 1;
-				}
+				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
+				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
+				//nbVertices += 1;
 			}
 		}
 				

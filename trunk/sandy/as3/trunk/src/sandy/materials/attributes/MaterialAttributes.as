@@ -73,5 +73,13 @@ package sandy.materials.attributes
 			for each( var l_oAttr:IAttributes in attributes )
 				l_oAttr.draw( p_oGraphics, p_oPolygon, p_oMaterial, p_oScene );
 		}
+		
+		public function get flags():uint
+		{
+			var l_nFlags:uint = 0;
+			for each( var l_oAttr:IAttributes in attributes )
+				l_nFlags |= l_oAttr.flags;
+			return l_nFlags;
+		}
 	}
 }

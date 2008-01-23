@@ -91,6 +91,14 @@ package sandy.materials
 			return m_oBackMaterial;
 		}
 		
+		
+		public function get flags():uint
+		{
+			var l_nFlag:uint =  m_oFrontMaterial.flags;
+			if( m_oFrontMaterial != m_oBackMaterial ) l_nFlag |= m_oBackMaterial.flags;
+			return l_nFlag;
+		}
+		
 		/**
 		 * Returns a string representation of this object.
 		 *

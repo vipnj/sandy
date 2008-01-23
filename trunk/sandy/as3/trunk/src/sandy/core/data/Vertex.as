@@ -51,12 +51,6 @@ package sandy.core.data
 		public var sy:Number;
 
 		/**
-		 * Has this vertex been projected? State flag.
-		 * <p>Default value is false.</p>
-		 */
-		public var projected:Boolean = false;
-
-		/**
 		 * Number of polygons this vertex belongs to.
 		 * <p>Default value is 0.</p>
 		 */
@@ -109,7 +103,10 @@ package sandy.core.data
 		*/
 		public final function getWorldVector():Vector
 		{
-			return new Vector( wx, wy, wz );
+			m_oWorld.x = wx;
+			m_oWorld.y = wy;
+			m_oWorld.z = wz;
+			return m_oWorld;
 		}
 
 		/**
@@ -444,5 +441,7 @@ package sandy.core.data
 			sx = tmp[6];
 			sy = tmp[7];
 		}
+		
+		private const m_oWorld:Vector = new Vector();
 	}
 }

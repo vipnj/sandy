@@ -20,6 +20,7 @@ package sandy.materials.attributes
 	import flash.display.Graphics;
 	import flash.geom.Matrix;
 	
+	import sandy.core.SandyFlags;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -56,6 +57,7 @@ package sandy.materials.attributes
 		{
 			useBright = p_bBright;
 			ambient = NumberUtil.constrain( p_nAmbient, 0, 1 );
+			m_nFlags |= SandyFlags.VERTEX_NORMAL_WORLD;
 		}
 		
 		internal var v0:Vertex, v1:Vertex, v2:Vertex;
@@ -84,12 +86,9 @@ package sandy.materials.attributes
 	        v1 = l_aPoints[1];
 	        v2 = l_aPoints[2];
 	        // --
-	        v0N = p_oPolygon.vertexNormals[0].getVector().clone();
-			p_oPolygon.shape.modelMatrix.vectorMult3x3( v0N );
-			v1N = p_oPolygon.vertexNormals[1].getVector().clone();
-			p_oPolygon.shape.modelMatrix.vectorMult3x3( v1N );
-			v2N = p_oPolygon.vertexNormals[2].getVector().clone();
-			p_oPolygon.shape.modelMatrix.vectorMult3x3( v2N );
+	        v0N = p_oPolygon.vertexNormals[0].getWorldVector();
+			v1N = p_oPolygon.vertexNormals[1].getWorldVector();
+			v2N = p_oPolygon.vertexNormals[2].getWorldVector();
 			// --
 			v0L = NumberUtil.constrain (calculate (v0N), 0, 1);
 			v1L = NumberUtil.constrain (calculate (v1N), 0, 1);

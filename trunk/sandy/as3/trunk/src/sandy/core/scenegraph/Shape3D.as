@@ -254,13 +254,10 @@ package sandy.core.scenegraph
 		{
 			// IF no appearance has bene applied, no display
 			if( m_oAppearance == null ) return;
-			var  l_nZNear:Number = p_oCamera.near;
-	        var 	l_aPoints:Array = m_oGeometry.aVertex,
+			var  	l_nZNear:Number = p_oCamera.near, l_aPoints:Array = m_oGeometry.aVertex,
 	        		l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
-					l_aVertexNormals:Array = m_oGeometry.aVertexNormals;
-
-			var l_oVertexNormal:Vertex, l_oVertex:Vertex;
-			var l_oFace:Polygon;
+					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
+					l_oVertexNormal:Vertex, l_oVertex:Vertex, l_oFace:Polygon, l_nMinZ:Number;
 			
 			if( appearance.flags & SandyFlags.POLYGON_NORMAL_WORLD )
 			{
@@ -314,11 +311,11 @@ package sandy.core.scenegraph
 			{
 				l_oFace.isClipped = false;
 				// -- lauch precomputation
-				l_oFace.computeVisibility(); //  need to always compute it in case there's 2 materials in appearance
+				l_oFace.computeVisibility();//  need to always compute it in case there's 2 materials in appearance
 				// --
 				if( l_oFace.visible || !m_bBackFaceCulling) 
 				{
-					l_oFace.precomputeBounds(); // TODO optimize !  Unroll ?
+					l_oFace.precompute();
 					// we process the frustum clipping
 					if( m_bClipped && enableClipping )
 					{
@@ -326,7 +323,7 @@ package sandy.core.scenegraph
 						// -- We project the vertices
 				 		if( l_oFace.cvertices.length > 0 )
 				 		{
-				 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
+				 			if( !enableForcedDepth ) m_nDepth += l_oFace.minZ;
 				 			// -- we manage the display list depending on the mode choosen
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
@@ -339,9 +336,10 @@ package sandy.core.scenegraph
 					}
 					else
 					{
-				    	if( l_oFace.minBounds.z > l_nZNear )
+						l_nMinZ = l_oFace.minZ;
+				    	if( l_nMinZ > l_nZNear )
 						{	
-					    	if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
+					    	if( !enableForcedDepth ) m_nDepth += l_nMinZ;
 					    	// -- we manage the display list depending on the mode choosen
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
@@ -358,7 +356,7 @@ package sandy.core.scenegraph
 							// -- We project the vertices
 					 		if( l_oFace.cvertices.length > 0 )
 					 		{
-					 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
+					 			if( !enableForcedDepth ) m_nDepth += l_nMinZ;
 					 			
 					 			// -- we manage the display list depending on the mode choosen
 								if( m_bUseSingleContainer )

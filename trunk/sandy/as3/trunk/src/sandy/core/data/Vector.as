@@ -56,9 +56,9 @@ package sandy.core.data
 		 * Reset the vector components to 0
 		 * after calling this method, x, y and z will be set to 0
 		 */
-		public function reset():void
+		public function reset( px:Number=0, py:Number=0, pz:Number=0):void
 		{
-			x = y = z = 0;
+			x = px; y = py; z = pz;
 		}
 		
 		/**

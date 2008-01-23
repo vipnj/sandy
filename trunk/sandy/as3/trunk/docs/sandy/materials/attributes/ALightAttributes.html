@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="ALightAttributes,sandy.materials.attributes.ALightAttributes,m_nI,m_oH,m_oL,m_oV,ambient,diffuse,gloss,specular,calculate,draw,onPropertyChange,onRenderDisplayList" name="keywords">
+<meta content="ALightAttributes,sandy.materials.attributes.ALightAttributes,m_nI,m_oH,m_oL,m_oV,ambient,diffuse,gloss,specular,begin,calculate,draw,finish,init,onPropertyChange,unlink" name="keywords">
 <title>sandy.materials.attributes.ALightAttributes</title>
 </head>
 <body>
@@ -41,7 +41,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="classHeaderTableLabel">Implements</td><td><a href="IAttributes.html">IAttributes</a></td>
 </tr>
 <tr>
-<td class="classHeaderTableLabel">Subclasses</td><td><a href="../attributes/GouraudAttributes.html">GouraudAttributes</a>, <a href="../attributes/LightAttributes.html">LightAttributes</a>, <a href="../attributes/PhongAttributes.html">PhongAttributes</a></td>
+<td class="classHeaderTableLabel">Subclasses</td><td><a href="../attributes/CelShadeAttributes.html">CelShadeAttributes</a>, <a href="../attributes/GouraudAttributes.html">GouraudAttributes</a>, <a href="../attributes/LightAttributes.html">LightAttributes</a>, <a href="../attributes/PhongAttributes.html">PhongAttributes</a></td>
 </tr>
 </table>
 <p></p>
@@ -117,9 +117,46 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#begin()">begin</a>(p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</div>
+<div class="summaryTableDescription">
+   Method called before the display list rendering.</div>
+</td><td class="summaryTableOwnerCol">ALightAttributes</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#draw()">draw</a>(p_oGraphics:Graphics, p_oPolygon:<a href="../../core/data/Polygon.html">Polygon</a>, p_oMaterial:<a href="../Material.html">Material</a>, p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</div>
 <div class="summaryTableDescription">
-   Override this to render the light.</div>
+   This method applies light color to polygon containers.</div>
+</td><td class="summaryTableOwnerCol">ALightAttributes</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#finish()">finish</a>(p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</div>
+<div class="summaryTableDescription">
+   Method called right after the display list rendering
+   This is the place to remove and dispose memory if necessary.</div>
+</td><td class="summaryTableOwnerCol">ALightAttributes</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#init()">init</a>(p_oPolygon:<a href="../../core/data/Polygon.html">Polygon</a>):void</div>
+<div class="summaryTableDescription">
+   Allows to proceed to an initialization
+   to know when the polyon isn't lined to the material, look at #unlink
+   </div>
+</td><td class="summaryTableOwnerCol">ALightAttributes</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#unlink()">unlink</a>(p_oPolygon:<a href="../../core/data/Polygon.html">Polygon</a>):void</div>
+<div class="summaryTableDescription">
+   Remove all the initialization
+   opposite of init
+   </div>
 </td><td class="summaryTableOwnerCol">ALightAttributes</td>
 </tr>
 </table>
@@ -145,14 +182,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="#onPropertyChange()">onPropertyChange</a>():void</div>
 <div class="summaryTableDescription">
    Override this to respond to property changes.</div>
-</td><td class="summaryTableOwnerCol">ALightAttributes</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#onRenderDisplayList()">onRenderDisplayList</a>(p_oArg:*):void</div>
-<div class="summaryTableDescription">
-   Override this to perform per-frame tasks.</div>
 </td><td class="summaryTableOwnerCol">ALightAttributes</td>
 </tr>
 </table>
@@ -222,7 +251,7 @@ showHideInherited();
 <div class="detailBody">
 <code>gloss:Number</code>&nbsp;&nbsp;[read-write]<p>
    Specular exponent.
-   </p><p>The default value is <code>1.0</code>.</p>
+   </p><p>The default value is <code>5.0</code>.</p>
 <span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get gloss():Number</code>
@@ -279,10 +308,27 @@ showHideInherited();
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
+<a name="begin()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">begin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function begin(p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</code><p>
+   Method called before the display list rendering.
+   This is the common place for this attribute to precompute things
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../../core/Scene3D.html">Scene3D</a></code></td>
+</tr>
+</table>
+</div>
 <a name="calculate()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">calculate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">calculate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -316,8 +362,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function draw(p_oGraphics:Graphics, p_oPolygon:<a href="../../core/data/Polygon.html">Polygon</a>, p_oMaterial:<a href="../Material.html">Material</a>, p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</code><p>
-   Override this to render the light.
-   Always call it first in sub classes.
+   This method applies light color to polygon containers.
+   Always call super.draw() when you override it.
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -343,6 +389,40 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="finish()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">finish</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function finish(p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</code><p>
+   Method called right after the display list rendering
+   This is the place to remove and dispose memory if necessary.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oScene</span>:<a href="../../core/Scene3D.html">Scene3D</a></code></td>
+</tr>
+</table>
+</div>
+<a name="init()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">init</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function init(p_oPolygon:<a href="../../core/data/Polygon.html">Polygon</a>):void</code><p>
+   Allows to proceed to an initialization
+   to know when the polyon isn't lined to the material, look at #unlink
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPolygon</span>:<a href="../../core/data/Polygon.html">Polygon</a></code></td>
+</tr>
+</table>
+</div>
 <a name="onPropertyChange()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -353,20 +433,20 @@ showHideInherited();
 <code>protected function onPropertyChange():void</code><p>
    Override this to respond to property changes.
    </p></div>
-<a name="onRenderDisplayList()"></a>
+<a name="unlink()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">onRenderDisplayList</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">unlink</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function onRenderDisplayList(p_oArg:*):void</code><p>
-   Override this to perform per-frame tasks.
-   Always call it first in sub classes.
+<code>public function unlink(p_oPolygon:<a href="../../core/data/Polygon.html">Polygon</a>):void</code><p>
+   Remove all the initialization
+   opposite of init
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_oArg</span>:*</code></td>
+<td width="20px"></td><td><code><span class="label">p_oPolygon</span>:<a href="../../core/data/Polygon.html">Polygon</a></code></td>
 </tr>
 </table>
 </div>

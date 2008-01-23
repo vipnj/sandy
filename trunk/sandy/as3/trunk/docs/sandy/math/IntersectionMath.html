@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="IntersectionMath,sandy.math.IntersectionMath,intersectionBSphere,intersectionLine2D,intersectionLine3D" name="keywords">
+<meta content="IntersectionMath,sandy.math.IntersectionMath,intersectionBSphere,intersectionLine2D,intersectionLine3D,isPointInTriangle2D" name="keywords">
 <title>sandy.math.IntersectionMath</title>
 </head>
 <body>
@@ -75,6 +75,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="#intersectionLine3D()">intersectionLine3D</a>(p_oPointA:<a href="../core/data/Vector.html">Vector</a>, p_oPointB:<a href="../core/data/Vector.html">Vector</a>, p_oPointC:<a href="../core/data/Vector.html">Vector</a>, p_oPointD:<a href="../core/data/Vector.html">Vector</a>):Array</div>
 <div class="summaryTableDescription">[static]
    Computes the smallest distance between these 3D lines.</div>
+</td><td class="summaryTableOwnerCol">IntersectionMath</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isPointInTriangle2D()">isPointInTriangle2D</a>(p_oPoint:Point, p_oA:Point, p_oB:Point, p_oC:Point):Boolean</div>
+<div class="summaryTableDescription">[static]</div>
 </td><td class="summaryTableOwnerCol">IntersectionMath</td>
 </tr>
 </table>
@@ -201,6 +208,45 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20"></td><td><code>Array</code></td>
+</tr>
+</table>
+</div>
+<a name="isPointInTriangle2D()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isPointInTriangle2D</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function isPointInTriangle2D(p_oPoint:Point, p_oA:Point, p_oB:Point, p_oC:Point):Boolean</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oPoint</span>:Point</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oA</span>:Point</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oB</span>:Point</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oC</span>:Point</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code></td>
 </tr>
 </table>
 </div>

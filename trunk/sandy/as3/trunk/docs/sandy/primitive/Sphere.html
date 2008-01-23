@@ -262,7 +262,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/ATransformable.html#pan">pan</a> : Number<div class="summaryTableDescription">
-   Pans this object around the local y axis.</div>
+   Pans this object around the local y axis to specified angle using internal integrator.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -273,7 +273,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/ATransformable.html#roll">roll</a> : Number<div class="summaryTableDescription">
-   Rolls this object around the local z axis.</div>
+   Rolls this object around the local z axis to specified angle using internal integrator.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -335,8 +335,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../core/scenegraph/ATransformable.html#tilt">tilt</a> : Number<div class="summaryTableDescription">
-   Getter for the tilt value
-   </div>
+   Tilts this object around the local x axis to specified angle using internal integrator.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -662,6 +661,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="../core/scenegraph/ATransformable.html#panBy()">panBy</a>(p_nAngle:Number):void</div>
+<div class="summaryTableDescription">
+   Pans this object around the local y axis by specified angle.</div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../core/scenegraph/Node.html#remove()">remove</a>():void</div>
 <div class="summaryTableDescription">
    Removes this node from the node tree, saving its child nodes.</div>
@@ -702,6 +709,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="../core/scenegraph/ATransformable.html#rollBy()">rollBy</a>(p_nAngle:Number):void</div>
+<div class="summaryTableDescription">
+   Rolls this object around the local z axis by specified angle.</div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../core/scenegraph/ATransformable.html#rotateAxis()">rotateAxis</a>(p_nX:Number, p_nY:Number, p_nZ:Number, p_nAngle:Number):void</div>
 <div class="summaryTableDescription">
    Rotate this object around the specified axis in the parent frame by the specified angle.</div>
@@ -738,6 +753,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    Moves this node to another parent node.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="../core/scenegraph/ATransformable.html#tiltBy()">tiltBy</a>(p_nAngle:Number):void</div>
+<div class="summaryTableDescription">
+   Tilts this object around the local x axis by specified angle.</div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">

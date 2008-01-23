@@ -16,6 +16,7 @@ limitations under the License.
 package sandy.materials.attributes
 {
 	import flash.display.Graphics;
+	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.materials.Material;
@@ -79,5 +80,13 @@ package sandy.materials.attributes
 		{
 			;// to remove reference to the shapes/polygons that use this attribute
 		}
+		
+		/**
+		 * Returns the specific flags of this attribute.
+		 */
+		public function get flags():uint
+		{ return m_nFlags; }
+		
+		protected var m_nFlags:uint = 0;
 	}
 }

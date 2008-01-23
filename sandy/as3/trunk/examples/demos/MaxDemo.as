@@ -88,7 +88,7 @@ package demos
   					break;
   			}
   			// --
-  			return new MaterialAttributes( l_oAttr, new OutlineAttributes( 1, 0xFF00, 1 )/*, new VertexNormalAttributes(10, 1, 0xFF, 1 )*/ );
+  			return new MaterialAttributes( l_oAttr/*, new OutlineAttributes( 1, 0xFF00, 1 )*//*, new VertexNormalAttributes(10, 1, 0xFF, 1 )*/ );
  
   		}
   		

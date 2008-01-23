@@ -145,6 +145,7 @@ package sandy.core.data
 		 */
 		public var meanBounds:Vector = new Vector();
 
+		public var a:Vertex, b:Vertex, c:Vertex;
 		/**
 		 * States if the appearance of the polygon has changed since the previous rendering.
 		 * Often used to update the scene material manager.
@@ -214,8 +215,9 @@ package sandy.core.data
 		public function computeVisibility():void
 		{
 			// all normals are refreshed every loop. Face is visible is normal face to the camera
-			var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
-			m_bVisible = ( l_nDot < 0 );
+			//var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
+			//m_bVisible = ( l_nDot < 0 );
+			m_bVisible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}	
 			
 		/**
@@ -422,7 +424,9 @@ package sandy.core.data
 				i++;
 			}
 			// --
-			m_oVisibilityRef = vertices[0];
+			a = vertices[0];
+			b = vertices[1];
+			c = vertices[2];
 			// -- every polygon does not have some texture coordinates
 			if( p_aUVCoordsID )
 			{
@@ -747,7 +751,6 @@ package sandy.core.data
 		private var m_bVisible:Boolean = false;
 
 		protected var m_oContainer:Sprite;
-		protected var m_oVisibilityRef:Vertex;
 
 		protected var m_oEB:BubbleEventBroadcaster = new BubbleEventBroadcaster();
 

@@ -21,6 +21,7 @@ package sandy.materials.attributes
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
+	import sandy.core.SandyFlags;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -28,7 +29,6 @@ package sandy.materials.attributes
 	import sandy.core.light.Light3D;
 	import sandy.events.SandyEvent;
 	import sandy.materials.Material;
-	import sandy.math.VertexMath;
 	import sandy.util.NumberUtil;
 
 	/**
@@ -230,6 +230,8 @@ package sandy.materials.attributes
 
 			m_nQuality = p_nQuality;
 			m_nSamples = p_nSamples;
+			
+			m_nFlags |= SandyFlags.VERTEX_NORMAL_WORLD;
 		}
 
 		// default quality to pass to computeLightMap (set in constructor)

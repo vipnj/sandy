@@ -23,8 +23,8 @@ package sandy.core.scenegraph
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
+	import sandy.core.SandyFlags;
 	import sandy.core.Scene3D;
-	import sandy.core.data.Edge3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -211,10 +211,11 @@ package sandy.core.scenegraph
 		{
 			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
 			if( culled == Frustum.OUTSIDE ) return;
-			
+
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
 	        /////////////////////////
+    
         	if( !boundingSphere.uptodate ) boundingSphere.transform( viewMatrix );
         	culled = p_oFrustum.sphereInFrustum( boundingSphere );
 			// --
@@ -239,6 +240,10 @@ package sandy.core.scenegraph
 			}
 		}
 		
+		internal var 	m11:Number, m21:Number, m31:Number,
+						m12:Number, m22:Number, m32:Number,
+						m13:Number, m23:Number, m33:Number,
+						m14:Number, m24:Number, m34:Number;
 		/**
 		 * Renders this 3D object.
 		 *
@@ -252,45 +257,68 @@ package sandy.core.scenegraph
 			var  l_nZNear:Number = p_oCamera.near;
 	        var 	l_aPoints:Array = m_oGeometry.aVertex,
 	        		l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
-					l_aNormals:Array = m_oGeometry.aFacesNormals,
-					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
-					m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
-					m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,
-					m13:Number = l_oMatrix.n13, m23:Number = l_oMatrix.n23, m33:Number = l_oMatrix.n33,
-					m14:Number = l_oMatrix.n14, m24:Number = l_oMatrix.n24, m34:Number = l_oMatrix.n34;
-		
-			var l_oVertexNormal:Vertex, l_oNormal:Vertex, l_oVertex:Vertex;
+					l_aVertexNormals:Array = m_oGeometry.aVertexNormals;
+
+			var l_oVertexNormal:Vertex, l_oVertex:Vertex;
 			var l_oFace:Polygon;
 			
-			// -- Now we transform the normals.
-			for each( l_oNormal in l_aNormals )
+			if( appearance.flags & SandyFlags.POLYGON_NORMAL_WORLD )
 			{
-				l_oNormal.wx  = l_oNormal.x * m11 + l_oNormal.y * m12 + l_oNormal.z * m13;
-				l_oNormal.wy  = l_oNormal.x * m21 + l_oNormal.y * m22 + l_oNormal.z * m23;
-				l_oNormal.wz  = l_oNormal.x * m31 + l_oNormal.y * m32 + l_oNormal.z * m33;
+				l_oMatrix = modelMatrix;
+				m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
+				m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
+				m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
+				//m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34;
+				// -- Now we transform the normals.
+				for each( l_oVertex in m_oGeometry.aFacesNormals )
+				{
+					l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
+					l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
+					l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+				}
+			}
+			if( appearance.flags & SandyFlags.VERTEX_NORMAL_WORLD )
+			{
+				l_oMatrix = modelMatrix;
+				m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
+				m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
+				m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
+				//m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34;
+				// -- Now we transform the normals.
+				for each( l_oVertex in m_oGeometry.aVertexNormals )
+				{
+					l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
+					l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
+					l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+				}
 			}
 			
 			// -- Now we can transform the objet vertices into the camera coordinates
+			l_oMatrix = viewMatrix;
+			m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
+			m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
+			m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
+			m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34;
 			for each( l_oVertex in l_aPoints )
 			{				
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
-				l_oVertex.projected = false;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-			m_aVisiblePoly.splice( 0 );
+			m_aVisiblePoly = [];//.splice( 0 );
 			m_nDepth = 0;
+			p_oCamera.projectArray( l_aPoints );
 			// --
 			for each( l_oFace in aPolygons )
 			{
 				l_oFace.isClipped = false;
 				// -- lauch precomputation
-				l_oFace.computeVisibility();
+				l_oFace.computeVisibility(); //  need to always compute it in case there's 2 materials in appearance
 				// --
-				if ( l_oFace.visible || !m_bBackFaceCulling) 
+				if( l_oFace.visible || !m_bBackFaceCulling) 
 				{
-					l_oFace.precomputeBounds();
+					l_oFace.precomputeBounds(); // TODO optimize !  Unroll ?
 					// we process the frustum clipping
 					if( m_bClipped && enableClipping )
 					{
@@ -298,9 +326,7 @@ package sandy.core.scenegraph
 						// -- We project the vertices
 				 		if( l_oFace.cvertices.length > 0 )
 				 		{
-				 			p_oCamera.projectArray( l_oFace.cvertices );
 				 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
-				 			
 				 			// -- we manage the display list depending on the mode choosen
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
@@ -316,10 +342,7 @@ package sandy.core.scenegraph
 				    	if( l_oFace.minBounds.z > l_nZNear )
 						{	
 					    	if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
-					    	
-					    	// -- We project the vertices
-					 		p_oCamera.projectArray( l_oFace.vertices );
-					 		// -- we manage the display list depending on the mode choosen
+					    	// -- we manage the display list depending on the mode choosen
 							if( m_bUseSingleContainer )
 								m_aVisiblePoly.push( l_oFace );
 							else
@@ -335,8 +358,6 @@ package sandy.core.scenegraph
 							// -- We project the vertices
 					 		if( l_oFace.cvertices.length > 0 )
 					 		{
-					 			//p_oCamera.projectArray( l_oFace.vertices ); // not needed anymore exept bitmapmaterial with enableAccurateClipping set to false
-								p_oCamera.projectArray( l_oFace.cvertices );
 					 			if( !enableForcedDepth ) m_nDepth += l_oFace.meanBounds.z;
 					 			
 					 			// -- we manage the display list depending on the mode choosen
@@ -377,6 +398,12 @@ package sandy.core.scenegraph
 				else 					m_nDepth /= m_aVisiblePoly.length;
 				p_oCamera.addToDisplayList( this );
 			}
+		}
+		
+		
+		public function get visiblePolygonsCount():uint
+		{
+			return m_aVisiblePoly.length;
 		}
 		
 		/**

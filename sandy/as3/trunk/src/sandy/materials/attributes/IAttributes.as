@@ -42,6 +42,8 @@ package sandy.materials.attributes
 		
 		function begin( p_oScene:Scene3D ):void;
 		
-		function finish( p_oScene:Scene3D ):void;		
+		function finish( p_oScene:Scene3D ):void;	
+		
+		function get flags():uint;	
 	}
 }

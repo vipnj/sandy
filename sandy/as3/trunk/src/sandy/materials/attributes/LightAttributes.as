@@ -18,6 +18,7 @@ package sandy.materials.attributes
 {
 	import flash.display.Graphics;
 	
+	import sandy.core.SandyFlags;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -54,6 +55,7 @@ package sandy.materials.attributes
 		{
 			useBright = p_bBright;
 			ambient = NumberUtil.constrain( p_nAmbient, 0, 1 );
+			m_nFlags |= SandyFlags.POLYGON_NORMAL_WORLD;
 		}
 		
 		/**
@@ -71,8 +73,7 @@ package sandy.materials.attributes
 			if( p_oMaterial.lightingEnable )
 			{	
 				var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;
-				var l_oNormal:Vector = p_oPolygon.normal.getVector().clone();
-				p_oPolygon.shape.modelMatrix.vectorMult3x3( l_oNormal );
+				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
 				// --
 				var lightStrength:Number = NumberUtil.constrain (calculate (l_oNormal), 0, 1);
 				// --

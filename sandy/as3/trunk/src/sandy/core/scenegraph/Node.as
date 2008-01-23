@@ -210,7 +210,7 @@ package sandy.core.scenegraph
 			p_oChild.parent = this;
 			changed =  true ;
 			children.push( p_oChild );
-			m_oEB.addChild( p_oChild.broadcaster );
+			if( p_oChild.broadcaster ) m_oEB.addChild( p_oChild.broadcaster );
 		}
 
 		/**
@@ -396,6 +396,7 @@ package sandy.core.scenegraph
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
 			parent.removeChildById( id );
+			
 			// now we make current node children the current parent's node children
 			for each( var lNode:Node in children.concat() )
 			{

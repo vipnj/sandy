@@ -129,22 +129,8 @@ package sandy.core.data
 		 */
 		public var aNeighboors:Array = new Array();
 		
-		/**
-		 * [READ-ONLY] property.
-		 * Min values of this polygon
-		 */
-		public var minBounds:Vector = new Vector();
-		/**
-		 * [READ-ONLY] property.
-		 * Max values of this polygon
-		 */
-		public var maxBounds:Vector = new Vector();
-		/**
-		 * [READ-ONLY] property.
-		 * Mean values of this polygon
-		 */
-		public var meanBounds:Vector = new Vector();
-
+		public var m_nMinZ:Number;
+		public var m_nDepth:Number;
 		public var a:Vertex, b:Vertex, c:Vertex;
 		/**
 		 * States if the appearance of the polygon has changed since the previous rendering.
@@ -205,58 +191,29 @@ package sandy.core.data
 		{
 			m_oEB.removeEventListener(p_sEvent, oL);
 		}
-
-
-		/**
-		 * Pre-compute several properties of the polygon in the same time.
-		 * List of the computed properties :
-		 *  - visibility : if the polygon is visible
-		 */
-		public function computeVisibility():void
-		{
-			// all normals are refreshed every loop. Face is visible is normal face to the camera
-			//var l_nDot:Number = ( m_oVisibilityRef.wx * normal.wx + m_oVisibilityRef.wy * normal.wy + m_oVisibilityRef.wz * normal.wz );
-			//m_bVisible = ( l_nDot < 0 );
-			m_bVisible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
-		}	
 			
 		/**
 		 * Pre-compute several properties of the polygon in the same time.
 		 * List of the computed properties :
 		 * <ul>
-		 *  <li>mean z depth : the mean z depth used for basic sorting</li>
-		 *  <li>max bounds : the maximum bounds of the polygon</li>
-		 *  <li>min bounds : the minimum bounds of the polygon</li>
-		 *  <li>mean bounds : the mean of each components of the polygon. It is center actually.</li>
+		 *  <li>minZ</li>
+		 *  <li>visibility</li>
+		 *  <li>depth</li>
 		 * </ul>
 		 */
-		public function precomputeBounds():void
+		public function precompute():void
 		{
-			const l_aVert:Array = vertices;
-			// --
-			meanBounds.reset();
-			minBounds.resetToPositiveInfinity();
-			maxBounds.resetToNegativeInfinity();
-			// --
-			for each ( var v:Vertex in l_aVert )
-			{
-				if( v.wx < minBounds.x ) minBounds.x = v.wx;
-				else if( v.wx > maxBounds.x ) maxBounds.x = v.wx;
-				// --
-				if( v.wy < minBounds.y ) minBounds.y = v.wy;
-				else if( v.wy > maxBounds.y ) maxBounds.y = v.wy;
-				// --
-				if( v.wz < minBounds.z ) minBounds.z = v.wz;
-				else if( v.wz > maxBounds.z ) maxBounds.z = v.wz;
-				// -- 
-				meanBounds.x += v.wx;
-				meanBounds.y += v.wy;
-				meanBounds.z += v.wz;
-			}
-			// -- We normalize the sum and return it
-			meanBounds.scale( 1 / l_aVert.length );
+			m_nMinZ = a.wz;
+			if (b.wz < m_nMinZ) m_nMinZ = b.wz;
+			if (c.wz < m_nMinZ) m_nMinZ = c.wz;
+			m_nDepth = 0.333*(a.wz+b.wz+c.wz);
+			
 		}
 		
+		public function computeVisibility():void
+		{
+			m_bVisible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
+		}
 		/**
 		 * Is this face visible?.
 		 * The method returns the visibility value pre computed after precompute method call. This getter shall be called afer the precompute call.
@@ -512,15 +469,22 @@ package sandy.core.data
 		 */
 		public function get depth():Number
 		{
-			return meanBounds.z;
+			return m_nDepth;
+			//return meanBounds.z;
 		}
-
+		
+		public function get minZ():Number
+		{
+			return m_nMinZ;
+			//return meanBounds.z;
+		}
+		
 		/**
 		 * The z depth of this polygon.
 		 */
 		public function set depth( p_nDepth:Number ):void
 		{
-			meanBounds.z = p_nDepth;
+			m_nDepth = p_nDepth;
 		}
 
 		/**

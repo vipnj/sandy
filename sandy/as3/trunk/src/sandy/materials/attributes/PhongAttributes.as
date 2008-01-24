@@ -270,8 +270,14 @@ package sandy.materials.attributes
 			}
 
 			m_oCurrentLightMap = m_oLightMaps [l_oLight] as PhongAttributesLightMap;
+			
+			// also, clear vertex dictionary
+			m_oVertices = new Dictionary (true);
 		}
 
+		// vertex dictionary
+		private var m_oVertices:Dictionary;
+		
 		// --
 		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{
@@ -295,17 +301,29 @@ package sandy.materials.attributes
 			// transform 1st three normals
 			for (i = 0; i < 3; i++)
 			{
-				aN0 [i].copy (p_oPolygon.vertexNormals [i].getVector ());
+				aN0 [i].copy (p_oPolygon.vertexNormals [i].getWorldVector());
 				if (spherize > 0)
 				{
-					var dv:Vector = l_aPoints [i].getVector ();
-					dv.sub (p_oPolygon.shape.geometryCenter);
-					dv.normalize ();
-					dv.scale (spherize);
+					// too bad, l_aPoints [i].getWorldVector () gives viewMatrix-based coordinates
+					// when vertexNormals [i].getWorldVector () gives modelMatrix-based ones :(
+					// so we have to use cache for modelMatrix-based vertex coords (and also scaled)
+					var dv:Vector;
+					if (m_oVertices [l_aPoints [i]] == null)
+					{
+						dv = l_aPoints [i].getVector ();
+						dv.sub (p_oPolygon.shape.geometryCenter);
+						p_oPolygon.shape.modelMatrix.vectorMult3x3 (dv);
+						dv.normalize ();
+						dv.scale (spherize);
+						m_oVertices [l_aPoints [i]] = dv;
+					}
+					else
+					{
+						dv = m_oVertices [l_aPoints [i]];
+					}
 					aN0 [i].add (dv);
 					aN0 [i].normalize ();
 				}
-				p_oPolygon.shape.modelMatrix.vectorMult3x3 (aN0 [i]);
 			}
 
 			// apply ambient + diffuse and specular maps separately

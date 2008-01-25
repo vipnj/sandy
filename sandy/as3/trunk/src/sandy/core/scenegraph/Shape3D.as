@@ -365,6 +365,22 @@ package sandy.core.scenegraph
 							}
 					 	}
 					}
+					
+					if( l_oFace.hasAppearanceChanged )
+					{
+						if( p_oScene.materialManager.isRegistered( l_oFace.appearance.frontMaterial ) == false )
+						{
+							p_oScene.materialManager.register( l_oFace.appearance.frontMaterial );
+						}
+						if( l_oFace.appearance.frontMaterial != l_oFace.appearance.backMaterial )
+						{
+							if( p_oScene.materialManager.isRegistered( l_oFace.appearance.backMaterial ) == false )
+							{
+								p_oScene.materialManager.register( l_oFace.appearance.backMaterial );
+							}
+						}
+						l_oFace.hasAppearanceChanged = false;
+					}
 				}	 
 			}
 			else
@@ -393,30 +409,24 @@ package sandy.core.scenegraph
 							}
 						}
 					}
-				}
-			}
-			
-			for each( l_oFace in aPolygons )
-			{
-				// we are gonna to check this for all polygons, which might sounds a bit too much, but
-				// since each polygon can have its own appearance, this is necessary.
-				if( l_oFace.hasAppearanceChanged )
-				{
-					if( p_oScene.materialManager.isRegistered( l_oFace.appearance.frontMaterial ) == false )
+					
+					if( l_oFace.hasAppearanceChanged )
 					{
-						p_oScene.materialManager.register( l_oFace.appearance.frontMaterial );
-					}
-					if( l_oFace.appearance.frontMaterial != l_oFace.appearance.backMaterial )
-					{
-						if( p_oScene.materialManager.isRegistered( l_oFace.appearance.backMaterial ) == false )
+						if( p_oScene.materialManager.isRegistered( l_oFace.appearance.frontMaterial ) == false )
 						{
-							p_oScene.materialManager.register( l_oFace.appearance.backMaterial );
+							p_oScene.materialManager.register( l_oFace.appearance.frontMaterial );
 						}
+						if( l_oFace.appearance.frontMaterial != l_oFace.appearance.backMaterial )
+						{
+							if( p_oScene.materialManager.isRegistered( l_oFace.appearance.backMaterial ) == false )
+							{
+								p_oScene.materialManager.register( l_oFace.appearance.backMaterial );
+							}
+						}
+						l_oFace.hasAppearanceChanged = false;
 					}
-					l_oFace.hasAppearanceChanged = false;
 				}
-			}
-			
+			}	
 			// --
 			if( m_bUseSingleContainer )
 			{

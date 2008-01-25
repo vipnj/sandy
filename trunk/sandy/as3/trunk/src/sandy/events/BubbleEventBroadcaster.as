@@ -54,6 +54,10 @@ package sandy.events
 					parent.broadcastEvent( e );
 				}
 			}
+			else 
+			{
+				parent.broadcastEvent( e ); // used for regular event dispatching
+        	} 
 		}
 		
 	}

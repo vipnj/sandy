@@ -1,4 +1,4 @@
-package demos
+﻿package demos
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -134,16 +134,27 @@ package demos
 			root.addChild( shape );
 			return root;
 		}
-		
+
 		private function enterFrameHandler( event : Event ) : void
 		{
 			if( running )
 			{
-				// TODO pre compute some values
-				camera.rotateZ += 5*(( this.mouseX - (stage.stageWidth/2)  ) / stage.stageWidth);
-				camera.tilt = NumberUtil.constrain( camera.tilt + 5*(( this.mouseY - (stage.stageHeight/2) )/stage.stageHeight), -89, 89 );
-				//camera.rotateY++;
-				//camera.rotateX ++;
+				var lon = Math.PI * ( stage.stageWidth/2 - this.mouseX ) / (stage.stageWidth/2);
+				var lat = Math.PI * ( stage.stageHeight/2 - this.mouseY ) / stage.stageHeight;
+				
+				// standard sphere with swapped z and y
+				var x = Math.cos(lon) * Math.cos(lat);
+    	        var z = Math.sin(lon) * Math.cos(lat);
+	            var y = Math.sin(lat);
+				
+				camera.lookAt (x, y, z);
+				
+				trace ("lat=" + Math.round(180 * lat / Math.PI) + ", lon=" + Math.round(180 * lon / Math.PI) +
+					": rotateX/Y/Z are " +
+					   Math.round (camera.rotateX) + ", " +
+					   Math.round (camera.rotateY) + ", " +
+					   Math.round (camera.rotateZ) + " (rounded)");
+
 				var t:int = getTimer();
 				world.render();
 				trace(getTimer() - t+" ms");

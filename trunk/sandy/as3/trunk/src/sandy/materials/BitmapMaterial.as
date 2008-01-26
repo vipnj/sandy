@@ -308,12 +308,12 @@ package sandy.materials
 
 		protected function _createTextureMatrix( p_aUv:Array ):Matrix
 		{
-			var u0: Number = p_aUv[0].u * m_nWidth  * m_oTiling.x,
-				v0: Number = p_aUv[0].v * m_nHeight * m_oTiling.y,
-				u1: Number = p_aUv[1].u * m_nWidth  * m_oTiling.x,
-				v1: Number = p_aUv[1].v * m_nHeight * m_oTiling.y,
-				u2: Number = p_aUv[2].u * m_nWidth  * m_oTiling.x,
-				v2: Number = p_aUv[2].v * m_nHeight * m_oTiling.y;
+			var u0: Number = (p_aUv[0].u * m_oTiling.x + m_oOffset.x) * m_nWidth,
+				v0: Number = (p_aUv[0].v * m_oTiling.y + m_oOffset.y) * m_nHeight,
+				u1: Number = (p_aUv[1].u * m_oTiling.x + m_oOffset.x) * m_nWidth,
+				v1: Number = (p_aUv[1].v * m_oTiling.y + m_oOffset.y) * m_nHeight,
+				u2: Number = (p_aUv[2].u * m_oTiling.x + m_oOffset.x) * m_nWidth,
+				v2: Number = (p_aUv[2].v * m_oTiling.y + m_oOffset.y) * m_nHeight;
 			// -- Fix perpendicular projections. Not sure it is really useful here since there's no texture prjection. This will certainly solve the freeze problem tho
 			if( (u0 == u1 && v0 == v1) || (u0 == u2 && v0 == v2) )
 			{
@@ -376,10 +376,16 @@ package sandy.materials
 			}
 		}
 
-		public function setTiling( p_nW:uint, p_nH:uint ):void
+		/**
+		 * Sets texture tiling and optional offset. Tiling is applied first.
+		 */
+		public function setTiling( p_nW:Number, p_nH:Number, p_nU:Number = 0, p_nV:Number = 0 ):void
 		{
 			m_oTiling.x = p_nW;
 			m_oTiling.y = p_nH;
+			// --
+			m_oOffset.x = p_nU;
+			m_oOffset.y = p_nV;
 			// --
 			for( var l_sID:String in m_oPolygonMatrixMap )
 			{
@@ -464,5 +470,6 @@ package sandy.materials
 		protected var m_oCmf:ColorMatrixFilter;
 		protected var matrix:Matrix = new Matrix();
 		protected const m_oTiling:Point = new Point( 1, 1 );
+		protected const m_oOffset:Point = new Point( 0, 0 );
 	}
 }

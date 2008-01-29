@@ -216,13 +216,23 @@ package sandy.core.data
 			//minZ = a.wz;
 			//if (b.wz < minZ) minZ = b.wz;
 			//if (c.wz < minZ) minZ = c.wz;
-			minZ = Math.min( a.wz, Math.min( b.wz, c.wz ) );
-			m_nDepth = 0.333*(a.wz+b.wz+c.wz);
+			
+			minZ = Math.min( a.wz, b.wz );
+			if (c != null)
+			{
+				minZ = Math.min( minZ, c.wz );
+				m_nDepth = 0.333*(a.wz+b.wz+c.wz);
+			}
+			else
+			{
+				m_nDepth = 0.5*(a.wz+b.wz);
+			}
 			//visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}
 		
 		public function computeVisibility():void
 		{
+			visible = true; if (c != null)
 			visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}
 

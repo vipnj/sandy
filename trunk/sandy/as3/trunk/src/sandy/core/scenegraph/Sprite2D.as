@@ -76,7 +76,7 @@ package sandy.core.scenegraph
 			super(p_sName);
 			m_oContainer = new Sprite();
 			// --
-			_v = new Vertex();
+			_v = new Vertex(); _vx = new Vertex(); _vy = new Vertex();
 			boundingSphere 	= new BSphere();
 	        boundingBox		= null;
 	        // --
@@ -195,13 +195,19 @@ package sandy.core.scenegraph
 	    	_v.wx = _v.x * viewMatrix.n11 + _v.y * viewMatrix.n12 + _v.z * viewMatrix.n13 + viewMatrix.n14;
 			_v.wy = _v.x * viewMatrix.n21 + _v.y * viewMatrix.n22 + _v.z * viewMatrix.n23 + viewMatrix.n24;
 			_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
+
 			m_nDepth = _v.wz;
-			m_nPerspScale = _nScale * 100/m_nDepth;
-			m_nRotation = Math.atan2( viewMatrix.n12, viewMatrix.n22 );
-			// --
+
+			p_oCamera.projectVertex( _v );
 			p_oCamera.addToDisplayList( this );
-			// -- We push the vertex to project onto the viewport.
-			p_oCamera.projectVertex( _v );	
+
+			_vx.copy (_v); _vx.wx++; p_oCamera.projectVertex (_vx);
+			_vy.copy (_v); _vy.wy++; p_oCamera.projectVertex (_vy);
+
+			m_nPerspScaleX = _nScale * (_vx.sx - _v.sx);
+			m_nPerspScaleY = _nScale * (_v.sy - _vy.sy);
+
+			m_nRotation = Math.atan2( viewMatrix.n12, viewMatrix.n22 );
 		}
 
 		/**
@@ -237,7 +243,8 @@ package sandy.core.scenegraph
 		 */
 		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null  ):void
 		{
-			m_oContainer.scaleX = m_oContainer.scaleY = m_nPerspScale;
+			m_oContainer.scaleX = m_nPerspScaleX;
+			m_oContainer.scaleY = m_nPerspScaleY;
 			m_oContainer.x = _v.sx - (autoCenter ? m_oContainer.width/2 : 0);
 			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
 			// --
@@ -339,9 +346,9 @@ package sandy.core.scenegraph
 		private var m_oContainer:Sprite;
 		private var m_bLightingEnabled:Boolean = false;
 
-		protected var m_nPerspScale:Number=0;
+		protected var m_nPerspScaleX:Number=0, m_nPerspScaleY:Number=0;
 		protected var m_nRotation:Number = 0;
-		protected var _v:Vertex;
+		protected var _v:Vertex, _vx:Vertex, _vy:Vertex;
 		protected var m_nDepth:Number;
 		protected var _nScale:Number;
 		protected var m_oContent:DisplayObject;

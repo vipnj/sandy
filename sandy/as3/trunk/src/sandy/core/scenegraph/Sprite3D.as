@@ -86,7 +86,7 @@ package sandy.core.scenegraph
 			{
 				super.content = p_content;
 				// --
-				m_nAutoOffset = (m_oContent as MovieClip).totalFrames / 360; trace(m_nAutoOffset)
+				m_nAutoOffset = (m_oContent as MovieClip).totalFrames / 360;
 			}
 		}
 
@@ -113,11 +113,17 @@ package sandy.core.scenegraph
 			_v.wz = _v.x * m31 + _v.y * m32 + _v.z * m33 + m34;
 
 			m_nDepth = _v.wz;
-			m_nPerspScale = _nScale * 100/m_nDepth;
-			m_nRotation = Math.atan2( m12, m22 );
 			// --
 			p_oCamera.projectVertex( _v );
 			p_oCamera.addToDisplayList( this );
+			
+			_vx.copy (_v); _vx.wx++; p_oCamera.projectVertex (_vx);
+			_vy.copy (_v); _vy.wy++; p_oCamera.projectVertex (_vy);
+
+			m_nPerspScaleX = _nScale * (_vx.sx - _v.sx);
+			m_nPerspScaleY = _nScale * (_v.sy - _vy.sy);
+
+			m_nRotation = Math.atan2( m12, m22 );
 			// -- We push the vertex to project onto the viewport.
 		        m_oNormale.x = _v.wx - _dir.wx;
 		        m_oNormale.y = _v.wy - _dir.wy;

@@ -396,7 +396,7 @@ package sandy.core.scenegraph
 					{
 						l_oFace.precompute();
 						l_nMinZ = l_oFace.minZ;
-				    	if( l_nMinZ > l_nZNear )
+				    	if( l_nMinZ >= l_nZNear )
 						{	
 					    	if( !enableForcedDepth ) m_nDepth += l_nMinZ;
 					    	// -- we manage the display list depending on the mode choosen

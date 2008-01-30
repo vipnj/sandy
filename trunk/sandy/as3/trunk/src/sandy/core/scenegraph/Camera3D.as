@@ -82,6 +82,9 @@ package sandy.core.scenegraph
 			_nNear = p_nNear;
 			// --
 			setPerspectiveProjection( _nFov, viewport.ratio, _nNear, _nFar );
+			m_nOffx = viewport.width2; 
+			m_nOffy = viewport.height2;
+			viewport.hasChanged = false;
 			// It's a non visible node
 			visible = false;
 		}
@@ -94,7 +97,7 @@ package sandy.core.scenegraph
 			_nFov = p_nFov;
 			_perspectiveChanged = true;
 		}
-
+		
 		/**
 		 * @private
 		 */
@@ -105,7 +108,7 @@ package sandy.core.scenegraph
 		 * Near plane distance for culling/clipping.
 		 */
 		public function set near( pNear:Number ):void
-		{_nNear = pNear;_perspectiveChanged = true;}
+		{_nNear = pNear; _perspectiveChanged = true;}
 		
 		/**
 		 * @private
@@ -331,11 +334,8 @@ package sandy.core.scenegraph
 		 */
 		public function updatePerspective():void
 		{
-			if( _perspectiveChanged )
-			{
-				setPerspectiveProjection( _nFov, viewport.ratio, _nNear, _nFar );
-				_perspectiveChanged = false;
-			}
+			setPerspectiveProjection( _nFov, viewport.ratio, _nNear, _nFar );
+			_perspectiveChanged = false;
 		}
 
 
@@ -372,7 +372,7 @@ package sandy.core.scenegraph
 		//////////////////////////
 		/// PRIVATE PROPERTIES ///
 		//////////////////////////
-		private var _perspectiveChanged:Boolean = true;
+		private var _perspectiveChanged:Boolean = false;
 		private var _mp:Matrix4 = new Matrix4(); // projection Matrix4
 		private var _mpInv:Matrix4 = new Matrix4(); // Inverse of the projection matrix 
 

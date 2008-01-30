@@ -35,7 +35,7 @@ package sandy.view
 		 * Offset to change the viewport center.
 		 * For example, if you set myCamera.viewport.offset.y to 100, everything drawn at the screen will be moved 100 pixels down (due to Flash vertical axis convention).
 		 */
-		public var offset:Point = new Point();
+		public const offset:Point = new Point();
 				
 		/**
 		 * Flag which specifies if the viewport dimension has changed

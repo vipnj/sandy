@@ -213,14 +213,12 @@ package sandy.core.data
 		 */
 		public function precompute():void
 		{
-			//minZ = a.wz;
-			//if (b.wz < minZ) minZ = b.wz;
-			//if (c.wz < minZ) minZ = c.wz;
-			
-			minZ = Math.min( a.wz, b.wz );
+			minZ = a.wz;
+			if (b.wz < minZ) minZ = b.wz;
+			// --
 			if (c != null)
 			{
-				minZ = Math.min( minZ, c.wz );
+				if (c.wz < minZ) minZ = c.wz;
 				m_nDepth = 0.333*(a.wz+b.wz+c.wz);
 			}
 			else
@@ -232,8 +230,9 @@ package sandy.core.data
 		
 		public function computeVisibility():void
 		{
-			visible = true; if (c != null)
-			visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
+			visible = true; 
+			if (c != null)
+				visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}
 
 		/**
@@ -460,7 +459,7 @@ package sandy.core.data
 			scene = p_oScene;
 			// --
 			const lCont:Sprite = (p_oContainer)?p_oContainer:m_oContainer;
-			if( m_bVisible )
+			if( visible )
 			{
 				m_oAppearance.frontMaterial.renderPolygon( p_oScene, this, lCont );
 			}
@@ -703,7 +702,6 @@ package sandy.core.data
 		private var m_oAppearance:Appearance;
 		/** array of ID of uv coordinates in geometry object */
 		private var m_aUVCoords:Array;
-		private var m_bVisible:Boolean = false;
 
 		protected var m_oContainer:Sprite;
 

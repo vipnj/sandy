@@ -181,6 +181,11 @@ package sandy.core.scenegraph
 			}
 			// --
 			if( culled == CullingState.OUTSIDE ) 	container.visible = false;
+			else if( culled == CullingState.INTERSECT ) 
+			{
+				if( boundingSphere.position.z <= p_oScene.camera.near ) container.visible = false;
+				else container.visible = true;
+			}
 			else									container.visible = true;
 		}
 		

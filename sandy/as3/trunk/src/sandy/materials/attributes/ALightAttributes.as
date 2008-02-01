@@ -131,11 +131,12 @@ package sandy.materials.attributes
 		/**
 		 * Calculates the reflection for given normal.
 		 */
-		protected function calculate (p_oNormal:Vector, p_bIgnoreSpecular:Boolean = false):Number
+		protected function calculate (p_oNormal:Vector, p_bFrontside:Boolean, p_bIgnoreSpecular:Boolean = false):Number
 		{
-			var l_k:Number = ambient + diffuse * Math.max (0, -m_oL.dot (p_oNormal));
+			var l_n:Number = p_bFrontside ? -1 : 1;
+			var l_k:Number = ambient + diffuse * Math.max (0, l_n * m_oL.dot (p_oNormal));
 			if (!p_bIgnoreSpecular && (specular > 0))
-				l_k += specular * Math.pow (Math.max (0, -m_oH.dot (p_oNormal)), gloss);
+				l_k += specular * Math.pow (Math.max (0, l_n * m_oH.dot (p_oNormal)), gloss);
 			return l_k * m_nI;
 		}
 		

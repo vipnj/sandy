@@ -123,8 +123,8 @@ package sandy.materials.attributes
 				n.z = e.z * r - m_oL.z * q;
 				n.normalize ();
 				// calculate reflection from that normal
-				l_aReflection [0] [i] = calculate (n, true);
-				l_aReflection [1] [i] = calculate (n) - l_aReflection [0] [i];
+				l_aReflection [0] [i] = calculate (n, true, true);
+				l_aReflection [1] [i] = calculate (n, true) - l_aReflection [0] [i];
 
 				for (j = 0; j < 2; j++)
 				{				
@@ -302,6 +302,8 @@ package sandy.materials.attributes
 			for (i = 0; i < 3; i++)
 			{
 				aN0 [i].copy (p_oPolygon.vertexNormals [i].getWorldVector());
+				if (!p_oPolygon.visible) aN0 [i].scale (-1);
+
 				if (spherize > 0)
 				{
 					// too bad, l_aPoints [i].getWorldVector () gives viewMatrix-based coordinates

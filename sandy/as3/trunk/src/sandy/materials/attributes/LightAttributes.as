@@ -75,7 +75,7 @@ package sandy.materials.attributes
 				var l_aPoints:Array = (p_oPolygon.isClipped)?p_oPolygon.cvertices : p_oPolygon.vertices;
 				var l_oNormal:Vector = p_oPolygon.normal.getWorldVector();
 				// --
-				var lightStrength:Number = NumberUtil.constrain (calculate (l_oNormal), 0, 1);
+				var lightStrength:Number = NumberUtil.constrain (calculate (l_oNormal, p_oPolygon.visible), 0, 1);
 				// --
 				p_oGraphics.lineStyle();
 				if( useBright) 

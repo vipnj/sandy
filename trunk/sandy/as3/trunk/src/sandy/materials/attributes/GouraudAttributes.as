@@ -90,9 +90,9 @@ package sandy.materials.attributes
 			v1N = p_oPolygon.vertexNormals[1].getWorldVector();
 			v2N = p_oPolygon.vertexNormals[2].getWorldVector();
 			// --
-			v0L = NumberUtil.constrain (calculate (v0N), 0, 1);
-			v1L = NumberUtil.constrain (calculate (v1N), 0, 1);
-			v2L = NumberUtil.constrain (calculate (v2N), 0, 1);
+			v0L = NumberUtil.constrain (calculate (v0N, p_oPolygon.visible), 0, 1);
+			v1L = NumberUtil.constrain (calculate (v1N, p_oPolygon.visible), 0, 1);
+			v2L = NumberUtil.constrain (calculate (v2N, p_oPolygon.visible), 0, 1);
 			v0L = NumberUtil.constrain( v0L, 0, 1 );
 			v1L = NumberUtil.constrain( v1L, 0, 1 );
 			v2L = NumberUtil.constrain( v2L, 0, 1 );	

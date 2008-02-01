@@ -19,7 +19,9 @@ package sandy.materials.attributes
 	import flash.display.Graphics;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	
+	import sandy.core.SandyFlags;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
@@ -77,6 +79,8 @@ package sandy.materials.attributes
 					  80, 120,
 					 120, 180];
 			}
+
+			m_nFlags |= SandyFlags.VERTEX_NORMAL_WORLD;
 		}
 
 		// --
@@ -102,17 +106,31 @@ package sandy.materials.attributes
 			// transform 1st three normals
 			for (i = 0; i < 3; i++)
 			{
-				aN0 [i].copy (p_oPolygon.vertexNormals [i].getVector ());
+				aN0 [i].copy (p_oPolygon.vertexNormals [i].getWorldVector());
+				if (!p_oPolygon.visible) aN0 [i].scale (-1);
+
 				if (spherize > 0)
 				{
-					var dv:Vector = l_aPoints [i].getVector ();
-					dv.sub (p_oPolygon.shape.geometryCenter);
-					dv.normalize ();
-					dv.scale (spherize);
+					// too bad, l_aPoints [i].getWorldVector () gives viewMatrix-based coordinates
+					// when vertexNormals [i].getWorldVector () gives modelMatrix-based ones :(
+					// so we have to use cache for modelMatrix-based vertex coords (and also scaled)
+					var dv:Vector;
+					if (m_oVertices [l_aPoints [i]] == null)
+					{
+						dv = l_aPoints [i].getVector ();
+						dv.sub (p_oPolygon.shape.geometryCenter);
+						p_oPolygon.shape.modelMatrix.vectorMult3x3 (dv);
+						dv.normalize ();
+						dv.scale (spherize);
+						m_oVertices [l_aPoints [i]] = dv;
+					}
+					else
+					{
+						dv = m_oVertices [l_aPoints [i]];
+					}
 					aN0 [i].add (dv);
 					aN0 [i].normalize ();
 				}
-				p_oPolygon.shape.modelMatrix.vectorMult3x3 (aN0 [i]);
 			}
 
 			// get highlight direction vector
@@ -159,6 +177,22 @@ package sandy.materials.attributes
 					aNP [i].y = (16384 - 1) * 0.05 * aNP [i].y;
 				}
 
+				// simple hack to resolve bad projections
+				// where the hell do they keep coming from?
+				while ((Math.abs(
+						(aNP[0].x - aNP[1].x) * (aNP[0].x - aNP[2].x) + (aNP[0].y - aNP[1].y) * (aNP[0].y - aNP[2].y)
+						) > (1 - NumberUtil.TOL) *
+						Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[0], aNP[2])
+					)
+					|| (Math.abs(
+						(aNP[0].x - aNP[1].x) * (aNP[2].x - aNP[1].x) + (aNP[0].y - aNP[1].y) * (aNP[2].y - aNP[1].y)
+						) > (1 - NumberUtil.TOL) *
+						Point.distance(aNP[0], aNP[1]) * Point.distance(aNP[2], aNP[1])
+					))
+				{
+					aNP[0].x--; aNP[1].y++; aNP[2].x++;
+				}
+
 				// compute gradient matrix
 				matrix.a = aNP[1].x - aNP[0].x;
 				matrix.b = aNP[1].y - aNP[0].y;
@@ -182,6 +216,17 @@ package sandy.materials.attributes
 
 			// --
 			l_aPoints = null;
+		}
+
+		// vertex dictionary
+		private var m_oVertices:Dictionary;
+
+		override public function begin( p_oScene:Scene3D ):void
+		{
+			super.begin (p_oScene);
+
+			// clear vertex dictionary
+			m_oVertices = new Dictionary (true);
 		}
 
 		// --

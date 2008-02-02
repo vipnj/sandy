@@ -20,12 +20,13 @@ package sandy.materials
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.attributes.MaterialAttributes;
 	
 	/**
-	 * ABSTRACT CLASS - base class for all materials.
+	 * Blank material - base class for all materials.
 	 * 
-	 * <p>This class should not be directly instatiated</p>
+	 * <p>You can use this class to apply attributes without any material to object.</p>
 	 *
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
@@ -45,14 +46,14 @@ package sandy.materials
 		public var useVertexNormal:Boolean = false;
 		
 		/**
-		 * Specify is the material can receive light and apply the lightAttributes if specified.
+		 * Specify is the material can receive light and apply the light attributes if specified.
 		 * Can be useful to disable very rapidly the light when unused.
 		 * Default value : false
 		 */
 		public var lightingEnable:Boolean = false;
 		
 		/**
-		 * Creates a matrial.
+		 * Creates a material.
 		 *
 		 * <p>This constructor is never called directly - but by sub class constructors</p>
 		 * @param p_oAttr	The attributes for this material
@@ -92,9 +93,19 @@ package sandy.materials
 		 */
 		public function renderPolygon( p_oScene:Scene3D, p_oPolygon:Polygon, p_mcContainer:Sprite ):void
 		{
-			;
+			if( attributes )  attributes.draw( p_mcContainer.graphics, p_oPolygon, this, p_oScene ) ;
 		}
 			
+		/**
+		 * Renders the sprite dress in this material.
+		 *
+		 * <p>Basically only needed to apply attributes to sprites</p>
+		 */
+		public function renderSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			if( attributes )  attributes.drawOnSprite( p_oSprite, p_oMaterial, p_oScene );
+		}
+
 		/**
 		 * Allows to proceed to an initialization
 		 * to know when the polyon isn't lined to the material, look at #unlink
@@ -169,7 +180,7 @@ package sandy.materials
 		// PROPERTIES
 		//////////////////
 		/**
-		 * DO NOT TOUCH THIS PROPERTY UNLESS YOU EPRFECTLY KNOW WHAT YOU ARE DOING.
+		 * DO NOT TOUCH THIS PROPERTY UNLESS YOU PERFECTLY KNOW WHAT YOU ARE DOING.
 		 * this flag property contains the specific material flags.
 		 */
 		protected var m_nFlags:uint = 0;

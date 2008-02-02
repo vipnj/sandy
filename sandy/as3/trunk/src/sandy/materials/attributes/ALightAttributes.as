@@ -23,6 +23,7 @@ package sandy.materials.attributes
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.data.Vector;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.events.SandyEvent;
 	import sandy.materials.Material;
 	import sandy.math.ColorMath;
@@ -41,6 +42,10 @@ package sandy.materials.attributes
 	{
 		/**
 		 * Ambient reflection factor.
+		 *
+		 * <p>Note that since geometry of sprites is unknown, this is going to
+		 * be the only lighting setting affecting them, so you would typically
+		 * need to set it to bigger value than you would for shapes.</p>
 		 * @default 0.3
 		 */
 		public function get ambient ():Number
@@ -148,22 +153,42 @@ package sandy.materials.attributes
 		{
 			if (p_oMaterial.lightingEnable)
 			{
-				// to avoid color darkening, we will normalize color; pitch-black is "normalized" to white
-				var c:uint = p_oScene.light.color;
-				if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
-				const rgb:Object = ColorMath.hex2rgb (c);
-				const Y:Number = Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b) / Math.sqrt (3);
-				rgb.r /= Y; rgb.g /= Y; rgb.b /= Y;
-				const s:DisplayObject = (p_oPolygon.shape.useSingleContainer) ? p_oPolygon.shape.container : p_oPolygon.container;
-				const ct:ColorTransform = s.transform.colorTransform;
-				if ((ct.redMultiplier != rgb.r) || (ct.greenMultiplier != rgb.g) || (ct.blueMultiplier != rgb.b))
-				{
-					ct.redMultiplier = rgb.r; ct.greenMultiplier = rgb.g; ct.blueMultiplier = rgb.b;
-					s.transform.colorTransform = ct;
-				}
+				applyColorToDisplayObject (
+					p_oPolygon.shape.useSingleContainer ? p_oPolygon.shape.container : p_oPolygon.container,
+					p_oScene.light.color, 1
+				);
 			}
 		}
 		
+		/**
+		 * This method applies light color to sprite containers.
+		 * You will hardly ever need to override it.
+		 */
+		public function drawOnSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			if (p_oMaterial.lightingEnable)
+			{
+				applyColorToDisplayObject (p_oSprite.container, p_oScene.light.color,
+					ambient * p_oScene.light.getNormalizedPower ()
+				);
+			}
+		}
+
+		private function applyColorToDisplayObject (s:DisplayObject, c:uint, b:Number):void
+		{
+			// to avoid color darkening, we will normalize color; pitch-black is "normalized" to white
+			if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
+			const rgb:Object = ColorMath.hex2rgb (c);
+			const bY:Number = b * Math.sqrt (3) / Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
+			rgb.r *= bY; rgb.g *= bY; rgb.b *= bY;
+			const ct:ColorTransform = s.transform.colorTransform;
+			if ((ct.redMultiplier != rgb.r) || (ct.greenMultiplier != rgb.g) || (ct.blueMultiplier != rgb.b))
+			{
+				ct.redMultiplier = rgb.r; ct.greenMultiplier = rgb.g; ct.blueMultiplier = rgb.b;
+				s.transform.colorTransform = ct;
+			}
+		}
+
 		/**
 		 * Method called before the display list rendering.
 		 * This is the common place for this attribute to precompute things

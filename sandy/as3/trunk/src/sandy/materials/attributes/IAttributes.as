@@ -21,6 +21,7 @@ package sandy.materials.attributes
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.Material;
 	
 	/**
@@ -35,6 +36,8 @@ package sandy.materials.attributes
 	public interface IAttributes
 	{
 		function draw( p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D ):void;
+
+		function drawOnSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void;
 		
 		function init( p_oPolygon:Polygon ):void;
 	

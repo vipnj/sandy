@@ -17,11 +17,13 @@ limitations under the License.
 package sandy.materials.attributes
 {
 	import flash.display.Graphics;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Edge3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.Material;
 	
 	/**
@@ -168,7 +170,7 @@ package sandy.materials.attributes
 		 * Draw the outline edges of the polygon into the graphics object.
 		 *  
 		 * @param p_oGraphics the Graphics object to draw attributes into
-		 * @param p_oPolygon the polygon which is going o be drawn
+		 * @param p_oPolygon the polygon which is going to be drawn
 		 * @param p_oMaterial the refering material
 		 * @param p_oScene the scene
 		 */
@@ -205,9 +207,22 @@ package sandy.materials.attributes
 		   			p_oGraphics.moveTo( l_oEdge.vertex1.sx, l_oEdge.vertex1.sy );
 					p_oGraphics.lineTo( l_oEdge.vertex2.sx, l_oEdge.vertex2.sy );
 	   			}
-        	}
-        	
-        	p_oGraphics.endFill();
-        }
+			}
+
+			p_oGraphics.endFill();
+		}
+
+		/**
+		 * Outline the sprite. This has to clear any drawing done on sprite container, sorry.
+		 *  
+		 * @param p_oSprite the Sprite2D object to apply attributes to
+		 * @param p_oScene the scene
+		 */
+		override public function drawOnSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			const g:Graphics = p_oSprite.container.graphics; g.clear ();
+			const r:Rectangle = p_oSprite.container.getBounds (p_oSprite.container);
+			g.lineStyle (m_nThickness, m_nColor, m_nAlpha); g.drawRect (r.x, r.y, r.width, r.height);
+		}
 	}
 }

@@ -20,7 +20,6 @@ package sandy.materials.attributes
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
 	import sandy.core.scenegraph.Sprite2D;
-	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.Material;
 
 	/**

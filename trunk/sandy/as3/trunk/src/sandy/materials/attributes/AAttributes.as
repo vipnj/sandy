@@ -19,6 +19,8 @@ package sandy.materials.attributes
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.scenegraph.Sprite2D;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.Material;
 
 	/**
@@ -45,6 +47,17 @@ package sandy.materials.attributes
 			;
 		}
 		
+		/**
+		 * Apply attributes to sprites.
+		 *  
+		 * @param p_oSprite the Sprite2D object to apply attributes to
+		 * @param p_oScene the scene
+		 */
+		public function drawOnSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			;
+		}
+
 		/**
 		 * Method called before the display list rendering.
 		 * This is the common place for this attribute to precompute things

@@ -21,6 +21,7 @@ package sandy.materials.attributes
 	
 	import sandy.core.Scene3D;
 	import sandy.core.data.Polygon;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.Material;
 	
 	public class MaterialAttributes
@@ -74,6 +75,12 @@ package sandy.materials.attributes
 				l_oAttr.draw( p_oGraphics, p_oPolygon, p_oMaterial, p_oScene );
 		}
 		
+		public function drawOnSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			for each( var l_oAttr:IAttributes in attributes )
+				l_oAttr.drawOnSprite( p_oSprite, p_oMaterial, p_oScene );
+		}
+
 		public function get flags():uint
 		{
 			var l_nFlags:uint = 0;

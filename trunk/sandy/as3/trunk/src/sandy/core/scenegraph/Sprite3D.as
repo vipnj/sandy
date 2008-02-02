@@ -98,6 +98,11 @@ package sandy.core.scenegraph
 		 */
 		override public function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
+			if ((m_oMaterial != null) && !p_oScene.materialManager.isRegistered( m_oMaterial ))
+			{
+				p_oScene.materialManager.register( m_oMaterial );
+			}
+
 			const l_oMatrix:Matrix4 = viewMatrix,
 				m11:Number = l_oMatrix.n11, m21:Number = l_oMatrix.n21, m31:Number = l_oMatrix.n31,
 				m12:Number = l_oMatrix.n12, m22:Number = l_oMatrix.n22, m32:Number = l_oMatrix.n32,

@@ -20,14 +20,13 @@ package sandy.core.scenegraph
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.geom.ColorTransform;
 	
 	import sandy.bounds.BSphere;
 	import sandy.core.Scene3D;
 	import sandy.core.data.Matrix4;
 	import sandy.core.data.Vertex;
 	import sandy.events.BubbleEvent;
-	import sandy.math.ColorMath;
+	import sandy.materials.Material;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
 	
@@ -195,9 +194,14 @@ package sandy.core.scenegraph
 		 * @param p_oScene The current scene
 		 * @param p_oCamera	The current camera
 		 */
-	    public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
+		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
 		{
-	    	_v.wx = _v.x * viewMatrix.n11 + _v.y * viewMatrix.n12 + _v.z * viewMatrix.n13 + viewMatrix.n14;
+			if ((m_oMaterial != null) && !p_oScene.materialManager.isRegistered( m_oMaterial ))
+			{
+				p_oScene.materialManager.register( m_oMaterial );
+			}
+
+			_v.wx = _v.x * viewMatrix.n11 + _v.y * viewMatrix.n12 + _v.z * viewMatrix.n13 + viewMatrix.n14;
 			_v.wy = _v.x * viewMatrix.n21 + _v.y * viewMatrix.n22 + _v.z * viewMatrix.n23 + viewMatrix.n24;
 			_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
 
@@ -254,53 +258,28 @@ package sandy.core.scenegraph
 			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
 			// --
 			if (fixedAngle) m_oContainer.rotation = m_nRotation * 180 / Math.PI;
-
-			// this should correspond to ALightAttributes behavior as closely as possible
-			if (lightingEnable)
-			{
-				var b:Number = ambient * p_oScene.light.getNormalizedPower ();
-				var c:uint = p_oScene.light.color;
-				if ((c < 1) || (c > 0xFFFFFF)) c = 0xFFFFFF;
-				const rgb:Object = ColorMath.hex2rgb (c);
-				const bY:Number = b * Math.sqrt (3) / Math.sqrt (rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
-				rgb.r *= bY; rgb.g *= bY; rgb.b *= bY;
-				const ct:ColorTransform = m_oContainer.transform.colorTransform;
-				if ((ct.redMultiplier != rgb.r) || (ct.greenMultiplier != rgb.g) || (ct.blueMultiplier != rgb.b))
-				{
-					ct.redMultiplier = rgb.r; ct.greenMultiplier = rgb.g; ct.blueMultiplier = rgb.b;
-					m_oContainer.transform.colorTransform = ct;
-				}
-			}
+			// --
+			if (m_oMaterial) m_oMaterial.renderSprite( this, m_oMaterial, p_oScene );
 		}
-		
+
 		/**
-		 * Specify if a sprite will obey scene light when displayed.
-		 * Can be useful to disable very rapidly the light when unused.
-		 * Default value : false
+		 * Material that the sprite will be dressed in. Use it to apply some attributes
+		 * to sprite, such as light attributes.
 		 */
-		public function get lightingEnable ():Boolean
+		public function get material():Material
 		{
-			return m_bLightingEnabled
+			return m_oMaterial;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set lightingEnable (p_bArg:Boolean):void
+		public function set material( p_oMaterial:Material ):void
 		{
-			m_bLightingEnabled = p_bArg;
-			if (!m_bLightingEnabled)
-				m_oContainer.transform.colorTransform = new ColorTransform ();
+			// FIXME: should we store scene reference to unregister material here,
+			// or simply advice users to do that?
+			m_oMaterial = p_oMaterial;
 		}
-
-		/**
-		 * Ambient reflection factor. Since we know nothing about sprite geometry,
-		 * only ambient reflection can be supported.
-		 * @default 0.6
-		 */
-		public var ambient:Number = 0.6;
-
-
 
 		public function get enableEvents():Boolean
 		{
@@ -357,5 +336,6 @@ package sandy.core.scenegraph
 		protected var m_nDepth:Number;
 		protected var _nScale:Number;
 		protected var m_oContent:DisplayObject;
+		protected var m_oMaterial:Material;
 	}
 }

@@ -117,7 +117,7 @@ package sandy.core.scenegraph
 			_v.wy = _v.x * m21 + _v.y * m22 + _v.z * m23 + m24;
 			_v.wz = _v.x * m31 + _v.y * m32 + _v.z * m33 + m34;
 
-			m_nDepth = _v.wz;
+			m_nDepth = enableForcedDepth ? forcedDepth : _v.wz;
 			// --
 			p_oCamera.projectVertex( _v );
 			p_oCamera.addToDisplayList( this );

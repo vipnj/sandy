@@ -16,9 +16,11 @@ limitations under the License.
 
 package sandy.materials.attributes
 {
+	import flash.display.DisplayObject;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.filters.BlurFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 
 	import sandy.core.Scene3D;
@@ -26,6 +28,7 @@ package sandy.materials.attributes
 	import sandy.core.data.Vector;
 	import sandy.core.data.Vertex;
 	import sandy.core.scenegraph.Shape3D;
+	import sandy.core.scenegraph.Sprite2D;
 	import sandy.materials.Material;
 	import sandy.math.ColorMath;
 	import sandy.math.VertexMath;
@@ -107,7 +110,7 @@ package sandy.materials.attributes
 		 * Draw the attribute onto the graphics object to simulate viewing through partially opaque medium.
 		 *  
 		 * @param p_oGraphics the Graphics object to draw attributes into
-		 * @param p_oPolygon the polygon which is going o be drawn
+		 * @param p_oPolygon the polygon which is going to be drawn
 		 * @param p_oMaterial the refering material
 		 * @param p_oScene the scene
 		 */
@@ -153,7 +156,35 @@ package sandy.materials.attributes
 				p_oGraphics.endFill();
 			}
 
-			blurPolygonBy (p_oPolygon, Math.min (255, Math.max (0, blurAmount * r0)));
+			blurDisplayObjectBy (
+				p_oPolygon.shape.useSingleContainer ? p_oPolygon.shape.container : p_oPolygon.container,
+				Math.min (255, Math.max (0, blurAmount * r0))
+			);
+		}
+
+		/**
+		 * Draw the attribute on sprite to simulate viewing through partially opaque medium.
+		 *  
+		 * @param p_oSprite the Sprite2D object to apply attributes to
+		 * @param p_oScene the scene
+		 */
+		override public function drawOnSprite( p_oSprite:Sprite2D, p_oMaterial:Material, p_oScene:Scene3D ):void
+		{
+			const l_ratio:Number = Math.max (0, Math.min (1, ratioFromWorldVector (p_oSprite.getPosition ("camera")) * _a));
+			const l_color:Object = ColorMath.hex2rgb (_c);
+			const l_coltr:ColorTransform = p_oSprite.container.transform.colorTransform;
+			// --
+			l_coltr.redOffset = Math.round (l_color.r * l_ratio);
+			l_coltr.greenOffset = Math.round (l_color.g * l_ratio);
+			l_coltr.blueOffset = Math.round (l_color.b * l_ratio);
+			l_coltr.redMultiplier = l_coltr.greenMultiplier = l_coltr.blueMultiplier = 1 - l_ratio;
+			// --
+			p_oSprite.container.transform.colorTransform = l_coltr;
+
+			blurDisplayObjectBy (
+				p_oSprite.container,
+				Math.min (255, Math.max (0, blurAmount * l_ratio))
+			);
 		}
 
 		// --
@@ -162,7 +193,7 @@ package sandy.materials.attributes
 			p_oW.sub (fadeFrom); return p_oW.dot (_fadeTo) / _fadeToN2;
 		}
 
-		private function blurPolygonBy (p_oPolygon:Polygon, p_nBlurAmount:Number):void
+		private function blurDisplayObjectBy (p_oDisplayObject:DisplayObject, p_nBlurAmount:Number):void
 		{
 			if (p_nBlurAmount == 0) return;
 
@@ -170,13 +201,12 @@ package sandy.materials.attributes
 			p_nBlurAmount = Math.round (10 * p_nBlurAmount) * 0.1;
 
 			var fs:Array = [], changed:Boolean = false;
-			var s:Sprite = (p_oPolygon.shape.useSingleContainer) ? p_oPolygon.shape.container : p_oPolygon.container;
 
-			for (var i:int = s.filters.length -1; i > -1; i--)
+			for (var i:int = p_oDisplayObject.filters.length -1; i > -1; i--)
 			{
-				if (!changed && (s.filters[i] is BlurFilter) && (s.filters[i].quality == 1))
+				if (!changed && (p_oDisplayObject.filters[i] is BlurFilter) && (p_oDisplayObject.filters[i].quality == 1))
 				{
-					var bf:BlurFilter = s.filters[i];
+					var bf:BlurFilter = p_oDisplayObject.filters[i];
 
 					// hopefully, this check will save some cpu
 					if ((bf.blurX == p_nBlurAmount) &&
@@ -188,14 +218,14 @@ package sandy.materials.attributes
 				else
 				{
 					// copy the filter
-					fs[i] = s.filters[i];
+					fs[i] = p_oDisplayObject.filters[i];
 				}
 			}
 			// if filter was not found, add new
 			if (!changed)
 				fs.push (new BlurFilter (p_nBlurAmount, p_nBlurAmount, 1));
 			// re-apply all filters
-			s.filters = fs;
+			p_oDisplayObject.filters = fs;
 		}
 
 		// --

@@ -205,7 +205,7 @@ package sandy.core.scenegraph
 			_v.wy = _v.x * viewMatrix.n21 + _v.y * viewMatrix.n22 + _v.z * viewMatrix.n23 + viewMatrix.n24;
 			_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
 
-			m_nDepth = _v.wz;
+			m_nDepth = enableForcedDepth ? forcedDepth : _v.wz;
 
 			p_oCamera.projectVertex( _v );
 			p_oCamera.addToDisplayList( this );
@@ -280,6 +280,23 @@ package sandy.core.scenegraph
 			// or simply advice users to do that?
 			m_oMaterial = p_oMaterial;
 		}
+
+		/**
+		 * Should forced depth be enable for this object?.
+		 *
+		 * <p>If true it is possible to force this object to be drawn at a specific depth,<br/>
+		 * if false the normal Z-sorting algorithm is applied.</p>
+		 * <p>When correctly used, this feature allows you to avoid some Z-sorting problems.</p>
+		 */
+		public var enableForcedDepth:Boolean = false;
+		
+		/**
+		 * The forced depth for this object.
+		 *
+		 * <p>To make this feature work, you must enable the ForcedDepth system too.<br/>
+		 * The higher the depth is, the sooner the more far the object will be represented.</p>
+		 */
+		public var forcedDepth:Number = 0;
 
 		public function get enableEvents():Boolean
 		{

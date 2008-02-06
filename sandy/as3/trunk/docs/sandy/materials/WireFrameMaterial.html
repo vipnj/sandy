@@ -76,6 +76,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#flags">flags</a> : uint<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#id">id</a> : Number<div class="summaryTableDescription">
    The unique id of this material
    </div>
@@ -83,7 +87,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lightingEnable">lightingEnable</a> : Boolean = false<div class="summaryTableDescription">
-   Specify is the material can receive light and apply the lightAttributes if specified.</div>
+   Specify is the material can receive light and apply the light attributes if specified.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -127,6 +131,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_bModified">m_bModified</a> : Boolean<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_nFlags">m_nFlags</a> : uint = 0<div class="summaryTableDescription">
+   DO NOT TOUCH THIS PROPERTY UNLESS YOU PERFECTLY KNOW WHAT YOU ARE DOING.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
@@ -194,6 +203,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    Renders this material on the face it dresses.</div>
 </td><td class="summaryTableOwnerCol">WireFrameMaterial</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Material.html#renderSprite()">renderSprite</a>(p_oSprite:<a href="../core/scenegraph/Sprite2D.html">Sprite2D</a>, p_oMaterial:<a href="../materials/Material.html">Material</a>, p_oScene:<a href="../core/Scene3D.html">Scene3D</a>):void</div>
+<div class="summaryTableDescription">
+   Renders the sprite dress in this material.</div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">

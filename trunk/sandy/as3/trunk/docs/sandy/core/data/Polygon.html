@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Polygon,sandy.core.data.Polygon,POLYGON_MAP,aEdges,aNeighboors,aUVCoord,caUVCoord,cvertices,hasAppearanceChanged,id,isClipped,m_oContainer,m_oEB,m_oVisibilityRef,maxBounds,meanBounds,minBounds,normal,scene,shape,uvBounds,vertexNormals,vertices,broadcaster,container,enableEvents,enableInteractivity,visible,appearance,depth,_onInteraction,_onTextureInteraction,_startMouseInteraction,_stopMouseInteraction,addEventListener,clear,clip,clipFrontPlane,computeVisibility,createNormal,destroy,display,get3DFrom2D,getUVFrom2D,precomputeBounds,removeEventListener,swapCulling,toString" name="keywords">
+<meta content="Polygon,sandy.core.data.Polygon,POLYGON_MAP,a,aEdges,aNeighboors,aUVCoord,caUVCoord,cvertices,hasAppearanceChanged,id,isClipped,m_nDepth,m_oContainer,m_oEB,minZ,normal,scene,shape,uvBounds,vertexNormals,vertices,visible,broadcaster,container,depth,enableEvents,enableInteractivity,appearance,_onInteraction,_onTextureInteraction,_startMouseInteraction,_stopMouseInteraction,addEventListener,clear,clip,clipFrontPlane,computeVisibility,createNormal,destroy,display,get3DFrom2D,getUVFrom2D,precompute,removeEventListener,swapCulling,toString" name="keywords">
 <title>sandy.core.data.Polygon</title>
 </head>
 <body>
@@ -55,6 +55,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#a">a</a> : <a href="../data/Vertex.html">Vertex</a>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polygon</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#aEdges">aEdges</a> : Array<div class="summaryTableDescription">
    [READ-ONLY] property.</div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
@@ -98,8 +103,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#depth">depth</a> : Number<div class="summaryTableDescription">
-   The z depth of this polygon.</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#depth">depth</a> : Number<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
@@ -121,21 +125,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#maxBounds">maxBounds</a> : <a href="../data/Vector.html">Vector</a>
-<div class="summaryTableDescription">
-   [READ-ONLY] property.</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#minZ">minZ</a> : Number<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#meanBounds">meanBounds</a> : <a href="../data/Vector.html">Vector</a>
-<div class="summaryTableDescription">
-   [READ-ONLY] property.</div>
-</td><td class="summaryTableOwnerCol">Polygon</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#minBounds">minBounds</a> : <a href="../data/Vector.html">Vector</a>
-<div class="summaryTableDescription">
-   [READ-ONLY] property.</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#m_nDepth">m_nDepth</a> : Number<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
@@ -177,7 +171,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#visible">visible</a> : Boolean<div class="summaryTableDescription">[read-only]
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#visible">visible</a> : Boolean<div class="summaryTableDescription">
    Is this face visible?.</div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
@@ -196,11 +190,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#m_oEB">m_oEB</a> : <a href="../../events/BubbleEventBroadcaster.html">BubbleEventBroadcaster</a>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Polygon</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#m_oVisibilityRef">m_oVisibilityRef</a> : <a href="../data/Vertex.html">Vertex</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
@@ -257,8 +246,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#computeVisibility()">computeVisibility</a>():void</div>
-<div class="summaryTableDescription">
-   Pre-compute several properties of the polygon in the same time.</div>
+<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
 </tr>
 <tr class="">
@@ -314,7 +302,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#precomputeBounds()">precomputeBounds</a>():void</div>
+<a class="signatureLink" href="#precompute()">precompute</a>():void</div>
 <div class="summaryTableDescription">
    Pre-compute several properties of the polygon in the same time.</div>
 </td><td class="summaryTableOwnerCol">Polygon</td>
@@ -404,10 +392,19 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
+<a name="a"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">a</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var a:<a href="../data/Vertex.html">Vertex</a></code>
+</div>
 <a name="aEdges"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">aEdges</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">aEdges</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -508,9 +505,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>depth:Number</code>&nbsp;&nbsp;[read-write]<p>
-   The z depth of this polygon.
-   </p><span class="label">Implementation</span>
+<code>depth:Number</code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get depth():Number</code>
 <br>
@@ -568,39 +563,24 @@ showHideInherited();
    [READ-ONLY] property.
    Specify if the polygon has been clipped
    </p></div>
-<a name="maxBounds"></a>
+<a name="minZ"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">maxBounds</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">minZ</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public var maxBounds:<a href="../data/Vector.html">Vector</a></code><p>
-   [READ-ONLY] property.
-   Max values of this polygon
-   </p></div>
-<a name="meanBounds"></a>
+<code>public var minZ:Number</code>
+</div>
+<a name="m_nDepth"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">meanBounds</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">m_nDepth</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public var meanBounds:<a href="../data/Vector.html">Vector</a></code><p>
-   [READ-ONLY] property.
-   Mean values of this polygon
-   </p></div>
-<a name="minBounds"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">minBounds</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var minBounds:<a href="../data/Vector.html">Vector</a></code><p>
-   [READ-ONLY] property.
-   Min values of this polygon
-   </p></div>
+<code>public var m_nDepth:Number</code>
+</div>
 <a name="m_oContainer"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -618,15 +598,6 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>protected var m_oEB:<a href="../../events/BubbleEventBroadcaster.html">BubbleEventBroadcaster</a></code>
-</div>
-<a name="m_oVisibilityRef"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">m_oVisibilityRef</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>protected var m_oVisibilityRef:<a href="../data/Vertex.html">Vertex</a></code>
 </div>
 <a name="normal"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -712,14 +683,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>visible:Boolean</code>&nbsp;&nbsp;[read-only]<p>
+<code>public var visible:Boolean</code><p>
    Is this face visible?.
    The method returns the visibility value pre computed after precompute method call. This getter shall be called afer the precompute call.
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get visible():Boolean</code>
-<br>
-</div>
+   </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="Polygon()"></a>
@@ -921,11 +888,8 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function computeVisibility():void</code><p>
-   Pre-compute several properties of the polygon in the same time.
-   List of the computed properties :
-    - visibility : if the polygon is visible
-   </p></div>
+<code>public function computeVisibility():void</code>
+</div>
 <a name="createNormal()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -1047,21 +1011,20 @@ showHideInherited();
 </tr>
 </table>
 </div>
-<a name="precomputeBounds()"></a>
+<a name="precompute()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">precomputeBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">precompute</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function precomputeBounds():void</code><p>
+<code>public function precompute():void</code><p>
    Pre-compute several properties of the polygon in the same time.
    List of the computed properties :
    <ul>
-    <li>mean z depth : the mean z depth used for basic sorting</li>
-    <li>max bounds : the maximum bounds of the polygon</li>
-    <li>min bounds : the minimum bounds of the polygon</li>
-    <li>mean bounds : the mean of each components of the polygon. It is center actually.</li>
+    <li>minZ</li>
+    <li>visibility</li>
+    <li>depth</li>
    </ul>
    </p></div>
 <a name="removeEventListener()"></a>

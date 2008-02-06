@@ -66,11 +66,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#ambient">ambient</a> : Number = 0.6<div class="summaryTableDescription">
-   Ambient reflection factor.</div>
-</td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
-</tr>
-<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#autoCenter">autoCenter</a> : Boolean = true<div class="summaryTableDescription">
    When enabled, the sprite will be displayed at its graphical center.</div>
 </td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
@@ -142,13 +137,24 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#enableForcedDepth">enableForcedDepth</a> : Boolean = false<div class="summaryTableDescription">
+   Should forced depth be enable for this object?.</div>
+</td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#fixedAngle">fixedAngle</a> : Boolean = false<div class="summaryTableDescription">
    Set this to true if you want this sprite to rotate with camera.</div>
 </td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#lightingEnable">lightingEnable</a> : Boolean<div class="summaryTableDescription">
-   Specify if a sprite will obey scene light when displayed.</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#forcedDepth">forcedDepth</a> : Number = 0<div class="summaryTableDescription">
+   The forced depth for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#material">material</a> : <a href="../../materials/Material.html">Material</a>
+<div class="summaryTableDescription">
+   Material that the sprite will be dressed in.</div>
 </td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -180,7 +186,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#pan">pan</a> : Number<div class="summaryTableDescription">
-   Pans this object around the local y axis to specified angle using internal integrator.</div>
+   Pans this object around the local y axis.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -191,7 +197,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#roll">roll</a> : Number<div class="summaryTableDescription">
-   Rolls this object around the local z axis to specified angle using internal integrator.</div>
+   Rolls this object around the local z axis.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -248,7 +254,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#tilt">tilt</a> : Number<div class="summaryTableDescription">
-   Tilts this object around the local x axis to specified angle using internal integrator.</div>
+   Getter for the tilt value
+   </div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -306,7 +313,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#m_nPerspScale">m_nPerspScale</a> : Number = 0<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#m_nPerspScaleX">m_nPerspScaleX</a> : Number = 0<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
@@ -321,6 +328,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Node.html#m_oEB">m_oEB</a> : <a href="../../events/BubbleEventBroadcaster.html">BubbleEventBroadcaster</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Sprite2D.html#m_oMaterial">m_oMaterial</a> : <a href="../../materials/Material.html">Material</a>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Sprite2D.html">Sprite2D</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ATransformable.html#m_oPreviousOffsetRotation">m_oPreviousOffsetRotation</a> : <a href="../data/Vector.html">Vector</a>
@@ -502,7 +514,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="ATransformable.html#lookAt()">lookAt</a>(p_nX:Number, p_nY:Number, p_nZ:Number, p_bRoll:Boolean = true):void</div>
+<a class="signatureLink" href="ATransformable.html#lookAt()">lookAt</a>(p_nX:Number, p_nY:Number, p_nZ:Number):void</div>
 <div class="summaryTableDescription">
    Makes this object "look at" the specified position in the parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
@@ -558,14 +570,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="ATransformable.html#panBy()">panBy</a>(p_nAngle:Number):void</div>
-<div class="summaryTableDescription">
-   Pans this object around the local y axis by specified angle.</div>
-</td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
 <a class="signatureLink" href="Sprite2D.html#remove()">remove</a>():void</div>
 <div class="summaryTableDescription">
    Provide the classical remove behaviour, plus remove the container to the display list.</div>
@@ -607,25 +611,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="ATransformable.html#rollBy()">rollBy</a>(p_nAngle:Number):void</div>
-<div class="summaryTableDescription">
-   Rolls this object around the local z axis by specified angle.</div>
-</td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
 <a class="signatureLink" href="ATransformable.html#rotateAxis()">rotateAxis</a>(p_nX:Number, p_nY:Number, p_nZ:Number, p_nAngle:Number):void</div>
 <div class="summaryTableDescription">
    Rotate this object around the specified axis in the parent frame by the specified angle.</div>
-</td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="ATransformable.html#rotateTo()">rotateTo</a>(ax:Number, ay:Number, az:Number):void</div>
-<div class="summaryTableDescription">
-   Makes this object rotated to specified Euler angles in parent frame.</div>
 </td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -651,14 +639,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    Moves this node to another parent node.</div>
 </td><td class="summaryTableOwnerCol"><a href="Node.html">Node</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="ATransformable.html#tiltBy()">tiltBy</a>(p_nAngle:Number):void</div>
-<div class="summaryTableDescription">
-   Tilts this object around the local x axis by specified angle.</div>
-</td><td class="summaryTableOwnerCol"><a href="ATransformable.html">ATransformable</a></td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">

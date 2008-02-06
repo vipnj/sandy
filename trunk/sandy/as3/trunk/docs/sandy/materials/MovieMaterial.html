@@ -80,6 +80,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#flags">flags</a> : uint<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#graphics">graphics</a> : Graphics<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
@@ -91,7 +95,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lightingEnable">lightingEnable</a> : Boolean = false<div class="summaryTableDescription">
-   Specify is the material can receive light and apply the lightAttributes if specified.</div>
+   Specify is the material can receive light and apply the light attributes if specified.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -175,6 +179,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_bModified">m_bModified</a> : Boolean<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_nFlags">m_nFlags</a> : uint = 0<div class="summaryTableDescription">
+   DO NOT TOUCH THIS PROPERTY UNLESS YOU PERFECTLY KNOW WHAT YOU ARE DOING.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
@@ -264,8 +273,17 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="BitmapMaterial.html#setTiling()">setTiling</a>(p_nW:uint, p_nH:uint):void</div>
-<div class="summaryTableDescription"></div>
+<a class="signatureLink" href="Material.html#renderSprite()">renderSprite</a>(p_oSprite:<a href="../core/scenegraph/Sprite2D.html">Sprite2D</a>, p_oMaterial:<a href="../materials/Material.html">Material</a>, p_oScene:<a href="../core/Scene3D.html">Scene3D</a>):void</div>
+<div class="summaryTableDescription">
+   Renders the sprite dress in this material.</div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="BitmapMaterial.html#setTiling()">setTiling</a>(p_nW:Number, p_nH:Number, p_nU:Number = 0, p_nV:Number = 0):void</div>
+<div class="summaryTableDescription">
+   Sets texture tiling and optional offset.</div>
 </td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
 <tr class="">
@@ -367,6 +385,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedConstant" class="summaryTable hideInheritedProtectedConstant" cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProtectedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#m_oOffset">m_oOffset</a> : Point<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="BitmapMaterial.html">BitmapMaterial</a></td>
 </tr>
 <tr class="hideInheritedProtectedConstant">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="BitmapMaterial.html#m_oTiling">m_oTiling</a> : Point<div class="summaryTableDescription"></div>

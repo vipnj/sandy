@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="BitmapMaterial,sandy.materials.BitmapMaterial,graphics,m_oCmf,m_oPoint,m_oPolygonMatrixMap,m_oTexture,m_oTiling,m_orgTexture,map,matrix,maxRecurssionDepth,polygon,precision,smooth,texture,_createTextureMatrix,_tesselatePolygon,init,renderPolygon,renderRec,renderTriangle,setTiling,setTransparency,toString,unlink" name="keywords">
+<meta content="BitmapMaterial,sandy.materials.BitmapMaterial,graphics,m_oCmf,m_oOffset,m_oPoint,m_oPolygonMatrixMap,m_oTexture,m_oTiling,m_orgTexture,map,matrix,maxRecurssionDepth,polygon,precision,smooth,texture,_createTextureMatrix,_tesselatePolygon,init,renderPolygon,renderRec,renderTriangle,setTiling,setTransparency,toString,unlink" name="keywords">
 <title>sandy.materials.BitmapMaterial</title>
 </head>
 <body>
@@ -76,6 +76,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
    The array of filters for this material.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#flags">flags</a> : uint<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#graphics">graphics</a> : Graphics<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">BitmapMaterial</td>
@@ -88,7 +92,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#lightingEnable">lightingEnable</a> : Boolean = false<div class="summaryTableDescription">
-   Specify is the material can receive light and apply the lightAttributes if specified.</div>
+   Specify is the material can receive light and apply the light attributes if specified.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="">
@@ -166,6 +170,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_bModified">m_bModified</a> : Boolean<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="Material.html#m_nFlags">m_nFlags</a> : uint = 0<div class="summaryTableDescription">
+   DO NOT TOUCH THIS PROPERTY UNLESS YOU PERFECTLY KNOW WHAT YOU ARE DOING.</div>
 </td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
 </tr>
 <tr class="">
@@ -253,11 +262,20 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
       </div>
 </td><td class="summaryTableOwnerCol">BitmapMaterial</td>
 </tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Material.html#renderSprite()">renderSprite</a>(p_oSprite:<a href="../core/scenegraph/Sprite2D.html">Sprite2D</a>, p_oMaterial:<a href="../materials/Material.html">Material</a>, p_oScene:<a href="../core/Scene3D.html">Scene3D</a>):void</div>
+<div class="summaryTableDescription">
+   Renders the sprite dress in this material.</div>
+</td><td class="summaryTableOwnerCol"><a href="Material.html">Material</a></td>
+</tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#setTiling()">setTiling</a>(p_nW:uint, p_nH:uint):void</div>
-<div class="summaryTableDescription"></div>
+<a class="signatureLink" href="#setTiling()">setTiling</a>(p_nW:Number, p_nH:Number, p_nU:Number = 0, p_nV:Number = 0):void</div>
+<div class="summaryTableDescription">
+   Sets texture tiling and optional offset.</div>
 </td><td class="summaryTableOwnerCol">BitmapMaterial</td>
 </tr>
 <tr class="">
@@ -327,6 +345,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedConstant" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#m_oOffset">m_oOffset</a> : Point<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">BitmapMaterial</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#m_oTiling">m_oTiling</a> : Point<div class="summaryTableDescription"></div>
@@ -788,16 +810,30 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function setTiling(p_nW:uint, p_nH:uint):void</code><span class="label">Parameters</span>
+<code>public function setTiling(p_nW:Number, p_nH:Number, p_nU:Number = 0, p_nV:Number = 0):void</code><p>
+   Sets texture tiling and optional offset. Tiling is applied first.
+   </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nW</span>:uint</code></td>
+<td width="20px"></td><td><code><span class="label">p_nW</span>:Number</code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nH</span>:uint</code></td>
+<td width="20px"></td><td><code><span class="label">p_nH</span>:Number</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nU</span>:Number</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nV</span>:Number</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 </div>
@@ -851,10 +887,19 @@ showHideInherited();
 </div>
 <a name="constantDetail"></a>
 <div class="detailSectionHeader">Constant detail</div>
+<a name="m_oOffset"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">m_oOffset</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected const m_oOffset:Point</code>
+</div>
 <a name="m_oTiling"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">m_oTiling</td><td class="detailHeaderType">constant</td>
+<td class="detailHeaderName">m_oTiling</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">

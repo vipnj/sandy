@@ -76,6 +76,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
 </tr>
 <tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ALightAttributes.html#flags">flags</a> : uint<div class="summaryTableDescription">
+   Returns the specific flags of this attribute.</div>
+</td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
+</tr>
+<tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ALightAttributes.html#gloss">gloss</a> : Number<div class="summaryTableDescription">
    Specular exponent.</div>
 </td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
@@ -106,6 +111,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedProperty" class="summaryTable hideInheritedProtectedProperty" cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ALightAttributes.html#m_nFlags">m_nFlags</a> : uint = 0<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ALightAttributes.html#m_nI">m_nI</a> : Number<div class="summaryTableDescription">
@@ -168,6 +177,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="ALightAttributes.html#drawOnSprite()">drawOnSprite</a>(p_oSprite:<a href="../../core/scenegraph/Sprite2D.html">Sprite2D</a>, p_oMaterial:<a href="../../materials/Material.html">Material</a>, p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</div>
+<div class="summaryTableDescription">
+   This method applies light color to sprite containers.</div>
+</td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="ALightAttributes.html#finish()">finish</a>(p_oScene:<a href="../../core/Scene3D.html">Scene3D</a>):void</div>
 <div class="summaryTableDescription">
    Method called right after the display list rendering
@@ -214,7 +231,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="ALightAttributes.html#calculate()">calculate</a>(p_oNormal:<a href="../../core/data/Vector.html">Vector</a>, p_bIgnoreSpecular:Boolean = false):Number</div>
+<a class="signatureLink" href="ALightAttributes.html#calculate()">calculate</a>(p_oNormal:<a href="../../core/data/Vector.html">Vector</a>, p_bFrontside:Boolean, p_bIgnoreSpecular:Boolean = false):Number</div>
 <div class="summaryTableDescription">
    Calculates the reflection for given normal.</div>
 </td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>

@@ -331,7 +331,7 @@ package sandy.core.scenegraph
                                 m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
 					 		}
 					 }
-					 else if(  enableNearClipping && l_nMinZ <= l_nZNear ) // PARTIALLY VISIBLE
+					 else if(  enableNearClipping && l_nMinZ < l_nZNear ) // PARTIALLY VISIBLE
 					 {
 					 		l_oFace.clipFrontPlane( l_oFrustum );
 							// -- We project the vertices
@@ -344,7 +344,7 @@ package sandy.core.scenegraph
                                 m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
 					 		}
 					 }
-					 else if( l_nMinZ > l_nZNear )
+					 else if( l_nMinZ >= l_nZNear )
 					 {
 					 		p_oCamera.projectArray( l_oFace.vertices );
 					 		if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
@@ -352,6 +352,8 @@ package sandy.core.scenegraph
 					    	// -- we manage the display list depending on the mode choosen
 							m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
 					}
+					else
+					   continue;
 					
 					if( l_oFace.hasAppearanceChanged )
 					{
@@ -368,6 +370,7 @@ package sandy.core.scenegraph
 						}
 						l_oFace.hasAppearanceChanged = false;
 					}
+					
 				}	 
 		    }
 			// --

@@ -225,15 +225,8 @@ package sandy.core.data
 			{
 				m_nDepth = 0.5*(a.wz+b.wz);
 			}
-			//visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
 		}
-		
-		public function computeVisibility():void
-		{
-			visible = true; 
-			if (c != null)
-				visible = ((b.sx - a.sx)*(c.sy - a.sy)-(b.sy - a.sy)*(c.sx - a.sx) < 0);
-		}
+	
 
 		/**
 		 * Returns the real 3D position of the 2D screen position.

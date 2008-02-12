@@ -89,7 +89,21 @@ package sandy.core.scenegraph
 			}
 		}
 
-
+		public function clone( p_sName:String ):TransformGroup
+		{
+			var l_oGroup:TransformGroup = new TransformGroup( p_sName );
+			
+			for each( var l_oNode:* in children )
+			{
+				if( l_oNode is Shape3D || l_oNode is Group || l_oNode is TransformGroup )
+				{
+					l_oGroup.addChild( l_oNode.clone( p_sName+"_"+l_oNode.name ) );
+				} 
+			}
+			
+			return l_oGroup;
+		}
+		
 		/**
 		 * Returns a string representation of the TransformGroup.
 		 *

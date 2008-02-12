@@ -20,6 +20,7 @@ package sandy.core.scenegraph
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	
 	import sandy.bounds.BBox;
 	import sandy.bounds.BSphere;
@@ -292,78 +293,64 @@ package sandy.core.scenegraph
 				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
 				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
 				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
+				l_oVertex.projected = false;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
 			m_aVisiblePoly = [];//.splice( 0 );
+			m_nVisiblePoly = 0;
 			m_nDepth = 0;
+			var x:Number, y:Number, z:Number, tx:Number, ty:Number, tz:Number;
 			
-			
-			if( m_bClipped )
-			{
-				for each( l_oFace in aPolygons )
-				{
-					l_oFace.isClipped = false;
-					// -- lauch precomputation
-					//l_oFace.computeVisibility();//  need to always compute it in case there's 2 materials in appearance
-					l_oVertex = l_oFace.normal;
-					l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-					l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-					l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
-					l_oFace.visible = l_oFace.a.wx*l_oVertex.wx + l_oFace.a.wy*l_oVertex.wy + l_oFace.a.wz*l_oVertex.wz < 0;
-					// --
-					if( l_oFace.visible || !m_bBackFaceCulling) 
-					{
-						l_oFace.precompute();
-						l_nMinZ = l_oFace.minZ;
-						// --
-						if( enableClipping ) // NEED COMPLETE CLIPPING
-						{
-							l_oFace.clip( l_oFrustum );
+			for each( l_oFace in aPolygons )
+            {
+                l_oFace.isClipped = false;
+                // --
+                x =  l_oFace.normal.x ; y =  l_oFace.normal.y ; z =  l_oFace.normal.z ;
+                // --
+                tx = x * m11 + y * m12 + z * m13;
+                ty = x * m21 + y * m22 + z * m23;
+                tz = x * m31 + y * m32 + z * m33;
+                // -- visibility computation
+                l_oFace.visible = l_oFace.a.wx*tx + l_oFace.a.wy*ty + l_oFace.a.wz*tz < 0;
+                // --
+                if( l_oFace.visible || !m_bBackFaceCulling) 
+                {
+                    l_oFace.precompute();
+                    l_nMinZ = l_oFace.minZ;
+                    // --
+                    if( m_bClipped && enableClipping ) // NEED COMPLETE CLIPPING
+                    {
+                            l_oFace.clip( l_oFrustum );
 							// -- We project the vertices
 					 		if( l_oFace.cvertices.length > 0 )
 					 		{
 					 			p_oCamera.projectArray( l_oFace.cvertices );
-					 			if( !enableForcedDepth ) m_nDepth += l_oFace.minZ;
-					 			if( m_bUseSingleContainer )
-									m_aVisiblePoly.push( l_oFace );
-								else
-								{
-									if( enableForcedDepth ) l_oFace.depth = forcedDepth;
-									p_oCamera.addToDisplayList( l_oFace );
-								}
+					 			if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
+                                else l_oFace.depth = forcedDepth;
+                                // -- we manage the display list depending on the mode choosen
+                                m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
 					 		}
-					 	}
-					 	else if( l_nMinZ <= l_nZNear ) // PARTIALLY VISIBLE
-					 	{
+					 }
+					 else if(  enableNearClipping && l_nMinZ <= l_nZNear ) // PARTIALLY VISIBLE
+					 {
 					 		l_oFace.clipFrontPlane( l_oFrustum );
 							// -- We project the vertices
 					 		if( l_oFace.cvertices.length > 0 )
 					 		{
 					 			p_oCamera.projectArray( l_oFace.cvertices );
-					 			if( !enableForcedDepth ) m_nDepth += l_nMinZ;
-					 			// -- we manage the display list depending on the mode choosen
-								if( m_bUseSingleContainer )
-									m_aVisiblePoly.push( l_oFace );
-								else
-								{
-									if( enableForcedDepth ) l_oFace.depth = forcedDepth;
-									p_oCamera.addToDisplayList( l_oFace );
-								}
+					 			if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
+                                else l_oFace.depth = forcedDepth;
+                                // -- we manage the display list depending on the mode choosen
+                                m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
 					 		}
-					 	}
-					 	else // COMPLETELY VISIBLE
-					 	{
+					 }
+					 else if( l_nMinZ > l_nZNear )
+					 {
 					 		p_oCamera.projectArray( l_oFace.vertices );
-					 		if( !enableForcedDepth ) m_nDepth += l_nMinZ;
+					 		if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
+					 		else l_oFace.depth = forcedDepth;
 					    	// -- we manage the display list depending on the mode choosen
-							if( m_bUseSingleContainer )
-								m_aVisiblePoly.push( l_oFace );
-							else
-							{
-								if( enableForcedDepth ) l_oFace.depth = forcedDepth;
-								p_oCamera.addToDisplayList( l_oFace );
-							}
-					 	}
+							m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
 					}
 					
 					if( l_oFace.hasAppearanceChanged )
@@ -382,51 +369,7 @@ package sandy.core.scenegraph
 						l_oFace.hasAppearanceChanged = false;
 					}
 				}	 
-			}
-			else
-			{
-				p_oCamera.projectArray( l_aPoints );
-				for each( l_oFace in aPolygons )
-				{
-					l_oFace.isClipped = false;
-					// -- lauch precomputation
-					l_oFace.computeVisibility();//  need to always compute it in case there's 2 materials in appearance
-					// --
-					if( l_oFace.visible || !m_bBackFaceCulling) 
-					{
-						l_oFace.precompute();
-						l_nMinZ = l_oFace.minZ;
-				    	if( l_nMinZ >= l_nZNear )
-						{	
-					    	if( !enableForcedDepth ) m_nDepth += l_nMinZ;
-					    	// -- we manage the display list depending on the mode choosen
-							if( m_bUseSingleContainer )
-								m_aVisiblePoly.push( l_oFace );
-							else
-							{
-								if( enableForcedDepth ) l_oFace.depth = forcedDepth;
-								p_oCamera.addToDisplayList( l_oFace );
-							}
-						}
-					}
-					
-					if( l_oFace.hasAppearanceChanged )
-					{
-						if( p_oScene.materialManager.isRegistered( l_oFace.appearance.frontMaterial ) == false )
-						{
-							p_oScene.materialManager.register( l_oFace.appearance.frontMaterial );
-						}
-						if( l_oFace.appearance.frontMaterial != l_oFace.appearance.backMaterial )
-						{
-							if( p_oScene.materialManager.isRegistered( l_oFace.appearance.backMaterial ) == false )
-							{
-								p_oScene.materialManager.register( l_oFace.appearance.backMaterial );
-							}
-						}
-						l_oFace.hasAppearanceChanged = false;
-					}
-				}
-			}	
+		    }
 			// --
 			if( m_bUseSingleContainer )
 			{
@@ -434,12 +377,16 @@ package sandy.core.scenegraph
 				else 					m_nDepth /= m_aVisiblePoly.length;
 				p_oCamera.addToDisplayList( this );
 			}
+			else
+			{
+			    p_oCamera.addArrayToDisplayList( m_aVisiblePoly );
+			}
 		}
 		
 		
 		public function get visiblePolygonsCount():uint
 		{
-			return m_aVisiblePoly.length;
+			return m_nVisiblePoly;
 		}
 		
 		/**
@@ -872,7 +819,8 @@ package sandy.core.scenegraph
 		protected var m_oContainer:Sprite;
 
 		private var m_aToProject:Array = new Array();
-		private var m_aVisiblePoly:Array = new Array();		
+		private var m_aVisiblePoly:Array = new Array();	
+		private var m_nVisiblePoly:int;	
 		
 		private var m_bMouseInteractivity:Boolean = false;
 		private var m_bForcedSingleContainer:Boolean = false;

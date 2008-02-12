@@ -72,6 +72,7 @@ package sandy.core.scenegraph
 			// --
 			//super.cull( p_oFrustum, p_oViewMatrix, p_bChanged );
 		}
+		
 		/**
 		 * Renders all children of this group.
 		 *
@@ -88,6 +89,21 @@ package sandy.core.scenegraph
 			    l_oNode.changed = false; // default value is set to not changed.
 			    l_oNode.culled = CullingState.INSIDE; // Default value is inside.
 			}
+		}
+		
+		public function clone( p_sName:String ):Group
+		{
+			var l_oGroup:Group = new Group( p_sName );
+			
+			for each( var l_oNode:* in children )
+			{
+				if( l_oNode is Shape3D || l_oNode is Group || l_oNode is TransformGroup )
+				{
+					l_oGroup.addChild( l_oNode.clone(  p_sName+"_"+l_oNode.name ) );
+				} 
+			}
+			
+			return l_oGroup;
 		}
 	}
 }

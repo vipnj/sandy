@@ -58,17 +58,17 @@ package sandy.primitive
 		 * @param p_nDim The dimension of the skybox
 		 * @param p_nQualityH The horizontal quality of the skybox (WARNING:Some faces are rotated, and so, the quality isn't representative. To fix!)
 		 * @param p_nQualityV The vertical quality of the skybox (WARNING:Some faces are rotated, and so, the quality isn't representative. To fix!)
-		 * @param p_bDisable - default true - A boolean value if enabled make the SkyBox static.
 		 *
 		 */	
-		public function SkyBox(p_sName:String="", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint=1, p_bDisable:Boolean = true )
+		public function SkyBox(p_sName:String="", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint=1 )
 		{
-			super(p_sName);
+			super(p_sName); // TOP BOTTOM
 			var l_oPlane:Plane3D;
 			// -- LEFT
 			l_oPlane = new Plane3D( p_sName+"_left", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.YZ_ALIGNED );
-			l_oPlane.swapCulling();
+			//l_oPlane.swapCulling();
 			l_oPlane.rotateX = -90;
+			l_oPlane.rotateY = 180;
 			l_oPlane.x = -p_nDim/2;
 			m_aPlanes[0] = l_oPlane;
 			// -- RIGHT
@@ -87,20 +87,25 @@ package sandy.primitive
 			m_aPlanes[3] = l_oPlane;
 			// -- TOP
 			l_oPlane = new Plane3D( p_sName+"_top", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.ZX_ALIGNED );
+			//l_oPlane.enableBackFaceCulling = false;
 			l_oPlane.swapCulling();
-			l_oPlane.rotateY = -90;
+			l_oPlane.rotateX = 180;
+			//l_oPlane.rotateY = 90;
+			//l_oPlane.rotateZ = 180;
 			l_oPlane.y = p_nDim/2;
 			m_aPlanes[4] = l_oPlane;
 			// -- BOTTOM
 			l_oPlane = new Plane3D( p_sName+"_bottom", p_nDim, p_nDim, p_nQualityH, p_nQualityV, Plane3D.ZX_ALIGNED );
-			l_oPlane.rotateY = -90;
+			l_oPlane.rotateY = 90;
 			l_oPlane.y = -p_nDim/2;
 			m_aPlanes[5] = l_oPlane;
 			
 			
 			for each( l_oPlane in m_aPlanes )
 			{
-				if( p_bDisable ) l_oPlane.disable = true;
+				l_oPlane.enableBackFaceCulling = false;
+				l_oPlane.enableForcedDepth = true;
+				l_oPlane.forcedDepth = 10000000000000;
 				this.addChild( l_oPlane );
 			}
 		}

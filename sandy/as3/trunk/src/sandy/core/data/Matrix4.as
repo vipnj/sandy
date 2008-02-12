@@ -447,6 +447,7 @@ package sandy.core.data
 			pv.z = (x * n31 + y * n32 + z * n33);
 		}
 		
+		
 		/**
 		 * Makes this matrix a rotation matrix for the given angle of rotation.
 		 * 
@@ -455,15 +456,15 @@ package sandy.core.data
 		 */
 		public final function rotationX ( angle:Number ):void
 		{
-			identity()
+			identity();
 			//
 			angle = NumberUtil.toRadian(angle);
-			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
 			//
 			n22 =  c;
-			n23 =  s;
-			n32 = -s;
+			n23 =  -s;
+			n32 = s;
 			n33 =  c;
 		}
 
@@ -476,11 +477,11 @@ package sandy.core.data
 		 */
 		public final function rotationY ( angle:Number ):void
 		{
-			identity()
+			identity();
 			//
 			angle = NumberUtil.toRadian(angle);
-			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
 			// --
 			n11 =  c;
 			n13 = -s;
@@ -497,15 +498,15 @@ package sandy.core.data
 		 */
 		public final function rotationZ ( angle:Number ):void
 		{
-			identity()
+			identity();
 			//
 			angle = NumberUtil.toRadian(angle);
-			const c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
-			const s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
+			var c:Number = ( USE_FAST_MATH == false ) ? Math.cos( angle ) : FastMath.cos( angle );
+			var s:Number = ( USE_FAST_MATH == false ) ? Math.sin( angle ) : FastMath.sin( angle );
 			// --
 			n11 =  c;
-			n12 =  s;
-			n21 = -s;
+			n12 =  -s;
+			n21 = s;
 			n22 =  c;
 		}
 
@@ -801,12 +802,12 @@ package sandy.core.data
 			//
 			n11 =   c  * e         ;
 			n12 = - c  * f         ;
-			n13 =   d              ;
-			n21 =   bd * e + a * f ;
+			n13 = - d              ;
+			n21 = - bd * e + a * f ;
 			n22 = - bd * f + a * e ;
 			n23 = - b  * c 	 ;
-			n31 = - ad * e + b * f ;
-			n32 =   ad * f + b * e ;
+			n31 =   ad * e + b * f ;
+			n32 = - ad * f + b * e ;
 			n33 =   a  * c         ;
 		}
 		
@@ -821,13 +822,13 @@ package sandy.core.data
 			var lAngleY:Number = Math.asin( t.n13 );
 			var lCos:Number = Math.cos( lAngleY );
 			
-			lAngleY *= NumberUtil.TO_DEGREE;
+			//lAngleY *= NumberUtil.TO_DEGREE;
 			var lTrx:Number, lTry:Number, lAngleX:Number, lAngleZ:Number;
 			
 			if( Math.abs( lCos ) > 0.005 )
 			{
 				lTrx = t.n33 / lCos;
-				lTry = -t.n23 / lCos;
+				lTry = -t.n22 / lCos;
 				lAngleX = Math.atan2( lTry, lTrx );
 				// --
 				lTrx = t.n11 / lCos;
@@ -842,8 +843,8 @@ package sandy.core.data
 				lAngleZ = Math.atan2( lTry, lTrx );
 			}
 			
-			lAngleX *= NumberUtil.TO_DEGREE;
-			lAngleZ *= NumberUtil.TO_DEGREE;
+			//lAngleX *= NumberUtil.TO_DEGREE;
+			//lAngleZ *= NumberUtil.TO_DEGREE;
 			
 			if( lAngleX < 0 ) lAngleX += 360;
 			if( lAngleY < 0 ) lAngleY += 360;

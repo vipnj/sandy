@@ -59,6 +59,8 @@ package sandy.core.scenegraph
 		 */
 		public var autoCenter:Boolean = true;
 		
+		public var floorCenter:Boolean = false;
+		
 		/**
 		 * Creates a Sprite2D.
 		 *
@@ -256,6 +258,9 @@ package sandy.core.scenegraph
 			m_oContainer.scaleY = m_nPerspScaleY;
 			m_oContainer.x = _v.sx - (autoCenter ? m_oContainer.width/2 : 0);
 			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : 0);
+			
+			m_oContainer.y = _v.sy - (autoCenter ? m_oContainer.height/2 : (floorCenter ? m_oContainer.height : 0) );
+			
 			// --
 			if (fixedAngle) m_oContainer.rotation = m_nRotation * 180 / Math.PI;
 			// --

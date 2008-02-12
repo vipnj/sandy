@@ -180,6 +180,16 @@ package sandy.core.scenegraph
 			m_aDisplayList.push( p_oShape );
 		}
 
+        /**
+         * Adds a displayable array of object to the display list.
+         *
+         * @param p_oShape  The object to add
+         */
+        public function addArrayToDisplayList( p_aShapeArray:Array  ):void
+        {
+            m_aDisplayList = m_aDisplayList.concat( p_aShapeArray );
+        }
+        
 		/**
 		 * <p>Project the vertices list given in parameter.
 		 * The vertices are projected to the screen, as a 2D position.
@@ -192,10 +202,12 @@ package sandy.core.scenegraph
 			var l_nCste:Number;
 			for each( var l_oVertex:Vertex in p_oList )
 			{
+				if( l_oVertex.projected ) continue;
 				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
 				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
 				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
 				//nbVertices += 1;
+				l_oVertex.projected = true;
 			}
 		}
 				

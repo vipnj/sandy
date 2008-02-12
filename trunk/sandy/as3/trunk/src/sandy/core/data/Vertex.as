@@ -59,10 +59,15 @@ package sandy.core.data
 		/**
 		 * An array of faces.
 		 *
-		 * <p>[<strong>ToDo</strong>: This isn't used - is it ;-P ]</p>
+		 * <p>List of polygons that actually use that vertex</p>
 		 */
 		public var aFaces:Array = new Array();
 
+        /**
+         *  State if that vertex has been projected or not. If not, we can consider that vertex to not be visible in the current rendering step.
+         */
+        
+        public var projected:Boolean;
 		/**
 		* Creates a new vertex.
 		*

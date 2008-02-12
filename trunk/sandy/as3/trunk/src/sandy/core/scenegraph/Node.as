@@ -126,7 +126,7 @@ package sandy.core.scenegraph
 		{
 			return m_oEB;
 		}
-
+		
 		/**
 		 * Adds a listener for the specified event.
 		 *

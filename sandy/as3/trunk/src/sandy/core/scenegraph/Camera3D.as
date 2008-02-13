@@ -31,7 +31,6 @@ package sandy.core.scenegraph
 	 *
 	 * <p>As of this version of Sandy, the camera is added to the object tree,
 	 * which means it is transformed in the same manner as any other object.</p>
-	 * <p>[<b>ToDo</b>: Describe the camera in some detail]</p> 
 	 * 
 	 * @author		Thomas Pfeiffer - kiroukou
 	 * @version		3.0
@@ -60,7 +59,8 @@ package sandy.core.scenegraph
 		/**
 		 * Creates a camera for projecting visible objects in the world.
 		 *
-		 * <p>By default the camera shows a perspective projection</p>
+		 * <p>By default the camera shows a perspective projection. <br />
+		 * The camera is at -300 in z axis and look at the world 0,0,0 point.</p>
 		 * 
 		 * @param p_nWidth	Width of the camera viewport in pixels
 		 * @param p_nHeight	Height of the camera viewport in pixels
@@ -84,6 +84,8 @@ package sandy.core.scenegraph
 			viewport.hasChanged = false;
 			// It's a non visible node
 			visible = false;
+			z = -300;
+			lookAt( 0,0,0 );
 		}
 						
 		/**

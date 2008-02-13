@@ -251,37 +251,6 @@ package sandy.core.scenegraph
 					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
 					l_oVertexNormal:Vertex, l_oVertex:Vertex, l_oFace:Polygon, l_nMinZ:Number;
 			
-			if( appearance.flags & SandyFlags.POLYGON_NORMAL_WORLD )
-			{
-				l_oMatrix = modelMatrix;
-				m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
-				m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
-				m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
-				//m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34;
-				// -- Now we transform the normals.
-				for each( l_oVertex in m_oGeometry.aFacesNormals )
-				{
-					l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-					l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-					l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
-				}
-			}
-			if( appearance.flags & SandyFlags.VERTEX_NORMAL_WORLD )
-			{
-				l_oMatrix = modelMatrix;
-				m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
-				m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
-				m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
-				//m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34;
-				// -- Now we transform the normals.
-				for each( l_oVertex in m_oGeometry.aVertexNormals )
-				{
-					l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-					l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-					l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
-				}
-			}
-			
 			// -- Now we can transform the objet vertices into the camera coordinates
 			l_oMatrix = viewMatrix;
 			m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
@@ -384,6 +353,41 @@ package sandy.core.scenegraph
 			{
 			    p_oCamera.addArrayToDisplayList( m_aVisiblePoly );
 			}
+			
+			var i:int;
+			if( appearance.flags & SandyFlags.POLYGON_NORMAL_WORLD )
+            {
+                l_oMatrix = modelMatrix;
+                m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
+                m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
+                m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
+                // -- Now we transform the normals.
+                for each( var l_oPoly:Polygon in m_aVisiblePoly )
+                {
+                    l_oVertex = l_oPoly.normal;
+                    l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
+                    l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
+                    l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+                }
+            }
+            if( appearance.flags & SandyFlags.VERTEX_NORMAL_WORLD )
+            {
+                l_oMatrix = modelMatrix;
+                m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
+                m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
+                m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
+                // -- Now we transform the normals.
+                i = m_oGeometry.aVertexNormals.length;
+                while( --i > -1 )
+                {
+                    if( m_oGeometry.aVertex[i].projected == false ) continue;
+                    // --
+                    l_oVertex = m_oGeometry.aVertexNormals[i];
+                    l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
+                    l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
+                    l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+                }
+            }
 		}
 		
 		

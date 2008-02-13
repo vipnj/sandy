@@ -1,6 +1,6 @@
 /*
 # ***** BEGIN LICENSE BLOCK *****
-Copyright the original author or authors.
+Copyright the original author Thomas PFEIFFER
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at

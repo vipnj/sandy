@@ -28,7 +28,6 @@ package sandy.events
 	
 	public class BubbleEvent extends Event
 	{
-		private var m_oEvt:Event;
 		private var m_oTarget:Object;
 		//private var m_sType:String;
 		//-------------------------------------------------------------------------
@@ -49,22 +48,16 @@ package sandy.events
 		 * @param e an {@link EventType} instance (event name).
 		 * @param oT event target.
 		 */
-		public function BubbleEvent( e : String, oT:Object, p_Evt:Event = null ) 
+		public function BubbleEvent( e : String, oT:Object ) 
 		{
 			super( e, true, true );
 			m_oTarget = oT;
-			m_oEvt = p_Evt;
 		}
 		
 		
 		public override function get target():Object
 		{
 			return m_oTarget;
-		}
-		
-		public function get event():Event
-		{
-			return m_oEvt;
 		}
 		
 		/**

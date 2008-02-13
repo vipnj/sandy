@@ -38,10 +38,7 @@ package sandy.core.scenegraph
 	 * @date 		26.07.2007
 	 */
 	public class Camera3D extends ATransformable
-	{
-		public var nbPolygons:uint = 0;
-		public var nbVertices:uint = 0;
-		
+	{		
 		/**
 		 * <p>Inverse of the model matrix
 		 * This is apply at the culling phasis
@@ -147,9 +144,6 @@ package sandy.core.scenegraph
 				l_oShape.clear();
 			}
 		    // --
-		    //nbPolygons = m_aDisplayList.length;
-		    nbPolygons = 0;
-		    // --
 		    const l_mcContainer:Sprite = p_oScene.container;
 		    // we go high quality for drawing part
 		   	//l_mcContainer.stage.quality = StageQuality.HIGH;
@@ -158,9 +152,6 @@ package sandy.core.scenegraph
 		    // --
 			for each( l_oShape in m_aDisplayList )
 			{
-				if( l_oShape is Shape3D ) nbPolygons += (l_oShape as Shape3D).visiblePolygonsCount;
-				else nbPolygons ++;
-				
 				l_oShape.display( p_oScene );
 				l_mcContainer.addChild( l_oShape.container );
 			}
@@ -177,7 +168,7 @@ package sandy.core.scenegraph
 		 */
 		public function addToDisplayList( p_oShape:IDisplayable ):void
 		{
-			m_aDisplayList.push( p_oShape );
+			m_aDisplayList[m_aDisplayList.length] = ( p_oShape );
 		}
 
         /**
@@ -202,12 +193,14 @@ package sandy.core.scenegraph
 			var l_nCste:Number;
 			for each( var l_oVertex:Vertex in p_oList )
 			{
-				if( l_oVertex.projected ) continue;
-				l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
-				l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
-				l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
-				//nbVertices += 1;
-				l_oVertex.projected = true;
+				if( !l_oVertex.projected )
+				{
+					l_nCste = 	1 / ( l_oVertex.wx * mp41 + l_oVertex.wy * mp42 + l_oVertex.wz * mp43 + mp44 );
+					l_oVertex.sx =  l_nCste * ( l_oVertex.wx * mp11 + l_oVertex.wy * mp12 + l_oVertex.wz * mp13 + mp14 ) * m_nOffx + l_nX;
+					l_oVertex.sy = -l_nCste * ( l_oVertex.wx * mp21 + l_oVertex.wy * mp22 + l_oVertex.wz * mp23 + mp24 ) * m_nOffy + l_nY;
+					//nbVertices += 1;
+					l_oVertex.projected = true;
+				}
 			}
 		}
 				
@@ -254,8 +247,6 @@ package sandy.core.scenegraph
 				// -- we warn the the modification has been taken under account
 				viewport.hasChanged = false;
 			}
-			// --
-			nbVertices = 0;
 			// --
 			if( _perspectiveChanged ) updatePerspective();
 			super.update( p_oScene, p_oModelMatrix, p_bChanged );

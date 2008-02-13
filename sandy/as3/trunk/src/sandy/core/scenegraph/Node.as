@@ -204,55 +204,13 @@ package sandy.core.scenegraph
 		{
 			if( p_oChild.parent )
 			{
-				p_oChild.parent.removeChildById( p_oChild.id );	
+				p_oChild.parent.removeChildByName( p_oChild.name );	
 			}
 			// --
 			p_oChild.parent = this;
 			changed =  true ;
 			children.push( p_oChild );
 			if( p_oChild.broadcaster ) m_oEB.addChild( p_oChild.broadcaster );
-		}
-
-		/**
-		 * Returns an array with all child nodes of this node.
-		 * Note : the public children property can by used too
-		 * @return 	The array of childs nodes
-		 */
-		public function getChildList():Array
-		{
-			return children;
-		}
-
-		/**
-		 * Returns the child node with the specified id.
-		 *
-		 * @param p_nId 	The id of the child you want to retrieve
-		 * @param p_bRecurs 	Set to true if you want to search the the children for the requested node
-		 *
-		 * @return 		The requested node or null if no child with this is was found
-		 */
-		public function getChildFromId( p_nId:uint, p_bRecurs:Boolean=false ):Node
-		{
-			var l_oNode:Node, l_oNode2:Node;
-			for each( l_oNode in children )
-			{
-				if( l_oNode.id == p_nId )
-				{
-					return l_oNode;
-				}
-			}
-			if( p_bRecurs )
-			{
-				for each( l_oNode in children )
-				{
-					l_oNode2 = l_oNode.getChildFromId( p_nId, p_bRecurs );
-					if( l_oNode2 != null )
-					{
-						return l_oNode2;
-					}
-				}
-			}
-			return null;
 		}
 
 		/**
@@ -290,36 +248,6 @@ package sandy.core.scenegraph
 
 
 		/**
-		 * Removes the child node with the specified id.
-		 *
-		 * <p>All the children of the node you want to remove are lost.<br/>
-		 * The link between them and the rest of the tree is broken, and they will not be rendered anymore!</p>
-		 * <p>The object itself and its children are still in memory! <br/>
-		 * If you want to free them completely, call child.destroy()</p>
-		 *
-		 * @param p_nId 	The id of the child you want to remove
-		 * @return 		true if the node was removed from node tree, false otherwise.
-		 */
-		public function removeChildById( p_nId:Number ):Boolean
-		{
-			var found:Boolean = false;
-			var i:int, l:int = children.length;
-
-			while( i < l && !found )
-		    {
-				if( children[int(i)].id == p_nId  )
-				{
-					broadcaster.removeChild( children[int(i)].broadcaster);
-					children.splice( i, 1 );
-					changed = true;
-					found = true;
-				}
-				i++;
-			}
-			return found;
-		}
-
-		/**
 		 * Moves this node to another parent node.
 		 *
 		 * <p>This node is removed from its current parent node, and added as a child of the specified node</p>
@@ -328,7 +256,7 @@ package sandy.core.scenegraph
 		 */
 		public function swapParent( p_oNewParent:Node ):void
 		{
-			if( parent.removeChildById( this.id ) );
+			if( parent.removeChildByName( this.name ) );
 				p_oNewParent.addChild( this );
 		}
 
@@ -373,10 +301,11 @@ package sandy.core.scenegraph
 		public function destroy():void
 		{
 			// the unlink this node to his parent
-			if( hasParent() == true ) parent.removeChildById( id );
+			if( hasParent() == true ) parent.removeChildByName( name );
 
 			// should we kill all the childs, or just make them childs of current node parent ?
-			for each( var lNode:Node in children.concat() )
+			var l_aTmp:Array = children.concat();
+			for each( var lNode:Node in l_aTmp )
 			{
 				lNode.destroy();
 			}
@@ -395,10 +324,11 @@ package sandy.core.scenegraph
 		{
 			// first we remove this node as a child of its parent
 			// we do not update rigth now, but a little bit later ;)
-			parent.removeChildById( id );
+			parent.removeChildByName( name );
 			
 			// now we make current node children the current parent's node children
-			for each( var lNode:Node in children.concat() )
+			var l_aTmp:Array = children.concat();
+			for each( var lNode:Node in l_aTmp )
 			{
 				parent.addChild( lNode );
 			}
@@ -410,9 +340,7 @@ package sandy.core.scenegraph
 		/**
 		 * Updates this node.
 		 *
-		 * <p>For a node with transformation, this method updateS the transformation taking into account the matrix cache system.</p>
-		 *
-		 * <p>[<b>ToDo</b> : Explain the parameters and what they do with more details]</p>
+		 * <p>For a node with transformation, this method update the transformation taking into account the matrix cache system.</p>
 		 *
 		 * @param p_oScene The current scene
 		 * @param p_oModelMatrix

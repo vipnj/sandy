@@ -158,7 +158,7 @@ package sandy.materials.attributes
 
 			blurDisplayObjectBy (
 				p_oPolygon.shape.useSingleContainer ? p_oPolygon.shape.container : p_oPolygon.container,
-				Math.min (255, Math.max (0, blurAmount * r0))
+				prepareBlurAmount (blurAmount * r0)
 			);
 		}
 
@@ -183,7 +183,7 @@ package sandy.materials.attributes
 
 			blurDisplayObjectBy (
 				p_oSprite.container,
-				Math.min (255, Math.max (0, blurAmount * l_ratio))
+				prepareBlurAmount (blurAmount * l_ratio)
 			);
 		}
 
@@ -193,13 +193,17 @@ package sandy.materials.attributes
 			p_oW.sub (fadeFrom); return p_oW.dot (_fadeTo) / _fadeToN2;
 		}
 
+		private function prepareBlurAmount (p_nBlurAmount:Number):Number
+		{
+			// a) constrain blur amount according to filter specs
+			// b) quantize blur amount to make filter reuse more effective
+			return Math.round (10 * Math.min (255, Math.max (0, p_nBlurAmount)) ) * 0.1;
+		}
+
 		private m_bWasNotBlurred:Boolean = true;
 		private function blurDisplayObjectBy (p_oDisplayObject:DisplayObject, p_nBlurAmount:Number):void
 		{
 			if (m_bWasNotBlurred && (p_nBlurAmount == 0)) return;
-
-			// quantize blur amount to make filter reuse more effective
-			p_nBlurAmount = Math.round (10 * p_nBlurAmount) * 0.1;
 
 			var fs:Array = [], changed:Boolean = false;
 

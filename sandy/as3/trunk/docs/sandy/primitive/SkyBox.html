@@ -357,7 +357,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#SkyBox()">SkyBox</a>(p_sName:String = "", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint = 1, p_bDisable:Boolean = true)</div>
+<a class="signatureLink" href="#SkyBox()">SkyBox</a>(p_sName:String = "", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint = 1)</div>
 <div class="summaryTableDescription">
    Creates a SkyBox objets
       <p>The skybox is created as a TransformGroup.</div>
@@ -382,6 +382,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="../core/scenegraph/TransformGroup.html#clone()">clone</a>(p_sName:String):<a href="../core/scenegraph/TransformGroup.html">TransformGroup</a>
+</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/TransformGroup.html">TransformGroup</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../core/scenegraph/TransformGroup.html#cull()">cull</a>(p_oScene:<a href="../core/Scene3D.html">Scene3D</a>, p_oFrustum:<a href="../view/Frustum.html">Frustum</a>, p_oViewMatrix:<a href="../core/data/Matrix4.html">Matrix4</a>, p_bChanged:Boolean):void</div>
 <div class="summaryTableDescription">
    Tests this node against the camera frustum to get its visibility.</div>
@@ -402,23 +410,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </div>
 <div class="summaryTableDescription">
    Returns the child node with the specified name.</div>
-</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="../core/scenegraph/Node.html#getChildFromId()">getChildFromId</a>(p_nId:uint, p_bRecurs:Boolean = false):<a href="../core/scenegraph/Node.html">Node</a>
-</div>
-<div class="summaryTableDescription">
-   Returns the child node with the specified id.</div>
-</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="../core/scenegraph/Node.html#getChildList()">getChildList</a>():Array</div>
-<div class="summaryTableDescription">
-   Returns an array with all child nodes of this node.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -516,14 +507,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="../core/scenegraph/Node.html#remove()">remove</a>():void</div>
 <div class="summaryTableDescription">
    Removes this node from the node tree, saving its child nodes.</div>
-</td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="../core/scenegraph/Node.html#removeChildById()">removeChildById</a>(p_nId:Number):Boolean</div>
-<div class="summaryTableDescription">
-   Removes the child node with the specified id.</div>
 </td><td class="summaryTableOwnerCol"><a href="../core/scenegraph/Node.html">Node</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -718,7 +701,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function SkyBox(p_sName:String = "", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint = 1, p_bDisable:Boolean = true)</code><p>
+<code>public function SkyBox(p_sName:String = "", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint = 1)</code><p>
    Creates a SkyBox objets
       </p><p>The skybox is created as a TransformGroup. This is a special behaviour comparing the other primitives which directly extend Shape3D.
    A skyBox isn't a graphical object itself, but it is composed of 6 planes (Plane3D objects) that represents the 6 sides of the skybox.</p>
@@ -752,13 +735,6 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nQualityV</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; The vertical quality of the skybox (WARNING:Some faces are rotated, and so, the quality isn't representative. To fix!)
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">p_bDisable</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; - default true - A boolean value if enabled make the SkyBox static.
       </td>
 </tr>
 </table>

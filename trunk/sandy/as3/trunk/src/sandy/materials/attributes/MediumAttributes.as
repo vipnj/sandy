@@ -200,7 +200,7 @@ package sandy.materials.attributes
 			return Math.round (10 * Math.min (255, Math.max (0, p_nBlurAmount)) ) * 0.1;
 		}
 
-		private m_bWasNotBlurred:Boolean = true;
+		private var m_bWasNotBlurred:Boolean = true;
 		private function blurDisplayObjectBy (p_oDisplayObject:DisplayObject, p_nBlurAmount:Number):void
 		{
 			if (m_bWasNotBlurred && (p_nBlurAmount == 0)) return;

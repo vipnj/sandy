@@ -193,9 +193,10 @@ package sandy.materials.attributes
 			p_oW.sub (fadeFrom); return p_oW.dot (_fadeTo) / _fadeToN2;
 		}
 
+		private m_bWasNotBlurred:Boolean = true;
 		private function blurDisplayObjectBy (p_oDisplayObject:DisplayObject, p_nBlurAmount:Number):void
 		{
-			if (p_nBlurAmount == 0) return;
+			if (m_bWasNotBlurred && (p_nBlurAmount == 0)) return;
 
 			// quantize blur amount to make filter reuse more effective
 			p_nBlurAmount = Math.round (10 * p_nBlurAmount) * 0.1;
@@ -223,7 +224,11 @@ package sandy.materials.attributes
 			}
 			// if filter was not found, add new
 			if (!changed)
+			{
 				fs.push (new BlurFilter (p_nBlurAmount, p_nBlurAmount, 1));
+				// once we added blur we have to track it all the time
+				m_bWasNotBlurred = false;
+			}
 			// re-apply all filters
 			p_oDisplayObject.filters = fs;
 		}

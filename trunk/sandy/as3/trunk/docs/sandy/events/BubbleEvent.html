@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="BubbleEvent,sandy.events.BubbleEvent,event,target,toString" name="keywords">
+<meta content="BubbleEvent,sandy.events.BubbleEvent,target,toString" name="keywords">
 <title>sandy.events.BubbleEvent</title>
 </head>
 <body>
@@ -40,6 +40,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr>
 <td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">BubbleEvent <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> flash.events.Event</td>
 </tr>
+<tr>
+<td class="classHeaderTableLabel">Subclasses</td><td><a href="../events/Shape3DEvent.html">Shape3DEvent</a></td>
+</tr>
 </table>
 <p></p>
 <p></p>
@@ -52,10 +55,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#event">event</a> : Event<div class="summaryTableDescription">[read-only]</div>
-</td><td class="summaryTableOwnerCol">BubbleEvent</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#target">target</a> : Object<div class="summaryTableDescription">[read-only]</div>
@@ -73,7 +72,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#BubbleEvent()">BubbleEvent</a>(e:String, oT:Object, p_Evt:Event = null)</div>
+<a class="signatureLink" href="#BubbleEvent()">BubbleEvent</a>(e:String, oT:Object)</div>
 <div class="summaryTableDescription">
    Constructs a new {</div>
 </td><td class="summaryTableOwnerCol">BubbleEvent</td>
@@ -95,22 +94,10 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="event"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">event</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>event:Event</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get event():Event</code>
-<br>
-</div>
 <a name="target"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">target</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">target</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -128,7 +115,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function BubbleEvent(e:String, oT:Object, p_Evt:Event = null)</code><p>
+<code>public function BubbleEvent(e:String, oT:Object)</code><p>
    Constructs a new {</p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -140,12 +127,6 @@ showHideInherited();
 <tr>
 <td width="20px"></td><td><code><span class="label">oT</span>:Object</code> &mdash; event target.
    </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">p_Evt</span>:Event</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 </div>

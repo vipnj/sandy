@@ -342,7 +342,7 @@ package sandy.core.scenegraph
 		
 		protected function _onInteraction( p_oEvt:Event ):void
 		{
-			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) );
+			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this ) );
 		}
 		
 		private var m_bEv:Boolean = false; // The event system state (enable or not)

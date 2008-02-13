@@ -37,6 +37,8 @@ package sandy.core.scenegraph
 	import sandy.math.IntersectionMath;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
+	import sandy.core.data.UVCoord;
+	import sandy.events.Shape3DEvent;
 
 	/**
 	 * The Shape3D class is the base class of all true 3D shapes.
@@ -216,7 +218,6 @@ package sandy.core.scenegraph
 			/////////////////////////
 	        //// BOUNDING SPHERE ////
 	        /////////////////////////
-    
         	if( !boundingSphere.uptodate ) boundingSphere.transform( viewMatrix );
         	culled = p_oFrustum.sphereInFrustum( boundingSphere );
 			// --
@@ -232,10 +233,6 @@ package sandy.core.scenegraph
 			m_bClipped = ((culled == CullingState.INTERSECT) && ( enableClipping || enableNearClipping ));
 		}
 		
-		internal var 	m11:Number, m21:Number, m31:Number,
-						m12:Number, m22:Number, m32:Number,
-						m13:Number, m23:Number, m33:Number,
-						m14:Number, m24:Number, m34:Number;
 		/**
 		 * Renders this 3D object.
 		 *
@@ -246,6 +243,12 @@ package sandy.core.scenegraph
 		{
 			// IF no appearance has bene applied, no display
 			if( m_oAppearance == null ) return;
+			var 	m11:Number, m21:Number, m31:Number,
+					m12:Number, m22:Number, m32:Number,
+					m13:Number, m23:Number, m33:Number,
+					m14:Number, m24:Number, m34:Number,
+					x:Number, y:Number, z:Number, tx:Number, ty:Number, tz:Number;
+					
 			var  	l_nZNear:Number = p_oCamera.near, l_aPoints:Array = m_oGeometry.aVertex,
 	        		l_oMatrix:Matrix4 = viewMatrix, l_oFrustum:Frustum = p_oCamera.frustrum, 
 					l_aVertexNormals:Array = m_oGeometry.aVertexNormals,
@@ -268,7 +271,6 @@ package sandy.core.scenegraph
 			m_aVisiblePoly = [];//.splice( 0 );
 			m_nVisiblePoly = 0;
 			m_nDepth = 0;
-			var x:Number, y:Number, z:Number, tx:Number, ty:Number, tz:Number;
 			
 			for each( l_oFace in aPolygons )
             {
@@ -276,11 +278,12 @@ package sandy.core.scenegraph
                 // --
                 x =  l_oFace.normal.x ; y =  l_oFace.normal.y ; z =  l_oFace.normal.z ;
                 // --
-                tx = x * m11 + y * m12 + z * m13;
-                ty = x * m21 + y * m22 + z * m23;
-                tz = x * m31 + y * m32 + z * m33;
+                tx = x * m11+ y * m12+ z * m13;
+                ty = x * m21+ y * m22+ z * m23;
+                tz = x * m31+ y * m32+ z * m33;
                 // -- visibility computation
-                l_oFace.visible = l_oFace.a.wx*tx + l_oFace.a.wy*ty + l_oFace.a.wz*tz < 0;
+                x = l_oFace.a.wx*tx + l_oFace.a.wy*ty + l_oFace.a.wz*tz;
+                l_oFace.visible = x < 0;
                 // --
                 if( l_oFace.visible || !m_bBackFaceCulling) 
                 {
@@ -297,7 +300,7 @@ package sandy.core.scenegraph
 					 			if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
                                 else l_oFace.depth = forcedDepth;
                                 // -- we manage the display list depending on the mode choosen
-                                m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
+                                m_aVisiblePoly[int(m_nVisiblePoly)] = l_oFace;
 					 		}
 					 }
 					 else if(  enableNearClipping && l_nMinZ < l_nZNear ) // PARTIALLY VISIBLE
@@ -310,7 +313,7 @@ package sandy.core.scenegraph
 					 			if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
                                 else l_oFace.depth = forcedDepth;
                                 // -- we manage the display list depending on the mode choosen
-                                m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
+                                m_aVisiblePoly[int(m_nVisiblePoly)] = l_oFace;
 					 		}
 					 }
 					 else if( l_nMinZ >= l_nZNear )
@@ -319,10 +322,12 @@ package sandy.core.scenegraph
 					 		if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
 					 		else l_oFace.depth = forcedDepth;
 					    	// -- we manage the display list depending on the mode choosen
-							m_aVisiblePoly[m_nVisiblePoly++] = l_oFace;
+							m_aVisiblePoly[int(m_nVisiblePoly)] = l_oFace;
 					}
 					else
 					   continue;
+					
+					m_nVisiblePoly ++;
 					
 					if( l_oFace.hasAppearanceChanged )
 					{
@@ -380,12 +385,13 @@ package sandy.core.scenegraph
                 i = m_oGeometry.aVertexNormals.length;
                 while( --i > -1 )
                 {
-                    if( m_oGeometry.aVertex[i].projected == false ) continue;
-                    // --
-                    l_oVertex = m_oGeometry.aVertexNormals[i];
-                    l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-                    l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-                    l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+                    if( m_oGeometry.aVertex[int(i)].projected )
+                    {
+	                    l_oVertex = m_oGeometry.aVertexNormals[int(i)];
+	                    l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
+	                    l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
+	                    l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+                    }
                 }
             }
 		}
@@ -683,7 +689,7 @@ package sandy.core.scenegraph
 			//j = l;
 			//while( --j > -1 )
 			{
-				l_oPoly = aPolygons[ l_aSId[ j ] ];
+				l_oPoly = aPolygons[ l_aSId[ int(j) ] ];
 				if( !l_oPoly.visible && m_bBackFaceCulling ) continue;
 				// --
 				var l_nSize:int = l_oPoly.vertices.length;
@@ -696,7 +702,9 @@ package sandy.core.scenegraph
 					// --
 					if( IntersectionMath.isPointInTriangle2D( l_oClick, l_oA, l_oB, l_oC ) )
 					{
-						m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, l_oPoly, p_oEvt ) );
+						var l_oUV:UVCoord = l_oPoly.getUVFrom2D( l_oClick );
+						var l_oPt3d:Vector = l_oPoly.get3DFrom2D( l_oClick );
+						m_oEB.broadcastEvent( new Shape3DEvent( p_oEvt.type, this, l_oPoly, l_oUV, l_oPt3d ) );
 						return;
 					}
 				}

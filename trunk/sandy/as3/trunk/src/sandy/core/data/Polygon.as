@@ -36,6 +36,7 @@ package sandy.core.data
 	import sandy.math.IntersectionMath;
 	import sandy.math.VectorMath;
 	import sandy.view.Frustum;
+	import sandy.events.Shape3DEvent;
 
 	/**
 	 * Polygon's are the building blocks of visible 3D shapes.
@@ -526,7 +527,12 @@ package sandy.core.data
 		{ return mouseEvents; }
 
 		protected function _onInteraction( p_oEvt:Event ):void
-		{ m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this, p_oEvt ) ); }
+		{ 
+			var l_oClick:Point = new Point( m_oContainer.mouseX, m_oContainer.mouseY );
+			var l_oUV:UVCoord = getUVFrom2D( l_oClick );
+			var l_oPt3d:Vector = get3DFrom2D( l_oClick );
+			m_oEB.broadcastEvent( new Shape3DEvent( p_oEvt.type, shape, this, l_oUV, l_oPt3d ) );
+		}
 		
 		protected function _startMouseInteraction( e : MouseEvent = null ) : void
 		{

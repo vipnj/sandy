@@ -1,6 +1,6 @@
 /*
 # ***** BEGIN LICENSE BLOCK *****
-Copyright the original author Thomas PFEIFFER
+Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -22,44 +22,63 @@ package sandy.events
 	import sandy.core.data.UVCoord;
 	import sandy.core.data.Vector;
 
+	/**
+	 * Perhaps a dev can enlighten us ;)
+	 *
+	 * @version 3.0
+	 *
+	 * @see sandy.core.scenegraph.Shape3D
+	 */
 	public class Shape3DEvent extends BubbleEvent
 	{
 		/**
-		 * Reference to the object which has bene clicked
+		 * A reference to the object which has bene clicked.
+		 *
+	     * @see sandy.core.scenegraph.Scene3D
 		 */
 		public var shape:Shape3D;
+
 		/**
-		 * Polygon which has been clicked
+		 * Polygon that has been clicked.
+		 *
+	     * @see sandy.core.data.Polygon
 		 */
 		public var polygon:Polygon;
+
 		/**
-		 * Real UV coordinate of the point under the mouse click position
+		 * Real UV coordinate of the point under the mouse click position.
+		 *
+	     * @see sandy.core.data.UVCoord
 		 */
 		public var uv:UVCoord;
+
 		/**
-		 * Real 3D position of the point under mouse click position
+		 * Real 3D position of the point under mouse click position.
+		 *
+	     * @see sandy.core.data.Vector
 		 */
 		public var point:Vector;
-		
-		
+
 		/**
-		 * Constructs a new {@code Shape3DEvent} instance.
-		 * 
-		 * <p>{@link #bubbles} and {@link #propagation} properties are set
-		 * to {@code true}.
-		 * 
+		 * Constructs a new Shape3DEvent instance.
+		 *
 		 * <p>Example
 		 * <code>
-		 *   var e : Shape3DEvent = new Shape3DEvent(MyClass.onSomething, theShapeReference, thePolygonReference, theUVCoord, theReal3DIntersectionPoint );
+		 *   var e:Shape3DEvent = new Shape3DEvent(MyClass.onSomething, theShapeReference, thePolygonReference, theUVCoord, theReal3DIntersectionPoint);
 		 * </code>
-		 * 
-		 * @param e an {@link EventType} instance (event name).
-		 * @param p_oShape The {@code Shape3D} object reference
-		 * @param p_oPolygon The {@code Polygon} object reference
-		 * @param p_oUV The {@code UVCoord} object which corresponds to the UVCoord under mouse position
-		 * @param p_oPoint3d The {@code Vector} object which is the real 3D position under the mouse position
+		 *
+		 * @param e				A name for the event.
+		 * @param p_oShape		The Shape3D object reference
+		 * @param p_oPolygon	The Polygon object reference
+		 * @param p_oUV			The UVCoord object which corresponds to the UVCoord under mouse position
+		 * @param p_oPoint3d	The Vector object which is the real 3D position under the mouse position
+		 *
+	     * @see sandy.core.scenegraph.Scene3D
+	     * @see sandy.core.data.Polygon
+	     * @see sandy.core.data.UVCoord
+	     * @see sandy.core.data.Vector
 		 */
-		public function Shape3DEvent(e:String, p_oShape:Shape3D, p_oPolygon:Polygon, p_oUV:UVCoord, p_oPoint3d:Vector )
+		public function Shape3DEvent(e:String, p_oShape:Shape3D, p_oPolygon:Polygon, p_oUV:UVCoord, p_oPoint3d:Vector)
 		{
 			super(e, p_oShape);
 			shape = p_oShape;
@@ -67,6 +86,5 @@ package sandy.events
 			uv = p_oUV;
 			point = p_oPoint3d;
 		}
-		
 	}
 }

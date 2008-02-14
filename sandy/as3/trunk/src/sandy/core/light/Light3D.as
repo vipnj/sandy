@@ -23,17 +23,17 @@ package sandy.core.light
 	import sandy.util.NumberUtil;
 
 	[Event(name="lightUpdated", type="sandy.events.SandyEvent")]
-	[Event(name="lightColorChanged", type="sandy.events.LIGHT_COLOR_CHANGED")]
+	[Event(name="lightColorChanged", type="sandy.events.SandyEvent")]
 
-     /**
+	 /**
 	 * The Light3D class is used for creating the light of the world.
 	 *
 	 * <p>The light in Sandy is a light source at infinity, emitting parallel colored light.<br/>
 	 * The direction of light and the intensity can be varied</p>
 	 *
-	 * @author		Thomas Pfeiffer - kiroukou
-	 * @version		3.0
-	 * @date 		26.07.2007
+	 * @author	Thomas Pfeiffer - kiroukou
+	 * @version	3.0
+	 * @date 	26.07.2007
 	 */
 	public class Light3D extends EventDispatcher
 	{
@@ -48,6 +48,8 @@ package sandy.core.light
 		 *
 		 * @param p_oD		The direction of the emitted light.
 		 * @param p_nPow	Intensity of the emitted light.
+		 *
+	     * @see sandy.core.data.Vector
 		 */
 		public function Light3D(p_oD:Vector, p_nPow:Number)
 		{
@@ -93,6 +95,8 @@ package sandy.core.light
 		 * Returns the direction of the light.
 		 *
 		 * @return 	The light direction
+		 *
+	     * @see sandy.core.data.Vector
 		 */
 		public function getDirectionVector():Vector
 		{
@@ -117,6 +121,8 @@ package sandy.core.light
 		 * Sets the direction of the Light3D.
 		 *
 		 * @param x	A Vector object representing the direction of the light.
+		 *
+	     * @see sandy.core.data.Vector
 		 */
 		public function setDirectionVector(pDir:Vector):void
 		{
@@ -129,6 +135,8 @@ package sandy.core.light
 		 * Calculates the strength of this light based on the supplied normal.
 		 *
 		 * @return Number	The strength between 0 and 1
+		 *
+	     * @see sandy.core.data.Vector
 		 */
 		public function calculate(normal:Vector):Number
 		{
@@ -156,8 +164,6 @@ package sandy.core.light
 
 		/**
 		 * Color of the light.
-		 *
-		 * @default 0xFFFFFF (White)
 		 */
 		public function get color():uint
 		{

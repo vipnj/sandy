@@ -52,17 +52,17 @@ package sandy.core.scenegraph
 		 * The children of this node are stored inside this array.
 		 * IMPORTANT: Use this property mainly as READ ONLY. To add, delete or search a specific child, you can use the specific method to do that
 		 */
-		public var children:Array = new Array();
+		public const children:Array = new Array();
 		
 		/**
 		 *  Cached matrix corresponding to the transformation to the 0,0,0 frame system
 		 */
-		public var modelMatrix:Matrix4 = new Matrix4();
+		public const modelMatrix:Matrix4 = new Matrix4();
 		
 		/**
 		 * Cached matrix corresponding to the transformation to the camera frame system
 		 */
-		public var viewMatrix:Matrix4 = new Matrix4();
+		public const viewMatrix:Matrix4 = new Matrix4();
 		
 		/**
 		 * The bounding box of this node
@@ -309,7 +309,7 @@ package sandy.core.scenegraph
 			{
 				lNode.destroy();
 			}
-			children = null;
+			children.splice(0);
 			m_oEB = null;
 		}
 
@@ -332,7 +332,7 @@ package sandy.core.scenegraph
 			{
 				parent.addChild( lNode );
 			}
-			children = null;
+			children.splice(0);
 			m_oEB = null;
 			changed = true;
 		}

@@ -23,7 +23,9 @@ package sandy.events
 	import sandy.core.data.Vector;
 
 	/**
-	 * Perhaps a dev can enlighten us ;)
+	 * This class represents the type of events broadcasted by shapes objects.
+	 * It gives some useful information about the clicked object such as the polygon clicked, and real 3D position of the point under mouse, the Uv coordinate under mouse.
+	 * It allows some advanced interaction with the object and its texture.
 	 *
 	 * @version 3.0
 	 *
@@ -60,6 +62,11 @@ package sandy.events
 		public var point:Vector;
 
 		/**
+		 * Original Flash event instance.
+		 */
+		public var event:Event;
+		
+		/**
 		 * Constructs a new Shape3DEvent instance.
 		 *
 		 * <p>Example
@@ -78,13 +85,14 @@ package sandy.events
 	     * @see sandy.core.data.UVCoord
 	     * @see sandy.core.data.Vector
 		 */
-		public function Shape3DEvent(e:String, p_oShape:Shape3D, p_oPolygon:Polygon, p_oUV:UVCoord, p_oPoint3d:Vector)
+		public function Shape3DEvent(e:String, p_oShape:Shape3D, p_oPolygon:Polygon, p_oUV:UVCoord, p_oPoint3d:Vector, p_oEvent:Event )
 		{
 			super(e, p_oShape);
 			shape = p_oShape;
 			polygon = p_oPolygon;
 			uv = p_oUV;
 			point = p_oPoint3d;
+			event = p_oEvent;
 		}
 	}
 }

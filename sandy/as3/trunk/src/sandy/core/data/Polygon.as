@@ -531,7 +531,7 @@ package sandy.core.data
 			var l_oClick:Point = new Point( m_oContainer.mouseX, m_oContainer.mouseY );
 			var l_oUV:UVCoord = getUVFrom2D( l_oClick );
 			var l_oPt3d:Vector = get3DFrom2D( l_oClick );
-			m_oEB.broadcastEvent( new Shape3DEvent( p_oEvt.type, shape, this, l_oUV, l_oPt3d ) );
+			m_oEB.broadcastEvent( new Shape3DEvent( p_oEvt.type, shape, this, l_oUV, l_oPt3d, p_oEvt ) );
 		}
 		
 		protected function _startMouseInteraction( e : MouseEvent = null ) : void

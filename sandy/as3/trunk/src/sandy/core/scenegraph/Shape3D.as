@@ -262,13 +262,13 @@ package sandy.core.scenegraph
 			m14 = l_oMatrix.n14; m24 = l_oMatrix.n24; m34 = l_oMatrix.n34;
 			for each( l_oVertex in l_aPoints )
 			{				
-				l_oVertex.wx = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13 + m14;
-				l_oVertex.wy = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23 + m24;
-				l_oVertex.wz = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33 + m34;
+				l_oVertex.wx = (x=l_oVertex.x) * m11 + (y=l_oVertex.y) * m12 + (z=l_oVertex.z) * m13 + m14;
+				l_oVertex.wy = x * m21 + y * m22 + z * m23 + m24;
+				l_oVertex.wz = x * m31 + y * m32 + z * m33 + m34;
 				l_oVertex.projected = false;
 			}
 			// -- The polygons will be clipped, we shall allocate a new array container the clipped vertex.
-			m_aVisiblePoly = [];//.splice( 0 );
+			m_aVisiblePoly = [];
 			m_nVisiblePoly = 0;
 			m_nDepth = 0;
 			
@@ -350,7 +350,7 @@ package sandy.core.scenegraph
 			// --
 			if( m_bUseSingleContainer )
 			{
-				if(enableForcedDepth)m_nDepth = forcedDepth;
+				if(enableForcedDepth) 	m_nDepth = forcedDepth;
 				else 					m_nDepth /= m_aVisiblePoly.length;
 				p_oCamera.addToDisplayList( this );
 			}
@@ -359,28 +359,28 @@ package sandy.core.scenegraph
 			    p_oCamera.addArrayToDisplayList( m_aVisiblePoly );
 			}
 			
+			var l_nFlags:int = appearance.flags;
+			
+			if( l_nFlags == 0 ) return;
+			
 			var i:int;
+			l_oMatrix = modelMatrix;
+            m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
+            m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
+            m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
 			if( appearance.flags & SandyFlags.POLYGON_NORMAL_WORLD )
             {
-                l_oMatrix = modelMatrix;
-                m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
-                m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
-                m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
                 // -- Now we transform the normals.
                 for each( var l_oPoly:Polygon in m_aVisiblePoly )
                 {
                     l_oVertex = l_oPoly.normal;
-                    l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-                    l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-                    l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+                    l_oVertex.wx  = (x=l_oVertex.x) * m11 + (y=l_oVertex.y) * m12 + (z=l_oVertex.z) * m13;
+                    l_oVertex.wy  = x * m21 + y * m22 + z * m23;
+                    l_oVertex.wz  = x * m31 + y * m32 + z * m33;
                 }
             }
             if( appearance.flags & SandyFlags.VERTEX_NORMAL_WORLD )
             {
-                l_oMatrix = modelMatrix;
-                m11 = l_oMatrix.n11; m21 = l_oMatrix.n21; m31 = l_oMatrix.n31;
-                m12 = l_oMatrix.n12; m22 = l_oMatrix.n22; m32 = l_oMatrix.n32;
-                m13 = l_oMatrix.n13; m23 = l_oMatrix.n23; m33 = l_oMatrix.n33;
                 // -- Now we transform the normals.
                 i = m_oGeometry.aVertexNormals.length;
                 while( --i > -1 )
@@ -388,9 +388,9 @@ package sandy.core.scenegraph
                     if( m_oGeometry.aVertex[int(i)].projected )
                     {
 	                    l_oVertex = m_oGeometry.aVertexNormals[int(i)];
-	                    l_oVertex.wx  = l_oVertex.x * m11 + l_oVertex.y * m12 + l_oVertex.z * m13;
-	                    l_oVertex.wy  = l_oVertex.x * m21 + l_oVertex.y * m22 + l_oVertex.z * m23;
-	                    l_oVertex.wz  = l_oVertex.x * m31 + l_oVertex.y * m32 + l_oVertex.z * m33;
+	                    l_oVertex.wx  = (x=l_oVertex.x) * m11 + (y=l_oVertex.y) * m12 + (z=l_oVertex.z) * m13;
+	                    l_oVertex.wy  = x * m21 + y * m22 + z * m23;
+	                    l_oVertex.wz  = x * m31 + y * m32 + z * m33;
                     }
                 }
             }
@@ -617,6 +617,23 @@ package sandy.core.scenegraph
 		 * As an alternative, you have the possibility to enable events only for specific faces.</p>
 		 *
 		 * <p>Once this feature is enabled, the animation is more CPU intensive.</p>
+		 * 
+		 * <p>Example
+		 * <code>
+		 * 	var l_oShape:Shape3D = new Sphere("sphere");
+		 * 	l_oShape.enableEvents = true;
+		 * 	l_oShape.addEventListener( MouseEvent.CLICK, onClick );
+		 * 
+		 * 	function onClick( p_eEvent:Shape3DEvent ):void
+         * 	{
+         *   	var l_oPoly:Polygon = ( p_eEvent.polygon );  
+         *   	var l_oPointAtClick:Vector =  p_eEvent.point;
+         *   	// -- get the normalized uv of the point under mouse position
+         *  	var l_oIntersectionUV:UVCoord = p_eEvent.uv;
+         *   	// -- get the correct material
+         *   	var l_oMaterial:BitmapMaterial = (l_oPoly.visible ? l_oPoly.appearance.frontMaterial : l_oPoly.appearance.backMaterial) as BitmapMaterial;
+         * 	}
+         * </code>
 		 */
 		public function set enableEvents( b:Boolean ):void
 		{
@@ -704,7 +721,7 @@ package sandy.core.scenegraph
 					{
 						var l_oUV:UVCoord = l_oPoly.getUVFrom2D( l_oClick );
 						var l_oPt3d:Vector = l_oPoly.get3DFrom2D( l_oClick );
-						m_oEB.broadcastEvent( new Shape3DEvent( p_oEvt.type, this, l_oPoly, l_oUV, l_oPt3d ) );
+						m_oEB.broadcastEvent( new Shape3DEvent( p_oEvt.type, this, l_oPoly, l_oUV, l_oPt3d, p_oEvt ) );
 						return;
 					}
 				}

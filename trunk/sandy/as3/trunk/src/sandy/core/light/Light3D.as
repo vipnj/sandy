@@ -23,8 +23,9 @@ package sandy.core.light
 	import sandy.util.NumberUtil;
 
 	[Event(name="lightUpdated", type="sandy.events.SandyEvent")]
+	[Event(name="lightColorChanged", type="sandy.events.LIGHT_COLOR_CHANGED")]
 
-       	/**
+     /**
 	 * The Light3D class is used for creating the light of the world.
 	 *
 	 * <p>The light in Sandy is a light source at infinity, emitting parallel colored light.<br/>
@@ -36,7 +37,6 @@ package sandy.core.light
 	 */
 	public class Light3D extends EventDispatcher
 	{
-
 		/**
 		* Maximum value accepted. If the default value (150) seems too big or too small for you, you can change it.
 		* But be aware that the actual lighting calculations are normalised i.e. 0 -> MAX_POWER becomes 0 -> 1
@@ -48,23 +48,23 @@ package sandy.core.light
 		 *
 		 * @param p_oD		The direction of the emitted light.
 		 * @param p_nPow	Intensity of the emitted light.
-		 *
 		 */
-		public function Light3D ( p_oD:Vector, p_nPow:Number )
+		public function Light3D(p_oD:Vector, p_nPow:Number)
 		{
 			_dir = p_oD;
 			_dir.normalize();
-			setPower( p_nPow );
+			setPower(p_nPow);
 		}
 
 		/**
 		 * The the power of the light. A number between 0 and MAX_POWER is necessary.
 		 * The highter the power of the light is, the less the shadows are visibles.
-		 * @param n Number a Number between 0 and MAX_POWER. This number is the light intensity.
+		 *
+		 * @param n	Number a Number between 0 and MAX_POWER. This number is the light intensity.
 		 */
-		public function setPower( p_nPow:Number ):void
+		public function setPower(p_nPow:Number):void
 		{
-			_power =  NumberUtil.constrain( p_nPow, 0, Light3D.MAX_POWER );
+			_power =  NumberUtil.constrain(p_nPow, 0, Light3D.MAX_POWER);
 			_nPower = _power / Light3D.MAX_POWER;
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
@@ -72,7 +72,7 @@ package sandy.core.light
 		/**
 		 * Returns the intensity of the light.
 		 *
-		 * @return 	The intensity as a number between 0 - MAX_POWER.
+		 * @return The intensity as a number between 0 - MAX_POWER.
 		 */
 		public function getPower():Number
 		{
@@ -81,6 +81,7 @@ package sandy.core.light
 
 		/**
 		 * Returns the power of the light normalized to the range 0 -> 1
+		 *
 		 * @return Number a number between 0 and 1
 		 */
 		public function getNormalizedPower():Number
@@ -99,20 +100,25 @@ package sandy.core.light
 		}
 
 		/**
-		 * Set the position of the {@code Light3D}.
+		 * Uneeded? setDirectionVector() does the same thing...
 		 *
-		 * @param	x	the x coordinate
-		 * @param	y	the y coordinate
-		 * @param	z	the z coordinate
+		 * @param x	The x coordinate
+		 * @param y	The y coordinate
+		 * @param z	The z coordinate
 		 */
-		public function setDirection( x:Number, y:Number, z:Number ):void
+		public function setDirection(x:Number, y:Number, z:Number):void
 		{
 			_dir.x = x; _dir.y = y; _dir.z = z;
 			_dir.normalize();
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_UPDATED));
 		}
 
-		public function setDirectionVector( pDir:Vector ):void
+		/**
+		 * Sets the direction of the Light3D.
+		 *
+		 * @param x	A Vector object representing the direction of the light.
+		 */
+		public function setDirectionVector(pDir:Vector):void
 		{
 			_dir = pDir;
 			_dir.normalize();
@@ -120,24 +126,40 @@ package sandy.core.light
 		}
 
 		/**
-		 * Calculate the strength of this light based on the supplied normal
-		 * @return Number	the strength between 0 and 1
+		 * Calculates the strength of this light based on the supplied normal.
+		 *
+		 * @return Number	The strength between 0 and 1
 		 */
-		public function calculate( normal:Vector ):Number
+		public function calculate(normal:Vector):Number
 		{
-			var DP:Number = _dir.dot( normal);
+			var DP:Number = _dir.dot(normal);
 			DP = -DP;
+
 			// if DP is less than 0 then the face is facing away from the light
 			// so set it to zero
-			if(DP < 0) DP = 0;
+			if (DP < 0)
+			{
+				DP = 0;
+			}
+
 			return _nPower * DP;
 		}
 
 		/**
-		 * Color of the light.
-		 * @default white
+		 * Not in use...
 		 */
-		public function get color ():uint
+		public function destroy():void
+		{
+			//How clean the listeners here?
+			//removeEventListener(SandyEvent.LIGHT_UPDATED, );
+		}
+
+		/**
+		 * Color of the light.
+		 *
+		 * @default 0xFFFFFF (White)
+		 */
+		public function get color():uint
 		{
 			return _color;
 		}
@@ -145,7 +167,7 @@ package sandy.core.light
 		/**
 		 * @private
 		 */
-		public function set color (p_nColor:uint):void
+		public function set color(p_nColor:uint):void
 		{
 			_color = p_nColor;
 
@@ -154,17 +176,11 @@ package sandy.core.light
 			dispatchEvent(new SandyEvent(SandyEvent.LIGHT_COLOR_CHANGED));
 		}
 
-		public function destroy():void
-		{
-			//How clean the listeners here?
-			//removeEventListener(SandyEvent.LIGHT_UPDATED, );
-		}
-
 		// Direction of the light. It is 3D vector.
 		//Please refer to the Light tutorial to learn more about Sandy's lights.
 		private var _dir:Vector;
-		private var _power : Number;
-		private var _nPower : Number;
+		private var _power:Number;
+		private var _nPower:Number;
 		private var _color:uint;
 	}
 }

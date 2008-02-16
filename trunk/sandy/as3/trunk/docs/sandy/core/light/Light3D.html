@@ -88,15 +88,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#calculate()">calculate</a>(normal:<a href="../data/Vector.html">Vector</a>):Number</div>
 <div class="summaryTableDescription">
-   Calculate the strength of this light based on the supplied normal
-   </div>
+   Calculates the strength of this light based on the supplied normal.</div>
 </td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#destroy()">destroy</a>():void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+   Not in use...</div>
 </td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
@@ -114,7 +114,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="#getNormalizedPower()">getNormalizedPower</a>():Number</div>
 <div class="summaryTableDescription">
    Returns the power of the light normalized to the range 0 -> 1
-   </div>
+      </div>
 </td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
@@ -130,14 +130,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#setDirection()">setDirection</a>(x:Number, y:Number, z:Number):void</div>
 <div class="summaryTableDescription">
-   Set the position of the {</div>
+   Uneeded? setDirectionVector() does the same thing...</div>
 </td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#setDirectionVector()">setDirectionVector</a>(pDir:<a href="../data/Vector.html">Vector</a>):void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+   Sets the direction of the Light3D.</div>
 </td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
@@ -156,6 +157,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableEvent" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#event:lightColorChanged">lightColorChanged</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol">Light3D</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
@@ -182,8 +190,7 @@ showHideInherited();
 <div class="detailBody">
 <code>color:uint</code>&nbsp;&nbsp;[read-write]<p>
    Color of the light.
-   </p><p>The default value is <code>white</code>.</p>
-<span class="label">Implementation</span>
+   </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get color():uint</code>
 <br>
@@ -223,9 +230,15 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nPow</span>:Number</code> &mdash; Intensity of the emitted light.
-      </td>
+         </td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../data/Vector.html" target="">sandy.core.data.Vector</a>
+</div>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
@@ -237,8 +250,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function calculate(normal:<a href="../data/Vector.html">Vector</a>):Number</code><p>
-   Calculate the strength of this light based on the supplied normal
-   </p><span class="label">Parameters</span>
+   Calculates the strength of this light based on the supplied normal.
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">normal</span>:<a href="../data/Vector.html">Vector</a></code></td>
@@ -248,10 +261,16 @@ showHideInherited();
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Number</code> &mdash; Number the strength between 0 and 1
-   </td>
+<td width="20"></td><td><code>Number</code> &mdash; Number The strength between 0 and 1
+         </td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../data/Vector.html" target="">sandy.core.data.Vector</a>
+</div>
 </div>
 <a name="destroy()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -260,8 +279,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy():void</code>
-</div>
+<code>public function destroy():void</code><p>
+   Not in use...
+   </p></div>
 <a name="getDirectionVector()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -277,11 +297,17 @@ showHideInherited();
 <tr>
 <td width="20"></td><td><code><a href="../data/Vector.html">Vector</a></code> &mdash; 
                          The light direction
-   
+         
                         
                      </td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../data/Vector.html" target="">sandy.core.data.Vector</a>
+</div>
 </div>
 <a name="getNormalizedPower()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -292,7 +318,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public function getNormalizedPower():Number</code><p>
    Returns the power of the light normalized to the range 0 -> 1
-   </p><p></p>
+      </p><p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -314,7 +340,7 @@ showHideInherited();
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Number</code> &mdash;  The intensity as a number between 0 - MAX_POWER.
+<td width="20"></td><td><code>Number</code> &mdash; The intensity as a number between 0 - MAX_POWER.
    </td>
 </tr>
 </table>
@@ -327,24 +353,25 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function setDirection(x:Number, y:Number, z:Number):void</code><p>
-   Set the position of the {</p><span class="label">Parameters</span>
+   Uneeded? setDirectionVector() does the same thing...
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">x</span>:Number</code> &mdash; the x coordinate
+<td width="20px"></td><td><code><span class="label">x</span>:Number</code> &mdash; The x coordinate
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">y</span>:Number</code> &mdash; the y coordinate
+<td width="20px"></td><td><code><span class="label">y</span>:Number</code> &mdash; The y coordinate
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">z</span>:Number</code> &mdash; the z coordinate
+<td width="20px"></td><td><code><span class="label">z</span>:Number</code> &mdash; The z coordinate
    </td>
 </tr>
 </table>
@@ -356,12 +383,21 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function setDirectionVector(pDir:<a href="../data/Vector.html">Vector</a>):void</code><span class="label">Parameters</span>
+<code>public function setDirectionVector(pDir:<a href="../data/Vector.html">Vector</a>):void</code><p>
+   Sets the direction of the Light3D.
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">pDir</span>:<a href="../data/Vector.html">Vector</a></code></td>
+<td width="20px"></td><td><code><span class="label">pDir</span>:<a href="../data/Vector.html">Vector</a></code> &mdash; A Vector object representing the direction of the light.
+         </td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../data/Vector.html" target="">sandy.core.data.Vector</a>
+</div>
 </div>
 <a name="setPower()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -373,7 +409,7 @@ showHideInherited();
 <code>public function setPower(p_nPow:Number):void</code><p>
    The the power of the light. A number between 0 and MAX_POWER is necessary.
    The highter the power of the light is, the less the shadows are visibles.
-   </p><span class="label">Parameters</span>
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">p_nPow</span>:Number</code> &mdash; Number a Number between 0 and MAX_POWER. This number is the light intensity.
@@ -382,10 +418,21 @@ showHideInherited();
 </table>
 </div>
 <div class="detailSectionHeader">Event detail</div>
+<a name="event:lightColorChanged"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lightColorChanged</td><td class="detailHeaderType">event&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<span class="label">Event object type: </span><a href="../../events/SandyEvent.html"><code>sandy.events.SandyEvent</code></a>
+<br>
+<p></p>
+</div>
 <a name="event:lightUpdated"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">lightUpdated</td><td class="detailHeaderType">event&nbsp;</td>
+<td class="detailHeaderName">lightUpdated</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">

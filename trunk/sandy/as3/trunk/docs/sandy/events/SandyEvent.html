@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="SandyEvent,sandy.events.SandyEvent,CONTAINER_CREATED,LIGHT_ADDED,LIGHT_COLOR_CHANGED,LIGHT_UPDATED,QUEUE_COMPLETE,QUEUE_LOADER_ERROR,SCENE_CULL,SCENE_RENDER,SCENE_RENDER_DISPLAYLIST,SCENE_UPDATE,clone" name="keywords">
+<meta content="SandyEvent,sandy.events.SandyEvent,CONTAINER_CREATED,LIGHT_ADDED,LIGHT_COLOR_CHANGED,LIGHT_UPDATED,QUEUE_COMPLETE,QUEUE_LOADER_ERROR,SCENE_CULL,SCENE_RENDER,SCENE_RENDER_DISPLAYLIST,SCENE_UPDATE" name="keywords">
 <title>sandy.events.SandyEvent</title>
 </head>
 <body>
@@ -42,7 +42,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+  Conatains custom Sandy events.
+    <p></p>
+<p>
+<span class="classHeaderTableLabel">See also</span>
+</p>
+<div class="seeAlso">
+<a href="BubbleEventBroadcaster.html" target="">BubbleEventBroadcaster</a>
+</div>
 <br>
 <hr>
 </div>
@@ -57,14 +64,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#SandyEvent()">SandyEvent</a>(type:String, bubbles:Boolean = false, cancelable:Boolean = false)</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">SandyEvent</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#clone()">clone</a>():Event</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+   Constructor.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 </table>
@@ -77,43 +78,54 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CONTAINER_CREATED">CONTAINER_CREATED</a> : String = "containerCreated"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CONTAINER_CREATED">CONTAINER_CREATED</a> : String = "containerCreated"<div class="summaryTableDescription">[static]
+      Not in use?
+            </div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LIGHT_ADDED">LIGHT_ADDED</a> : String = "lightAdded"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LIGHT_ADDED">LIGHT_ADDED</a> : String = "lightAdded"<div class="summaryTableDescription">[static]
+      Indicates that a light has been added to a Scene3D object.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LIGHT_COLOR_CHANGED">LIGHT_COLOR_CHANGED</a> : String = "lightColorChanged"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LIGHT_COLOR_CHANGED">LIGHT_COLOR_CHANGED</a> : String = "lightColorChanged"<div class="summaryTableDescription">[static]
+      Indicates that the color of the light has changed.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LIGHT_UPDATED">LIGHT_UPDATED</a> : String = "lightUpdated"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#LIGHT_UPDATED">LIGHT_UPDATED</a> : String = "lightUpdated"<div class="summaryTableDescription">[static]
+      Indicates that the Light3D object of the scene has been updated.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#QUEUE_COMPLETE">QUEUE_COMPLETE</a> : String = "queueComplete"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#QUEUE_COMPLETE">QUEUE_COMPLETE</a> : String = "queueComplete"<div class="summaryTableDescription">[static]
+      Uneeded? Also in QueueEvent class...</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#QUEUE_LOADER_ERROR">QUEUE_LOADER_ERROR</a> : String = "queueLoaderError"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#QUEUE_LOADER_ERROR">QUEUE_LOADER_ERROR</a> : String = "queueLoaderError"<div class="summaryTableDescription">[static]
+      Uneeded? Also in QueueEvent class...</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_CULL">SCENE_CULL</a> : String = "scene_cull"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_CULL">SCENE_CULL</a> : String = "scene_cull"<div class="summaryTableDescription">[static]
+      Indicates the scene has been culled.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_RENDER">SCENE_RENDER</a> : String = "scene_render"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_RENDER">SCENE_RENDER</a> : String = "scene_render"<div class="summaryTableDescription">[static]
+      Indicates the scene has been rendered.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_RENDER_DISPLAYLIST">SCENE_RENDER_DISPLAYLIST</a> : String = "scene_render_display_list"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_RENDER_DISPLAYLIST">SCENE_RENDER_DISPLAYLIST</a> : String = "scene_render_display_list"<div class="summaryTableDescription">[static]
+      Indicates the display list has been rendered.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_UPDATE">SCENE_UPDATE</a> : String = "scene_update"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SCENE_UPDATE">SCENE_UPDATE</a> : String = "scene_update"<div class="summaryTableDescription">[static]
+      Indicates the scene has been updated.</div>
 </td><td class="summaryTableOwnerCol">SandyEvent</td>
 </tr>
 </table>
@@ -132,40 +144,27 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function SandyEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)</code><span class="label">Parameters</span>
+<code>public function SandyEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)</code><p>
+   Constructor.
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">type</span>:String</code></td>
+<td width="20px"></td><td><code><span class="label">type</span>:String</code> &mdash; The event type; indicates the action that caused the event.
+   </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">bubbles</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">bubbles</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Specifies whether the event can bubble up the display list hierarchy.
+   </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">cancelable</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="clone()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">clone</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public override function clone():Event</code>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Event</code></td>
+<td width="20px"></td><td><code><span class="label">cancelable</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Specifies whether the behavior associated with the event can be prevented.
+      </td>
 </tr>
 </table>
 </div>
@@ -178,7 +177,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const CONTAINER_CREATED:String = "containerCreated"</code>
+<code>public static const CONTAINER_CREATED:String = "containerCreated"</code><p>
+      Not in use?
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/World3D.html" target="">sandy.core.World3D</a>
+</div>
 </div>
 <a name="LIGHT_ADDED"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -187,7 +193,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const LIGHT_ADDED:String = "lightAdded"</code>
+<code>public static const LIGHT_ADDED:String = "lightAdded"</code><p>
+      Indicates that a light has been added to a Scene3D object.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/Scene3D.html" target="">sandy.core.Scene3D</a>
+</div>
 </div>
 <a name="LIGHT_COLOR_CHANGED"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -196,7 +209,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const LIGHT_COLOR_CHANGED:String = "lightColorChanged"</code>
+<code>public static const LIGHT_COLOR_CHANGED:String = "lightColorChanged"</code><p>
+      Indicates that the color of the light has changed.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/light/Light3D.html" target="">sandy.core.light.Light3D</a>
+</div>
 </div>
 <a name="LIGHT_UPDATED"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -205,7 +225,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const LIGHT_UPDATED:String = "lightUpdated"</code>
+<code>public static const LIGHT_UPDATED:String = "lightUpdated"</code><p>
+      Indicates that the Light3D object of the scene has been updated.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/light/Light3D.html" target="">sandy.core.light.Light3D</a>
+</div>
 </div>
 <a name="QUEUE_COMPLETE"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -214,7 +241,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const QUEUE_COMPLETE:String = "queueComplete"</code>
+<code>public static const QUEUE_COMPLETE:String = "queueComplete"</code><p>
+      Uneeded? Also in QueueEvent class...
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../util/LoaderQueue.html" target="">sandy.util.LoaderQueue</a>
+</div>
 </div>
 <a name="QUEUE_LOADER_ERROR"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -223,7 +257,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const QUEUE_LOADER_ERROR:String = "queueLoaderError"</code>
+<code>public static const QUEUE_LOADER_ERROR:String = "queueLoaderError"</code><p>
+      Uneeded? Also in QueueEvent class...
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../util/LoaderQueue.html" target="">sandy.util.LoaderQueue</a>
+</div>
 </div>
 <a name="SCENE_CULL"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -232,7 +273,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const SCENE_CULL:String = "scene_cull"</code>
+<code>public static const SCENE_CULL:String = "scene_cull"</code><p>
+      Indicates the scene has been culled.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/Scene3D.html" target="">sandy.core.Scene3D</a>
+</div>
 </div>
 <a name="SCENE_RENDER"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -241,7 +289,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const SCENE_RENDER:String = "scene_render"</code>
+<code>public static const SCENE_RENDER:String = "scene_render"</code><p>
+      Indicates the scene has been rendered.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/Scene3D.html" target="">sandy.core.Scene3D</a>
+</div>
 </div>
 <a name="SCENE_RENDER_DISPLAYLIST"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -250,7 +305,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const SCENE_RENDER_DISPLAYLIST:String = "scene_render_display_list"</code>
+<code>public static const SCENE_RENDER_DISPLAYLIST:String = "scene_render_display_list"</code><p>
+      Indicates the display list has been rendered.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/Scene3D.html" target="">sandy.core.Scene3D</a>
+</div>
 </div>
 <a name="SCENE_UPDATE"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -259,7 +321,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const SCENE_UPDATE:String = "scene_update"</code>
+<code>public static const SCENE_UPDATE:String = "scene_update"</code><p>
+      Indicates the scene has been updated.
+            </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../core/Scene3D.html" target="">sandy.core.Scene3D</a>
+</div>
 </div>
 <br>
 <br>

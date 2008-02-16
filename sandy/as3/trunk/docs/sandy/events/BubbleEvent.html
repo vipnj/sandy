@@ -45,7 +45,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+  BubbleEvent defines a custom event type to work with.
+    <p></p>
+<p>
+<span class="classHeaderTableLabel">See also</span>
+</p>
+<div class="seeAlso">
+<a href="BubbleEventBroadcaster.html" target="">BubbleEventBroadcaster</a>
+</div>
 <br>
 <hr>
 </div>
@@ -57,7 +64,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#target">target</a> : Object<div class="summaryTableDescription">[read-only]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#target">target</a> : Object<div class="summaryTableDescription">[read-only]
+   The event target.</div>
 </td><td class="summaryTableOwnerCol">BubbleEvent</td>
 </tr>
 </table>
@@ -74,7 +82,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#BubbleEvent()">BubbleEvent</a>(e:String, oT:Object)</div>
 <div class="summaryTableDescription">
-   Constructs a new {</div>
+   Creates a new BubbleEvent instance.</div>
 </td><td class="summaryTableOwnerCol">BubbleEvent</td>
 </tr>
 <tr class="">
@@ -101,7 +109,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>target:Object</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>target:Object</code>&nbsp;&nbsp;[read-only]<p>
+   The event target.
+   </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get target():Object</code>
 <br>
@@ -116,19 +126,27 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function BubbleEvent(e:String, oT:Object)</code><p>
-   Constructs a new {</p><span class="label">Parameters</span>
+   Creates a new BubbleEvent instance.
+       </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">e</span>:String</code> &mdash; an {</td>
+<td width="20px"></td><td><code><span class="label">e</span>:String</code> &mdash;  A name for the event.
+   </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">oT</span>:Object</code> &mdash; event target.
+<td width="20px"></td><td><code><span class="label">oT</span>:Object</code> &mdash; The event target.
    </td>
 </tr>
 </table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+     var e:BubbleEvent = new BubbleEvent(MyClass.onSomething, this);
+   </pre></div>
+      <p></p>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
@@ -141,12 +159,12 @@ showHideInherited();
 <div class="detailBody">
 <code>public override function toString():String</code><p>
    Returns the string representation of this instance.
-   
-   </p><p></p>
+      </p><p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>String</code> &mdash; {</td>
+<td width="20"></td><td><code>String</code> &mdash; String representation of this instance
+   </td>
 </tr>
 </table>
 </div>

@@ -1,4 +1,4 @@
-/*
+﻿/*
 # ***** BEGIN LICENSE BLOCK *****
 Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
@@ -13,40 +13,40 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-package sandy.primitive 
+package sandy.primitive
 {
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
-	
-       	/**
-	 * The Line3D class is used for creating a line in 3D space.
-	 *
-	 * <p>The line is created by passing a comma delimited argument list
-	 * containing points in space as vectors.<br/>
-	 * A Line3D object can only use the WireFrameMaterial[?]</p>
-	 * 
-	 * @author		Thomas Pfeiffer - kiroukou
-	 * @version		3.0
-	 * @date 		26.07.2007
-	 *
-	 * @example To create a line between ( x0, y0, z0 ), ( x1, y1, z1 ), ( x2, y2, z3 ),
-	 * here is the statement:
-	 *
-	 * <listing version="3.0">
-	 *     var myLine:Line3D = new Line3D( "aLine", new Vector(x0, y0, z0), new Vector( x1, y1, z1 ), new Vector( x2, y2, z3 ));
-	 *  </listing>
-	 */
+
+	/**
+	* The Line3D class is used for creating a line in 3D space.
+	*
+	* <p>The line is created by passing a comma delimited argument list containing vectors.<br/>
+	* A Line3D object can only use the WireFrameMaterial[?]</p>
+	*
+	* @author		Thomas Pfeiffer - kiroukou
+	* @version		3.0
+	* @date 		26.07.2007
+	*
+	* @example To create a line between ( x0, y0, z0 ), ( x1, y1, z1 ), ( x2, y2, z3 ),
+	* use the following statement:
+	*
+	* <listing version="3.0">
+	*     var myLine:Line3D = new Line3D( "aLine", new Vector(x0, y0, z0), new Vector( x1, y1, z1 ), new Vector( x2, y2, z3 ));
+	*  </listing>
+	*/
 	public class Line3D extends Shape3D implements Primitive3D
 	{
 		/**
-		 * Creates a Line3D primitive
-		 *
-		 * <p>A line is drawn between points in the order they are passed.<br/> 
-		 * You can pass as many points as you want, with a minimum of two.</p>
-		 *
-		 * @param p_sName	A string identifier for this object
-		 * @param ...rest 	p_V1 ... p_Vn  A comma delimited list of Vector objects
-		 */
+		* Creates a Line3D primitive.
+		*
+		* <p>A line is drawn between vectors in the order they are passed. A minimum of two vectors must be passed.</p>
+		*
+		* @param p_sName	A string identifier for this object.
+		* @param ...rest 	A comma delimited list of vectors.
+		*
+		* @see sandy.core.data.Vector
+		*/
 		public function Line3D ( p_sName:String, ...rest )
 		{
 			super ( p_sName );
@@ -60,14 +60,12 @@ package sandy.primitive
 				enableBackFaceCulling = false;
 			}
 		}
-		
+
 		/**
-		 * Generates the geometry for this Shape3D
-		 *
-		 * @see sandy.core.data.Vertex
-		 * @see sandy.core.data.UVCoord
-		 * @see sandy.core.data.Polygon
-		 */
+		* Generates the geometry for the line.
+		*
+		* @see sandy.core.scenegraph.Geometry3D
+		*/
 		public function generate ( ... arguments ) : Geometry3D
 		{
 			var l_oGeometry:Geometry3D = new Geometry3D();
@@ -91,10 +89,13 @@ package sandy.primitive
 			// --
 			return l_oGeometry;
 		}
-				
+
+		/**
+		* @private
+		*/
 		public override function toString():String
 		{
 			return "sandy.primitive.Line3D";
-		}		
+		}
 	}
 }

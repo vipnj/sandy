@@ -1,6 +1,6 @@
 ﻿/*
 # ***** BEGIN LICENSE BLOCK *****
-Copyright the original author Thomas PFEIFFER
+Copyright the original author or authors.
 Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -13,7 +13,6 @@ limitations under the License.
 
 # ***** END LICENSE BLOCK *****
 */
-
 package sandy.primitive
 {
 	import sandy.core.data.PrimitiveFace;
@@ -21,75 +20,75 @@ package sandy.primitive
 	import sandy.core.scenegraph.Geometry3D;
 	import sandy.core.scenegraph.Shape3D;
 
-    /**
-	 * The Cylinder class is used for creating a cylinder primitive, a cone or a truncated cone.
-	 *
-	 * <p>All credits go to Tim Knipt from suite75.net who created the AS2 implementation.
-	 * Original sources available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Cylinder.as</p>
-	 *
-	 * @author		Xavier Martin ( ajout fonction getTop, getBottom, getTop )
-	 * @author		Thomas Pfeiffer ( adaption for Sandy )
-	 * @author		Tim Knipt
-	 * @version		3.0
-	 * @date 		26.07.2007
-	 *
-	 * @example To create a cylinder with a base radius of 150 and a height of 300,
-	 * with default number of faces, here is the statement:
-	 *
-	 * <listing version="3.0">
-	 *     var cyl:Cylinder = new Cylinder( "theCylinder", 150, 300 );
-	 *  </listing>
-	 * To create a truncated cone, you pass a top radius value to the constructor
-	 * <listing version="3.0">
-	 *     var tCone:Cylinder = new Cylinder( "trunkCone", 150, 300, 0, 0, 40 );
-	 *  </listing>
-	 */
+	/**
+	* The Cylinder class is used for creating a cylinder primitive, a cone or a truncated cone.
+	*
+	* <p>All credits go to Tim Knipt from suite75.net who created the AS2 implementation.
+	* Original sources available at : http://www.suite75.net/svn/papervision3d/tim/as2/org/papervision3d/objects/Cylinder.as</p>
+	*
+	* @author		Xavier Martin ( ajout fonction getTop, getBottom, getTop )
+	* @author		Thomas Pfeiffer ( adaption for Sandy )
+	* @author		Tim Knipt
+	* @version		3.0
+	* @date 		26.07.2007
+	*
+	* @example To create a cylinder with a base radius of 150 and a height of 300,
+	* with default number of faces, use the following statement:
+	*
+	* <listing version="3.0">
+	*     var cyl:Cylinder = new Cylinder( "theCylinder", 150, 300 );
+	*  </listing>
+	* To create a truncated cone, you pass a top radius value to the constructor
+	* <listing version="3.0">
+	*     var tCone:Cylinder = new Cylinder( "trunkCone", 150, 300, 0, 0, 40 );
+	*  </listing>
+	*/
 	public class Cylinder extends Shape3D implements Primitive3D
 	{
 		/**
-		 * Number of segments horizontally. Defaults to 8.
-		 */
+		* The number of horizontal segments.
+		*/
 		public var segmentsW :Number;
 
 		/**
-		 * Number of segments vertically. Defaults to 6.
-		 */
+		* The number of vertical segments.
+		*/
 		public var segmentsH :Number;
 
 		/**
-		 * Default radius
-		 */
-		static public var DEFAULT_RADIUS :Number = 100;
+		* The default radius for a cylinder.
+		*/
+		static public const DEFAULT_RADIUS :Number = 100;
 
 		/**
-		 * Default height
-		 */
-		static public var DEFAULT_HEIGHT :Number = 100;
+		* The default height for a cylinder.
+		*/
+		static public const DEFAULT_HEIGHT :Number = 100;
 
 		/**
-		 * Default scale of Cylinder texture
-		 */
-		static public var DEFAULT_SCALE :Number = 1;
+		* The default scale for a cylinder texture.
+		*/
+		static public const DEFAULT_SCALE :Number = 1;
 
 		/**
-		 * Default value for number of segments horizontally
-		 */
-		static public var DEFAULT_SEGMENTSW :Number = 8;
+		* The default number of horizontal segments for a cylinder.
+		*/
+		static public const DEFAULT_SEGMENTSW :Number = 8;
 
 		/**
-		 * Default for number of segments vertically
-		 */
-		static public var DEFAULT_SEGMENTSH :Number = 6;
+		* The default number of vertical segments for a cylinder.
+		*/
+		static public const DEFAULT_SEGMENTSH :Number = 6;
 
 		/**
-		 * Minimum value for number of segments horizontally
-		 */
-		static public var MIN_SEGMENTSW :Number = 3;
+		* The minimum number of horizontal segments for a cylinder.
+		*/
+		static public const MIN_SEGMENTSW :Number = 3;
 
 		/**
-		 * Minimum value for number of segments hoizontally
-		 */
-		static public var MIN_SEGMENTSH :Number = 2;
+		* The minimum number of vertical segments for a cylinder.
+		*/
+		static public const MIN_SEGMENTSH :Number = 2;
 
 
 		private var topRadius:Number;
@@ -102,41 +101,42 @@ package sandy.primitive
 		private var m_bIsWholeMappingEnabled:Boolean;
 
 		/**
-		 * Number of polygon for the base ( so bottom and top )
-		 */
+		* Number of polygon for the base ( so bottom and top )
+		*/
 		private var m_nPolBase : uint;
 
 		/**
-		 * Number of polygon to jump to come back on the same face ( side ) you were on
-		 * as the cylinder is rendered in rows
-		 */
+		* Number of polygon to jump to come back on the same face ( side ) you were on
+		* as the cylinder is rendered in rows
+		*/
 		private var m_nNextPolFace : uint;
 
 		private var m_aFaces : Array;
 
 		/**
-		 * Creates a Cylinder primitive or truncated cone.
-		 *
-		 * <p>The cylinder is created at the origin of the world coordinate system, with its axis
-		 * along the y axis, and with the bottom and top surfaces paralell to the zx plane</p>
-		 *
-		 * <p>All arguments to the constructor have default values, and are optional.
-		 * If you pass in a top radius, that is different from the bottom radius,
-		 * a truncated cone is created.</p>
-		 * <p>By passing true values to one or both of p_bExcludeBottom and p_bExludeTop,
-		 * you exclude the bottom and/or top surfaces from being created.</p>
-		 *
-		 * @param p_sName 		A String identifier of this object
-		 * @param radius		Radius. Defaults to 100
-		 * @param p_nHeight		Height. Defaults to 100
-		 * @param segmentsW		Number of segments horizontally. Defaults to 8.
-		 * @param segmentsH		Number of segments vertically. Defaults to 6.
-		 * @param topRadius		An optional parameter for cone - or diverging cylinders
-		 * @param p_bExcludeBottom	Exclude the creation of the bottom surface. Defaults to false
-		 * @param p_bExludeTop		Exclude the creation of the top surface. Defaults to false
-		 * @param p_bWholeMapping 	Specifies if the material applied to the cylinder will
-		 * map to the whole cylinder (true and default) or each face separately (false)
-		 */
+		* Creates a Cylinder primitive or truncated cone.
+		*
+		* <p>The cylinder is created at the origin of the world coordinate system, with its axis
+		* along the y axis, and with the bottom and top surfaces paralell to the zx plane</p>
+		*
+		* <p>All arguments to the constructor have default values, and are optional.
+		* If you pass in a top radius, that is different from the bottom radius,
+		* a truncated cone is created.</p>
+		* <p>By passing true values to one or both of p_bExcludeBottom and p_bExludeTop,
+		* you exclude the bottom and/or top surfaces from being created.</p>
+		*
+		* @param p_sName 			A string identifier for this object.
+		* @param p_nRadius			Radius of the cylinder.
+		* @param p_nHeight			Height of the cylinder.
+		* @param p_nSegmentsW		Number of horizontal segments.
+		* @param p_nSegmentsH		Number of vertical segments.
+		* @param p_nTopRadius		An optional parameter for cone - or diverging cylinders.
+		* @param p_bExcludeBottom	If set to true, the bottom face is not created.
+		* @param p_bExludeTop		If set to true, the top face is not created.
+		* @param p_bWholeMapping 	Specifies how the material applied to the cylinder will
+		* be mapped. If set to <code>false</code>, the material will be mapped to each individual
+		* face, rather than to the whole cylinder.
+		*/
 		function Cylinder( p_sName:String = null, p_nRadius:Number=100, p_nHeight:Number=100,
 		                   p_nSegmentsW:Number=8, p_nSegmentsH:Number=6, p_nTopRadius:Number=NaN,
 		                   p_bExcludeBottom:Boolean=false, p_bExludeTop:Boolean=false,
@@ -164,12 +164,10 @@ package sandy.primitive
 		}
 
 		/**
-		 * Generates the geometry for this Shape3D.
-		 *
-		 * @see sandy.core.data.Vertex
-		 * @see sandy.core.data.UVCoord
-		 * @see sandy.core.data.Polygon
-		 */
+		* Generates the geometry for the cylinder.
+		*
+		* @see sandy.core.scenegraph.Geometry3D
+		*/
 		public function generate(... arguments):Geometry3D
 		{
 			var l_oGeometry3D:Geometry3D = new Geometry3D();
@@ -325,9 +323,11 @@ package sandy.primitive
 		}
 
 		/**
-		* Returns an array of polygons defining the bottom of the cylinder.
+		* Returns a PrimitiveFace object ( an array of polygons ) defining the bottom face.
 		*
-		* @return	The bottom polygons
+		* @return	The PrimitiveFace object of the bottom face.
+		*
+		* @see PrimitiveFace
 		*/
 		public function getBottom() : PrimitiveFace
 		{
@@ -335,21 +335,24 @@ package sandy.primitive
 		}
 
 		/**
-		* Returns an array of polygons defining the top of the cylinder.
+		* Returns a PrimitiveFace object ( an array of polygons ) defining the top face.
 		*
-		* @return	The top polygons
+		* @return	The PrimitiveFace object of the top face.
+		*
+		* @see PrimitiveFace
 		*/
 		public function getTop() : PrimitiveFace
 		{
-			return m_aFaces[ 1 ]
+			return m_aFaces[ 1 ];
 		}
 
-
 		/**
-		* Returns an array of polygons defining the specified face
+		* Returns a PrimitiveFace object ( an array of polygons ) defining the specified face.
 		*
 		* @param	p_nFace The requested face
-		* @return	The arry of polygons
+		* @return	The PrimitiveFace object of the specified face.
+		*
+		* @see PrimitiveFace
 		*/
 		public function getFace( p_nFace : uint ) : PrimitiveFace
 		{
@@ -358,7 +361,7 @@ package sandy.primitive
 
 		/**
 		* Calculates the radius depending on the number of sides you want and their width.
-		* <p>[<strong>ToDo</strong>: Elaborate on this a bit ]</p>
+		* <p>[<strong>ToDo</strong>: Elaborate on this a bit, please :) ]</p>
 		*
 		* @param	p_nSideNumber The number of sides the cylinder has
 		* @param	p_nSideWidth  Width of a side
@@ -379,6 +382,9 @@ package sandy.primitive
 			return ( p_nSideWidth / ( 2 * Math.sin( Math.PI / p_nSideNumber ) ) );
 		}
 
+		/**
+		* @private
+		*/
 		public override function toString():String
 		{
 			return "sandy.primitive.Cylinder";

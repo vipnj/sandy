@@ -294,26 +294,26 @@ package sandy.core.scenegraph
                     {
                             l_oFace.clip( l_oFrustum );
 							// -- We project the vertices
-					 		if( l_oFace.cvertices.length > 0 )
+					 		if( l_oFace.cvertices.length > 2 )
 					 		{
 					 			p_oCamera.projectArray( l_oFace.cvertices );
 					 			if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
                                 else l_oFace.depth = forcedDepth;
                                 // -- we manage the display list depending on the mode choosen
-                                m_aVisiblePoly[int(m_nVisiblePoly)] = l_oFace;
+                                m_aVisiblePoly[int(m_nVisiblePoly++)] = l_oFace;
 					 		}
 					 }
 					 else if(  enableNearClipping && l_nMinZ < l_nZNear ) // PARTIALLY VISIBLE
 					 {
 					 		l_oFace.clipFrontPlane( l_oFrustum );
 							// -- We project the vertices
-					 		if( l_oFace.cvertices.length > 0 )
+					 		if( l_oFace.cvertices.length > 2 )
 					 		{
 					 			p_oCamera.projectArray( l_oFace.cvertices );
 					 			if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
                                 else l_oFace.depth = forcedDepth;
                                 // -- we manage the display list depending on the mode choosen
-                                m_aVisiblePoly[int(m_nVisiblePoly)] = l_oFace;
+                                m_aVisiblePoly[int(m_nVisiblePoly++)] = l_oFace;
 					 		}
 					 }
 					 else if( l_nMinZ >= l_nZNear )
@@ -322,12 +322,10 @@ package sandy.core.scenegraph
 					 		if( !enableForcedDepth ) m_nDepth += l_oFace.m_nDepth;
 					 		else l_oFace.depth = forcedDepth;
 					    	// -- we manage the display list depending on the mode choosen
-							m_aVisiblePoly[int(m_nVisiblePoly)] = l_oFace;
+							m_aVisiblePoly[int(m_nVisiblePoly++)] = l_oFace;
 					}
 					else
 					   continue;
-					
-					m_nVisiblePoly ++;
 					
 					if( l_oFace.hasAppearanceChanged )
 					{

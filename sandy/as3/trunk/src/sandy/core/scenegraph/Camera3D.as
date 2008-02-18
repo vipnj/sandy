@@ -170,7 +170,7 @@ package sandy.core.scenegraph
 		 */
 		public function addToDisplayList( p_oShape:IDisplayable ):void
 		{
-			m_aDisplayList[m_aDisplayList.length] = ( p_oShape );
+			if( p_oShape != null ) m_aDisplayList[m_aDisplayList.length] = ( p_oShape );
 		}
 
         /**

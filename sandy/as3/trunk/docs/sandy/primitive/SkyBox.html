@@ -42,25 +42,31 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
+ A SkyBox is a TransformGroup of six Plane3D objects that form a box.
   <p></p>
 <br>
 <span class="label">Example</span>
-<br>To create a skybox, apply some appearance and, if needed, remove some of the sides
-  <div class='listing'><pre>
-   // -- creation of the skybox
-   var l_oSkyBox:SkyBox = new SkyBox( "game_sky", 3000, 6, 6 );
-   // -- Access to FRONT, BACK, LEFT and RIGHT planes, and set an appearance
-  l_oSkyBox.front.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
-  l_oSkyBox.back.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
-  l_oSkyBox.left.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
-  l_oSkyBox.right.appearance = new Appearance( new BitmapMaterial( lPic.bitmapData ) );
-  // -- In case you don't need some of the skybox side, access to them, and remove them.
-  l_oSkyBox.top.remove();
-  l_oSkyBox.bottom.remove();
-  // -- link the skybox to a group to make is displayable
-  l_oGroup.addChild( l_oSkyBox );
-   </pre></div>
+<br>The following code creates a SkyBox with appearances for the front, back, left, and right sides.
+ <div class='listing'><pre>
+ var mySkyBox:SkyBox = new SkyBox( "game_sky", 3000, 6, 6 );
+  // Set the appearance for the front, back, left, and right sides
+ mySkyBox.front.appearance = new Appearance( new BitmapMaterial( myPic.bitmapData ) );
+ mySkyBox.back.appearance = new Appearance( new BitmapMaterial( myPic.bitmapData ) );
+ mySkyBox.left.appearance = new Appearance( new BitmapMaterial( myPic.bitmapData ) );
+ mySkyBox.right.appearance = new Appearance( new BitmapMaterial( myPic.bitmapData ) );
+  // Remove unneeded sides
+ mySkyBox.top.remove();
+ mySkyBox.bottom.remove();
+  // Link the skybox to a group to display it
+ aGroup.addChild( mySkyBox );
+ </pre></div>
   <p></p>
+<p>
+<span class="classHeaderTableLabel">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Plane3D.html" target="">Plane3D</a>
+</div>
 <br>
 <hr>
 </div>
@@ -81,12 +87,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#back">back</a> : <a href="../primitive/Plane3D.html">Plane3D</a>
-<div class="summaryTableDescription">[read-only]</div>
+<div class="summaryTableDescription">[read-only]
+  The back plane of the SkyBox.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#bottom">bottom</a> : <a href="../primitive/Plane3D.html">Plane3D</a>
-<div class="summaryTableDescription">[read-only]</div>
+<div class="summaryTableDescription">[read-only]
+  The bottom plane of the SkyBox.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -132,12 +140,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#front">front</a> : <a href="../primitive/Plane3D.html">Plane3D</a>
-<div class="summaryTableDescription">[read-only]</div>
+<div class="summaryTableDescription">[read-only]
+  The front plane of the SkyBox.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#left">left</a> : <a href="../primitive/Plane3D.html">Plane3D</a>
-<div class="summaryTableDescription">[read-only]</div>
+<div class="summaryTableDescription">[read-only]
+  The left plane of the SkyBox.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -169,7 +179,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#right">right</a> : <a href="../primitive/Plane3D.html">Plane3D</a>
-<div class="summaryTableDescription">[read-only]</div>
+<div class="summaryTableDescription">[read-only]
+  The right plane of the SkyBox.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -232,7 +243,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#top">top</a> : <a href="../primitive/Plane3D.html">Plane3D</a>
-<div class="summaryTableDescription">[read-only]</div>
+<div class="summaryTableDescription">[read-only]
+  The top plane of the SkyBox.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -340,8 +352,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#SkyBox()">SkyBox</a>(p_sName:String = "", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint = 1)</div>
 <div class="summaryTableDescription">
-   Creates a SkyBox objets
-      <p>The skybox is created as a TransformGroup.</div>
+  Creates a SkyBox object.</div>
 </td><td class="summaryTableOwnerCol">SkyBox</td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -627,7 +638,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>back:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>back:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<p>
+  The back plane of the SkyBox.
+  </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get back():<a href="../primitive/Plane3D.html">Plane3D</a></code>
 <br>
@@ -639,7 +652,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>bottom:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>bottom:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<p>
+  The bottom plane of the SkyBox.
+  </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get bottom():<a href="../primitive/Plane3D.html">Plane3D</a></code>
 <br>
@@ -651,7 +666,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>front:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>front:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<p>
+  The front plane of the SkyBox.
+  </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get front():<a href="../primitive/Plane3D.html">Plane3D</a></code>
 <br>
@@ -663,7 +680,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>left:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>left:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<p>
+  The left plane of the SkyBox.
+  </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get left():<a href="../primitive/Plane3D.html">Plane3D</a></code>
 <br>
@@ -675,7 +694,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>right:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>right:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<p>
+  The right plane of the SkyBox.
+  </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get right():<a href="../primitive/Plane3D.html">Plane3D</a></code>
 <br>
@@ -687,7 +708,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>top:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<code>top:<a href="../primitive/Plane3D.html">Plane3D</a></code>&nbsp;&nbsp;[read-only]<p>
+  The top plane of the SkyBox.
+  </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get top():<a href="../primitive/Plane3D.html">Plane3D</a></code>
 <br>
@@ -702,40 +725,37 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function SkyBox(p_sName:String = "", p_nDim:Number = 100, p_nQualityH:uint = 1, p_nQualityV:uint = 1)</code><p>
-   Creates a SkyBox objets
-      </p><p>The skybox is created as a TransformGroup. This is a special behaviour comparing the other primitives which directly extend Shape3D.
-   A skyBox isn't a graphical object itself, but it is composed of 6 planes (Plane3D objects) that represents the 6 sides of the skybox.</p>
-   
-   <p>The planes are automatically created, and placed for you. You can access them individually thanks to the getter methods.
-   The planes are created with a default name, which is simply the concatenation of the skybox name and "_left" for the left side, "_top" for the top side etc.
-   </p>
-   
-   <span class="label">Parameters</span>
+  Creates a SkyBox object.
+    </p><p>The skybox is created as a TransformGroup. This is a special behaviour comparing the other primitives which directly extend Shape3D.
+  A skyBox isn't a graphical object itself, but it is composed of 6 planes (Plane3D objects) that represents the 6 sides of the skybox.</p>
+    <p>The planes are automatically created, and placed for you. You can access them individually thanks to the getter methods.
+  The planes are created with a default name, which is simply the concatenation of the skybox name and "_left" for the left side, "_top" for the top side, etc.</p>
+    <span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> (default = "<code></code>")<code></code> &mdash; The name of the skybox. It is recommended to give a explicit name.
-   </td>
+<td width="20px"></td><td><code><span class="label">p_sName</span>:String</code> (default = "<code></code>")<code></code> &mdash;  The name of the skybox. It is recommended to give a explicit name.
+  </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nDim</span>:Number</code> (default = <code>100</code>)<code></code> &mdash; The dimension of the skybox
-   </td>
+<td width="20px"></td><td><code><span class="label">p_nDim</span>:Number</code> (default = <code>100</code>)<code></code> &mdash;   The dimension of the skybox. This number is used for the width, height, and depth.
+  </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nQualityH</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; The horizontal quality of the skybox (WARNING:Some faces are rotated, and so, the quality isn't representative. To fix!)
-   </td>
+<td width="20px"></td><td><code><span class="label">p_nQualityH</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; Number of horizontal segments of the planes of the skybox. (WARNING: Some faces are rotated, and so, the quality isn't representative. To fix!)
+  </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nQualityV</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; The vertical quality of the skybox (WARNING:Some faces are rotated, and so, the quality isn't representative. To fix!)
-      </td>
+<td width="20px"></td><td><code><span class="label">p_nQualityV</span>:uint</code> (default = <code>1</code>)<code></code> &mdash; Number of vertical segments of the planes of the skybox. (WARNING: Some faces are rotated, and so, the quality isn't representative. To fix!)
+    </td>
 </tr>
 </table>
 </div>

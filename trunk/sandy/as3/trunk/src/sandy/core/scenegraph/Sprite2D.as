@@ -308,7 +308,7 @@ package sandy.core.scenegraph
 			return m_bEv;
 		}
 		
-		public function set enableEvents( b:Boolean ):void
+		override public function set enableEvents( b:Boolean ):void
 		{
 			if( b &&!m_bEv )
 			{

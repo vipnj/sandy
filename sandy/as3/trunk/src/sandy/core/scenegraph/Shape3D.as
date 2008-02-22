@@ -141,7 +141,7 @@ package sandy.core.scenegraph
     	 * <p>If true, this object renders itself on a single container ( Sprite ),<br/>
     	 * if false, each polygon is rendered on its own container.</p>
     	 */
-    	public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
+    	override public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
     	{
     		var l_oFace:Polygon;
     		// --
@@ -497,7 +497,7 @@ package sandy.core.scenegraph
 		/**
 		 * The appearance of this object.
 		 */
-		public function set appearance( p_oApp:Appearance ):void
+		override public function set appearance( p_oApp:Appearance ):void
 		{
 			// Now we register to the update event
 			m_oAppearance = p_oApp;
@@ -549,7 +549,7 @@ package sandy.core.scenegraph
 		 * <p>If set to false all faces of this object are drawn.<br/>
 		 * A true value enables the back face culling algorithm - Default true</p>
 		 */
-		public function set enableBackFaceCulling( b:Boolean ):void
+		override public function set enableBackFaceCulling( b:Boolean ):void
 		{
 			if( b != m_bBackFaceCulling )
 			{
@@ -574,7 +574,7 @@ package sandy.core.scenegraph
 		 * 
 		 * The original settings are back to their  original state when the mode is disabled
 		 */
-		public function set enableInteractivity( p_bState:Boolean ):void
+		override public function set enableInteractivity( p_bState:Boolean ):void
 		{
 			if( p_bState != m_bMouseInteractivity )
 			{
@@ -633,7 +633,7 @@ package sandy.core.scenegraph
          * 	}
          * </code>
 		 */
-		public function set enableEvents( b:Boolean ):void
+		override public function set enableEvents( b:Boolean ):void
 		{
 			// To use only when use Single container is disabled 
 			var v:Polygon = null;

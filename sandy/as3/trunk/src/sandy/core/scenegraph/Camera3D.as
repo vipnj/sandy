@@ -305,7 +305,7 @@ package sandy.core.scenegraph
 		* @param p_nZNear 	The distance betweeen the camera and the near plane - Default 10.
 		* @param p_nZFar 	The distance betweeen the camera position and the far plane. Default 10 000.
 		*/
-		public function setPerspectiveProjection(p_nFovY:Number, p_nAspectRatio:Number, p_nZNear:Number, p_nZFar:Number):void
+		protected function setPerspectiveProjection(p_nFovY:Number, p_nAspectRatio:Number, p_nZNear:Number, p_nZFar:Number):void
 		{
 			var cotan:Number, Q:Number;
 			// --
@@ -337,7 +337,7 @@ package sandy.core.scenegraph
 		/**
 		 * Updates the perspective projection.
 		 */
-		public function updatePerspective():void
+		protected function updatePerspective():void
 		{
 			setPerspectiveProjection( _nFov, viewport.ratio, _nNear, _nFar );
 			_perspectiveChanged = false;

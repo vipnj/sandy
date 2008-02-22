@@ -23,6 +23,7 @@ package sandy.core.scenegraph
 	import sandy.events.BubbleEventBroadcaster;
 	import sandy.view.CullingState;
 	import sandy.view.Frustum;
+	import sandy.materials.Appearance;
 
 	/**
 	 * ABSTRACT CLASS - Base class for all nodes in the object tree.
@@ -160,6 +161,62 @@ package sandy.core.scenegraph
 			return (_parent == p_oNode && p_oNode != null);
 		}
 
+		/**
+		 * Make all the Shape3D and descendants children react to this value.
+		 * @param p_bUseSingleContainer if true, the whole objects will use a container to display the geometry into, otherwise, a specific container will be given to each polygon 
+		 */
+		public function set useSingleContainer( p_bUseSingleContainer:Boolean ):void
+		{
+			for each( var l_oNode:Node in children )
+			{
+				l_oNode.useSingleContainer = p_bUseSingleContainer;
+			}
+		}
+		
+		/**
+		 * Change the backface culling state to all the shapes objects in the children list
+		 */
+		public function set enableBackFaceCulling( b:Boolean ):void
+		{
+			for each( var l_oNode:Node in children )
+			{
+				l_oNode.enableBackFaceCulling = b;
+			}
+		}
+		
+		/**
+		 * Change the interactivity of all the children
+		 */
+		public function set enableInteractivity( p_bState:Boolean ):void
+		{
+			for each( var l_oNode:Node in children )
+			{
+				l_oNode.enableInteractivity = p_bState;
+			}
+		}
+		
+		/**
+		 * Enable event handling to all the children objects that can broadcast bubbling events
+		 */
+		public function set enableEvents( b:Boolean ):void
+		{
+			for each( var l_oNode:Node in children )
+			{
+				l_oNode.enableEvents = b;
+			}
+		}
+		
+		/**
+		 * Set that appearance to all the children of that node
+		 */
+		public function set appearance( p_oApp:Appearance ):void
+		{
+			for each( var l_oNode:Node in children )
+			{
+				l_oNode.appearance = p_oApp;
+			}
+		}
+		
 		/**
 		 * @private
 		 */

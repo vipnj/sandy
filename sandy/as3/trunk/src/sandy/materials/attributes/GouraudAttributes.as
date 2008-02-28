@@ -51,6 +51,7 @@ package sandy.materials.attributes
 
 		/**
 		 * Create the GouraudAttribute object.
+		 * @param p_bBright The brightness (value for useBright).
 		 * @param p_nAmbient The ambient light value. A value between O and 1 is expected.
 		 */
 		public function GouraudAttributes( p_bBright:Boolean = false, p_nAmbient:Number = 0.0 )

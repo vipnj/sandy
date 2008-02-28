@@ -46,10 +46,10 @@ package sandy.materials.attributes
 		public var useBright:Boolean = false;
 		
 		/**
-		 * Creates a new LineAttributes object.
+		 * Creates a new LightAttributes object.
 		 *
-		 * @param p_bBright	- default false - The brightness
-		 * @param p_nAmbient - default 0 - The ambiant light value. Value must be between 0 and 1
+		 * @param p_bBright The brightness (value for useBright).
+		 * @param p_nAmbient The ambient light value. Value must be between 0 and 1
 		 */
 		public function LightAttributes( p_bBright:Boolean = false, p_nAmbient:Number = 0.3 )
 		{

@@ -215,6 +215,7 @@ package sandy.materials.attributes
 		
 		/**
 		 * Create the PhongAttributes object.
+		 * @param p_bBright The brightness (value for useBright).
 		 * @param p_nAmbient The ambient light value. A value between 0 and 1 is expected.
 		 * @param p_nQuality Quality of light response approximation. A value between 2 and 15 is expected.
 		 * @param p_nSamples A number of calculated samples per anchor. Positive value is expected.

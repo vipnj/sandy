@@ -46,10 +46,6 @@ package sandy.materials.attributes
 	public final class PhongAttributes extends ALightAttributes
 	{
 		/**
-		 * Used if a lightmap needs to be overridden.
-		 */
-		public var lightmap:PhongAttributesLightMap = null;
-		/**
 		 * Non-zero value adds sphere normals to actual normals for light rendering.
 		 * Use this with flat surfaces or cylinders.
 		 */
@@ -253,7 +249,7 @@ package sandy.materials.attributes
 		}
 
 		// light map to use in this rendering session
-		/*private*/protected var m_oCurrentLightMap:PhongAttributesLightMap;
+		private var m_oCurrentLightMap:PhongAttributesLightMap;
 
 		// set current light map for "draw" to use
 		override public function begin( p_oScene:Scene3D ):void

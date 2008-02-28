@@ -60,19 +60,19 @@ package sandy.materials.attributes
 			m_nFlags |= SandyFlags.VERTEX_NORMAL_WORLD;
 		}
 		
-		internal var v0:Vertex, v1:Vertex, v2:Vertex;
-		internal var id0:int, id1:int, id2:int;
-		internal var v0N:Vector, v1N:Vector, v2N:Vector;
-		internal var v0L:Number, v1L:Number, v2L:Number;
-		internal var aL:Array = new Array(3);
-		internal var aLId:Array;
+		private var v0:Vertex, v1:Vertex, v2:Vertex;
+		private var id0:int, id1:int, id2:int;
+		private var v0N:Vector, v1N:Vector, v2N:Vector;
+		private var v0L:Number, v1L:Number, v2L:Number;
+		private var aL:Array = new Array(3);
+		private var aLId:Array;
 		
-		internal var alpha:Array = new Array(2);
-		internal var matrix:Matrix = new Matrix();
-		internal var l_oVertex:Vertex;
+		private var alpha:Array = new Array(2);
+		private var matrix:Matrix = new Matrix();
+		private var l_oVertex:Vertex;
 		 
-		internal var colours:Array = new Array(0,0); 
-		internal var ratios:Array = [ 0x00, 0xFF ];
+		private var colours:Array = new Array(0,0); 
+		private var ratios:Array = [ 0x00, 0xFF ];
 		
 		override public function draw(p_oGraphics:Graphics, p_oPolygon:Polygon, p_oMaterial:Material, p_oScene:Scene3D):void
 		{

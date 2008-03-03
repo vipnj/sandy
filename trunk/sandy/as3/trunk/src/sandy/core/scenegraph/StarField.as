@@ -1,0 +1,244 @@
+﻿/*
+# ***** BEGIN LICENSE BLOCK *****
+Copyright the original author or authors.
+Licensed under the MOZILLA PUBLIC LICENSE, Version 1.1 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/MPL-1.1.html
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+# ***** END LICENSE BLOCK *****
+*/
+
+package sandy.core.scenegraph 
+{	
+	import flash.display.*;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
+	import sandy.bounds.BSphere;
+	import sandy.core.Scene3D;
+	import sandy.core.data.Matrix4;
+	import sandy.core.data.Vertex;
+	import sandy.events.BubbleEvent;
+	import sandy.materials.Material;
+	import sandy.view.CullingState;
+	import sandy.view.Frustum;
+	
+	/**
+	 * The StarField class renders dense star field at reasonable FPS.
+	 *
+	 * @author		makc
+	 * @version		3.0.3
+	 * @date 		03.03.2008
+	 */
+	public class StarField extends ATransformable implements IDisplayable
+	{
+		/**
+		 * Array of Vertex - star coordinates data.
+		 */
+		public var stars:Array = [];
+
+		// if culling goes, this goes too
+		private var starVisible:Array = [];
+		
+		/**
+		 * Array of star colors (if not specified, white is used).
+		 */
+		public var starColors:Array = [];
+
+		/**
+		 * Creates a StarField.
+		 *
+		 * @param p_sName	A string identifier for this object
+		 */	
+		public function StarField( p_sName:String = "") 
+		{
+			super(p_sName);
+			// create something
+			m_oContainer = new Sprite ();
+			m_oBitmapData = new BitmapData (1, 1, true, 0);
+			m_oBitmap = new Bitmap (m_oBitmapData);
+			m_oContainer.addChild (m_oBitmap);
+			// do we need this? seems not...
+			boundingSphere 	= new BSphere();
+	        boundingBox		= null;
+			boundingSphere.radius = 1;
+		}
+
+		/**
+		 * The container of this object
+		 */
+		public function get container():Sprite
+		{
+			return m_oContainer;
+		}
+
+
+		/**
+		 * The depth to draw the starfield at (1e10).
+		 */
+		public function get depth ():Number
+		{
+			return 1e10;
+		}
+		  
+		/**
+		 * This tests for stars visibility.
+		 *
+		 * @param p_oScene The current scene
+		 * @param p_oFrustum	The frustum of the current camera
+		 * @param p_oViewMatrix	The view martix of the curren camera
+		 * @param p_bChanged
+		 */
+		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
+		{
+			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
+			// --
+			var i:int = 0;
+			for (i = 0; i < stars.length; i++)
+				starVisible [i] = true;
+			/* do we need this culling? it doesnt work as is anyways
+			if (viewMatrix)
+			{
+				var bs:BSphere = new BSphere(); bs.radius = 1;
+				for (i = 0; i < stars.length; i++)
+				{
+					var v:Vertex = stars [i];
+					bs.center.x = v.x; bs.center.z = v.z; bs.center.z = v.z;
+					bs.transform (viewMatrix);
+					var c:CullingState = p_oFrustum.sphereInFrustum (boundingSphere);
+					if (c == CullingState.OUTSIDE)
+						starVisible [i] = false;
+					else if (c == CullingState.INTERSECT)
+					{
+						if (bs.position.z <= p_oScene.camera.near)
+							starVisible [i] = false;
+					}
+				}
+			}*/
+			// check if we need to resize our canvas
+			if ((m_oBitmapData.width  != p_oScene.camera.viewport.width)
+			 || (m_oBitmapData.height != p_oScene.camera.viewport.height))
+			{
+				m_oBitmapData = new BitmapData (p_oScene.camera.viewport.width,
+					p_oScene.camera.viewport.height, true, 0);
+				m_oBitmap.bitmapData = m_oBitmapData;
+			}
+		}
+		
+		/**
+		 * Renders the starfield
+		 *
+		 * @param p_oScene The current scene
+		 * @param p_oCamera	The current camera
+		 */
+		public override function render( p_oScene:Scene3D, p_oCamera:Camera3D ):void
+		{
+			m_oBitmapData.fillRect (m_oBitmapData.rect, 0);
+			m_oBitmapData.lock();
+			// --
+			var i:int = 0;
+			for (i = 0; i < stars.length; i++)
+			/*if (starVisible [i])*/
+			{
+				var _v:Vertex = stars [i];
+				_v.wx = _v.x * viewMatrix.n11 + _v.y * viewMatrix.n12 + _v.z * viewMatrix.n13 + viewMatrix.n14;
+				_v.wy = _v.x * viewMatrix.n21 + _v.y * viewMatrix.n22 + _v.z * viewMatrix.n23 + viewMatrix.n24;
+				_v.wz = _v.x * viewMatrix.n31 + _v.y * viewMatrix.n32 + _v.z * viewMatrix.n33 + viewMatrix.n34;
+
+				if (_v.wz >= p_oScene.camera.near)
+				{
+					p_oCamera.projectVertex (_v);
+					m_oBitmapData.setPixel32 (_v.sx, _v.sy, (i < starColors.length) ? starColors [i] : 0xFFFFFFFF);
+				}
+			}
+			m_oBitmapData.unlock();
+
+			p_oCamera.addToDisplayList (this);
+		}
+
+		/**
+		 * Clearing is done in render() method.
+		 */	
+		public function clear():void
+		{
+			;
+		}
+
+		/**
+		 * Provide the classical remove behaviour, plus remove the container to the display list.
+		 */
+		public override function remove():void
+		{
+			if( m_oContainer.parent ) m_oContainer.parent.removeChild( m_oContainer );
+			super.remove();
+		}
+		
+		/**
+		 * Displays the starfield.
+		 *
+		 * @param p_oScene The current scene
+		 * @param p_oContainer	The container to draw on
+		 */
+		public function display( p_oScene:Scene3D, p_oContainer:Sprite = null  ):void
+		{
+			// viewport upper left?
+			m_oContainer.x = 0;
+			m_oContainer.y = 0;
+		}
+
+		// Sprite2D-like events system: needed?
+		public function get enableEvents():Boolean
+		{
+			return m_bEv;
+		}
+		
+		override public function set enableEvents( b:Boolean ):void
+		{
+			if( b &&!m_bEv )
+			{
+				m_oContainer.addEventListener(MouseEvent.CLICK, _onInteraction);
+		    		m_oContainer.addEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+		    		m_oContainer.addEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+	    			m_oContainer.addEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+	    			m_oContainer.addEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+	    		
+				m_oContainer.addEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+				m_oContainer.addEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
+			}
+			else if( !b && m_bEv )
+			{
+				m_oContainer.removeEventListener(MouseEvent.CLICK, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_UP, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_DOWN, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.ROLL_OVER, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.ROLL_OUT, _onInteraction);
+				
+				m_oContainer.removeEventListener(MouseEvent.DOUBLE_CLICK, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_MOVE, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_OVER, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_OUT, _onInteraction);
+				m_oContainer.removeEventListener(MouseEvent.MOUSE_WHEEL, _onInteraction);
+			}
+		}
+		
+		protected function _onInteraction( p_oEvt:Event ):void
+		{
+			m_oEB.broadcastEvent( new BubbleEvent( p_oEvt.type, this ) );
+		}
+		
+		private var m_bEv:Boolean = false; // The event system state (enable or not)
+		
+		private var m_oContainer:Sprite;
+		private var m_oBitmap:Bitmap;
+		private var m_oBitmapData:BitmapData;
+	}
+}

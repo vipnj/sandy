@@ -42,9 +42,6 @@ package sandy.core.scenegraph
 		 * Array of Vertex - star coordinates data.
 		 */
 		public var stars:Array = [];
-
-		// if culling goes, this goes too
-		private var starVisible:Array = [];
 		
 		/**
 		 * Array of star colors (if not specified, white is used).
@@ -64,10 +61,6 @@ package sandy.core.scenegraph
 			m_oBitmapData = new BitmapData (1, 1, true, 0);
 			m_oBitmap = new Bitmap (m_oBitmapData);
 			m_oContainer.addChild (m_oBitmap);
-			// do we need this? seems not...
-			boundingSphere 	= new BSphere();
-	        boundingBox		= null;
-			boundingSphere.radius = 1;
 		}
 
 		/**
@@ -98,33 +91,11 @@ package sandy.core.scenegraph
 		public override function cull( p_oScene:Scene3D, p_oFrustum:Frustum, p_oViewMatrix:Matrix4, p_bChanged:Boolean ):void
 		{
 			super.cull( p_oScene, p_oFrustum, p_oViewMatrix, p_bChanged );
-			// --
-			var i:int = 0;
-			for (i = 0; i < stars.length; i++)
-				starVisible [i] = true;
-			/* do we need this culling? it doesnt work as is anyways
-			if (viewMatrix)
-			{
-				var bs:BSphere = new BSphere(); bs.radius = 1;
-				for (i = 0; i < stars.length; i++)
-				{
-					var v:Vertex = stars [i];
-					bs.center.x = v.x; bs.center.z = v.z; bs.center.z = v.z;
-					bs.transform (viewMatrix);
-					var c:CullingState = p_oFrustum.sphereInFrustum (boundingSphere);
-					if (c == CullingState.OUTSIDE)
-						starVisible [i] = false;
-					else if (c == CullingState.INTERSECT)
-					{
-						if (bs.position.z <= p_oScene.camera.near)
-							starVisible [i] = false;
-					}
-				}
-			}*/
 			// check if we need to resize our canvas
 			if ((m_oBitmapData.width  != p_oScene.camera.viewport.width)
 			 || (m_oBitmapData.height != p_oScene.camera.viewport.height))
 			{
+				m_oBitmap.bitmapData.dispose ();
 				m_oBitmapData = new BitmapData (p_oScene.camera.viewport.width,
 					p_oScene.camera.viewport.height, true, 0);
 				m_oBitmap.bitmapData = m_oBitmapData;
@@ -144,7 +115,6 @@ package sandy.core.scenegraph
 			// --
 			var i:int = 0;
 			for (i = 0; i < stars.length; i++)
-			/*if (starVisible [i])*/
 			{
 				var _v:Vertex = stars [i];
 				_v.wx = _v.x * viewMatrix.n11 + _v.y * viewMatrix.n12 + _v.z * viewMatrix.n13 + viewMatrix.n14;

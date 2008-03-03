@@ -39,6 +39,16 @@ package sandy.core.scenegraph
 	public class StarField extends ATransformable implements IDisplayable
 	{
 		/**
+		 * Distance from screen where stars start to fade out
+		 */
+		public var fadeFrom:Number = 300;
+
+		/**
+		 * Distance from fadeFrom to the point where stars fade out completely
+		 */
+		public var fadeTo:Number = 300;
+
+		/**
 		 * Array of Vertex - star coordinates data.
 		 */
 		public var stars:Array = [];
@@ -113,7 +123,7 @@ package sandy.core.scenegraph
 			m_oBitmapData.fillRect (m_oBitmapData.rect, 0);
 			m_oBitmapData.lock();
 			// --
-			var i:int = 0;
+			var i:int = 0, c32:Number, a:Number, r:Number;
 			for (i = 0; i < stars.length; i++)
 			{
 				var _v:Vertex = stars [i];
@@ -123,8 +133,15 @@ package sandy.core.scenegraph
 
 				if (_v.wz >= p_oScene.camera.near)
 				{
-					p_oCamera.projectVertex (_v);
-					m_oBitmapData.setPixel32 (_v.sx, _v.sy, (i < starColors.length) ? starColors [i] : 0xFFFFFFFF);
+					r = Math.min(1, Math.max (0, (_v.wz - fadeFrom) / fadeTo));
+					if (r < 1)
+					{
+						// will uint and bit shift really make a difference?
+						c32 = (i < starColors.length) ? starColors [i] : 0xFFFFFFFF;
+						a = c32 / 0x1000000 * (1 - r);
+						p_oCamera.projectVertex (_v);
+						m_oBitmapData.setPixel32 (_v.sx, _v.sy, c32 & 0xFFFFFF + Math.floor (a) * 0x1000000);
+					}
 				}
 			}
 			m_oBitmapData.unlock();

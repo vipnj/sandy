@@ -81,6 +81,7 @@ package sandy.core.scenegraph
 			_vSide 	= new Vector( 1, 0, 0 );
 			_vUp 	= new Vector( 0, 1 ,0 );
 			_vOut 	= new Vector( 0, 0, 1 );
+			_vRotation = new Vector(0,0,0);
 		}
 
 		public function get matrix():Matrix4

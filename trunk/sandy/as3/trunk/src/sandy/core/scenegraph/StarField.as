@@ -162,7 +162,9 @@ package sandy.core.scenegraph
 		 */
 		public override function remove():void
 		{
-			if( m_oContainer.parent ) m_oContainer.parent.removeChild( m_oContainer );
+			m_oBitmap.bitmapData.dispose ();
+			if( m_oContainer.parent )
+				m_oContainer.parent.removeChild( m_oContainer );
 			super.remove();
 		}
 		

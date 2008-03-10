@@ -158,7 +158,7 @@ package sandy.core.scenegraph
 						c32 = (i < starColors.length) ? starColors [i] : 0xFFFFFFFF;
 						a = c32 / 0x1000000 * (1 - r);
 						p_oCamera.projectVertex (_v);
-						m_oBitmapData.setPixel32 (_v.sx, _v.sy, c32 & 0xFFFFFF + Math.floor (a) * 0x1000000);
+						m_oBitmapData.setPixel32 (_v.sx, _v.sy, (c32 & 0xFFFFFF) + Math.floor (a) * 0x1000000);
 					}
 				}
 			}

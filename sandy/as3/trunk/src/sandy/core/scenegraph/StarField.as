@@ -41,12 +41,12 @@ package sandy.core.scenegraph
 		/**
 		 * Distance from screen where stars start to fade out
 		 */
-		public var fadeFrom:Number = 300;
+		public var fadeFrom:Number = 0;
 
 		/**
 		 * Distance from fadeFrom to the point where stars fade out completely
 		 */
-		public var fadeTo:Number = 300;
+		public var fadeTo:Number = 1000;
 
 		/**
 		 * Array of Vertex - star coordinates data.
@@ -83,11 +83,29 @@ package sandy.core.scenegraph
 
 
 		/**
-		 * The depth to draw the starfield at (1e10).
+		 * An index in stars array; if set to valid value, depth returns distance to that star.
+		 */
+		public var depthIndex:int = -1;
+
+		/**
+		 * The depth to draw the starfield at. If depthIndex is set to valid value,
+		 * depth returns distance to that star, otherwise value set by user (default: 1e10).
 		 */
 		public function get depth ():Number
 		{
-			return 1e10;
+			var v:Vertex = stars [depthIndex] as Vertex;
+			if (v != null)
+				return v.wz;
+
+			return m_nDepth;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set depth (p_nDepth:Number):void
+		{
+			m_nDepth = p_nDepth;
 		}
 		  
 		/**
@@ -181,6 +199,7 @@ package sandy.core.scenegraph
 			m_oContainer.y = 0;
 		}
 		
+		private var m_nDepth:Number = 1e10;
 		private var m_oContainer:Sprite;
 		private var m_oBitmap:Bitmap;
 		private var m_oBitmapData:BitmapData;

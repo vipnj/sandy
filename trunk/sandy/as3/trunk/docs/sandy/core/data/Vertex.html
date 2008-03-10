@@ -1,0 +1,926 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="Vertex,sandy.core.data.Vertex,aFaces,id,nbFaces,projected,sx,sy,wx,wy,wz,x,y,z,add,clone,clone2,copy,createFromVector,cross,deserialize,dot,equals,getAngle,getNorm,getScreenPoint,getVector,getWorldVector,negate,normalize,pow,scale,serialize,sub,toString" name="keywords">
+<title>sandy.core.data.Vertex</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'Vertex - Sandy 3.0(+) API Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Sandy 3D AS3 Developer</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?sandy/core/data/Vertex.html&amp;sandy/core/data/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Vertex</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Vertex"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">sandy.core.data</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public final  class Vertex</td>
+</tr>
+</table>
+<p></p>
+  A vertex of a 3D mesh or polygon.
+    <p>A vertex is a point which can be represented in different coordinate systems.</p>
+    <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#aFaces">aFaces</a> : Array<div class="summaryTableDescription">
+   An array of faces.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#nbFaces">nbFaces</a> : uint = 0<div class="summaryTableDescription">
+   Number of polygons this vertex belongs to.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#projected">projected</a> : Boolean<div class="summaryTableDescription">
+          State if that vertex has been projected or not.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sx">sx</a> : Number<div class="summaryTableDescription">
+  properties used to store transformed coordinates in screen World.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sy">sy</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#wx">wx</a> : Number<div class="summaryTableDescription">
+  properties used to store transformed positions in the World coordinates
+  </div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#wy">wy</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#wz">wz</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#x">x</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#y">y</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#z">z</a> : Number<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#Vertex()">Vertex</a>(p_nx:Number = 0, p_ny:Number = 0, p_nz:Number = 0, ... rest)</div>
+<div class="summaryTableDescription">
+  Creates a new vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#add()">add</a>(v:<a href="Vertex.html">Vertex</a>):void</div>
+<div class="summaryTableDescription">
+   Adds a specified vertex to this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clone()">clone</a>():<a href="../data/Vertex.html">Vertex</a>
+</div>
+<div class="summaryTableDescription">
+   Returns a clone of this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clone2()">clone2</a>():<a href="../data/Vertex.html">Vertex</a>
+</div>
+<div class="summaryTableDescription">
+   Returns a new vertex build on the transformed values of this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#copy()">copy</a>(p_oVector:<a href="Vertex.html">Vertex</a>):void</div>
+<div class="summaryTableDescription">
+   Makes this vertex equal to the specified vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#createFromVector()">createFromVector</a>(p_v:<a href="Vector.html">Vector</a>):<a href="../data/Vertex.html">Vertex</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Creates and returns a new vertex from the specified vector.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#cross()">cross</a>(v:<a href="Vertex.html">Vertex</a>):<a href="../data/Vertex.html">Vertex</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the cross product between this vertex and the specified vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#deserialize()">deserialize</a>(convertFrom:String):void</div>
+<div class="summaryTableDescription">
+   Sets the elements of this vertex from a string representation.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#dot()">dot</a>(w:<a href="Vertex.html">Vertex</a>):Number</div>
+<div class="summaryTableDescription">
+   Returns the dot product between this vertex and a specified vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#equals()">equals</a>(p_vertex:<a href="Vertex.html">Vertex</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Is this vertex equal to the specified vertex?.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getAngle()">getAngle</a>(w:<a href="Vertex.html">Vertex</a>):Number</div>
+<div class="summaryTableDescription">
+   Returns the angle between this vertex and the specified vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getNorm()">getNorm</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the norm of this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getScreenPoint()">getScreenPoint</a>():<a href="../data/Vector.html">Vector</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the 2D position of this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getVector()">getVector</a>():<a href="../data/Vector.html">Vector</a>
+</div>
+<div class="summaryTableDescription">
+   Returns a vector representing the original x, y, z values.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getWorldVector()">getWorldVector</a>():<a href="../data/Vector.html">Vector</a>
+</div>
+<div class="summaryTableDescription">
+  Returns the transformed vertex in world coordinates.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#negate()">negate</a>():void</div>
+<div class="summaryTableDescription">
+   Return the invers of this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#normalize()">normalize</a>():void</div>
+<div class="summaryTableDescription">
+   Normalizes this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#pow()">pow</a>(pow:Number):void</div>
+<div class="summaryTableDescription">
+   Raises the vertex to the specified power.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#scale()">scale</a>(n:Number):void</div>
+<div class="summaryTableDescription">
+   Multiplies this vertex by the specified scalar value.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#serialize()">serialize</a>(decPlaces:Number = 0):String</div>
+<div class="summaryTableDescription">
+   Returns a string representation of this vertex with rounded values.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#sub()">sub</a>(v:<a href="Vertex.html">Vertex</a>):void</div>
+<div class="summaryTableDescription">
+   Substracts a specified vertex from this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#toString()">toString</a>(decPlaces:Number = 0):String</div>
+<div class="summaryTableDescription">
+   Returns a string representing this vertex.</div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#id">id</a> : uint<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Vertex</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="aFaces"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">aFaces</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var aFaces:Array</code><p>
+   An array of faces.
+      </p><p>List of polygons that actually use that vertex</p>
+   </div>
+<a name="nbFaces"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">nbFaces</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var nbFaces:uint = 0</code><p>
+   Number of polygons this vertex belongs to.
+   </p><p>Default value is 0.</p>
+   </div>
+<a name="projected"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">projected</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var projected:Boolean</code><p>
+          State if that vertex has been projected or not. If not, we can consider that vertex to not be visible in the current rendering step.
+         </p></div>
+<a name="sx"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sx</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var sx:Number</code><p>
+  properties used to store transformed coordinates in screen World.
+  </p></div>
+<a name="sy"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sy</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var sy:Number</code>
+</div>
+<a name="wx"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">wx</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var wx:Number</code><p>
+  properties used to store transformed positions in the World coordinates
+  </p></div>
+<a name="wy"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">wy</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var wy:Number</code>
+</div>
+<a name="wz"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">wz</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var wz:Number</code>
+</div>
+<a name="x"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">x</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var x:Number</code>
+</div>
+<a name="y"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">y</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var y:Number</code>
+</div>
+<a name="z"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">z</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var z:Number</code>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="Vertex()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">Vertex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function Vertex(p_nx:Number = 0, p_ny:Number = 0, p_nz:Number = 0, ... rest)</code><p>
+  Creates a new vertex.
+    </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nx</span>:Number</code> (default = <code>0</code>)<code></code> &mdash;  The x position
+  </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_ny</span>:Number</code> (default = <code>0</code>)<code></code> &mdash;  The y position
+  </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">p_nz</span>:Number</code> (default = <code>0</code>)<code></code> &mdash;  The z position
+  </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code>... <span class="label">rest</span></code> &mdash; optional values for wx, wy, wz
+  </td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="add()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">add</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function add(v:<a href="Vertex.html">Vertex</a>):void</code><p>
+   Adds a specified vertex to this vertex.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">v</span>:<a href="Vertex.html">Vertex</a></code> &mdash;  The vertex to add to this vertex
+   </td>
+</tr>
+</table>
+</div>
+<a name="clone()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clone</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function clone():<a href="../data/Vertex.html">Vertex</a></code><p>
+   Returns a clone of this vertex.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vertex.html">Vertex</a></code> &mdash; 
+                         The clone
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="clone2()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clone2</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function clone2():<a href="../data/Vertex.html">Vertex</a></code><p>
+   Returns a new vertex build on the transformed values of this vertex.
+      </p><p>A new vertex is created with this vertex's transformed coordinates as start position.<br />
+   So ( x, y, z ) of the new vertex is the ( wx, wy, wz ) of this vertex.</p>
+   <p>[<strong>ToDo</strong>: What can this one be used for? - Explain! ]</p>
+      <p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vertex.html">Vertex</a></code> &mdash; 
+                         The new vertex
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="copy()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">copy</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function copy(p_oVector:<a href="Vertex.html">Vertex</a>):void</code><p>
+   Makes this vertex equal to the specified vertex.
+      </p><p>All components of the argument vertex are copied to this vertex.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_oVector</span>:<a href="Vertex.html">Vertex</a></code> &mdash; The vertex to copy to this
+   </td>
+</tr>
+</table>
+</div>
+<a name="createFromVector()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">createFromVector</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function createFromVector(p_v:<a href="Vector.html">Vector</a>):<a href="../data/Vertex.html">Vertex</a></code><p>
+   Creates and returns a new vertex from the specified vector.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_v</span>:<a href="Vector.html">Vector</a></code> &mdash; The vertex position vector
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vertex.html">Vertex</a></code> &mdash; 
+                         The new vertex
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="cross()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">cross</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function cross(v:<a href="Vertex.html">Vertex</a>):<a href="../data/Vertex.html">Vertex</a></code><p>
+   Returns the cross product between this vertex and the specified vertex.
+      </p><p>Only the original positions values are used for this cross product.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">v</span>:<a href="Vertex.html">Vertex</a></code> &mdash;  The vertex to make a cross product with
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vertex.html">Vertex</a></code> &mdash; 
+                         the resulting vertex of the cross product.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="deserialize()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">deserialize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function deserialize(convertFrom:String):void</code><p>
+   Sets the elements of this vertex from a string representation.
+      </p><p>[<strong>ToDo</strong>: Explain why this is good for XML intput! ]</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">convertFrom</span>:String</code> &mdash; A string representing the vertex ( specific serialize format )
+   </td>
+</tr>
+</table>
+</div>
+<a name="dot()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">dot</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function dot(w:<a href="Vertex.html">Vertex</a>):Number</code><p>
+   Returns the dot product between this vertex and a specified vertex.
+      </p><p>Only the original positions values are used for this dot product.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">w</span>:<a href="Vertex.html">Vertex</a></code> &mdash;  The vertex to make a dot product with
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The dot product
+   </td>
+</tr>
+</table>
+</div>
+<a name="equals()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">equals</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function equals(p_vertex:<a href="Vertex.html">Vertex</a>):Boolean</code><p>
+   Is this vertex equal to the specified vertex?.
+      </p><p>This vertex is compared to the argument vertex, component by component.<br />
+   If all components of the two vertices are equal, a true value is returned.
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">p_vertex</span>:<a href="Vertex.html">Vertex</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if the vertices are considered equal, false otherwise
+   </td>
+</tr>
+</table>
+</div>
+<a name="getAngle()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getAngle</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function getAngle(w:<a href="Vertex.html">Vertex</a>):Number</code><p>
+   Returns the angle between this vertex and the specified vertex.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">w</span>:<a href="Vertex.html">Vertex</a></code> &mdash; The vertex making an angle with this one
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The angle in radians
+   </td>
+</tr>
+</table>
+</div>
+<a name="getNorm()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getNorm</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function getNorm():Number</code><p>
+   Returns the norm of this vertex.
+      </p><p>The norm of the vertex is calculated as the length of its position vector.<br />
+   That is sqrt( x + y + z )</p>
+      <p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The norm
+   </td>
+</tr>
+</table>
+</div>
+<a name="getScreenPoint()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getScreenPoint</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getScreenPoint():<a href="../data/Vector.html">Vector</a></code><p>
+   Returns the 2D position of this vertex.
+   This 2D position is the position on the screen after the camera projection.
+   WARNING: There's actually a third value (the z one) which correspond to the depth screen position.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vector.html">Vector</a></code> &mdash; 
+                        Vector The 2D position of this vertex once projected.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getVector()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getVector</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function getVector():<a href="../data/Vector.html">Vector</a></code><p>
+   Returns a vector representing the original x, y, z values.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vector.html">Vector</a></code> &mdash; 
+                         The vector
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getWorldVector()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getWorldVector</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function getWorldVector():<a href="../data/Vector.html">Vector</a></code><p>
+  Returns the transformed vertex in world coordinates.
+    </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../data/Vector.html">Vector</a></code></td>
+</tr>
+</table>
+</div>
+<a name="negate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">negate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function negate():void</code><p>
+   Return the invers of this vertex.
+      </p><p>A new vertex is created with the negative of all values in this vertex.</p>
+      </div>
+<a name="normalize()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">normalize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function normalize():void</code><p>
+   Normalizes this vertex.
+      </p><p>Normalization means that all components of the vertex are divided by its norm.<br />
+   The norm is calculated as the sqrt(x + y + z), that is the length of the position vector.</p>
+   </div>
+<a name="pow()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">pow</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function pow(pow:Number):void</code><p>
+   Raises the vertex to the specified power.
+      </p><p>All components of this vertex is raised to the power specified in the argument.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pow</span>:Number</code> &mdash; {</td>
+</tr>
+</table>
+</div>
+<a name="scale()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">scale</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function scale(n:Number):void</code><p>
+   Multiplies this vertex by the specified scalar value.
+      </p><p>All components of the vertex are multiplied by the specified value</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">n</span>:Number</code> &mdash;  The number to multiply with
+   </td>
+</tr>
+</table>
+</div>
+<a name="serialize()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">serialize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function serialize(decPlaces:Number = 0):String</code><p>
+   Returns a string representation of this vertex with rounded values.
+      </p><p>[<strong>ToDo</strong>: Explain why this is good for XML output! ]</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">decPlaces</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; Number of decimals
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash;   The specific serialize string
+   </td>
+</tr>
+</table>
+</div>
+<a name="sub()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sub</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function sub(v:<a href="Vertex.html">Vertex</a>):void</code><p>
+   Substracts a specified vertex from this vertex.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">v</span>:<a href="Vertex.html">Vertex</a></code> &mdash;  The vertex to subtract from this vertex
+   </td>
+</tr>
+</table>
+</div>
+<a name="toString()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">toString</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public final function toString(decPlaces:Number = 0):String</code><p>
+   Returns a string representing this vertex.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">decPlaces</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; Number of decimals
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; The representation
+   </td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="id"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">id</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public const id:uint</code>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">ASDoc Documentation for Sandy 3D Engine, AS3 Trunk version</center>
+</div>
+</body>
+</html>
+<!--ASDoc Documentation for Sandy 3D Engine, AS3 Trunk version-->

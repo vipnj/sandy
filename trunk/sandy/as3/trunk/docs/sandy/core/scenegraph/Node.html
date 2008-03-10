@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Node,sandy.core.scenegraph.Node,boundingBox,boundingSphere,changed,children,culled,id,m_oEB,modelMatrix,name,scene,viewMatrix,visible,broadcaster,parent,addChild,addEventListener,cull,destroy,getChildByName,hasParent,isParent,remove,removeChildByName,removeEventListener,render,swapParent,toString,update" name="keywords">
+<meta content="Node,sandy.core.scenegraph.Node,boundingBox,boundingSphere,changed,children,culled,id,m_oEB,modelMatrix,name,scene,viewMatrix,visible,broadcaster,parent,appearance,enableBackFaceCulling,enableEvents,enableInteractivity,useSingleContainer,addChild,addEventListener,cull,destroy,getChildByName,hasParent,isParent,remove,removeChildByName,removeEventListener,render,swapParent,toString,update" name="keywords">
 <title>sandy.core.scenegraph.Node</title>
 </head>
 <body>
@@ -57,6 +57,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#appearance">appearance</a> : <a href="../../materials/Appearance.html">Appearance</a>
+<div class="summaryTableDescription">[write-only]
+   Set that appearance to all the children of that node
+   </div>
+</td><td class="summaryTableOwnerCol">Node</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#boundingBox">boundingBox</a> : <a href="../../bounds/BBox.html">BBox</a>
 <div class="summaryTableDescription">
    The bounding box of this node
@@ -93,6 +100,24 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Node</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableBackFaceCulling">enableBackFaceCulling</a> : Boolean<div class="summaryTableDescription">[write-only]
+   Change the backface culling state to all the shapes objects in the children list
+   </div>
+</td><td class="summaryTableOwnerCol">Node</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableEvents">enableEvents</a> : Boolean<div class="summaryTableDescription">[write-only]
+   Enable event handling to all the children objects that can broadcast bubbling events
+   </div>
+</td><td class="summaryTableOwnerCol">Node</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableInteractivity">enableInteractivity</a> : Boolean<div class="summaryTableDescription">[write-only]
+   Change the interactivity of all the children
+   </div>
+</td><td class="summaryTableOwnerCol">Node</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#name">name</a> : String<div class="summaryTableDescription">
    Name of this node.</div>
 </td><td class="summaryTableOwnerCol">Node</td>
@@ -106,6 +131,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#scene">scene</a> : <a href="../../core/Scene3D.html">Scene3D</a> = null<div class="summaryTableDescription">
    Reference to the scene is it linked to.</div>
+</td><td class="summaryTableOwnerCol">Node</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#useSingleContainer">useSingleContainer</a> : Boolean<div class="summaryTableDescription">[write-only]
+   Make all the Shape3D and descendants children react to this value.</div>
 </td><td class="summaryTableOwnerCol">Node</td>
 </tr>
 <tr class="">
@@ -300,10 +330,24 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
+<a name="appearance"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">appearance</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>appearance:<a href="../../materials/Appearance.html">Appearance</a></code>&nbsp;&nbsp;[write-only]<p>
+   Set that appearance to all the children of that node
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set appearance(value:<a href="../../materials/Appearance.html">Appearance</a>):void</code>
+<br>
+</div>
 <a name="boundingBox"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">boundingBox</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">boundingBox</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -360,6 +404,48 @@ showHideInherited();
    This property represent the culling state of the current node.
    This state is defined during the culling phasis as it refers to the position of the object against the viewing frustum.
    </p></div>
+<a name="enableBackFaceCulling"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableBackFaceCulling</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>enableBackFaceCulling:Boolean</code>&nbsp;&nbsp;[write-only]<p>
+   Change the backface culling state to all the shapes objects in the children list
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set enableBackFaceCulling(value:Boolean):void</code>
+<br>
+</div>
+<a name="enableEvents"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableEvents</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>enableEvents:Boolean</code>&nbsp;&nbsp;[write-only]<p>
+   Enable event handling to all the children objects that can broadcast bubbling events
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set enableEvents(value:Boolean):void</code>
+<br>
+</div>
+<a name="enableInteractivity"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableInteractivity</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>enableInteractivity:Boolean</code>&nbsp;&nbsp;[write-only]<p>
+   Change the interactivity of all the children
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set enableInteractivity(value:Boolean):void</code>
+<br>
+</div>
 <a name="m_oEB"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -408,6 +494,20 @@ showHideInherited();
    Reference to the scene is it linked to.
    Initialized at null.
    </p></div>
+<a name="useSingleContainer"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">useSingleContainer</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>useSingleContainer:Boolean</code>&nbsp;&nbsp;[write-only]<p>
+   Make all the Shape3D and descendants children react to this value.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set useSingleContainer(value:Boolean):void</code>
+<br>
+</div>
 <a name="visible"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -824,8 +924,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc Documentation for Sandy 3D Engine,AS3 Trunk version</center>
+<center class="copyright">ASDoc Documentation for Sandy 3D Engine, AS3 Trunk version</center>
 </div>
 </body>
 </html>
-<!--ASDoc Documentation for Sandy 3D Engine,AS3 Trunk version-->
+<!--ASDoc Documentation for Sandy 3D Engine, AS3 Trunk version-->

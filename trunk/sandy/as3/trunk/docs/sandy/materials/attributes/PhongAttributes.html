@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="PhongAttributes,sandy.materials.attributes.PhongAttributes,lightmap,m_oCurrentLightMap,onlySpecular,spherize,useBright,begin,computeLightMap,draw,onPropertyChange" name="keywords">
+<meta content="PhongAttributes,sandy.materials.attributes.PhongAttributes,onlySpecular,spherize,useBright,begin,computeLightMap,draw,onPropertyChange" name="keywords">
 <title>sandy.materials.attributes.PhongAttributes</title>
 </head>
 <body>
@@ -88,11 +88,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lightmap">lightmap</a> : <a href="../attributes/PhongAttributesLightMap.html">PhongAttributesLightMap</a> = null<div class="summaryTableDescription">
-   Used if a lightmap needs to be overridden.</div>
-</td><td class="summaryTableOwnerCol">PhongAttributes</td>
-</tr>
-<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#onlySpecular">onlySpecular</a> : Boolean = false<div class="summaryTableDescription">
    Flag for rendering mode.</div>
 </td><td class="summaryTableOwnerCol">PhongAttributes</td>
@@ -125,7 +120,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a onclick="javascript:setInheritedVisible(true,'ProtectedProperty');" href="#protectedPropertySummary" class="showHideLink"><img src="../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Protected Properties</a>
 </div>
 </div>
-<table id="summaryTableProtectedProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<table id="summaryTableProtectedProperty" class="summaryTable hideInheritedProtectedProperty" cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
@@ -137,11 +132,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ALightAttributes.html#m_nI">m_nI</a> : Number<div class="summaryTableDescription">
    Latest light power.</div>
 </td><td class="summaryTableOwnerCol"><a href="ALightAttributes.html">ALightAttributes</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#m_oCurrentLightMap">m_oCurrentLightMap</a> : <a href="../attributes/PhongAttributesLightMap.html">PhongAttributesLightMap</a>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">PhongAttributes</td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="ALightAttributes.html#m_oL">m_oL</a> : <a href="../../core/data/Vector.html">Vector</a>
@@ -303,29 +293,10 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="lightmap"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">lightmap</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var lightmap:<a href="../attributes/PhongAttributesLightMap.html">PhongAttributesLightMap</a> = null</code><p>
-   Used if a lightmap needs to be overridden.
-   </p></div>
-<a name="m_oCurrentLightMap"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">m_oCurrentLightMap</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>protected var m_oCurrentLightMap:<a href="../attributes/PhongAttributesLightMap.html">PhongAttributesLightMap</a></code>
-</div>
 <a name="onlySpecular"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">onlySpecular</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">onlySpecular</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -378,28 +349,29 @@ showHideInherited();
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">p_bBright</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; The ambient light value. A value between 0 and 1 is expected.
+<td width="20px"></td><td><code><span class="label">p_bBright</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; The brightness (value for useBright).
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nAmbient</span>:Number</code> (default = <code>0.0</code>)<code></code> &mdash; Quality of light response approximation. A value between 2 and 15 is expected.
+<td width="20px"></td><td><code><span class="label">p_nAmbient</span>:Number</code> (default = <code>0.0</code>)<code></code> &mdash; The ambient light value. A value between 0 and 1 is expected.
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nQuality</span>:int</code> (default = <code>4</code>)<code></code> &mdash; A number of calculated samples per anchor. Positive value is expected.
+<td width="20px"></td><td><code><span class="label">p_nQuality</span>:int</code> (default = <code>4</code>)<code></code> &mdash; Quality of light response approximation. A value between 2 and 15 is expected.
    </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">p_nSamples</span>:int</code> (default = <code>4</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">p_nSamples</span>:int</code> (default = <code>4</code>)<code></code> &mdash; A number of calculated samples per anchor. Positive value is expected.
+   </td>
 </tr>
 </table>
 </div>
@@ -502,8 +474,8 @@ showHideInherited();
 <hr>
 <br>
 <p></p>
-<center class="copyright">ASDoc Documentation for Sandy 3D Engine,AS3 Trunk version</center>
+<center class="copyright">ASDoc Documentation for Sandy 3D Engine, AS3 Trunk version</center>
 </div>
 </body>
 </html>
-<!--ASDoc Documentation for Sandy 3D Engine,AS3 Trunk version-->
+<!--ASDoc Documentation for Sandy 3D Engine, AS3 Trunk version-->
